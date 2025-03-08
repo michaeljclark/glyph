@@ -2,6 +2,10 @@
 
 > a super regular RISC that encodes constants in immediate blocks.
 
+![instruction and constant streams](/doc/concept.png)
+
+_Figure 1 - instruction (pc-relative) and constant (ib-relative) streams_
+
 ## introduction
 
 glyph is a super regular RISC architecture that encodes constants in a
@@ -100,13 +104,19 @@ instructions. for this reason, glyph does not support 48-bit instructions.
 
 ![16-bit instruction packet](/doc/packet-16.png)
 
+_Figure 2 - one, two, and three operand 16-bit instruction formats_
+
 ### 32-bit instruction formats
 
 ![32-bit instruction packet](/doc/packet-32.png)
 
+_Figure 3 - one, two, and three operand 32-bit instruction formats_
+
 ### 64-bit instruction formats
 
 ![64-bit instruction packet](/doc/packet-64.png)
+
+_Figure 4 - one, two, and three operand 64-bit instruction formats_
 
 ## vectorized decoder
 
@@ -120,4 +130,4 @@ invocation prints the decode offsets for a 4-wide 64-bit decoder.
 
 ![combinatorial decode offsets for 4-wide decoder](/doc/combos-4.png)
 
-_Figure 1 - screenshot showing partial output from combos.py_
+_Figure 5 - screenshot showing partial output from combos.py_
