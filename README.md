@@ -81,3 +81,25 @@ C-style structure packing rules.
 | nop          | op0r_imm9_16 | 11101 | nop imm9                                    |
 | dump         | op0r_imm9_16 | 11110 | dump imm9                                   |
 | illegal      | op0r_imm9_16 | 11111 | illegal imm9                                |
+
+## instructions formats
+
+glyph uses a super regular RISC encoding designed for vectorized decoders.
+the variable length instruction encoding supports 16-bit, 32-bit, 64-bit,
+and 128-bit instruction packets. each 16-bit packet has 2-bits for size.
+in contrast, RISC-V currently has a variable size field which requires
+up to 7-bits for 64-bit instruction packets. glyph size decoding logic
+is simpler and easily supports 16-wide decoders (256-bits) with 8x32-bit
+instructions. for this reason, glyph does not support 48-bit instructions.
+
+### 16-bit instruction formats
+
+![16-bit instruction packet](/doc/packet-16.png)
+
+### 32-bit instruction formats
+
+![32-bit instruction packet](/doc/packet-32.png)
+
+### 64-bit instruction formats
+
+![64-bit instruction packet](/doc/packet-64.png)
