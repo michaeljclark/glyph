@@ -103,3 +103,17 @@ instructions. for this reason, glyph does not support 48-bit instructions.
 ### 64-bit instruction formats
 
 ![64-bit instruction packet](/doc/packet-64.png)
+
+## vectorized decoder
+
+this Python script allows one to explore the combinatorial decode window
+for various widths using 16-bit alignment for instructions. the following
+invocation prints the decode offsets for a 4-wide 64-bit decoder.
+
+```
+./scripts/combo.py --print-decode -w 4
+```
+
+![combinatorial decode offsets for 4-wide decoder](/doc/combos-4.png)
+
+_Figure 1 - screenshot showing partial output from combos.py_
