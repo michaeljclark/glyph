@@ -1,6 +1,23 @@
-## glyph
+# glyph
 
-glyph is a super regular RISC that encodes constants in immediate blocks.
+> a super regular RISC that encodes constants in immediate blocks.
+
+## introduction
+
+glyph is a super regular RISC architecture that encodes constants in a
+secondary constant stream accessed via an immediate base register. the
+immediate base register branches like the program counter and the call
+instructions sets _(pc,ib)_ together for procedure calls and returns.
+
+glyph uses relative addresses in its link register which is different
+to typical RISC architectures. glyph achieves this by packing two 32-bit
+relative _(pc,ib)_ displacements into an _i32x2_ vector.
+
+immediate blocks can be linked together using relative displacements
+and switched using a constant branch instruction detailed below.
+immediate blocks, unlike typical RISC architectures, mean relocations
+are simple word sizes like CISC architectures, are aligned and can use
+C-style structure packing rules.
 
 - 16-bit compressed instruction packets can access 8x64-bit registers.
 - (pc,ib) is a special program counter and immediate base register pair.
@@ -19,7 +36,10 @@ glyph is a super regular RISC that encodes constants in immediate blocks.
   - composes relative (pc,ib) address vector.
 - link register contains packed i32x2 relative displacement to function entry.
 - instruction format is detailed here: [packet.pdf](/doc/packet.pdf).
-  - 16/32/64/128-bit instruction forms with 2-bit size encoding.
+  - 16/32/64/128-bit instruction packets with 2-bit size encoding.
+  - presently only the 16-bit compressed packet has an encoding.
+
+## 16-bit opcodes
 
 | instruction  | form         | code  | description                                 |
 |:-------------|:-------------|:------|:--------------------------------------------|
