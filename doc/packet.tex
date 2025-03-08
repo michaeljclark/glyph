@@ -1,0 +1,1258 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[margin=10mm]{geometry}
+\usepackage{tikz}
+\pagestyle{empty}
+\begin{document}
+
+\begin{center}
+
+\textbf{Instruction templates}
+
+\end{center}
+\begin{center}
+
+\vspace{2mm}
+
+
+\scriptsize{\textit{\textbf{16-bit instruction template}}}
+
+
+\vspace{2mm}
+
+\begin{tikzpicture}[scale=0.5]
+\node at (-16.000000,0.500000) [anchor=west] {\texttt{op\_16}};
+
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
+\end{tikzpicture}
+\end{center}
+\begin{center}
+
+\vspace{2mm}
+
+
+\scriptsize{\textit{\textbf{32-bit instruction template}}}
+
+
+\vspace{2mm}
+
+\begin{tikzpicture}[scale=0.5]
+\node at (-16.000000,0.500000) [anchor=west] {\texttt{op\_32}};
+
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {$sz_{[3:2]}$};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (5.500000,-0.500000) [font=\scriptsize] {$operand_{[17:9]}$};
+\end{tikzpicture}
+\end{center}
+\begin{center}
+
+\vspace{2mm}
+
+
+\scriptsize{\textit{\textbf{64-bit instruction template}}}
+
+
+\vspace{2mm}
+
+\begin{tikzpicture}[scale=0.5]
+\node at (-16.000000,0.500000) [anchor=west] {\texttt{op\_64}};
+
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {$sz_{[3:2]}$};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (5.500000,-0.500000) [font=\scriptsize] {$operand_{[17:9]}$};
+\fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\node at (16.000000,-1.500000) [font=\scriptsize] {$sz_{[5:4]}$};
+\fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
+\fill [black!5]  (1.000000,-2.000000) rectangle (10.000000,-1.000000);
+\draw [black!90]  (1.000000,-2.000000) rectangle (10.000000,-1.000000);
+\node at (5.500000,-1.500000) [font=\scriptsize] {$operand_{[26:18]}$};
+\fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\node at (16.000000,-2.500000) [font=\scriptsize] {$sz_{[7:6]}$};
+\fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
+\fill [black!5]  (1.000000,-3.000000) rectangle (10.000000,-2.000000);
+\draw [black!90]  (1.000000,-3.000000) rectangle (10.000000,-2.000000);
+\node at (5.500000,-2.500000) [font=\scriptsize] {$operand_{[35:27]}$};
+\end{tikzpicture}
+\end{center}
+\begin{center}
+
+\vspace{2mm}
+
+
+\scriptsize{\textit{\textbf{128-bit instruction template}}}
+
+
+\vspace{2mm}
+
+\begin{tikzpicture}[scale=0.5]
+\node at (-16.000000,0.500000) [anchor=west] {\texttt{op\_128}};
+
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {$sz_{[3:2]}$};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (5.500000,-0.500000) [font=\scriptsize] {$operand_{[17:9]}$};
+\fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\node at (16.000000,-1.500000) [font=\scriptsize] {$sz_{[5:4]}$};
+\fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
+\fill [black!5]  (1.000000,-2.000000) rectangle (10.000000,-1.000000);
+\draw [black!90]  (1.000000,-2.000000) rectangle (10.000000,-1.000000);
+\node at (5.500000,-1.500000) [font=\scriptsize] {$operand_{[26:18]}$};
+\fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\node at (16.000000,-2.500000) [font=\scriptsize] {$sz_{[7:6]}$};
+\fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
+\fill [black!5]  (1.000000,-3.000000) rectangle (10.000000,-2.000000);
+\draw [black!90]  (1.000000,-3.000000) rectangle (10.000000,-2.000000);
+\node at (5.500000,-2.500000) [font=\scriptsize] {$operand_{[35:27]}$};
+\fill [black!5]  (15.000000,-4.000000) rectangle (17.000000,-3.000000);
+\draw [black!90]  (15.000000,-4.000000) rectangle (17.000000,-3.000000);
+\node at (16.000000,-3.500000) [font=\scriptsize] {$sz_{[9:8]}$};
+\fill [black!5]  (10.000000,-4.000000) rectangle (15.000000,-3.000000);
+\draw [black!90]  (10.000000,-4.000000) rectangle (15.000000,-3.000000);
+\node at (12.500000,-3.500000) [font=\scriptsize] {$opcode_{[24:20]}$};
+\fill [black!5]  (1.000000,-4.000000) rectangle (10.000000,-3.000000);
+\draw [black!90]  (1.000000,-4.000000) rectangle (10.000000,-3.000000);
+\node at (5.500000,-3.500000) [font=\scriptsize] {$operand_{[44:36]}$};
+\fill [black!5]  (15.000000,-5.000000) rectangle (17.000000,-4.000000);
+\draw [black!90]  (15.000000,-5.000000) rectangle (17.000000,-4.000000);
+\node at (16.000000,-4.500000) [font=\scriptsize] {$sz_{[11:10]}$};
+\fill [black!5]  (10.000000,-5.000000) rectangle (15.000000,-4.000000);
+\draw [black!90]  (10.000000,-5.000000) rectangle (15.000000,-4.000000);
+\node at (12.500000,-4.500000) [font=\scriptsize] {$opcode_{[29:25]}$};
+\fill [black!5]  (1.000000,-5.000000) rectangle (10.000000,-4.000000);
+\draw [black!90]  (1.000000,-5.000000) rectangle (10.000000,-4.000000);
+\node at (5.500000,-4.500000) [font=\scriptsize] {$operand_{[53:45]}$};
+\fill [black!5]  (15.000000,-6.000000) rectangle (17.000000,-5.000000);
+\draw [black!90]  (15.000000,-6.000000) rectangle (17.000000,-5.000000);
+\node at (16.000000,-5.500000) [font=\scriptsize] {$sz_{[13:12]}$};
+\fill [black!5]  (10.000000,-6.000000) rectangle (15.000000,-5.000000);
+\draw [black!90]  (10.000000,-6.000000) rectangle (15.000000,-5.000000);
+\node at (12.500000,-5.500000) [font=\scriptsize] {$opcode_{[34:30]}$};
+\fill [black!5]  (1.000000,-6.000000) rectangle (10.000000,-5.000000);
+\draw [black!90]  (1.000000,-6.000000) rectangle (10.000000,-5.000000);
+\node at (5.500000,-5.500000) [font=\scriptsize] {$operand_{[62:54]}$};
+\fill [black!5]  (15.000000,-7.000000) rectangle (17.000000,-6.000000);
+\draw [black!90]  (15.000000,-7.000000) rectangle (17.000000,-6.000000);
+\node at (16.000000,-6.500000) [font=\scriptsize] {$sz_{[15:14]}$};
+\fill [black!5]  (10.000000,-7.000000) rectangle (15.000000,-6.000000);
+\draw [black!90]  (10.000000,-7.000000) rectangle (15.000000,-6.000000);
+\node at (12.500000,-6.500000) [font=\scriptsize] {$opcode_{[39:35]}$};
+\fill [black!5]  (1.000000,-7.000000) rectangle (10.000000,-6.000000);
+\draw [black!90]  (1.000000,-7.000000) rectangle (10.000000,-6.000000);
+\node at (5.500000,-6.500000) [font=\scriptsize] {$operand_{[71:63]}$};
+\end{tikzpicture}
+\end{center}
+\begin{center}
+
+\textbf{16-bit instruction formats}
+
+\end{center}
+\begin{center}
+
+\vspace{2mm}
+
+
+\scriptsize{\textit{\textbf{one operand with immediate}}}
+
+
+\vspace{2mm}
+
+\begin{tikzpicture}[scale=0.5]
+\node at (-16.000000,0.500000) [anchor=west] {\texttt{op1ri\_16 \# op ra, imm}};
+
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (4.500000,1.250000) [font=\scriptsize] {12};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (3.500000,1.250000) [font=\scriptsize] {13};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (4.000000,1.000000) -- (4.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\bf 00};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (4.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (4.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (7.000000,0.500000) [font=\scriptsize] {$imm_{[5:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\node at (2.500000,0.500000) [font=\scriptsize] {$ra_{[2:0]}$};
+\end{tikzpicture}
+\end{center}
+\begin{center}
+
+\vspace{2mm}
+
+
+\scriptsize{\textit{\textbf{two operand with immediate}}}
+
+
+\vspace{2mm}
+
+\begin{tikzpicture}[scale=0.5]
+\node at (-16.000000,0.500000) [anchor=west] {\texttt{op2ri\_16 \# op ra, rb, imm}};
+
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (7.500000,1.250000) [font=\scriptsize] {9};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (4.500000,1.250000) [font=\scriptsize] {12};
+\node at (6.500000,1.250000) [font=\scriptsize] {10};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (3.500000,1.250000) [font=\scriptsize] {13};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (7.000000,1.000000) -- (7.000000,1.500000);
+\draw (4.000000,1.000000) -- (4.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\bf 00};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (8.500000,0.500000) [font=\scriptsize] {$imm_{[2:0]}$};
+\fill [black!5]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\draw [black!90]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$rb_{[2:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\node at (2.500000,0.500000) [font=\scriptsize] {$ra_{[2:0]}$};
+\end{tikzpicture}
+\end{center}
+\begin{center}
+
+\vspace{2mm}
+
+
+\scriptsize{\textit{\textbf{three operand}}}
+
+
+\vspace{2mm}
+
+\begin{tikzpicture}[scale=0.5]
+\node at (-16.000000,0.500000) [anchor=west] {\texttt{op3r\_16 \# op ra, rb, rc}};
+
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (7.500000,1.250000) [font=\scriptsize] {9};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (4.500000,1.250000) [font=\scriptsize] {12};
+\node at (6.500000,1.250000) [font=\scriptsize] {10};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (3.500000,1.250000) [font=\scriptsize] {13};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (7.000000,1.000000) -- (7.000000,1.500000);
+\draw (4.000000,1.000000) -- (4.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\bf 00};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (8.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\fill [black!5]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\draw [black!90]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$rb_{[2:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\node at (2.500000,0.500000) [font=\scriptsize] {$ra_{[2:0]}$};
+\end{tikzpicture}
+\end{center}
+\begin{center}
+
+\textbf{32-bit instruction formats}
+
+\end{center}
+\begin{center}
+
+\vspace{2mm}
+
+
+\scriptsize{\textit{\textbf{one operand with immediate}}}
+
+
+\vspace{2mm}
+
+\begin{tikzpicture}[scale=0.5]
+\node at (-16.000000,0.500000) [anchor=west] {\texttt{op1ri\_32 \# op ra, imm}};
+
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (4.500000,1.250000) [font=\scriptsize] {12};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (3.500000,1.250000) [font=\scriptsize] {13};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (4.000000,1.000000) -- (4.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\bf 01};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (4.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (4.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (7.000000,0.500000) [font=\scriptsize] {$imm_{[5:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\node at (2.500000,0.500000) [font=\scriptsize] {$ra_{[2:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (4.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (4.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (7.000000,-0.500000) [font=\scriptsize] {$imm_{[11:6]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\node at (2.500000,-0.500000) [font=\scriptsize] {$ra_{[5:3]}$};
+\end{tikzpicture}
+\end{center}
+\begin{center}
+
+\vspace{2mm}
+
+
+\scriptsize{\textit{\textbf{two operand with immediate}}}
+
+
+\vspace{2mm}
+
+\begin{tikzpicture}[scale=0.5]
+\node at (-16.000000,0.500000) [anchor=west] {\texttt{op2ri\_32 \# op ra, rb, imm}};
+
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (7.500000,1.250000) [font=\scriptsize] {9};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (4.500000,1.250000) [font=\scriptsize] {12};
+\node at (6.500000,1.250000) [font=\scriptsize] {10};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (3.500000,1.250000) [font=\scriptsize] {13};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (7.000000,1.000000) -- (7.000000,1.500000);
+\draw (4.000000,1.000000) -- (4.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\bf 01};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (8.500000,0.500000) [font=\scriptsize] {$imm_{[2:0]}$};
+\fill [black!5]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\draw [black!90]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$rb_{[2:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\node at (2.500000,0.500000) [font=\scriptsize] {$ra_{[2:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (8.500000,-0.500000) [font=\scriptsize] {$imm_{[5:3]}$};
+\fill [black!5]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
+\draw [black!90]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
+\node at (5.500000,-0.500000) [font=\scriptsize] {$rb_{[5:3]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\node at (2.500000,-0.500000) [font=\scriptsize] {$ra_{[5:3]}$};
+\end{tikzpicture}
+\end{center}
+\begin{center}
+
+\vspace{2mm}
+
+
+\scriptsize{\textit{\textbf{three operand}}}
+
+
+\vspace{2mm}
+
+\begin{tikzpicture}[scale=0.5]
+\node at (-16.000000,0.500000) [anchor=west] {\texttt{op3r\_32 \# op ra, rb, rc}};
+
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (7.500000,1.250000) [font=\scriptsize] {9};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (4.500000,1.250000) [font=\scriptsize] {12};
+\node at (6.500000,1.250000) [font=\scriptsize] {10};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (3.500000,1.250000) [font=\scriptsize] {13};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (7.000000,1.000000) -- (7.000000,1.500000);
+\draw (4.000000,1.000000) -- (4.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\bf 01};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (8.500000,0.500000) [font=\scriptsize] {$ra_{[2:0]}$};
+\fill [black!5]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\draw [black!90]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$rb_{[2:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (8.500000,-0.500000) [font=\scriptsize] {$ra_{[5:3]}$};
+\fill [black!5]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
+\draw [black!90]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
+\node at (5.500000,-0.500000) [font=\scriptsize] {$rb_{[5:3]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\node at (2.500000,-0.500000) [font=\scriptsize] {$rc_{[5:3]}$};
+\end{tikzpicture}
+\end{center}
+\newpage
+\begin{center}
+
+\textbf{64-bit instruction formats}
+
+\end{center}
+\begin{center}
+
+\vspace{2mm}
+
+
+\scriptsize{\textit{\textbf{one operand with immediate}}}
+
+
+\vspace{2mm}
+
+\begin{tikzpicture}[scale=0.5]
+\node at (-16.000000,0.500000) [anchor=west] {\texttt{op1ri\_64 \# op ra, imm}};
+
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (4.500000,1.250000) [font=\scriptsize] {12};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (3.500000,1.250000) [font=\scriptsize] {13};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (4.000000,1.000000) -- (4.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\bf 10};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (4.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (4.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (7.000000,0.500000) [font=\scriptsize] {$imm_{[5:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\node at (2.500000,0.500000) [font=\scriptsize] {$ra_{[2:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (4.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (4.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (7.000000,-0.500000) [font=\scriptsize] {$imm_{[11:6]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\node at (2.500000,-0.500000) [font=\scriptsize] {$ra_{[5:3]}$};
+\fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\node at (16.000000,-1.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
+\fill [black!5]  (4.000000,-2.000000) rectangle (10.000000,-1.000000);
+\draw [black!90]  (4.000000,-2.000000) rectangle (10.000000,-1.000000);
+\node at (7.000000,-1.500000) [font=\scriptsize] {$imm_{[17:12]}$};
+\fill [black!5]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
+\draw [black!90]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
+\node at (2.500000,-1.500000) [font=\scriptsize] {$ra_{[8:6]}$};
+\fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\node at (16.000000,-2.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
+\fill [black!5]  (4.000000,-3.000000) rectangle (10.000000,-2.000000);
+\draw [black!90]  (4.000000,-3.000000) rectangle (10.000000,-2.000000);
+\node at (7.000000,-2.500000) [font=\scriptsize] {$imm_{[23:18]}$};
+\fill [black!5]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
+\draw [black!90]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
+\node at (2.500000,-2.500000) [font=\scriptsize] {$ra_{[11:9]}$};
+\end{tikzpicture}
+\end{center}
+\begin{center}
+
+\vspace{2mm}
+
+
+\scriptsize{\textit{\textbf{two operand with immediate}}}
+
+
+\vspace{2mm}
+
+\begin{tikzpicture}[scale=0.5]
+\node at (-16.000000,0.500000) [anchor=west] {\texttt{op2ri\_64 \# op ra, rb, imm}};
+
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (7.500000,1.250000) [font=\scriptsize] {9};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (4.500000,1.250000) [font=\scriptsize] {12};
+\node at (6.500000,1.250000) [font=\scriptsize] {10};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (3.500000,1.250000) [font=\scriptsize] {13};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (7.000000,1.000000) -- (7.000000,1.500000);
+\draw (4.000000,1.000000) -- (4.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\bf 10};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (8.500000,0.500000) [font=\scriptsize] {$imm_{[2:0]}$};
+\fill [black!5]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\draw [black!90]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$rb_{[2:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\node at (2.500000,0.500000) [font=\scriptsize] {$ra_{[2:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (8.500000,-0.500000) [font=\scriptsize] {$imm_{[5:3]}$};
+\fill [black!5]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
+\draw [black!90]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
+\node at (5.500000,-0.500000) [font=\scriptsize] {$rb_{[5:3]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\node at (2.500000,-0.500000) [font=\scriptsize] {$ra_{[5:3]}$};
+\fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\node at (16.000000,-1.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
+\fill [black!5]  (7.000000,-2.000000) rectangle (10.000000,-1.000000);
+\draw [black!90]  (7.000000,-2.000000) rectangle (10.000000,-1.000000);
+\node at (8.500000,-1.500000) [font=\scriptsize] {$imm_{[8:6]}$};
+\fill [black!5]  (4.000000,-2.000000) rectangle (7.000000,-1.000000);
+\draw [black!90]  (4.000000,-2.000000) rectangle (7.000000,-1.000000);
+\node at (5.500000,-1.500000) [font=\scriptsize] {$rb_{[8:6]}$};
+\fill [black!5]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
+\draw [black!90]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
+\node at (2.500000,-1.500000) [font=\scriptsize] {$ra_{[8:6]}$};
+\fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\node at (16.000000,-2.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
+\fill [black!5]  (7.000000,-3.000000) rectangle (10.000000,-2.000000);
+\draw [black!90]  (7.000000,-3.000000) rectangle (10.000000,-2.000000);
+\node at (8.500000,-2.500000) [font=\scriptsize] {$imm_{[11:9]}$};
+\fill [black!5]  (4.000000,-3.000000) rectangle (7.000000,-2.000000);
+\draw [black!90]  (4.000000,-3.000000) rectangle (7.000000,-2.000000);
+\node at (5.500000,-2.500000) [font=\scriptsize] {$rb_{[11:9]}$};
+\fill [black!5]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
+\draw [black!90]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
+\node at (2.500000,-2.500000) [font=\scriptsize] {$ra_{[11:9]}$};
+\end{tikzpicture}
+\end{center}
+\begin{center}
+
+\vspace{2mm}
+
+
+\scriptsize{\textit{\textbf{three operand}}}
+
+
+\vspace{2mm}
+
+\begin{tikzpicture}[scale=0.5]
+\node at (-16.000000,0.500000) [anchor=west] {\texttt{op3r\_64 \# op ra, rb, rc}};
+
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (7.500000,1.250000) [font=\scriptsize] {9};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (4.500000,1.250000) [font=\scriptsize] {12};
+\node at (6.500000,1.250000) [font=\scriptsize] {10};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (3.500000,1.250000) [font=\scriptsize] {13};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (7.000000,1.000000) -- (7.000000,1.500000);
+\draw (4.000000,1.000000) -- (4.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\bf 10};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (8.500000,0.500000) [font=\scriptsize] {$ra_{[2:0]}$};
+\fill [black!5]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\draw [black!90]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$rb_{[2:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (8.500000,-0.500000) [font=\scriptsize] {$ra_{[5:3]}$};
+\fill [black!5]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
+\draw [black!90]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
+\node at (5.500000,-0.500000) [font=\scriptsize] {$rb_{[5:3]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\node at (2.500000,-0.500000) [font=\scriptsize] {$rc_{[5:3]}$};
+\fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\node at (16.000000,-1.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
+\fill [black!5]  (7.000000,-2.000000) rectangle (10.000000,-1.000000);
+\draw [black!90]  (7.000000,-2.000000) rectangle (10.000000,-1.000000);
+\node at (8.500000,-1.500000) [font=\scriptsize] {$ra_{[8:6]}$};
+\fill [black!5]  (4.000000,-2.000000) rectangle (7.000000,-1.000000);
+\draw [black!90]  (4.000000,-2.000000) rectangle (7.000000,-1.000000);
+\node at (5.500000,-1.500000) [font=\scriptsize] {$rb_{[8:6]}$};
+\fill [black!5]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
+\draw [black!90]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
+\node at (2.500000,-1.500000) [font=\scriptsize] {$rc_{[8:6]}$};
+\fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\node at (16.000000,-2.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
+\fill [black!5]  (7.000000,-3.000000) rectangle (10.000000,-2.000000);
+\draw [black!90]  (7.000000,-3.000000) rectangle (10.000000,-2.000000);
+\node at (8.500000,-2.500000) [font=\scriptsize] {$ra_{[11:9]}$};
+\fill [black!5]  (4.000000,-3.000000) rectangle (7.000000,-2.000000);
+\draw [black!90]  (4.000000,-3.000000) rectangle (7.000000,-2.000000);
+\node at (5.500000,-2.500000) [font=\scriptsize] {$rb_{[11:9]}$};
+\fill [black!5]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
+\draw [black!90]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
+\node at (2.500000,-2.500000) [font=\scriptsize] {$rc_{[11:9]}$};
+\end{tikzpicture}
+\end{center}
+\begin{center}
+
+\textbf{128-bit instruction formats}
+
+\end{center}
+\begin{center}
+
+\vspace{2mm}
+
+
+\scriptsize{\textit{\textbf{one operand with immediate}}}
+
+
+\vspace{2mm}
+
+\begin{tikzpicture}[scale=0.5]
+\node at (-16.000000,0.500000) [anchor=west] {\texttt{op1ri\_128 \# op ra, imm}};
+
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (4.500000,1.250000) [font=\scriptsize] {12};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (3.500000,1.250000) [font=\scriptsize] {13};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (4.000000,1.000000) -- (4.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (4.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (4.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (7.000000,0.500000) [font=\scriptsize] {$imm_{[5:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\node at (2.500000,0.500000) [font=\scriptsize] {$ra_{[2:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (4.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (4.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (7.000000,-0.500000) [font=\scriptsize] {$imm_{[11:6]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\node at (2.500000,-0.500000) [font=\scriptsize] {$ra_{[5:3]}$};
+\fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\node at (16.000000,-1.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
+\fill [black!5]  (4.000000,-2.000000) rectangle (10.000000,-1.000000);
+\draw [black!90]  (4.000000,-2.000000) rectangle (10.000000,-1.000000);
+\node at (7.000000,-1.500000) [font=\scriptsize] {$imm_{[17:12]}$};
+\fill [black!5]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
+\draw [black!90]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
+\node at (2.500000,-1.500000) [font=\scriptsize] {$ra_{[8:6]}$};
+\fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\node at (16.000000,-2.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
+\fill [black!5]  (4.000000,-3.000000) rectangle (10.000000,-2.000000);
+\draw [black!90]  (4.000000,-3.000000) rectangle (10.000000,-2.000000);
+\node at (7.000000,-2.500000) [font=\scriptsize] {$imm_{[23:18]}$};
+\fill [black!5]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
+\draw [black!90]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
+\node at (2.500000,-2.500000) [font=\scriptsize] {$ra_{[11:9]}$};
+\fill [black!5]  (15.000000,-4.000000) rectangle (17.000000,-3.000000);
+\draw [black!90]  (15.000000,-4.000000) rectangle (17.000000,-3.000000);
+\node at (16.000000,-3.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-4.000000) rectangle (15.000000,-3.000000);
+\draw [black!90]  (10.000000,-4.000000) rectangle (15.000000,-3.000000);
+\node at (12.500000,-3.500000) [font=\scriptsize] {$opcode_{[24:20]}$};
+\fill [black!5]  (4.000000,-4.000000) rectangle (10.000000,-3.000000);
+\draw [black!90]  (4.000000,-4.000000) rectangle (10.000000,-3.000000);
+\node at (7.000000,-3.500000) [font=\scriptsize] {$imm_{[29:24]}$};
+\fill [black!5]  (1.000000,-4.000000) rectangle (4.000000,-3.000000);
+\draw [black!90]  (1.000000,-4.000000) rectangle (4.000000,-3.000000);
+\node at (2.500000,-3.500000) [font=\scriptsize] {$ra_{[14:12]}$};
+\fill [black!5]  (15.000000,-5.000000) rectangle (17.000000,-4.000000);
+\draw [black!90]  (15.000000,-5.000000) rectangle (17.000000,-4.000000);
+\node at (16.000000,-4.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-5.000000) rectangle (15.000000,-4.000000);
+\draw [black!90]  (10.000000,-5.000000) rectangle (15.000000,-4.000000);
+\node at (12.500000,-4.500000) [font=\scriptsize] {$opcode_{[29:25]}$};
+\fill [black!5]  (4.000000,-5.000000) rectangle (10.000000,-4.000000);
+\draw [black!90]  (4.000000,-5.000000) rectangle (10.000000,-4.000000);
+\node at (7.000000,-4.500000) [font=\scriptsize] {$imm_{[35:30]}$};
+\fill [black!5]  (1.000000,-5.000000) rectangle (4.000000,-4.000000);
+\draw [black!90]  (1.000000,-5.000000) rectangle (4.000000,-4.000000);
+\node at (2.500000,-4.500000) [font=\scriptsize] {$ra_{[17:15]}$};
+\fill [black!5]  (15.000000,-6.000000) rectangle (17.000000,-5.000000);
+\draw [black!90]  (15.000000,-6.000000) rectangle (17.000000,-5.000000);
+\node at (16.000000,-5.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-6.000000) rectangle (15.000000,-5.000000);
+\draw [black!90]  (10.000000,-6.000000) rectangle (15.000000,-5.000000);
+\node at (12.500000,-5.500000) [font=\scriptsize] {$opcode_{[34:30]}$};
+\fill [black!5]  (4.000000,-6.000000) rectangle (10.000000,-5.000000);
+\draw [black!90]  (4.000000,-6.000000) rectangle (10.000000,-5.000000);
+\node at (7.000000,-5.500000) [font=\scriptsize] {$imm_{[41:36]}$};
+\fill [black!5]  (1.000000,-6.000000) rectangle (4.000000,-5.000000);
+\draw [black!90]  (1.000000,-6.000000) rectangle (4.000000,-5.000000);
+\node at (2.500000,-5.500000) [font=\scriptsize] {$ra_{[20:18]}$};
+\fill [black!5]  (15.000000,-7.000000) rectangle (17.000000,-6.000000);
+\draw [black!90]  (15.000000,-7.000000) rectangle (17.000000,-6.000000);
+\node at (16.000000,-6.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-7.000000) rectangle (15.000000,-6.000000);
+\draw [black!90]  (10.000000,-7.000000) rectangle (15.000000,-6.000000);
+\node at (12.500000,-6.500000) [font=\scriptsize] {$opcode_{[39:35]}$};
+\fill [black!5]  (4.000000,-7.000000) rectangle (10.000000,-6.000000);
+\draw [black!90]  (4.000000,-7.000000) rectangle (10.000000,-6.000000);
+\node at (7.000000,-6.500000) [font=\scriptsize] {$imm_{[47:42]}$};
+\fill [black!5]  (1.000000,-7.000000) rectangle (4.000000,-6.000000);
+\draw [black!90]  (1.000000,-7.000000) rectangle (4.000000,-6.000000);
+\node at (2.500000,-6.500000) [font=\scriptsize] {$ra_{[23:21]}$};
+\end{tikzpicture}
+\end{center}
+\begin{center}
+
+\vspace{2mm}
+
+
+\scriptsize{\textit{\textbf{two operand with immediate}}}
+
+
+\vspace{2mm}
+
+\begin{tikzpicture}[scale=0.5]
+\node at (-16.000000,0.500000) [anchor=west] {\texttt{op2ri\_128 \# op ra, rb, imm}};
+
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (7.500000,1.250000) [font=\scriptsize] {9};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (4.500000,1.250000) [font=\scriptsize] {12};
+\node at (6.500000,1.250000) [font=\scriptsize] {10};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (3.500000,1.250000) [font=\scriptsize] {13};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (7.000000,1.000000) -- (7.000000,1.500000);
+\draw (4.000000,1.000000) -- (4.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (8.500000,0.500000) [font=\scriptsize] {$imm_{[2:0]}$};
+\fill [black!5]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\draw [black!90]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$rb_{[2:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\node at (2.500000,0.500000) [font=\scriptsize] {$ra_{[2:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (8.500000,-0.500000) [font=\scriptsize] {$imm_{[5:3]}$};
+\fill [black!5]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
+\draw [black!90]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
+\node at (5.500000,-0.500000) [font=\scriptsize] {$rb_{[5:3]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\node at (2.500000,-0.500000) [font=\scriptsize] {$ra_{[5:3]}$};
+\fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\node at (16.000000,-1.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
+\fill [black!5]  (7.000000,-2.000000) rectangle (10.000000,-1.000000);
+\draw [black!90]  (7.000000,-2.000000) rectangle (10.000000,-1.000000);
+\node at (8.500000,-1.500000) [font=\scriptsize] {$imm_{[8:6]}$};
+\fill [black!5]  (4.000000,-2.000000) rectangle (7.000000,-1.000000);
+\draw [black!90]  (4.000000,-2.000000) rectangle (7.000000,-1.000000);
+\node at (5.500000,-1.500000) [font=\scriptsize] {$rb_{[8:6]}$};
+\fill [black!5]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
+\draw [black!90]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
+\node at (2.500000,-1.500000) [font=\scriptsize] {$ra_{[8:6]}$};
+\fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\node at (16.000000,-2.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
+\fill [black!5]  (7.000000,-3.000000) rectangle (10.000000,-2.000000);
+\draw [black!90]  (7.000000,-3.000000) rectangle (10.000000,-2.000000);
+\node at (8.500000,-2.500000) [font=\scriptsize] {$imm_{[11:9]}$};
+\fill [black!5]  (4.000000,-3.000000) rectangle (7.000000,-2.000000);
+\draw [black!90]  (4.000000,-3.000000) rectangle (7.000000,-2.000000);
+\node at (5.500000,-2.500000) [font=\scriptsize] {$rb_{[11:9]}$};
+\fill [black!5]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
+\draw [black!90]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
+\node at (2.500000,-2.500000) [font=\scriptsize] {$ra_{[11:9]}$};
+\fill [black!5]  (15.000000,-4.000000) rectangle (17.000000,-3.000000);
+\draw [black!90]  (15.000000,-4.000000) rectangle (17.000000,-3.000000);
+\node at (16.000000,-3.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-4.000000) rectangle (15.000000,-3.000000);
+\draw [black!90]  (10.000000,-4.000000) rectangle (15.000000,-3.000000);
+\node at (12.500000,-3.500000) [font=\scriptsize] {$opcode_{[24:20]}$};
+\fill [black!5]  (7.000000,-4.000000) rectangle (10.000000,-3.000000);
+\draw [black!90]  (7.000000,-4.000000) rectangle (10.000000,-3.000000);
+\node at (8.500000,-3.500000) [font=\scriptsize] {$imm_{[14:12]}$};
+\fill [black!5]  (4.000000,-4.000000) rectangle (7.000000,-3.000000);
+\draw [black!90]  (4.000000,-4.000000) rectangle (7.000000,-3.000000);
+\node at (5.500000,-3.500000) [font=\scriptsize] {$rb_{[14:12]}$};
+\fill [black!5]  (1.000000,-4.000000) rectangle (4.000000,-3.000000);
+\draw [black!90]  (1.000000,-4.000000) rectangle (4.000000,-3.000000);
+\node at (2.500000,-3.500000) [font=\scriptsize] {$ra_{[14:12]}$};
+\fill [black!5]  (15.000000,-5.000000) rectangle (17.000000,-4.000000);
+\draw [black!90]  (15.000000,-5.000000) rectangle (17.000000,-4.000000);
+\node at (16.000000,-4.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-5.000000) rectangle (15.000000,-4.000000);
+\draw [black!90]  (10.000000,-5.000000) rectangle (15.000000,-4.000000);
+\node at (12.500000,-4.500000) [font=\scriptsize] {$opcode_{[29:25]}$};
+\fill [black!5]  (7.000000,-5.000000) rectangle (10.000000,-4.000000);
+\draw [black!90]  (7.000000,-5.000000) rectangle (10.000000,-4.000000);
+\node at (8.500000,-4.500000) [font=\scriptsize] {$imm_{[17:15]}$};
+\fill [black!5]  (4.000000,-5.000000) rectangle (7.000000,-4.000000);
+\draw [black!90]  (4.000000,-5.000000) rectangle (7.000000,-4.000000);
+\node at (5.500000,-4.500000) [font=\scriptsize] {$rb_{[17:15]}$};
+\fill [black!5]  (1.000000,-5.000000) rectangle (4.000000,-4.000000);
+\draw [black!90]  (1.000000,-5.000000) rectangle (4.000000,-4.000000);
+\node at (2.500000,-4.500000) [font=\scriptsize] {$ra_{[17:15]}$};
+\fill [black!5]  (15.000000,-6.000000) rectangle (17.000000,-5.000000);
+\draw [black!90]  (15.000000,-6.000000) rectangle (17.000000,-5.000000);
+\node at (16.000000,-5.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-6.000000) rectangle (15.000000,-5.000000);
+\draw [black!90]  (10.000000,-6.000000) rectangle (15.000000,-5.000000);
+\node at (12.500000,-5.500000) [font=\scriptsize] {$opcode_{[34:30]}$};
+\fill [black!5]  (7.000000,-6.000000) rectangle (10.000000,-5.000000);
+\draw [black!90]  (7.000000,-6.000000) rectangle (10.000000,-5.000000);
+\node at (8.500000,-5.500000) [font=\scriptsize] {$imm_{[20:18]}$};
+\fill [black!5]  (4.000000,-6.000000) rectangle (7.000000,-5.000000);
+\draw [black!90]  (4.000000,-6.000000) rectangle (7.000000,-5.000000);
+\node at (5.500000,-5.500000) [font=\scriptsize] {$rb_{[20:18]}$};
+\fill [black!5]  (1.000000,-6.000000) rectangle (4.000000,-5.000000);
+\draw [black!90]  (1.000000,-6.000000) rectangle (4.000000,-5.000000);
+\node at (2.500000,-5.500000) [font=\scriptsize] {$ra_{[20:18]}$};
+\fill [black!5]  (15.000000,-7.000000) rectangle (17.000000,-6.000000);
+\draw [black!90]  (15.000000,-7.000000) rectangle (17.000000,-6.000000);
+\node at (16.000000,-6.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-7.000000) rectangle (15.000000,-6.000000);
+\draw [black!90]  (10.000000,-7.000000) rectangle (15.000000,-6.000000);
+\node at (12.500000,-6.500000) [font=\scriptsize] {$opcode_{[39:35]}$};
+\fill [black!5]  (7.000000,-7.000000) rectangle (10.000000,-6.000000);
+\draw [black!90]  (7.000000,-7.000000) rectangle (10.000000,-6.000000);
+\node at (8.500000,-6.500000) [font=\scriptsize] {$imm_{[23:21]}$};
+\fill [black!5]  (4.000000,-7.000000) rectangle (7.000000,-6.000000);
+\draw [black!90]  (4.000000,-7.000000) rectangle (7.000000,-6.000000);
+\node at (5.500000,-6.500000) [font=\scriptsize] {$rb_{[23:21]}$};
+\fill [black!5]  (1.000000,-7.000000) rectangle (4.000000,-6.000000);
+\draw [black!90]  (1.000000,-7.000000) rectangle (4.000000,-6.000000);
+\node at (2.500000,-6.500000) [font=\scriptsize] {$ra_{[23:21]}$};
+\end{tikzpicture}
+\end{center}
+\begin{center}
+
+\vspace{2mm}
+
+
+\scriptsize{\textit{\textbf{three operand}}}
+
+
+\vspace{2mm}
+
+\begin{tikzpicture}[scale=0.5]
+\node at (-16.000000,0.500000) [anchor=west] {\texttt{op3r\_128 \# op ra, rb, rc}};
+
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (7.500000,1.250000) [font=\scriptsize] {9};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (4.500000,1.250000) [font=\scriptsize] {12};
+\node at (6.500000,1.250000) [font=\scriptsize] {10};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (3.500000,1.250000) [font=\scriptsize] {13};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (7.000000,1.000000) -- (7.000000,1.500000);
+\draw (4.000000,1.000000) -- (4.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (8.500000,0.500000) [font=\scriptsize] {$ra_{[2:0]}$};
+\fill [black!5]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\draw [black!90]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$rb_{[2:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (8.500000,-0.500000) [font=\scriptsize] {$ra_{[5:3]}$};
+\fill [black!5]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
+\draw [black!90]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
+\node at (5.500000,-0.500000) [font=\scriptsize] {$rb_{[5:3]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\node at (2.500000,-0.500000) [font=\scriptsize] {$rc_{[5:3]}$};
+\fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\node at (16.000000,-1.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
+\fill [black!5]  (7.000000,-2.000000) rectangle (10.000000,-1.000000);
+\draw [black!90]  (7.000000,-2.000000) rectangle (10.000000,-1.000000);
+\node at (8.500000,-1.500000) [font=\scriptsize] {$ra_{[8:6]}$};
+\fill [black!5]  (4.000000,-2.000000) rectangle (7.000000,-1.000000);
+\draw [black!90]  (4.000000,-2.000000) rectangle (7.000000,-1.000000);
+\node at (5.500000,-1.500000) [font=\scriptsize] {$rb_{[8:6]}$};
+\fill [black!5]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
+\draw [black!90]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
+\node at (2.500000,-1.500000) [font=\scriptsize] {$rc_{[8:6]}$};
+\fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\node at (16.000000,-2.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
+\fill [black!5]  (7.000000,-3.000000) rectangle (10.000000,-2.000000);
+\draw [black!90]  (7.000000,-3.000000) rectangle (10.000000,-2.000000);
+\node at (8.500000,-2.500000) [font=\scriptsize] {$ra_{[11:9]}$};
+\fill [black!5]  (4.000000,-3.000000) rectangle (7.000000,-2.000000);
+\draw [black!90]  (4.000000,-3.000000) rectangle (7.000000,-2.000000);
+\node at (5.500000,-2.500000) [font=\scriptsize] {$rb_{[11:9]}$};
+\fill [black!5]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
+\draw [black!90]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
+\node at (2.500000,-2.500000) [font=\scriptsize] {$rc_{[11:9]}$};
+\fill [black!5]  (15.000000,-4.000000) rectangle (17.000000,-3.000000);
+\draw [black!90]  (15.000000,-4.000000) rectangle (17.000000,-3.000000);
+\node at (16.000000,-3.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-4.000000) rectangle (15.000000,-3.000000);
+\draw [black!90]  (10.000000,-4.000000) rectangle (15.000000,-3.000000);
+\node at (12.500000,-3.500000) [font=\scriptsize] {$opcode_{[24:20]}$};
+\fill [black!5]  (7.000000,-4.000000) rectangle (10.000000,-3.000000);
+\draw [black!90]  (7.000000,-4.000000) rectangle (10.000000,-3.000000);
+\node at (8.500000,-3.500000) [font=\scriptsize] {$ra_{[14:12]}$};
+\fill [black!5]  (4.000000,-4.000000) rectangle (7.000000,-3.000000);
+\draw [black!90]  (4.000000,-4.000000) rectangle (7.000000,-3.000000);
+\node at (5.500000,-3.500000) [font=\scriptsize] {$rb_{[14:12]}$};
+\fill [black!5]  (1.000000,-4.000000) rectangle (4.000000,-3.000000);
+\draw [black!90]  (1.000000,-4.000000) rectangle (4.000000,-3.000000);
+\node at (2.500000,-3.500000) [font=\scriptsize] {$rc_{[14:12]}$};
+\fill [black!5]  (15.000000,-5.000000) rectangle (17.000000,-4.000000);
+\draw [black!90]  (15.000000,-5.000000) rectangle (17.000000,-4.000000);
+\node at (16.000000,-4.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-5.000000) rectangle (15.000000,-4.000000);
+\draw [black!90]  (10.000000,-5.000000) rectangle (15.000000,-4.000000);
+\node at (12.500000,-4.500000) [font=\scriptsize] {$opcode_{[29:25]}$};
+\fill [black!5]  (7.000000,-5.000000) rectangle (10.000000,-4.000000);
+\draw [black!90]  (7.000000,-5.000000) rectangle (10.000000,-4.000000);
+\node at (8.500000,-4.500000) [font=\scriptsize] {$ra_{[17:15]}$};
+\fill [black!5]  (4.000000,-5.000000) rectangle (7.000000,-4.000000);
+\draw [black!90]  (4.000000,-5.000000) rectangle (7.000000,-4.000000);
+\node at (5.500000,-4.500000) [font=\scriptsize] {$rb_{[17:15]}$};
+\fill [black!5]  (1.000000,-5.000000) rectangle (4.000000,-4.000000);
+\draw [black!90]  (1.000000,-5.000000) rectangle (4.000000,-4.000000);
+\node at (2.500000,-4.500000) [font=\scriptsize] {$rc_{[17:15]}$};
+\fill [black!5]  (15.000000,-6.000000) rectangle (17.000000,-5.000000);
+\draw [black!90]  (15.000000,-6.000000) rectangle (17.000000,-5.000000);
+\node at (16.000000,-5.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-6.000000) rectangle (15.000000,-5.000000);
+\draw [black!90]  (10.000000,-6.000000) rectangle (15.000000,-5.000000);
+\node at (12.500000,-5.500000) [font=\scriptsize] {$opcode_{[34:30]}$};
+\fill [black!5]  (7.000000,-6.000000) rectangle (10.000000,-5.000000);
+\draw [black!90]  (7.000000,-6.000000) rectangle (10.000000,-5.000000);
+\node at (8.500000,-5.500000) [font=\scriptsize] {$ra_{[20:18]}$};
+\fill [black!5]  (4.000000,-6.000000) rectangle (7.000000,-5.000000);
+\draw [black!90]  (4.000000,-6.000000) rectangle (7.000000,-5.000000);
+\node at (5.500000,-5.500000) [font=\scriptsize] {$rb_{[20:18]}$};
+\fill [black!5]  (1.000000,-6.000000) rectangle (4.000000,-5.000000);
+\draw [black!90]  (1.000000,-6.000000) rectangle (4.000000,-5.000000);
+\node at (2.500000,-5.500000) [font=\scriptsize] {$rc_{[20:18]}$};
+\fill [black!5]  (15.000000,-7.000000) rectangle (17.000000,-6.000000);
+\draw [black!90]  (15.000000,-7.000000) rectangle (17.000000,-6.000000);
+\node at (16.000000,-6.500000) [font=\scriptsize] {\bf 11};
+\fill [black!5]  (10.000000,-7.000000) rectangle (15.000000,-6.000000);
+\draw [black!90]  (10.000000,-7.000000) rectangle (15.000000,-6.000000);
+\node at (12.500000,-6.500000) [font=\scriptsize] {$opcode_{[39:35]}$};
+\fill [black!5]  (7.000000,-7.000000) rectangle (10.000000,-6.000000);
+\draw [black!90]  (7.000000,-7.000000) rectangle (10.000000,-6.000000);
+\node at (8.500000,-6.500000) [font=\scriptsize] {$ra_{[23:21]}$};
+\fill [black!5]  (4.000000,-7.000000) rectangle (7.000000,-6.000000);
+\draw [black!90]  (4.000000,-7.000000) rectangle (7.000000,-6.000000);
+\node at (5.500000,-6.500000) [font=\scriptsize] {$rb_{[23:21]}$};
+\fill [black!5]  (1.000000,-7.000000) rectangle (4.000000,-6.000000);
+\draw [black!90]  (1.000000,-7.000000) rectangle (4.000000,-6.000000);
+\node at (2.500000,-6.500000) [font=\scriptsize] {$rc_{[23:21]}$};
+\end{tikzpicture}
+\end{center}
+\end{document}
