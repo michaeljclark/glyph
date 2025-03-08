@@ -19,6 +19,8 @@
 \node [above,scale=0.9,anchor=south] at (32,4)  {\textbf{instruction stream (pc-relative)}};
 \node [above,scale=0.9,anchor=south] at (8,2)  {\textbf{16-bit instruction packet}};
 
+\node [font=\tiny,below,scale=0.9,anchor=north] at (-1.5,0.66)  {$\textbf{(pc)}$};
+
 \fill [black!15] (0,0)    rectangle (9,1);
 \draw [black!50] (0,0)    rectangle (9,1);
 \node [font=\tiny,below,scale=0.9,anchor=north] at (0.5,0.66)  {$\textbf{13}$};
@@ -49,6 +51,8 @@
 
 \node [above,scale=0.9,anchor=south] at (32,-5)  {\textbf{constant stream (ib-relative)}};
 \node [above,scale=0.9,anchor=south] at (8,-7)  {\textbf{64-bit immediate data}};
+
+\node [font=\tiny,below,scale=0.9,anchor=north] at (-1.5,-8.33)  {$\textbf{(ib)}$};
 
 \foreach \x in {0,1,2,3,4,5,6,7}
   \fill [black!15] (\x*8,-9)    rectangle (\x*8+8,-8);
