@@ -296,13 +296,13 @@ static inline int cpu_exec(cpu_state *cpu, i64 inst)
             cpu->r[rc(inst)] = -cpu->r[rb(inst)];
             break;
         case cpu_log_ctz:
-            cpu->r[rc(inst)] = __builtin_ctz(cpu->r[rb(inst)]);
+            cpu->r[rc(inst)] = __builtin_ctzll(cpu->r[rb(inst)]);
             break;
         case cpu_log_clz:
-            cpu->r[rc(inst)] = __builtin_clz(cpu->r[rb(inst)]);
+            cpu->r[rc(inst)] = __builtin_clzll(cpu->r[rb(inst)]);
             break;
         case cpu_log_pop:
-            cpu->r[rc(inst)] = __builtin_popcount(cpu->r[rb(inst)]);
+            cpu->r[rc(inst)] = __builtin_popcountll(cpu->r[rb(inst)]);
             break;
         default:
             return -1;
