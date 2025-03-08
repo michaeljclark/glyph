@@ -19,6 +19,8 @@ immediate blocks, unlike typical RISC architectures, mean relocations
 are simple word sizes like CISC architectures, are aligned and can use
 C-style structure packing rules.
 
+## architecture
+
 - 16-bit compressed instruction packets can access 8x64-bit registers.
 - (pc,ib) is a special program counter and immediate base register pair.
 - `ibl` adds 64-bit displacement ib(imm6*8) to link immediate blocks.
@@ -39,7 +41,9 @@ C-style structure packing rules.
   - 16/32/64/128-bit instruction packets with 2-bit size encoding.
   - presently only the 16-bit compressed packet has an encoding.
 
-## 16-bit opcodes
+## opcodes
+
+### 16-bit opcodes
 
 | instruction  | form         | code  | description                                 |
 |:-------------|:-------------|:------|:--------------------------------------------|
