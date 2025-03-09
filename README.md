@@ -65,10 +65,10 @@ C-style structure packing rules.
 |              |              |       |   (pc,ib) += ib(imm6*8,i32x2) - i32x2(lr);  |
 | lib.i64      | op1r_imm6_16 | 00111 | **load-imm-ib** rc,ib(imm6*8,i64)           |
 | li.i64       | op1r_imm6_16 | 01000 | **load-imm** rc,simm6                       |
-| addi.i64     | op1r_imm6_16 | 01001 | **add-imm** rc,simm6                        |
-| srli.i64     | op2r_imm3_16 | 01010 | **shift-right-logical-imm** rc,rb,uimm3     |
-| srai.i64     | op2r_imm3_16 | 01011 | **shift-right-arith-imm** rc,rb,uimm3       |
-| slli.i64     | op2r_imm3_16 | 01100 | **shift-left-logical-imm** rc,rb,uimm3      |
+| srli.i64     | op2r_imm3_16 | 01001 | **shift-right-logical-imm** rc,rb,uimm3     |
+| srai.i64     | op2r_imm3_16 | 01010 | **shift-right-arith-imm** rc,rb,uimm3       |
+| slli.i64     | op2r_imm3_16 | 01011 | **shift-left-logical-imm** rc,rb,uimm3      |
+| addi.i64     | op1r_imm6_16 | 01100 | **add-imm** rc,simm6                        |
 | load.i8      | op2r_imm3_16 | 01101 | **load-i8** rc,uimm3(rb)                    |
 | load.u8      | op2r_imm3_16 | 01110 | **load-u8** rc,uimm3(rb)                    |
 | load.i64     | op2r_imm3_16 | 01111 | **load-i64** rc,uimm3(rb)                   |
@@ -78,14 +78,14 @@ C-style structure packing rules.
 | store.i64    | op2r_imm3_16 | 10011 | **store-i64** rc,uimm3(rb)                  |
 | pin          | op3r_16      | 10100 | **pack-indirect** rc,rb,ra                  |
 |              |              |       |   i32x2(lr) = (pc-i32,ib-i32);              |
-| srl.i64      | op3r_16      | 10101 | **shift-right-logical** rc,rb,ra            |
-| sra.i64      | op3r_16      | 10110 | **shift-right-arith** rc,rb,ra              |
-| sll.i64      | op3r_16      | 10111 | **shift-left-logical** rc,rb,ra             |
-| add.i64      | op3r_16      | 11000 | **add** rc,rb,ra                            |
-| sub.i64      | op3r_16      | 11001 | **sub** rc,rb,ra                            |
-| and.i64      | op3r_16      | 11010 | **and** rc,rb,ra                            |
-| or.i64       | op3r_16      | 11011 | **or** rc,rb,ra                             |
-| xor.i64      | op3r_16      | 11100 | **xor** rc,rb,ra                            |
+| and.i64      | op3r_16      | 10101 | **and** rc,rb,ra                            |
+| or.i64       | op3r_16      | 10110 | **or** rc,rb,ra                             |
+| xor.i64      | op3r_16      | 10111 | **xor** rc,rb,ra                            |
+| sub.i64      | op3r_16      | 11000 | **sub** rc,rb,ra                            |
+| srl.i64      | op3r_16      | 11001 | **shift-right-logical** rc,rb,ra            |
+| sra.i64      | op3r_16      | 11010 | **shift-right-arith** rc,rb,ra              |
+| sll.i64      | op3r_16      | 11011 | **shift-left-logical** rc,rb,ra             |
+| add.i64      | op3r_16      | 11100 | **add** rc,rb,ra                            |
 | nop          | op0r_imm9_16 | 11101 | **nop** imm9                                |
 | dump         | op0r_imm9_16 | 11110 | **dump** imm9                               |
 | illegal      | op0r_imm9_16 | 11111 | **illegal** imm9                            |
