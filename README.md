@@ -56,6 +56,7 @@ C-style structure packing rules.
 | 02 | b            | op0r_imm9_16 | 00010 | **branch** pcrel9*2+2                       |
 | 03 | rsrv1        | op0r_imm9_16 | 00011 | **rsrv1** imm9                              |
 | 04 | ibl          | op1r_imm6_16 | 00100 | **ib-link** rc,ibrel(imm6*8,i64)            |
+|    |              |              |       |   rc = ib;                                  |
 |    |              |              |       |   ib += ib(imm6*8,i64)                      |
 | 05 | jalib        | op1r_imm6_16 | 00101 | **jump-and-link-ib** rc,ibrel(imm6*8,i32x2) |
 |    |              |              |       |   (opc,oib) = (pc+2,ib);                    |
