@@ -14,8 +14,10 @@ immediate base register branches like the program counter and the call
 instructions sets _(pc,ib)_ together for procedure calls and returns.
 
 glyph uses relative addresses in its link register which is different
-to typical RISC architectures. glyph achieves this by packing two 32-bit
-relative _(pc,ib)_ displacements into an _i32x2_ vector.
+to typical RISC architectures. glyph needs to do this for the branch
+instruction to fit _(pc,ib)_ into the link register for compatibility.
+glyph achieves this by packing together two 32-bit relative _(pc,ib)_
+displacements in an _i32x2_ vector.
 
 immediate blocks can be linked together using relative displacements
 and switched using a constant branch instruction detailed below.
