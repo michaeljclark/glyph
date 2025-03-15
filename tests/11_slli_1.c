@@ -8,7 +8,7 @@ void t()
     };
     u16 i[] = {
         enc_li_i64(0,1),
-        enc_slli_i64(1,0,2),
+        enc_slli_i64(0,16),
         enc_break(0)
     };
     run_test("slli_1", c, sizeof(c), i, sizeof(i));

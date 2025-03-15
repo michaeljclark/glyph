@@ -5,13 +5,14 @@
 void t()
 {
     u64 c[] = {
+        0xa0000000aull
     };
     u16 i[] = {
-        enc_li_i64(0,-8),
-        enc_srli_i64(0,16),
+        enc_li_i64(0,1),
+        enc_addib_i64(1,0,0),
         enc_break(0)
     };
-    run_test("srli_1", c, sizeof(c), i, sizeof(i));
+    run_test("addib_1", c, sizeof(c), i, sizeof(i));
 }
 
 int main(int argc, char **argv)

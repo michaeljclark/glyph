@@ -53,33 +53,33 @@ C-style structure packing rules.
 
 | nr | instruction  | form         | code  | description                                 |
 |:---|:-------------|:-------------|:------|:--------------------------------------------|
-| 00 | break        | op0r_imm9_16 | 00000 | **break** imm9                              |
-| 01 | j            | op0r_imm9_16 | 00001 | **jump** pcrel9*2+2                         |
-| 02 | b            | op0r_imm9_16 | 00010 | **branch** pcrel9*2+2                       |
-| 03 | rsrv1        | op0r_imm9_16 | 00011 | **rsrv1** imm9                              |
-| 04 | ibl          | op1r_imm6_16 | 00100 | **ib-link** rc,ibrel(imm6*8,i64)            |
+| 00 | break        | op0r_imm9_16 | 00000 | **break** uimm9                             |
+| 01 | j            | op0r_imm9_16 | 00001 | **jump** simm9*2+2                          |
+| 02 | b            | op0r_imm9_16 | 00010 | **branch** simm9*2+2                        |
+| 03 | ibl          | op1r_imm6_16 | 00100 | **ib-link** rc,ib64(uimm6*8)                |
 |    |              |              |       |   rc = ib;                                  |
-|    |              |              |       |   ib += ib(imm6*8,i64)                      |
-| 05 | jalib        | op1r_imm6_16 | 00101 | **jump-and-link-ib** rc,ibrel(imm6*8,i32x2) |
+|    |              |              |       |   ib += ib64(uimm6*8)                       |
+| 04 | jalib        | op1r_imm6_16 | 00101 | **jump-and-link-ib** rc,ib32x2(uimm6*8)     |
 |    |              |              |       |   (opc,oib) = (pc+2,ib);                    |
-|    |              |              |       |   (pc,ib) += ib(imm6*8,i32x2);              |
-|    |              |              |       |   i32x2(lr) = ib(imm6*8,i32x2);             |
-| 06 | jtlib        | op1r_imm6_16 | 00110 | **jump-to-link-ib** rc,ibrel(imm6*8,i32x2)  |
-|    |              |              |       |   (pc,ib) += ib(imm6*8,i32x2) - i32x2(lr);  |
-| 07 | lib.i64      | op1r_imm6_16 | 00111 | **load-imm-ib** rc,ib(imm6*8,i64)           |
-| 08 | li.i64       | op1r_imm6_16 | 01000 | **load-imm** rc,simm6                       |
-| 09 | srli.i64     | op2r_imm3_16 | 01001 | **shift-right-logical-imm** rc,rb,uimm3     |
-| 10 | srai.i64     | op2r_imm3_16 | 01010 | **shift-right-arith-imm** rc,rb,uimm3       |
-| 11 | slli.i64     | op2r_imm3_16 | 01011 | **shift-left-logical-imm** rc,rb,uimm3      |
-| 12 | addi.i64     | op1r_imm6_16 | 01100 | **add-imm** rc,simm6                        |
-| 13 | load.i8      | op2r_imm3_16 | 01101 | **load-i8** rc,uimm3(rb)                    |
-| 14 | load.u8      | op2r_imm3_16 | 01110 | **load-u8** rc,uimm3(rb)                    |
-| 15 | load.i64     | op2r_imm3_16 | 01111 | **load-i64** rc,uimm3(rb)                   |
-| 16 | cmp.i64      | op2r_fun3_16 | 10000 | **cmp** rc,rb fun3=lg,ge,eq,ne,ltu,geu      |
-| 17 | log.i64      | op2r_fun3_16 | 10001 | **log** rc,rb fun3=not,neg,ctz,clz,pop      |
-| 18 | store.i8     | op2r_imm3_16 | 10010 | **store-i8** rc,uimm3(rb)                   |
-| 19 | store.i64    | op2r_imm3_16 | 10011 | **store-i64** rc,uimm3(rb)                  |
-| 20 | pin          | op3r_16      | 10100 | **pack-indirect** rc,rb,ra                  |
+|    |              |              |       |   (pc,ib) += ib32x2(uimm6*8);               |
+|    |              |              |       |   i32x2(lr) = ib32x2(uimm6*8);              |
+| 05 | jtlib        | op1r_imm6_16 | 00110 | **jump-to-link-ib** rc,ib32x2(uimm6*8)      |
+|    |              |              |       |   (pc,ib) += ib32x2(uimm6*8) - i32x2(lr);   |
+| 06 | lib.i64      | op1r_imm6_16 | 00110 | **load-ib** rc,ib64(uimm6*8)                |
+| 07 | li.i64       | op1r_imm6_16 | 00111 | **load-imm6** rc,simm6                      |
+| 08 | addi.i64     | op1r_imm6_16 | 01000 | **add-imm6** rc,simm6                       |
+| 09 | srli.i64     | op1r_imm6_16 | 01001 | **shift-right-logical-imm** rc,uimm6        |
+| 10 | srai.i64     | op1r_imm6_16 | 01010 | **shift-right-arith-imm** rc,uimm6          |
+| 11 | slli.i64     | op1r_imm6_16 | 01011 | **shift-left-logical-imm** rc,uimm6         |
+| 12 | addib.i64    | op2r_imm3_16 | 01100 | **add-ib** rc,rb,ib64(uimm3*8)              |
+| 13 | load.i64     | op2r_imm3_16 | 01101 | **load** rc,uimm3(rb)                       |
+| 14 | loadib.i64   | op2r_imm3_16 | 01110 | **load** rc,ib64(uimm3*8)(rb)               |
+| 15 | cmp.i64      | op2r_fun3_16 | 01111 | **cmp** rc,rb fun3=lg,ge,eq,ne,ltu,geu      |
+| 16 | subib.i64    | op2r_imm3_16 | 10000 | **sub-ib** rc,rb,ib64(uimm3*8)              |
+| 17 | store.i64    | op2r_imm3_16 | 10001 | **store** rc,uimm3(rb)                      |
+| 18 | storeib.i64  | op2r_imm3_16 | 10010 | **store** rc,ib64(uimm3*8)(rb)              |
+| 19 | log.i64      | op2r_fun3_16 | 10011 | **log** rc,rb fun3=not,neg,ctz,clz,pop      |
+| 20 | pin.i64      | op3r_16      | 10100 | **pack-indirect** rc,rb,ra                  |
 |    |              |              |       |   i32x2(lr) = (pc-i32,ib-i32);              |
 | 21 | and.i64      | op3r_16      | 10101 | **and** rc,rb,ra                            |
 | 22 | or.i64       | op3r_16      | 10110 | **or** rc,rb,ra                             |
@@ -89,9 +89,9 @@ C-style structure packing rules.
 | 26 | sra.i64      | op3r_16      | 11010 | **shift-right-arith** rc,rb,ra              |
 | 27 | sll.i64      | op3r_16      | 11011 | **shift-left-logical** rc,rb,ra             |
 | 28 | add.i64      | op3r_16      | 11100 | **add** rc,rb,ra                            |
-| 29 | nop          | op0r_imm9_16 | 11101 | **nop** imm9                                |
-| 30 | dump         | op0r_imm9_16 | 11110 | **dump** imm9                               |
-| 31 | illegal      | op0r_imm9_16 | 11111 | **illegal** imm9                            |
+| 29 | nop          | op0r_imm9_16 | 11101 | **nop** uimm9                               |
+| 30 | dump         | op0r_imm9_16 | 11110 | **dump** uimm9                              |
+| 31 | illegal      | op0r_imm9_16 | 11111 | **illegal** uimm9                           |
 
 ## instructions formats
 

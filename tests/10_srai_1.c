@@ -8,7 +8,7 @@ void t()
     };
     u16 i[] = {
         enc_li_i64(0,-8),
-        enc_srai_i64(1,0,2),
+        enc_srai_i64(0,2),
         enc_break(0)
     };
     run_test("srai_1", c, sizeof(c), i, sizeof(i));
