@@ -96,11 +96,12 @@ enum
 
 enum
 {
-    cpu_log_not = 0b000,
-    cpu_log_neg = 0b001,
-    cpu_log_ctz = 0b010,
-    cpu_log_clz = 0b011,
-    cpu_log_pop = 0b100,
+    cpu_log_mov = 0b000,
+    cpu_log_not = 0b001,
+    cpu_log_neg = 0b010,
+    cpu_log_popc = 0b011,
+    cpu_log_ctz = 0b100,
+    cpu_log_clz = 0b101,
 };
 
 /*
@@ -295,20 +296,23 @@ static inline int cpu_exec(cpu_state *cpu, i64 inst)
         break;
     case cpu_op_log_i64 >> 2:
         switch(uimm3(inst)) {
+        case cpu_log_mov:
+            cpu->r[rc(inst)] = cpu->r[rb(inst)];
+            break;
         case cpu_log_not:
             cpu->r[rc(inst)] = ~cpu->r[rb(inst)];
             break;
         case cpu_log_neg:
             cpu->r[rc(inst)] = -cpu->r[rb(inst)];
             break;
+        case cpu_log_popc:
+            cpu->r[rc(inst)] = __builtin_popcountll(cpu->r[rb(inst)]);
+            break;
         case cpu_log_ctz:
             cpu->r[rc(inst)] = __builtin_ctzll(cpu->r[rb(inst)]);
             break;
         case cpu_log_clz:
             cpu->r[rc(inst)] = __builtin_clzll(cpu->r[rb(inst)]);
-            break;
-        case cpu_log_pop:
-            cpu->r[rc(inst)] = __builtin_popcountll(cpu->r[rb(inst)]);
             break;
         default:
             return -1;
@@ -436,20 +440,23 @@ static inline int cpu_disasm(char *buf, size_t len, i64 inst, i64 pc_offset)
         break;
     case cpu_op_log_i64 >> 2:
         switch(uimm3(inst)) {
+        case cpu_log_mov:
+            return snprintf(buf, len, "mov.i64 r%d, r%d",
+                rc(inst), rb(inst));
         case cpu_log_not:
             return snprintf(buf, len, "not.i64 r%d, r%d",
                 rc(inst), rb(inst));
         case cpu_log_neg:
             return snprintf(buf, len, "neg.i64 r%d, r%d",
                 rc(inst), rb(inst));
+        case cpu_log_popc:
+            return snprintf(buf, len, "popc.i64 r%d, r%d",
+                rc(inst), rb(inst));
         case cpu_log_ctz:
             return snprintf(buf, len, "ctz.i64 r%d, r%d",
                 rc(inst), rb(inst));
         case cpu_log_clz:
             return snprintf(buf, len, "clz.i64 r%d, r%d",
-                rc(inst), rb(inst));
-        case cpu_log_pop:
-            return snprintf(buf, len, "pop.i64 r%d, r%d",
                 rc(inst), rb(inst));
         default:
             return snprintf(buf, len, "invalid");
