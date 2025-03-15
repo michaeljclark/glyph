@@ -29,23 +29,21 @@ C-style structure packing rules.
 
 - 16-bit compressed instruction packets can access 8x64-bit registers.
 - (pc,ib) is a special program counter and immediate base register pair.
-- `ibl` adds 64-bit displacement ib(imm6*8) to link immediate blocks.
-  - immediate blocks contain constants used by the current block.
-  - _ibrel_ is immediate block relative indirect addressing for constants.
-- `lib` uses unsigned 6-bit displacement to access 64x64-bit constants (64x8).
-- `jalib` _(call)_ branch links address and adds ibrel i32x2 disp to (pc,ib).
-  - links i32x2 _ibrel_ displacement of program counter and immediate base.
-  - jumps to _ibrel_ (pc,ib) displacement in constant.
-- `jtlib` _(ret)_ branch subtracts link and adds ibrel i32x2 disp to (pc,ib).
-  - jumps to link register plus i32x2 _ibrel_ (pc,ib) displacement to entry.
-  - returns from calls and requires a block-entry delta relocation.
-- `pin` packs two absolute addresses as relative displacements from (pc,ib).
-  - is used to call virtual functions within +/-2GiB from (pc,ib).
-  - composes relative (pc,ib) address vector.
+- `ibl` _(immediate-block-link)_ adds a 64-bit displacement to the
+  immediate base register.
+- `lib` _(load-immediate-block)_ uses unsigned 6-bit displacement to access
+  constants.
+- `jalib` _(jump-and-link-immediate-block)_ or _(call)_ branch links address
+  and adds constants to (pc,ib).
+- `jtlib` _(jump-to-link-immediate-block)_ or _(ret)_ branch subtracts link
+  and adds constants from (pc,ib).
+- `pin` _(pack-indirect)_ packs two absolute addresses as relative
+  displacements from (pc,ib).
 - link register contains packed i32x2 relative displacement to function entry.
 - instruction format is detailed here: [packet.pdf](/doc/packet.pdf).
   - 16/32/64/128-bit instruction packets with 2-bit size encoding.
   - presently only the 16-bit compressed packet has an encoding.
+
 
 ## opcodes
 
