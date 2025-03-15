@@ -319,8 +319,8 @@ static inline int cpu_exec(cpu_state *cpu, i64 inst)
         }
         break;
     case cpu_op_pin_i64 >> 2:
-        upc = -(cpu->r[ra(inst)] - (cpu->pc + 2));
-        uib = -(cpu->r[rb(inst)] - cpu->ib);
+        upc = cpu->pc - cpu->r[ra(inst)] + 2;
+        uib = cpu->ib - cpu->r[rb(inst)];
         tmp = (upc << 32 >> 32) | (uib << 32);
         cpu->r[rc(inst)] = tmp;
         break;

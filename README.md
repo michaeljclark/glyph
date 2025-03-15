@@ -60,9 +60,9 @@ C-style structure packing rules.
 | 04 | jalib        | op1r_imm6_16 | 00101 | **jump-and-link-ib** rc,ib32x2(uimm6*8)     |
 |    |              |              |       |   (opc,oib) = (pc+2,ib);                    |
 |    |              |              |       |   (pc,ib) += ib32x2(uimm6*8);               |
-|    |              |              |       |   i32x2(lr) = ib32x2(uimm6*8);              |
+|    |              |              |       |   i32x2(rc) = ib32x2(uimm6*8);              |
 | 05 | jtlib        | op1r_imm6_16 | 00110 | **jump-to-link-ib** rc,ib32x2(uimm6*8)      |
-|    |              |              |       |   (pc,ib) += ib32x2(uimm6*8) - i32x2(lr);   |
+|    |              |              |       |   (pc,ib) += ib32x2(uimm6*8) - i32x2(rc);   |
 | 06 | lib.i64      | op1r_imm6_16 | 00110 | **load-ib** rc,ib64(uimm6*8)                |
 | 07 | li.i64       | op1r_imm6_16 | 00111 | **load-imm6** rc,simm6                      |
 | 08 | addi.i64     | op1r_imm6_16 | 01000 | **add-imm6** rc,simm6                       |
@@ -78,7 +78,7 @@ C-style structure packing rules.
 | 18 | storeib.i64  | op2r_imm3_16 | 10010 | **store** rc,ib64(uimm3*8)(rb)              |
 | 19 | log.i64      | op2r_fun3_16 | 10011 | **log** rc,rb fun3=mov,not,neg,ctz,clz,popc |
 | 20 | pin.i64      | op3r_16      | 10100 | **pack-indirect** rc,rb,ra                  |
-|    |              |              |       |   i32x2(lr) = (pc-i32,ib-i32);              |
+|    |              |              |       |   i32x2(rc) = (pc-ra+2,ib-rb);              |
 | 21 | and.i64      | op3r_16      | 10101 | **and** rc,rb,ra                            |
 | 22 | or.i64       | op3r_16      | 10110 | **or** rc,rb,ra                             |
 | 23 | xor.i64      | op3r_16      | 10111 | **xor** rc,rb,ra                            |
