@@ -92,6 +92,33 @@ structure packing and alignment rules.
 | 30 | dump         | op0r_imm9_16 | 11110 | **dump** uimm9                              |
 | 31 | illegal      | op0r_imm9_16 | 11111 | **illegal** uimm9                           |
 
+## registers
+
+### 16-bit opcode register allocation
+
+a careful choice of the 8 registers accessible to the 16-bit opcodes is
+required to optimize the number of instructions that can be encoded in
+16-bit packets:
+
+- 2 blocks of 4 contiguous callee saved and caller saved registers.
+- 2 special registers, 2 argument registers, 1 temporary register,
+  and 3 save registers.
+- 3 save registers to avoid excessive spilling around function calls.
+- 1 temporary register to avoid spilling arguments to free a temporary.
+
+### 16-bit opcode register table
+
+| nr | name  | alias | description                                 | save   |
+|:---|:------|:------|:--------------------------------------------|:-------|
+| 01 | r0    | sp    | stack pointer                               | callee |
+| 01 | r1    | s0/fp | saved register 0 / frame pointer            | callee |
+| 02 | r2    | s1    | saved register 1                            | callee |
+| 03 | r3    | s2    | saved register 2                            | callee |
+| 05 | r4    | a0    | argument register 0                         | caller |
+| 06 | r5    | a1    | argument register 1                         | caller |
+| 07 | r6    | t0    | temporary register 0                        | caller |
+| 04 | r7    | ra    | return address / _(pc,ib)_ link vector      | caller |
+
 ## instructions formats
 
 glyph uses a super regular RISC encoding designed for vectorized decoders.
