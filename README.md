@@ -27,6 +27,10 @@ C-style structure packing rules.
 
 ## architecture
 
+- variable length instruction format supporting 16, 32, 64, and 128-bit
+  instruction packets.
+- instruction formats and 2-bit size encoding is detailed here:
+  [packet.pdf](/doc/packet.pdf).
 - 16-bit compressed instruction packets can access 8x64-bit registers.
 - (pc,ib) is a special program counter and immediate base register pair.
 - `ibl` _(immediate-block-link)_ adds a 64-bit displacement to the
@@ -40,9 +44,6 @@ C-style structure packing rules.
 - `pin` _(pack-indirect)_ packs two absolute addresses as relative
   displacements from (pc,ib).
 - link register contains packed i32x2 relative displacement to function entry.
-- instruction format is detailed here: [packet.pdf](/doc/packet.pdf).
-  - 16/32/64/128-bit instruction packets with 2-bit size encoding.
-  - presently only the 16-bit compressed packet has an encoding.
 
 
 ## opcodes
