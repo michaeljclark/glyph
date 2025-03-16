@@ -20,10 +20,10 @@ glyph achieves this by packing together two 32-bit relative _(pc,ib)_
 displacements in an _i32x2_ vector.
 
 immediate blocks can be linked together using relative displacements
-and switched using a constant branch instruction detailed below.
-immediate blocks, unlike typical RISC architectures, mean relocations
-are simple word sizes like CISC architectures, are aligned and can use
-C-style structure packing rules.
+and switched using the constant branch instruction detailed below.
+immediate blocks, unlike typical RISC architectures, mean that most
+relocations are word sized like CISC architectures, and can use C-style
+structure packing and alignment rules.
 
 ## architecture
 
@@ -33,6 +33,7 @@ C-style structure packing rules.
   [packet.pdf](/doc/packet.pdf).
 - 16-bit compressed instruction packets can access 8x64-bit registers.
 - (pc,ib) is a special program counter and immediate base register pair.
+- link register contains packed i32x2 relative displacement to function entry.
 - `ibl` _(immediate-block-link)_ adds a 64-bit displacement to the
   immediate base register.
 - `lib` _(load-immediate-block)_ uses unsigned 6-bit displacement to access
@@ -43,8 +44,7 @@ C-style structure packing rules.
   and adds constants from (pc,ib).
 - `pin` _(pack-indirect)_ packs two absolute addresses as relative
   displacements from (pc,ib).
-- link register contains packed i32x2 relative displacement to function entry.
-
+- `ret` requires a relocation due to the use of relative link addresses.
 
 ## opcodes
 
