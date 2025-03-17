@@ -114,9 +114,9 @@ required to optimize the number of instructions that can be encoded in
 | 01 | r1    | s0/fp | saved register 0 / frame pointer            | callee |
 | 02 | r2    | s1    | saved register 1                            | callee |
 | 03 | r3    | s2    | saved register 2                            | callee |
-| 05 | r4    | a0    | argument register 0                         | caller |
-| 06 | r5    | a1    | argument register 1                         | caller |
-| 07 | r6    | t0    | temporary register 0                        | caller |
+| 05 | r4    | t0    | temporary register 0                        | caller |
+| 06 | r5    | a0    | argument register 0                         | caller |
+| 07 | r6    | a1    | argument register 1                         | caller |
 | 04 | r7    | ra    | return address / _(pc,ib)_ link vector      | caller |
 
 ## instructions formats
