@@ -72,8 +72,8 @@ enum
     cpu_op_sll_i64      = 0b11011 << 2, // op3r
     cpu_op_add_i64      = 0b11100 << 2, // op3r
     cpu_op_nop          = 0b11101 << 2, // op0r_imm9
-    cpu_op_dump         = 0b11110 << 2, // op0r_imm9
-    cpu_op_illegal      = 0b11111 << 2, // op0r_imm9
+    cpu_op_ud1          = 0b11110 << 2, // op0r_imm9
+    cpu_op_ud2          = 0b11111 << 2, // op0r_imm9
 };
 
 /*
@@ -203,7 +203,11 @@ static inline int cpu_exec(cpu_state *cpu, i64 inst)
     i64 tmp;
     switch (op) {
     case cpu_op_break >> 2:
-        return -1;
+        switch(uimm9(inst)) {
+        case 511: cpu_dump(cpu); break;
+        default: return -1;
+        }
+        break;
     case cpu_op_j >> 2:
         cpu->pc = cpu->pc + (simm9(inst) << 1) + 2;
         return 0;
@@ -354,10 +358,8 @@ static inline int cpu_exec(cpu_state *cpu, i64 inst)
         break;
     case cpu_op_nop >> 2:
         break;
-    case cpu_op_dump >> 2:
-        cpu_dump(cpu);
-        break;
-    case cpu_op_illegal >> 2:
+    case cpu_op_ud1 >> 2:
+    case cpu_op_ud2 >> 2:
         return -1;
     }
     cpu->pc = cpu->pc + 2;
@@ -505,11 +507,11 @@ static inline int cpu_disasm(char *buf, size_t len, i64 inst, i64 pc_offset)
     case cpu_op_nop >> 2:
         return snprintf(buf, len, "nop %llu",
             uimm9(inst));
-    case cpu_op_dump >> 2:
-        return snprintf(buf, len, "dump %llu",
+    case cpu_op_ud1 >> 2:
+        return snprintf(buf, len, "ud1 %llu",
             uimm9(inst));
-    case cpu_op_illegal >> 2:
-        return snprintf(buf, len, "illegal %llu",
+    case cpu_op_ud2 >> 2:
+        return snprintf(buf, len, "ud2 %llu",
             uimm9(inst));
     }
     return snprintf(buf, len, "invalid");
@@ -662,11 +664,11 @@ static inline i16 enc_nop(int imm9)
 {
     return cpu_op_nop | ((imm9 & 511)<<7);
 }
-static inline i16 enc_dump(int imm9)
+static inline i16 enc_ud1(int imm9)
 {
-    return cpu_op_dump | ((imm9 & 511)<<7);
+    return cpu_op_ud1 | ((imm9 & 511)<<7);
 }
-static inline i16 enc_illegal(int imm9)
+static inline i16 enc_ud2(int imm9)
 {
-    return cpu_op_illegal | ((imm9 & 511)<<7);
+    return cpu_op_ud2 | ((imm9 & 511)<<7);
 }

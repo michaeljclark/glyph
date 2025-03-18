@@ -91,8 +91,8 @@ structure packing and alignment rules.
 | 27 | sll.i64      | op3r_16      | 11011 | **shift-left-logical** rc,rb,ra             |
 | 28 | add.i64      | op3r_16      | 11100 | **add** rc,rb,ra                            |
 | 29 | nop          | op0r_imm9_16 | 11101 | **nop** uimm9                               |
-| 30 | dump         | op0r_imm9_16 | 11110 | **dump** uimm9                              |
-| 31 | illegal      | op0r_imm9_16 | 11111 | **illegal** uimm9                           |
+| 30 | ud1          | op0r_imm9_16 | 11110 | **ud1** uimm9                               |
+| 31 | ud2          | op0r_imm9_16 | 11111 | **ud2** uimm9                               |
 
 ## registers
 

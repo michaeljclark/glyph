@@ -13,7 +13,7 @@ void t()
         enc_jalib(7,0),
         enc_break(0),
         enc_lib_i64(0,1),
-        enc_dump(0),
+        enc_break(511),
         enc_jtlib(7,0)
     };
     run_test("jtlib_1", c, sizeof(c), i, sizeof(i));
