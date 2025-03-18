@@ -99,9 +99,10 @@ enum
     cpu_log_mov = 0b000,
     cpu_log_not = 0b001,
     cpu_log_neg = 0b010,
-    cpu_log_popc = 0b011,
+    cpu_log_bswap = 0b011,
     cpu_log_ctz = 0b100,
     cpu_log_clz = 0b101,
+    cpu_log_ctpop = 0b110,
 };
 
 /*
@@ -305,14 +306,17 @@ static inline int cpu_exec(cpu_state *cpu, i64 inst)
         case cpu_log_neg:
             cpu->r[rc(inst)] = -cpu->r[rb(inst)];
             break;
-        case cpu_log_popc:
-            cpu->r[rc(inst)] = __builtin_popcountll(cpu->r[rb(inst)]);
+        case cpu_log_bswap:
+            cpu->r[rc(inst)] = __builtin_bswap64(cpu->r[rb(inst)]);
             break;
         case cpu_log_ctz:
             cpu->r[rc(inst)] = __builtin_ctzll(cpu->r[rb(inst)]);
             break;
         case cpu_log_clz:
             cpu->r[rc(inst)] = __builtin_clzll(cpu->r[rb(inst)]);
+            break;
+        case cpu_log_ctpop:
+            cpu->r[rc(inst)] = __builtin_popcountll(cpu->r[rb(inst)]);
             break;
         default:
             return -1;
@@ -449,14 +453,17 @@ static inline int cpu_disasm(char *buf, size_t len, i64 inst, i64 pc_offset)
         case cpu_log_neg:
             return snprintf(buf, len, "neg.i64 r%d, r%d",
                 rc(inst), rb(inst));
-        case cpu_log_popc:
-            return snprintf(buf, len, "popc.i64 r%d, r%d",
+        case cpu_log_bswap:
+            return snprintf(buf, len, "bswap.i64 r%d, r%d",
                 rc(inst), rb(inst));
         case cpu_log_ctz:
             return snprintf(buf, len, "ctz.i64 r%d, r%d",
                 rc(inst), rb(inst));
         case cpu_log_clz:
             return snprintf(buf, len, "clz.i64 r%d, r%d",
+                rc(inst), rb(inst));
+        case cpu_log_ctpop:
+            return snprintf(buf, len, "ctpop.i64 r%d, r%d",
                 rc(inst), rb(inst));
         default:
             return snprintf(buf, len, "invalid");
