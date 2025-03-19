@@ -61,7 +61,7 @@ enum
     cpu_op_subib_i64    = 0b10000 << 2, // op2r_imm3
     cpu_op_store_i64    = 0b10001 << 2, // op2r_imm3
     cpu_op_storeib_i64  = 0b10010 << 2, // op2r_imm3
-    cpu_op_log_i64      = 0b10011 << 2, // op2r_fun3
+    cpu_op_logic_i64    = 0b10011 << 2, // op2r_fun3
     cpu_op_pin_i64      = 0b10100 << 2, // op3r
     cpu_op_and_i64      = 0b10101 << 2, // op3r
     cpu_op_or_i64       = 0b10110 << 2, // op3r
@@ -299,7 +299,7 @@ static inline int cpu_exec(cpu_state *cpu, i64 inst)
         tmp = cpu->r[rb(inst)] + cpu_const_i64(cpu, uimm3(inst));
         cpu_store_i64(cpu, tmp, cpu->r[rc(inst)]);
         break;
-    case cpu_op_log_i64 >> 2:
+    case cpu_op_logic_i64 >> 2:
         switch(uimm3(inst)) {
         case cpu_log_mov:
             cpu->r[rc(inst)] = cpu->r[rb(inst)];
@@ -444,7 +444,7 @@ static inline int cpu_disasm(char *buf, size_t len, i64 inst, i64 pc_offset)
                 rc(inst), rb(inst));
         }
         break;
-    case cpu_op_log_i64 >> 2:
+    case cpu_op_logic_i64 >> 2:
         switch(uimm3(inst)) {
         case cpu_log_mov:
             return snprintf(buf, len, "mov.i64 r%d, r%d",
@@ -620,9 +620,9 @@ static inline i16 enc_storeib_i64(int rc, int rb, int ibimm3)
 {
     return cpu_op_storeib_i64 | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-static inline i16 enc_log_i64(int rc, int rb, int fun3)
+static inline i16 enc_logic_i64(int rc, int rb, int fun3)
 {
-    return cpu_op_log_i64 | ((fun3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
+    return cpu_op_logic_i64 | ((fun3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
 static inline i16 enc_pin_i64(int rc, int rb, int ra)
 {

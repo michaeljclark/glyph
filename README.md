@@ -81,7 +81,7 @@ structure packing and alignment rules.
 | 16 | subib.i64    | op2r_imm3_16 | 10000 | **sub-ib** rc,rb,ib64(uimm3*8)              |
 | 17 | store.i64    | op2r_imm3_16 | 10001 | **store** rc,uimm3(rb)                      |
 | 18 | storeib.i64  | op2r_imm3_16 | 10010 | **store-ib** rc,ib64(uimm3*8)(rb)           |
-| 19 | log.i64      | op2r_fun3_16 | 10011 | **log** rc,rb                               |
+| 19 | logic.i64    | op2r_fun3_16 | 10011 | **logic** rc,rb                             |
 |    |              |              |       |   fun3=mov,not,neg,bswap,ctz,clz,ctpop      |
 | 20 | pin.i64      | op3r_16      | 10100 | **pack-indirect** rc,rb,ra                  |
 |    |              |              |       |   i32x2(rc) = (pc-ra+2,ib-rb);              |
