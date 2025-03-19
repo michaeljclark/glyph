@@ -34,9 +34,9 @@ structure packing and alignment rules.
 - 16-bit compressed instruction packets can access 8x64-bit registers.
 - (pc,ib) is a special program counter and immediate base register pair.
 - link register contains packed i32x2 relative displacement to function entry.
-- `ibl` _(immediate-block-link)_ adds a 64-bit displacement to the
-  immediate base register.
-- `lib` _(load-immediate-block)_ uses unsigned 6-bit displacement to access
+- `ibl` _(immediate-block-link)_ adds a displacement to the immediate
+  base register.
+- `lib` _(load-immediate-block)_ uses unsigned displacement to access
   constants.
 - `jalib` _(jump-and-link-immediate-block)_ or _(call)_ branch links address
   and adds constants to (pc,ib).
