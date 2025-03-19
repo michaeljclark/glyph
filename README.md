@@ -72,12 +72,12 @@ structure packing and alignment rules.
 | 11 | slli.i64     | op1r_imm6_16 | 01011 | **shift-left-logical-imm** rc,uimm6         |
 | 12 | addib.i64    | op2r_imm3_16 | 01100 | **add-ib** rc,rb,ib64(uimm3*8)              |
 | 13 | load.i64     | op2r_imm3_16 | 01101 | **load** rc,uimm3(rb)                       |
-| 14 | loadib.i64   | op2r_imm3_16 | 01110 | **load** rc,ib64(uimm3*8)(rb)               |
+| 14 | loadib.i64   | op2r_imm3_16 | 01110 | **load-ib** rc,ib64(uimm3*8)(rb)            |
 | 15 | cmp.i64      | op2r_fun3_16 | 01111 | **cmp** rc,rb                               |
 |    |              |              |       |   fun3=lt,ge,eq,ne,ltu,geu                  |
 | 16 | subib.i64    | op2r_imm3_16 | 10000 | **sub-ib** rc,rb,ib64(uimm3*8)              |
 | 17 | store.i64    | op2r_imm3_16 | 10001 | **store** rc,uimm3(rb)                      |
-| 18 | storeib.i64  | op2r_imm3_16 | 10010 | **store** rc,ib64(uimm3*8)(rb)              |
+| 18 | storeib.i64  | op2r_imm3_16 | 10010 | **store-ib** rc,ib64(uimm3*8)(rb)           |
 | 19 | log.i64      | op2r_fun3_16 | 10011 | **log** rc,rb                               |
 |    |              |              |       |   fun3=mov,not,neg,bswap,ctz,clz,ctpop      |
 | 20 | pin.i64      | op3r_16      | 10100 | **pack-indirect** rc,rb,ra                  |
