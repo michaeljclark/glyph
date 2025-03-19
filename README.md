@@ -62,11 +62,11 @@ structure packing and alignment rules.
 |    |              |              |       |   rc = ib;                                  |
 |    |              |              |       |   ib += ib64(uimm6*8)                       |
 | 04 | jalib        | op1r_imm6_16 | 00101 | **jump-and-link-ib** rc,ib32x2(uimm6*8)     |
-|    |              |              |       |   (opc,oib) = (pc+2,ib);                    |
-|    |              |              |       |   (pc,ib) += ib32x2(uimm6*8);               |
-|    |              |              |       |   i32x2(rc) = ib32x2(uimm6*8);              |
+|    |              |              |       |   rc = ib32x2(uimm6*8);                     |
+|    |              |              |       |   (pc,ib) += i32x2(rc) + i32x2(2,0);        |
 | 05 | jtlib        | op1r_imm6_16 | 00110 | **jump-to-link-ib** rc,ib32x2(uimm6*8)      |
-|    |              |              |       |   (pc,ib) += ib32x2(uimm6*8) - i32x2(rc);   |
+|    |              |              |       |   tmp = ib32x2(uimm6*8) - i32x2(rc);        |
+|    |              |              |       |   (pc,ib) += i32x2(tmp);                    |
 | 06 | lib.i64      | op1r_imm6_16 | 00110 | **load-ib** rc,ib64(uimm6*8)                |
 | 07 | li.i64       | op1r_imm6_16 | 00111 | **load-imm6** rc,simm6                      |
 | 08 | addi.i64     | op1r_imm6_16 | 01000 | **add-imm6** rc,simm6                       |
