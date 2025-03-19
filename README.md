@@ -32,19 +32,22 @@ structure packing and alignment rules.
 - instruction formats and 2-bit size encoding is detailed here:
   [packet.pdf](/doc/packet.pdf).
 - 16-bit compressed instruction packets can access 8x64-bit registers.
-- (pc,ib) is a special program counter and immediate base register pair.
-- link register contains packed i32x2 relative displacement to function entry.
-- `ibl` _(immediate-block-link)_ adds a displacement to the immediate
+- (pc,ib) is a special program counter and immediate base register address
+  vector.
+- link register contains packed i32x2 relative address vector to function
+  entry.
+- `ibl` _(immediate-block-link)_ adds a relative address to the immediate
   base register.
 - `lib` _(load-immediate-block)_ uses unsigned displacement to access
   constants.
-- `jalib` _(jump-and-link-immediate-block)_ or _(call)_ branch links address
-  and adds constants to (pc,ib).
-- `jtlib` _(jump-to-link-immediate-block)_ or _(ret)_ branch subtracts link
-  and adds constants from (pc,ib).
-- `pin` _(pack-indirect)_ packs two absolute addresses as relative
-  displacements from (pc,ib).
-- `ret` requires a relocation due to the use of relative link addresses.
+- `jalib` _(jump-and-link-immediate-block)_ or _(call)_ links address
+  vector and adds constants to (pc,ib).
+- `jtlib` _(jump-to-link-immediate-block)_ or _(ret)_ subtracts link
+  vector from and adds constants to (pc,ib).
+- `pin` _(pack-indirect)_ packs two absolute addresses as relative address
+  vector from (pc,ib).
+- `ret` requires a relocation due to the use of relative link address
+  vectors.
 
 ## opcodes
 
