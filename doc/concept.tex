@@ -22,23 +22,23 @@
 \node [font=\tiny,below,scale=0.9,anchor=north] at (-1.5,0.66)  {$\textbf{(pc)}$};
 
 \fill [black!15] (0,0)    rectangle (9,1);
-\draw [black!50] (0,0)    rectangle (9,1);
-\node [font=\tiny,below,scale=0.9,anchor=north] at (0.5,0.66)  {$\textbf{13}$};
+\draw [line width=0.2mm, black!80] (0,0)    rectangle (9,1);
+\node [font=\tiny,below,scale=0.9,anchor=north] at (0.5,0.66)  {$\textbf{15}$};
 \node [font=\tiny,below,scale=0.9,anchor=north] at (8.5,0.66)  {$\textbf{7}$};
 
 \fill [black!10] (9,0)     rectangle (14,1);
-\draw [black!50] (9,0)     rectangle (14,1);
+\draw [line width=0.2mm, black!80] (9,0)     rectangle (14,1);
 \node [font=\tiny,below,scale=0.9,anchor=north] at (9.5,0.66)  {$\textbf{6}$};
 \node [font=\tiny,below,scale=0.9,anchor=north] at (13.5,0.66)  {$\textbf{2}$};
 
 \fill [black!5] (14,0)     rectangle (16,1);
-\draw [black!50] (14,0)     rectangle (16,1);
+\draw [line width=0.2mm, black!80] (14,0)     rectangle (16,1);
 \node [font=\tiny,below,scale=0.9,anchor=north] at (14.5,0.66)  {$\textbf{1}$};
 \node [font=\tiny,below,scale=0.9,anchor=north] at (15.5,0.66)  {$\textbf{0}$};
 
-\draw [black!50,dashed] (16,0)     rectangle (32,1);
-\draw [black!50,dashed] (32,0)     rectangle (48,1);
-\draw [black!50,dashed] (48,0)     rectangle (64,1);
+\draw [line width=0.2mm, black!80,dashed] (16,0)     rectangle (32,1);
+\draw [line width=0.2mm, black!80,dashed] (32,0)     rectangle (48,1);
+\draw [line width=0.2mm, black!80,dashed] (48,0)     rectangle (64,1);
 
 \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
     (0,1.5) -- (9,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{operands}};
@@ -58,7 +58,7 @@
   \fill [black!15] (\x*8,-9)    rectangle (\x*8+8,-8);
 
 \foreach \x in {0,1,2,3,4,5,6,7}
-  \draw [black!50] (\x*8,-9)     rectangle (\x*8+8,-8);
+  \draw [line width=0.2mm, black!80] (\x*8,-9)     rectangle (\x*8+8,-8);
 
 \foreach \x in {0,1,2,3,4,5,6,7}
   \node [font=\tiny,below,scale=0.9,anchor=north] at (\x*8 + 4,-8.33)  {$\textbf{\x}$};
