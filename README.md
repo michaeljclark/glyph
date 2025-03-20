@@ -27,6 +27,9 @@ structure packing and alignment rules.
 
 ## architecture
 
+this list of points outlines the primary differentiating elements of
+the super regular RISC architecture:
+
 - variable length instruction format supporting 16, 32, 64, and 128-bit
   instruction packets.
 - instruction formats and 2-bit size encoding is detailed here:
