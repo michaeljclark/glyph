@@ -107,8 +107,8 @@ this list outlines insructions, opcodes, and descriptions used in the
 
 ### 16-bit opcode register allocation
 
-a careful choice of the 8 registers accessible to the 16-bit opcodes is
-required to optimize the number of instructions that can be encoded in
+a careful choice of the 8 registers accessible to the 16-bit opcodes has
+been made to optimize the number of instructions that can be encoded in
 16-bit packets:
 
 - 2 blocks of 4 contiguous callee saved and caller saved registers.
