@@ -77,32 +77,32 @@ enum
 };
 
 /*
- * cmp op fun3
+ * compare op fun3
  */
 
 enum
 {
-    cpu_cmp_lt  = 0b000,
-    cpu_cmp_ge  = 0b001,
-    cpu_cmp_eq  = 0b010,
-    cpu_cmp_ne  = 0b011,
-    cpu_cmp_ltu  = 0b100,
-    cpu_cmp_geu  = 0b101,
+    cpu_compare_lt      = 0b000,
+    cpu_compare_ge      = 0b001,
+    cpu_compare_eq      = 0b010,
+    cpu_compare_ne      = 0b011,
+    cpu_compare_ltu     = 0b100,
+    cpu_compare_geu     = 0b101,
 };
 
 /*
- * log2 op fun3
+ * logic op fun3
  */
 
 enum
 {
-    cpu_log_mov = 0b000,
-    cpu_log_not = 0b001,
-    cpu_log_neg = 0b010,
-    cpu_log_bswap = 0b011,
-    cpu_log_ctz = 0b100,
-    cpu_log_clz = 0b101,
-    cpu_log_ctpop = 0b110,
+    cpu_logic_mov       = 0b000,
+    cpu_logic_not       = 0b001,
+    cpu_logic_neg       = 0b010,
+    cpu_logic_bswap     = 0b011,
+    cpu_logic_ctz       = 0b100,
+    cpu_logic_clz       = 0b101,
+    cpu_logic_ctpop     = 0b110,
 };
 
 /*
@@ -268,22 +268,22 @@ static inline int cpu_exec(cpu_state *cpu, i64 inst)
         break;
     case cpu_op_cmp_i64 >> 2:
         switch(uimm3(inst)) {
-        case cpu_cmp_lt:
+        case cpu_compare_lt:
             cpu->flag = cpu->r[rc(inst)] < cpu->r[rb(inst)];
             break;
-        case cpu_cmp_ge:
+        case cpu_compare_ge:
             cpu->flag = cpu->r[rc(inst)] >= cpu->r[rb(inst)];
             break;
-        case cpu_cmp_eq:
+        case cpu_compare_eq:
             cpu->flag = cpu->r[rc(inst)] == cpu->r[rb(inst)];
             break;
-        case cpu_cmp_ne:
+        case cpu_compare_ne:
             cpu->flag = cpu->r[rc(inst)] != cpu->r[rb(inst)];
             break;
-        case cpu_cmp_ltu:
+        case cpu_compare_ltu:
             cpu->flag = (u64)cpu->r[rc(inst)] < (u64)cpu->r[rb(inst)];
             break;
-        case cpu_cmp_geu:
+        case cpu_compare_geu:
             cpu->flag = (u64)cpu->r[rc(inst)] >= (u64)cpu->r[rb(inst)];
             break;
         }
@@ -301,25 +301,25 @@ static inline int cpu_exec(cpu_state *cpu, i64 inst)
         break;
     case cpu_op_logic_i64 >> 2:
         switch(uimm3(inst)) {
-        case cpu_log_mov:
+        case cpu_logic_mov:
             cpu->r[rc(inst)] = cpu->r[rb(inst)];
             break;
-        case cpu_log_not:
+        case cpu_logic_not:
             cpu->r[rc(inst)] = ~cpu->r[rb(inst)];
             break;
-        case cpu_log_neg:
+        case cpu_logic_neg:
             cpu->r[rc(inst)] = -cpu->r[rb(inst)];
             break;
-        case cpu_log_bswap:
+        case cpu_logic_bswap:
             cpu->r[rc(inst)] = __builtin_bswap64(cpu->r[rb(inst)]);
             break;
-        case cpu_log_ctz:
+        case cpu_logic_ctz:
             cpu->r[rc(inst)] = __builtin_ctzll(cpu->r[rb(inst)]);
             break;
-        case cpu_log_clz:
+        case cpu_logic_clz:
             cpu->r[rc(inst)] = __builtin_clzll(cpu->r[rb(inst)]);
             break;
-        case cpu_log_ctpop:
+        case cpu_logic_ctpop:
             cpu->r[rc(inst)] = __builtin_popcountll(cpu->r[rb(inst)]);
             break;
         default:
@@ -424,47 +424,47 @@ static inline int cpu_disasm(char *buf, size_t len, i64 inst, i64 pc_offset)
             rc(inst), rb(inst), uimm3(inst));
     case cpu_op_cmp_i64 >> 2:
         switch(uimm3(inst)) {
-        case cpu_cmp_lt:
+        case cpu_compare_lt:
             return snprintf(buf, len, "cmp.lt.i64 r%d, r%d",
                 rc(inst), rb(inst));
-        case cpu_cmp_ge:
+        case cpu_compare_ge:
             return snprintf(buf, len, "cmp.ge.i64 r%d, r%d",
                 rc(inst), rb(inst));
-        case cpu_cmp_eq:
+        case cpu_compare_eq:
             return snprintf(buf, len, "cmp.eq.i64 r%d, r%d",
                 rc(inst), rb(inst));
-        case cpu_cmp_ne:
+        case cpu_compare_ne:
             return snprintf(buf, len, "cmp.ne.i64 r%d, r%d",
                 rc(inst), rb(inst));
-        case cpu_cmp_ltu:
+        case cpu_compare_ltu:
             return snprintf(buf, len, "cmp.ltu.i64 r%d, r%d",
                 rc(inst), rb(inst));
-        case cpu_cmp_geu:
+        case cpu_compare_geu:
             return snprintf(buf, len, "cmp.geu.i64 r%d, r%d",
                 rc(inst), rb(inst));
         }
         break;
     case cpu_op_logic_i64 >> 2:
         switch(uimm3(inst)) {
-        case cpu_log_mov:
+        case cpu_logic_mov:
             return snprintf(buf, len, "mov.i64 r%d, r%d",
                 rc(inst), rb(inst));
-        case cpu_log_not:
+        case cpu_logic_not:
             return snprintf(buf, len, "not.i64 r%d, r%d",
                 rc(inst), rb(inst));
-        case cpu_log_neg:
+        case cpu_logic_neg:
             return snprintf(buf, len, "neg.i64 r%d, r%d",
                 rc(inst), rb(inst));
-        case cpu_log_bswap:
+        case cpu_logic_bswap:
             return snprintf(buf, len, "bswap.i64 r%d, r%d",
                 rc(inst), rb(inst));
-        case cpu_log_ctz:
+        case cpu_logic_ctz:
             return snprintf(buf, len, "ctz.i64 r%d, r%d",
                 rc(inst), rb(inst));
-        case cpu_log_clz:
+        case cpu_logic_clz:
             return snprintf(buf, len, "clz.i64 r%d, r%d",
                 rc(inst), rb(inst));
-        case cpu_log_ctpop:
+        case cpu_logic_ctpop:
             return snprintf(buf, len, "ctpop.i64 r%d, r%d",
                 rc(inst), rb(inst));
         default:

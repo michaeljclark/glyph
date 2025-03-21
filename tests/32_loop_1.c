@@ -10,7 +10,7 @@ void t()
         enc_li_i64(0,0),
         enc_li_i64(1,5),
         enc_addi_i64(1,-1),
-        enc_cmp_i64(0,1, cpu_cmp_lt),
+        enc_cmp_i64(0,1, cpu_compare_lt),
         enc_b(-3),
         enc_break(0)
     };
