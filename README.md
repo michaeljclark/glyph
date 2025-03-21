@@ -54,7 +54,7 @@ the super regular RISC architecture:
 
 ## opcodes
 
-this list outlines insructions, opcodes, and descriptions used in the
+this list outlines instructions, opcodes, and descriptions used in the
 16-bit compressed instruction packet:
 
 ### 16-bit opcodes
