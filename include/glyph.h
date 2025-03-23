@@ -335,6 +335,18 @@ static inline int cpu_exec(cpu_state *cpu, i64 inst)
         tmp = (upc << 32 >> 32) | (uib << 32);
         cpu->r[rc(inst)] = tmp;
         break;
+    case cpu_op_and_i64 >> 2:
+        cpu->r[rc(inst)] = cpu->r[rb(inst)] & cpu->r[ra(inst)];
+        break;
+    case cpu_op_or_i64 >> 2:
+        cpu->r[rc(inst)] = cpu->r[rb(inst)] | cpu->r[ra(inst)];
+        break;
+    case cpu_op_xor_i64 >> 2:
+        cpu->r[rc(inst)] = cpu->r[rb(inst)] ^ cpu->r[ra(inst)];
+        break;
+    case cpu_op_sub_i64 >> 2:
+        cpu->r[rc(inst)] = cpu->r[rb(inst)] - cpu->r[ra(inst)];
+        break;
     case cpu_op_srl_i64 >> 2:
         cpu->r[rc(inst)] = (u64)cpu->r[rb(inst)] >> cpu->r[ra(inst)];
         break;
@@ -346,18 +358,6 @@ static inline int cpu_exec(cpu_state *cpu, i64 inst)
         break;
     case cpu_op_add_i64 >> 2:
         cpu->r[rc(inst)] = cpu->r[rb(inst)] + cpu->r[ra(inst)];
-        break;
-    case cpu_op_sub_i64 >> 2:
-        cpu->r[rc(inst)] = cpu->r[rb(inst)] - cpu->r[ra(inst)];
-        break;
-    case cpu_op_and_i64 >> 2:
-        cpu->r[rc(inst)] = cpu->r[rb(inst)] & cpu->r[ra(inst)];
-        break;
-    case cpu_op_or_i64 >> 2:
-        cpu->r[rc(inst)] = cpu->r[rb(inst)] | cpu->r[ra(inst)];
-        break;
-    case cpu_op_xor_i64 >> 2:
-        cpu->r[rc(inst)] = cpu->r[rb(inst)] ^ cpu->r[ra(inst)];
         break;
     case cpu_op_nop >> 2:
         break;
@@ -421,9 +421,6 @@ static inline int cpu_disasm(char *buf, size_t len, i64 inst, i64 pc_offset)
     case cpu_op_loadib_i64 >> 2:
         return snprintf(buf, len, "loadib.i64 r%d, ib(%llu)(r%d)",
             rc(inst), uimm3(inst) << 3, rb(inst));
-    case cpu_op_subib_i64 >> 2:
-        return snprintf(buf, len, "subib.i64 r%d, r%d, ib(%llu)",
-            rc(inst), rb(inst), uimm3(inst));
     case cpu_op_cmp_i64 >> 2:
         switch(uimm3(inst)) {
         case cpu_compare_lt:
@@ -446,6 +443,15 @@ static inline int cpu_disasm(char *buf, size_t len, i64 inst, i64 pc_offset)
                 rc(inst), rb(inst));
         }
         break;
+    case cpu_op_subib_i64 >> 2:
+        return snprintf(buf, len, "subib.i64 r%d, r%d, ib(%llu)",
+            rc(inst), rb(inst), uimm3(inst));
+    case cpu_op_store_i64 >> 2:
+        return snprintf(buf, len, "store.i64 r%d, %llu(r%d)",
+            rc(inst), uimm3(inst), rb(inst));
+    case cpu_op_storeib_i64 >> 2:
+        return snprintf(buf, len, "storeib.i64 r%d, ib(%llu)(r%d)",
+            rc(inst), uimm3(inst), rb(inst));
     case cpu_op_logic_i64 >> 2:
         switch(uimm3(inst)) {
         case cpu_logic_mov:
@@ -473,14 +479,20 @@ static inline int cpu_disasm(char *buf, size_t len, i64 inst, i64 pc_offset)
             return snprintf(buf, len, "invalid");
         }
         break;
-    case cpu_op_store_i64 >> 2:
-        return snprintf(buf, len, "store.i64 r%d, %llu(r%d)",
-            rc(inst), uimm3(inst), rb(inst));
-    case cpu_op_storeib_i64 >> 2:
-        return snprintf(buf, len, "storeib.i64 r%d, ib(%llu)(r%d)",
-            rc(inst), uimm3(inst), rb(inst));
     case cpu_op_pin_i64 >> 2:
         return snprintf(buf, len, "pin.i64 r%d, r%d, r%d",
+            rc(inst), rb(inst), ra(inst));
+    case cpu_op_and_i64 >> 2:
+        return snprintf(buf, len, "and.i64 r%d, r%d, r%d",
+            rc(inst), rb(inst), ra(inst));
+    case cpu_op_or_i64 >> 2:
+        return snprintf(buf, len, "or.i64 r%d, r%d, r%d",
+            rc(inst), rb(inst), ra(inst));
+    case cpu_op_xor_i64 >> 2:
+        return snprintf(buf, len, "xor.i64 r%d, r%d, r%d",
+            rc(inst), rb(inst), ra(inst));
+    case cpu_op_sub_i64 >> 2:
+        return snprintf(buf, len, "sub.i64 r%d, r%d, r%d",
             rc(inst), rb(inst), ra(inst));
     case cpu_op_srl_i64 >> 2:
         return snprintf(buf, len, "srl.i64 r%d, r%d, r%d",
@@ -493,18 +505,6 @@ static inline int cpu_disasm(char *buf, size_t len, i64 inst, i64 pc_offset)
             rc(inst), rb(inst), ra(inst));
     case cpu_op_add_i64 >> 2:
         return snprintf(buf, len, "add.i64 r%d, r%d, r%d",
-            rc(inst), rb(inst), ra(inst));
-    case cpu_op_sub_i64 >> 2:
-        return snprintf(buf, len, "sub.i64 r%d, r%d, r%d",
-            rc(inst), rb(inst), ra(inst));
-    case cpu_op_and_i64 >> 2:
-        return snprintf(buf, len, "and.i64 r%d, r%d, r%d",
-            rc(inst), rb(inst), ra(inst));
-    case cpu_op_or_i64 >> 2:
-        return snprintf(buf, len, "or.i64 r%d, r%d, r%d",
-            rc(inst), rb(inst), ra(inst));
-    case cpu_op_xor_i64 >> 2:
-        return snprintf(buf, len, "xor.i64 r%d, r%d, r%d",
             rc(inst), rb(inst), ra(inst));
     case cpu_op_nop >> 2:
         return snprintf(buf, len, "nop %llu",
@@ -630,6 +630,22 @@ static inline i16 enc_pin_i64(int rc, int rb, int ra)
 {
     return cpu_op_pin_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
+static inline i16 enc_and_i64(int rc, int rb, int ra)
+{
+    return cpu_op_and_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
+}
+static inline i16 enc_or_i64(int rc, int rb, int ra)
+{
+    return cpu_op_or_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
+}
+static inline i16 enc_xor_i64(int rc, int rb, int ra)
+{
+    return cpu_op_xor_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
+}
+static inline i16 enc_sub_i64(int rc, int rb, int ra)
+{
+    return cpu_op_sub_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
+}
 static inline i16 enc_srl_i64(int rc, int rb, int ra)
 {
     return cpu_op_srl_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
@@ -645,22 +661,6 @@ static inline i16 enc_sll_i64(int rc, int rb, int ra)
 static inline i16 enc_add_i64(int rc, int rb, int ra)
 {
     return cpu_op_add_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
-}
-static inline i16 enc_sub_i64(int rc, int rb, int ra)
-{
-    return cpu_op_sub_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
-}
-static inline i16 enc_and_i64(int rc, int rb, int ra)
-{
-    return cpu_op_and_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
-}
-static inline i16 enc_or_i64(int rc, int rb, int ra)
-{
-    return cpu_op_or_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
-}
-static inline i16 enc_xor_i64(int rc, int rb, int ra)
-{
-    return cpu_op_xor_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
 static inline i16 enc_nop(int imm9)
 {
