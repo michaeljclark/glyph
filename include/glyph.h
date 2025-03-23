@@ -106,6 +106,21 @@ enum
 };
 
 /*
+ * decode
+ */
+
+static inline uint opc(int64_t insn) { return (insn >> 2) & 0b11111; }
+static inline i64 uimm9(int64_t insn) { return (u64)insn << 48 >> 55; }
+static inline i64 uimm6(int64_t insn) { return (u64)insn << 51 >> 58; }
+static inline i64 uimm3(int64_t insn) { return (u64)insn << 54 >> 61; }
+static inline i64 simm9(int64_t insn) { return insn << 48 >> 55; }
+static inline i64 simm6(int64_t insn) { return insn << 51 >> 58; }
+static inline i64 simm3(int64_t insn) { return insn << 54 >> 61; }
+static inline uint ra(int64_t insn) { return (insn >> 7) & 7; }
+static inline uint rb(int64_t insn) { return (insn >> 10) & 7; }
+static inline uint rc(int64_t insn) { return (insn >> 13) & 7; }
+
+/*
  * state
  */
 
@@ -123,35 +138,6 @@ struct cpu_state
     i8 *mem;
     size_t mem_size;
 };
-
-/*
- * load, store and constant memory
- */
-
-static inline i64 cpu_load_i64(cpu_state *cpu, u64 offset)
-{
-    return *(i64*)(cpu->mem + offset);
-}
-
-static inline void cpu_store_i64(cpu_state *cpu, u64 offset, i64 val)
-{
-    *(i64*)(cpu->mem + offset) = val;
-}
-
-static inline i8 cpu_const_i8(cpu_state *cpu, u64 offset)
-{
-    return *(i8*)(cpu->mem + cpu->ib + offset);
-}
-
-static inline i64 cpu_const_i64(cpu_state *cpu, u64 offset)
-{
-    return *(i64*)(cpu->mem + cpu->ib + offset * 8);
-}
-
-static inline i16 cpu_fetch(cpu_state *cpu)
-{
-    return *(i16*)(cpu->mem + cpu->pc);
-}
 
 /*
  * cpu initialization
@@ -183,19 +169,32 @@ static inline int cpu_dump(cpu_state *cpu)
 }
 
 /*
- * cpu implementation
+ * load, store and constant memory
  */
 
-static inline uint opc(int64_t insn) { return (insn >> 2) & 0b11111; }
-static inline i64 uimm9(int64_t insn) { return (u64)insn << 48 >> 55; }
-static inline i64 uimm6(int64_t insn) { return (u64)insn << 51 >> 58; }
-static inline i64 uimm3(int64_t insn) { return (u64)insn << 54 >> 61; }
-static inline i64 simm9(int64_t insn) { return insn << 48 >> 55; }
-static inline i64 simm6(int64_t insn) { return insn << 51 >> 58; }
-static inline i64 simm3(int64_t insn) { return insn << 54 >> 61; }
-static inline uint ra(int64_t insn) { return (insn >> 7) & 7; }
-static inline uint rb(int64_t insn) { return (insn >> 10) & 7; }
-static inline uint rc(int64_t insn) { return (insn >> 13) & 7; }
+static inline i64 cpu_load_i64(cpu_state *cpu, u64 offset)
+{
+    return *(i64*)(cpu->mem + offset);
+}
+
+static inline void cpu_store_i64(cpu_state *cpu, u64 offset, i64 val)
+{
+    *(i64*)(cpu->mem + offset) = val;
+}
+
+static inline i64 cpu_const_i64(cpu_state *cpu, u64 offset)
+{
+    return *(i64*)(cpu->mem + cpu->ib + offset * 8);
+}
+
+static inline i16 cpu_fetch(cpu_state *cpu)
+{
+    return *(i16*)(cpu->mem + cpu->pc);
+}
+
+/*
+ * cpu implementation
+ */
 
 static inline int cpu_exec(cpu_state *cpu, i64 inst)
 {
