@@ -186,6 +186,7 @@ static inline int cpu_dump(cpu_state *cpu)
  * cpu implementation
  */
 
+static inline uint opc(int64_t insn) { return (insn >> 2) & 0b11111; }
 static inline i64 uimm9(int64_t insn) { return (u64)insn << 48 >> 55; }
 static inline i64 uimm6(int64_t insn) { return (u64)insn << 51 >> 58; }
 static inline i64 uimm3(int64_t insn) { return (u64)insn << 54 >> 61; }
@@ -198,10 +199,9 @@ static inline uint rc(int64_t insn) { return (insn >> 13) & 7; }
 
 static inline int cpu_exec(cpu_state *cpu, i64 inst)
 {
-    uint op = (inst >> 2) & 0b11111;
     u64 upc, uib, npc, nib;
     i64 tmp;
-    switch (op) {
+    switch (opc(inst)) {
     case cpu_op_break >> 2:
         switch(uimm9(inst)) {
         case 511: cpu_dump(cpu); break;
@@ -376,8 +376,7 @@ static inline int cpu_exec(cpu_state *cpu, i64 inst)
 
 static inline int cpu_disasm(char *buf, size_t len, i64 inst, i64 pc_offset)
 {
-    uint op = (inst >> 2) & 0b11111;
-    switch (op) {
+    switch (opc(inst)) {
     case cpu_op_break >> 2:
         return snprintf(buf, len, "break %llu",
             uimm9(inst));
