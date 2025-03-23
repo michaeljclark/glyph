@@ -21,7 +21,7 @@ static void init_inst(cpu_state *cpu, i16 *d, size_t l)
     printf("\n# instructions:\n");
     for(size_t i = 0; i < (l>>1); i++) {
         cpu_disasm(buf, sizeof(buf), d[i], cpu->pc + (i<<1));
-        printf("# %08llx %s\n", cpu->pc + (i<<1), buf);
+        printf("# %08llx %04hx %s\n", cpu->pc + (i<<1), d[i], buf);
     }
 }
 

@@ -534,7 +534,7 @@ static inline int cpu_run(cpu_state *cpu, int trace, int dump)
         inst = cpu_fetch(cpu);
         if (trace) {
             cpu_disasm(buf, sizeof(buf), inst, cpu->pc);
-            printf("-- %08llx %s\n", cpu->pc, buf);
+            printf("-- %08llx %04hx %s\n", cpu->pc, inst, buf);
         }
         if (dump) {
             cpu_dump(cpu);
