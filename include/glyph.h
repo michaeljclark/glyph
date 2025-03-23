@@ -199,7 +199,7 @@ static inline uint rc(int64_t insn) { return (insn >> 13) & 7; }
 static inline int cpu_exec(cpu_state *cpu, i64 inst)
 {
     uint op = (inst >> 2) & 0b11111;
-    u64 upc, uib;
+    u64 upc, uib, npc, nib;
     i64 tmp;
     switch (op) {
     case cpu_op_break >> 2:
@@ -224,17 +224,21 @@ static inline int cpu_exec(cpu_state *cpu, i64 inst)
         break;
     case cpu_op_jalib >> 2:
         tmp = cpu_const_i64(cpu, uimm6(inst));
-        cpu->pc = cpu->pc + ((tmp << 32 >> 32) & ~1ll) + 2;
-        cpu->ib = cpu->ib + ((tmp       >> 32) & ~7ll);
+        upc = ((tmp << 32 >> 32) & ~1ll);
+        uib = ((tmp       >> 32) & ~7ll);
+        cpu->pc = cpu->pc + upc + 2;
+        cpu->ib = cpu->ib + uib;
         cpu->r[rc(inst)] = tmp;
         return 0;
     case cpu_op_jtlib >> 2:
         tmp = cpu->r[rc(inst)];
-        upc = tmp << 32 >> 32;
-        uib = tmp       >> 32;
+        upc = ((tmp << 32 >> 32) & ~1ll);
+        uib = ((tmp       >> 32) & ~7ll);
         tmp = cpu_const_i64(cpu, uimm6(inst));
-        cpu->pc = cpu->pc + ((tmp << 32 >> 32) & ~1ll) - upc;
-        cpu->ib = cpu->ib + ((tmp       >> 32) & ~7ll) - uib;
+        npc = ((tmp << 32 >> 32) & ~1ll);
+        nib = ((tmp       >> 32) & ~7ll);
+        cpu->pc = cpu->pc + npc - upc;
+        cpu->ib = cpu->ib + nib - uib;
         return 0;
     case cpu_op_lib_i64 >> 2:
         tmp = cpu_const_i64(cpu, uimm6(inst));
