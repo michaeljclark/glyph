@@ -233,11 +233,11 @@ __glyph_func__ int cpu_exec_op_ibl(cpu_state *cpu, i64 inst)
 }
 __glyph_func__ int cpu_exec_op_jalib(cpu_state *cpu, i64 inst)
 {
-    u64 upc, uib;
+    i32 upc, uib;
     i64 tmp;
     tmp = cpu_const_i64(cpu, uimm6(inst));
-    upc = ((tmp << 32 >> 32) & ~1ll);
-    uib = ((tmp       >> 32) & ~7ll);
+    upc = ((tmp      ) & ~1ll);
+    uib = ((tmp >> 32) & ~7ll);
     cpu->pc = cpu->pc + upc + 2;
     cpu->ib = cpu->ib + uib;
     cpu->r[rc(inst)] = tmp;
@@ -245,15 +245,15 @@ __glyph_func__ int cpu_exec_op_jalib(cpu_state *cpu, i64 inst)
 }
 __glyph_func__ int cpu_exec_op_jtlib(cpu_state *cpu, i64 inst)
 {
-    u64 upc, uib;
-    u64 npc, nib;
+    i32 upc, uib;
+    i32 npc, nib;
     i64 tmp;
     tmp = cpu->r[rc(inst)];
-    upc = ((tmp << 32 >> 32) & ~1ll);
-    uib = ((tmp       >> 32) & ~7ll);
+    upc = ((tmp      ) & ~1ll);
+    uib = ((tmp >> 32) & ~7ll);
     tmp = cpu_const_i64(cpu, uimm6(inst));
-    npc = ((tmp << 32 >> 32) & ~1ll);
-    nib = ((tmp       >> 32) & ~7ll);
+    npc = ((tmp      ) & ~1ll);
+    nib = ((tmp >> 32) & ~7ll);
     cpu->pc = cpu->pc + npc - upc;
     cpu->ib = cpu->ib + nib - uib;
     return 0;
@@ -385,11 +385,11 @@ __glyph_func__ int cpu_exec_op_logic_i64(cpu_state *cpu, i64 inst)
 }
 __glyph_func__ int cpu_exec_op_pin_i64(cpu_state *cpu, i64 inst)
 {
-    u64 upc, uib;
+    i32 upc, uib;
     i64 tmp;
     upc = cpu->pc - cpu->r[ra(inst)] + 2;
     uib = cpu->ib - cpu->r[rb(inst)];
-    tmp = (upc << 32 >> 32) | (uib << 32);
+    tmp = (u32)upc | ((u64)uib << 32);
     cpu->r[rc(inst)] = tmp;
     return 2;
 }
