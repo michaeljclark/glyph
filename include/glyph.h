@@ -36,6 +36,14 @@ typedef unsigned long long u64;
 
 typedef struct cpu_state cpu_state;
 
+#ifndef __glyph_inline__
+#define __glyph_inline__ static inline
+#endif
+
+#ifndef __glyph_func__
+#define __glyph_func__  static inline
+#endif
+
 /*
  * opcodes
  */
@@ -109,16 +117,16 @@ enum
  * decode
  */
 
-static inline uint opc(int64_t insn) { return (insn >> 2) & 0b11111; }
-static inline i64 uimm9(int64_t insn) { return (u64)insn << 48 >> 55; }
-static inline i64 uimm6(int64_t insn) { return (u64)insn << 51 >> 58; }
-static inline i64 uimm3(int64_t insn) { return (u64)insn << 54 >> 61; }
-static inline i64 simm9(int64_t insn) { return insn << 48 >> 55; }
-static inline i64 simm6(int64_t insn) { return insn << 51 >> 58; }
-static inline i64 simm3(int64_t insn) { return insn << 54 >> 61; }
-static inline uint ra(int64_t insn) { return (insn >> 7) & 7; }
-static inline uint rb(int64_t insn) { return (insn >> 10) & 7; }
-static inline uint rc(int64_t insn) { return (insn >> 13) & 7; }
+__glyph_inline__ uint opc(int64_t insn) { return (insn >> 2) & 0b11111; }
+__glyph_inline__ i64 uimm9(int64_t insn) { return (u64)insn << 48 >> 55; }
+__glyph_inline__ i64 uimm6(int64_t insn) { return (u64)insn << 51 >> 58; }
+__glyph_inline__ i64 uimm3(int64_t insn) { return (u64)insn << 54 >> 61; }
+__glyph_inline__ i64 simm9(int64_t insn) { return insn << 48 >> 55; }
+__glyph_inline__ i64 simm6(int64_t insn) { return insn << 51 >> 58; }
+__glyph_inline__ i64 simm3(int64_t insn) { return insn << 54 >> 61; }
+__glyph_inline__ uint ra(int64_t insn) { return (insn >> 7) & 7; }
+__glyph_inline__ uint rb(int64_t insn) { return (insn >> 10) & 7; }
+__glyph_inline__ uint rc(int64_t insn) { return (insn >> 13) & 7; }
 
 /*
  * state
@@ -143,22 +151,22 @@ struct cpu_state
  * load, store and constant memory
  */
 
-static inline i64 cpu_load_i64(cpu_state *cpu, u64 offset)
+__glyph_inline__ i64 cpu_load_i64(cpu_state *cpu, u64 offset)
 {
     return *(i64*)(cpu->mem + offset);
 }
 
-static inline void cpu_store_i64(cpu_state *cpu, u64 offset, i64 val)
+__glyph_inline__ void cpu_store_i64(cpu_state *cpu, u64 offset, i64 val)
 {
     *(i64*)(cpu->mem + offset) = val;
 }
 
-static inline i64 cpu_const_i64(cpu_state *cpu, u64 offset)
+__glyph_inline__ i64 cpu_const_i64(cpu_state *cpu, u64 offset)
 {
     return *(i64*)(cpu->mem + cpu->ib + offset * 8);
 }
 
-static inline i16 cpu_fetch(cpu_state *cpu)
+__glyph_inline__ i16 cpu_fetch(cpu_state *cpu)
 {
     return *(i16*)(cpu->mem + cpu->pc);
 }
@@ -167,18 +175,18 @@ static inline i16 cpu_fetch(cpu_state *cpu)
  * cpu emulation
  */
 
-static inline int cpu_exec_op_break(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_break(cpu_state *cpu, i64 inst)
 {
     return -1;
 }
 
-static inline int cpu_exec_op_j(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_j(cpu_state *cpu, i64 inst)
 {
     cpu->pc = cpu->pc + (simm9(inst) << 1) + 2;
     return 0;
 }
 
-static inline int cpu_exec_op_b(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_b(cpu_state *cpu, i64 inst)
 {
     if (cpu->flag) {
         cpu->pc = cpu->pc + (simm9(inst) << 1) + 2;
@@ -187,7 +195,7 @@ static inline int cpu_exec_op_b(cpu_state *cpu, i64 inst)
     return 2;
 }
 
-static inline int cpu_exec_op_ibl(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_ibl(cpu_state *cpu, i64 inst)
 {
     i64 tmp;
     cpu->r[rc(inst)] = cpu->ib;
@@ -196,7 +204,7 @@ static inline int cpu_exec_op_ibl(cpu_state *cpu, i64 inst)
     return 2;
 }
 
-static inline int cpu_exec_op_jalib(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_jalib(cpu_state *cpu, i64 inst)
 {
     u64 upc, uib;
     i64 tmp;
@@ -209,7 +217,7 @@ static inline int cpu_exec_op_jalib(cpu_state *cpu, i64 inst)
     return 0;
 }
 
-static inline int cpu_exec_op_jtlib(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_jtlib(cpu_state *cpu, i64 inst)
 {
     u64 upc, uib;
     u64 npc, nib;
@@ -225,7 +233,7 @@ static inline int cpu_exec_op_jtlib(cpu_state *cpu, i64 inst)
     return 0;
 }
 
-static inline int cpu_exec_op_lib_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_lib_i64(cpu_state *cpu, i64 inst)
 {
     i64 tmp;
     tmp = cpu_const_i64(cpu, uimm6(inst));
@@ -233,43 +241,43 @@ static inline int cpu_exec_op_lib_i64(cpu_state *cpu, i64 inst)
     return 2;
 }
 
-static inline int cpu_exec_op_li_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_li_i64(cpu_state *cpu, i64 inst)
 {
     cpu->r[rc(inst)] = simm6(inst);
     return 2;
 }
 
-static inline int cpu_exec_op_addi_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_addi_i64(cpu_state *cpu, i64 inst)
 {
     cpu->r[rc(inst)] = cpu->r[rc(inst)] + simm6(inst);
     return 2;
 }
 
-static inline int cpu_exec_op_srli_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_srli_i64(cpu_state *cpu, i64 inst)
 {
     cpu->r[rc(inst)] = (u64)cpu->r[rc(inst)] >> uimm6(inst);
     return 2;
 }
 
-static inline int cpu_exec_op_srai_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_srai_i64(cpu_state *cpu, i64 inst)
 {
     cpu->r[rc(inst)] = cpu->r[rc(inst)] >> uimm6(inst);
     return 2;
 }
 
-static inline int cpu_exec_op_slli_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_slli_i64(cpu_state *cpu, i64 inst)
 {
     cpu->r[rc(inst)] = cpu->r[rc(inst)] << uimm6(inst);
     return 2;
 }
 
-static inline int cpu_exec_op_addib_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_addib_i64(cpu_state *cpu, i64 inst)
 {
     cpu->r[rc(inst)] = cpu->r[rb(inst)] + cpu_const_i64(cpu, uimm3(inst));
     return 2;
 }
 
-static inline int cpu_exec_op_load_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_load_i64(cpu_state *cpu, i64 inst)
 {
     i64 tmp;
     tmp = cpu->r[rb(inst)] + (uimm3(inst) << 3);
@@ -277,7 +285,7 @@ static inline int cpu_exec_op_load_i64(cpu_state *cpu, i64 inst)
     return 2;
 }
 
-static inline int cpu_exec_op_loadib_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_loadib_i64(cpu_state *cpu, i64 inst)
 {
     i64 tmp;
     tmp = cpu->r[rb(inst)] + cpu_const_i64(cpu, uimm3(inst));
@@ -285,7 +293,7 @@ static inline int cpu_exec_op_loadib_i64(cpu_state *cpu, i64 inst)
     return 2;
 }
 
-static inline int cpu_exec_op_cmp_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_cmp_i64(cpu_state *cpu, i64 inst)
 {
     switch(uimm3(inst)) {
     case cpu_compare_lt:
@@ -312,13 +320,13 @@ static inline int cpu_exec_op_cmp_i64(cpu_state *cpu, i64 inst)
     return 2;
 }
 
-static inline int cpu_exec_op_subib_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_subib_i64(cpu_state *cpu, i64 inst)
 {
     cpu->r[rc(inst)] = cpu->r[rb(inst)] - cpu_const_i64(cpu, uimm3(inst));
     return 2;
 }
 
-static inline int cpu_exec_op_store_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_store_i64(cpu_state *cpu, i64 inst)
 {
     i64 tmp;
     tmp = cpu->r[rb(inst)] + (uimm3(inst) << 3);
@@ -326,7 +334,7 @@ static inline int cpu_exec_op_store_i64(cpu_state *cpu, i64 inst)
     return 2;
 }
 
-static inline int cpu_exec_op_storeib_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_storeib_i64(cpu_state *cpu, i64 inst)
 {
     i64 tmp;
     tmp = cpu->r[rb(inst)] + cpu_const_i64(cpu, uimm3(inst));
@@ -334,7 +342,7 @@ static inline int cpu_exec_op_storeib_i64(cpu_state *cpu, i64 inst)
     return 2;
 }
 
-static inline int cpu_exec_op_logic_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_logic_i64(cpu_state *cpu, i64 inst)
 {
     switch(uimm3(inst)) {
     case cpu_logic_mov:
@@ -364,7 +372,7 @@ static inline int cpu_exec_op_logic_i64(cpu_state *cpu, i64 inst)
     return 2;
 }
 
-static inline int cpu_exec_op_pin_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_pin_i64(cpu_state *cpu, i64 inst)
 {
     u64 upc, uib;
     i64 tmp;
@@ -375,65 +383,65 @@ static inline int cpu_exec_op_pin_i64(cpu_state *cpu, i64 inst)
     return 2;
 }
 
-static inline int cpu_exec_op_and_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_and_i64(cpu_state *cpu, i64 inst)
 {
     cpu->r[rc(inst)] = cpu->r[rb(inst)] & cpu->r[ra(inst)];
     return 2;
 }
 
-static inline int cpu_exec_op_or_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_or_i64(cpu_state *cpu, i64 inst)
 {
     cpu->r[rc(inst)] = cpu->r[rb(inst)] | cpu->r[ra(inst)];
     return 2;
 }
 
-static inline int cpu_exec_op_xor_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_xor_i64(cpu_state *cpu, i64 inst)
 {
     cpu->r[rc(inst)] = cpu->r[rb(inst)] ^ cpu->r[ra(inst)];
     return 2;
 }
 
-static inline int cpu_exec_op_sub_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_sub_i64(cpu_state *cpu, i64 inst)
 {
     cpu->r[rc(inst)] = cpu->r[rb(inst)] - cpu->r[ra(inst)];
     return 2;
 }
 
-static inline int cpu_exec_op_srl_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_srl_i64(cpu_state *cpu, i64 inst)
 {
     cpu->r[rc(inst)] = (u64)cpu->r[rb(inst)] >> cpu->r[ra(inst)];
     return 2;
 }
 
-static inline int cpu_exec_op_sra_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_sra_i64(cpu_state *cpu, i64 inst)
 {
     cpu->r[rc(inst)] = cpu->r[rb(inst)] >> cpu->r[ra(inst)];
     return 2;
 }
 
-static inline int cpu_exec_op_sll_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_sll_i64(cpu_state *cpu, i64 inst)
 {
     cpu->r[rc(inst)] = cpu->r[rb(inst)] << cpu->r[ra(inst)];
     return 2;
 }
 
-static inline int cpu_exec_op_add_i64(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_add_i64(cpu_state *cpu, i64 inst)
 {
     cpu->r[rc(inst)] = cpu->r[rb(inst)] + cpu->r[ra(inst)];
     return 2;
 }
 
-static inline int cpu_exec_op_nop(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_nop(cpu_state *cpu, i64 inst)
 {
     return 2;
 }
 
-static inline int cpu_exec_op_ud1(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_ud1(cpu_state *cpu, i64 inst)
 {
     return -1;
 }
 
-static inline int cpu_exec_op_ud2(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec_op_ud2(cpu_state *cpu, i64 inst)
 {
     return -1;
 }
@@ -442,85 +450,85 @@ static inline int cpu_exec_op_ud2(cpu_state *cpu, i64 inst)
  * cpu disassembly
  */
 
-static inline int cpu_disasm_op_break(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_break(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "break %llu", uimm9(i));
 }
 
-static inline int cpu_disasm_op_j(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_j(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "j %lld", simm9(i));
 }
 
-static inline int cpu_disasm_op_b(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_b(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "b %lld", simm9(i));
 }
 
-static inline int cpu_disasm_op_ibl(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_ibl(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "ibl ib(%llu)", uimm6(i));
 }
 
-static inline int cpu_disasm_op_jalib(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_jalib(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "jalib r%d, ib(%llu)", rc(i), uimm6(i));
 }
 
-static inline int cpu_disasm_op_jtlib(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_jtlib(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "jtlib ib(%llu), r%d", uimm6(i), rc(i));
 }
 
-static inline int cpu_disasm_op_lib_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_lib_i64(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "lib.i64 r%d, ib(%llu)", rc(i), uimm6(i));
 }
 
-static inline int cpu_disasm_op_li_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_li_i64(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "li.i64 r%d, %lld", rc(i), simm6(i));
 }
 
-static inline int cpu_disasm_op_addi_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_addi_i64(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "addi.i64 r%d, %lld", rc(i), simm6(i));
 }
 
-static inline int cpu_disasm_op_srli_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_srli_i64(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "srli.i64 r%d, %llu", rc(i), uimm6(i));
 }
 
-static inline int cpu_disasm_op_srai_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_srai_i64(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "srai.i64 r%d, %llu", rc(i), uimm6(i));
 }
 
-static inline int cpu_disasm_op_slli_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_slli_i64(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "slli.i64 r%d, %llu", rc(i), uimm6(i));
 }
 
-static inline int cpu_disasm_op_addib_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_addib_i64(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "addib.i64 r%d, r%d, ib(%llu)",
         rc(i), rb(i), uimm3(i));
 }
 
-static inline int cpu_disasm_op_load_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_load_i64(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "load.i64 r%d, %llu(r%d)",
         rc(i), uimm3(i) << 3, rb(i));
 }
 
-static inline int cpu_disasm_op_loadib_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_loadib_i64(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "loadib.i64 r%d, ib(%llu)(r%d)",
         rc(i), uimm3(i) << 3, rb(i));
 }
 
-static inline int cpu_disasm_op_cmp_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_cmp_i64(char *b, size_t l, i64 i, i64 c)
 {
     switch(uimm3(i)) {
     case cpu_compare_lt:
@@ -541,25 +549,25 @@ static inline int cpu_disasm_op_cmp_i64(char *b, size_t l, i64 i, i64 c)
     return snprintf(b, l, "invalid");
 }
 
-static inline int cpu_disasm_op_subib_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_subib_i64(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "subib.i64 r%d, r%d, ib(%llu)",
         rc(i), rb(i), uimm3(i));
 }
 
-static inline int cpu_disasm_op_store_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_store_i64(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "store.i64 r%d, %llu(r%d)",
         rc(i), uimm3(i), rb(i));
 }
 
-static inline int cpu_disasm_op_storeib_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_storeib_i64(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "storeib.i64 r%d, ib(%llu)(r%d)",
         rc(i), uimm3(i), rb(i));
 }
 
-static inline int cpu_disasm_op_logic_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_logic_i64(char *b, size_t l, i64 i, i64 c)
 {
     switch(uimm3(i)) {
     case cpu_logic_mov:
@@ -582,62 +590,62 @@ static inline int cpu_disasm_op_logic_i64(char *b, size_t l, i64 i, i64 c)
     return snprintf(b, l, "invalid");
 }
 
-static inline int cpu_disasm_op_pin_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_pin_i64(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "pin.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
 }
 
-static inline int cpu_disasm_op_and_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_and_i64(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "and.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
 }
 
-static inline int cpu_disasm_op_or_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_or_i64(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "or.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
 }
 
-static inline int cpu_disasm_op_xor_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_xor_i64(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "xor.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
 }
 
-static inline int cpu_disasm_op_sub_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_sub_i64(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "sub.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
 }
 
-static inline int cpu_disasm_op_srl_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_srl_i64(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "srl.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
 }
 
-static inline int cpu_disasm_op_sra_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_sra_i64(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "sra.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
 }
 
-static inline int cpu_disasm_op_sll_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_sll_i64(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "sll.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
 }
 
-static inline int cpu_disasm_op_add_i64(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_add_i64(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "add.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
 }
 
-static inline int cpu_disasm_op_nop(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_nop(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "nop %llu", uimm9(i));
 }
 
-static inline int cpu_disasm_op_ud1(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_ud1(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "ud1 %llu", uimm9(i));
 }
 
-static inline int cpu_disasm_op_ud2(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm_op_ud2(char *b, size_t l, i64 i, i64 c)
 {
     return snprintf(b, l, "ud2 %llu", uimm9(i));
 }
@@ -646,131 +654,131 @@ static inline int cpu_disasm_op_ud2(char *b, size_t l, i64 i, i64 c)
  * cpu instruction encoding
  */
 
-static inline i16 enc_break(int imm9)
+__glyph_func__ i16 enc_break(int imm9)
 {
     return cpu_op_break | ((imm9 & 511)<<7);
 }
-static inline i16 enc_j(int pcrel9)
+__glyph_func__ i16 enc_j(int pcrel9)
 {
     return cpu_op_j | ((pcrel9 & 511)<<7);
 }
-static inline i16 enc_b(int pcrel9)
+__glyph_func__ i16 enc_b(int pcrel9)
 {
     return cpu_op_b | ((pcrel9 & 511)<<7);
 }
-static inline i16 enc_ibl(int rc, int ibrel6)
+__glyph_func__ i16 enc_ibl(int rc, int ibrel6)
 {
     return cpu_op_ibl | ((ibrel6 & 63)<<7) | ((rc & 7)<<13);
 }
-static inline i16 enc_jalib(int rc, int ibrel6)
+__glyph_func__ i16 enc_jalib(int rc, int ibrel6)
 {
     return cpu_op_jalib | ((ibrel6 & 63)<<7) | ((rc & 7)<<13);
 }
-static inline i16 enc_jtlib(int rc, int ibrel6)
+__glyph_func__ i16 enc_jtlib(int rc, int ibrel6)
 {
     return cpu_op_jtlib | ((ibrel6 & 63)<<7) | ((rc & 7)<<13);
 }
-static inline i16 enc_lib_i64(int rc, int ibrel6)
+__glyph_func__ i16 enc_lib_i64(int rc, int ibrel6)
 {
     return cpu_op_lib_i64 | ((ibrel6 & 63)<<7) | ((rc & 7)<<13);
 }
-static inline i16 enc_li_i64(int rc, int imm6)
+__glyph_func__ i16 enc_li_i64(int rc, int imm6)
 {
     return cpu_op_li_i64 | ((imm6 & 63)<<7) | ((rc & 7)<<13);
 }
-static inline i16 enc_addi_i64(int rc, int imm6)
+__glyph_func__ i16 enc_addi_i64(int rc, int imm6)
 {
     return cpu_op_addi_i64 | ((imm6 & 63)<<7) | ((rc & 7)<<13);
 }
-static inline i16 enc_srli_i64(int rc, int imm6)
+__glyph_func__ i16 enc_srli_i64(int rc, int imm6)
 {
     return cpu_op_srli_i64 | ((imm6 & 63)<<7) | ((rc & 7)<<13);
 }
-static inline i16 enc_srai_i64(int rc, int imm6)
+__glyph_func__ i16 enc_srai_i64(int rc, int imm6)
 {
     return cpu_op_srai_i64 | ((imm6 & 63)<<7) | ((rc & 7)<<13);
 }
-static inline i16 enc_slli_i64(int rc, int imm6)
+__glyph_func__ i16 enc_slli_i64(int rc, int imm6)
 {
     return cpu_op_slli_i64 | ((imm6 & 63)<<7) | ((rc & 7)<<13);
 }
-static inline i16 enc_addib_i64(int rc, int rb, int ibimm3)
+__glyph_func__ i16 enc_addib_i64(int rc, int rb, int ibimm3)
 {
     return cpu_op_addib_i64 | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-static inline i16 enc_load_i64(int rc, int rb, int imm3)
+__glyph_func__ i16 enc_load_i64(int rc, int rb, int imm3)
 {
     return cpu_op_load_i64 | ((imm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-static inline i16 enc_loadib_i64(int rc, int rb, int ibimm3)
+__glyph_func__ i16 enc_loadib_i64(int rc, int rb, int ibimm3)
 {
     return cpu_op_loadib_i64 | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-static inline i16 enc_cmp_i64(int rc, int rb, int fun3)
+__glyph_func__ i16 enc_cmp_i64(int rc, int rb, int fun3)
 {
     return cpu_op_cmp_i64 | ((fun3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-static inline i16 enc_subib_i64(int rc, int rb, int ibimm3)
+__glyph_func__ i16 enc_subib_i64(int rc, int rb, int ibimm3)
 {
     return cpu_op_subib_i64 | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-static inline i16 enc_store_i64(int rc, int rb, int imm3)
+__glyph_func__ i16 enc_store_i64(int rc, int rb, int imm3)
 {
     return cpu_op_store_i64 | ((imm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-static inline i16 enc_storeib_i64(int rc, int rb, int ibimm3)
+__glyph_func__ i16 enc_storeib_i64(int rc, int rb, int ibimm3)
 {
     return cpu_op_storeib_i64 | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-static inline i16 enc_logic_i64(int rc, int rb, int fun3)
+__glyph_func__ i16 enc_logic_i64(int rc, int rb, int fun3)
 {
     return cpu_op_logic_i64 | ((fun3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-static inline i16 enc_pin_i64(int rc, int rb, int ra)
+__glyph_func__ i16 enc_pin_i64(int rc, int rb, int ra)
 {
     return cpu_op_pin_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-static inline i16 enc_and_i64(int rc, int rb, int ra)
+__glyph_func__ i16 enc_and_i64(int rc, int rb, int ra)
 {
     return cpu_op_and_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-static inline i16 enc_or_i64(int rc, int rb, int ra)
+__glyph_func__ i16 enc_or_i64(int rc, int rb, int ra)
 {
     return cpu_op_or_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-static inline i16 enc_xor_i64(int rc, int rb, int ra)
+__glyph_func__ i16 enc_xor_i64(int rc, int rb, int ra)
 {
     return cpu_op_xor_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-static inline i16 enc_sub_i64(int rc, int rb, int ra)
+__glyph_func__ i16 enc_sub_i64(int rc, int rb, int ra)
 {
     return cpu_op_sub_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-static inline i16 enc_srl_i64(int rc, int rb, int ra)
+__glyph_func__ i16 enc_srl_i64(int rc, int rb, int ra)
 {
     return cpu_op_srl_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-static inline i16 enc_sra_i64(int rc, int rb, int ra)
+__glyph_func__ i16 enc_sra_i64(int rc, int rb, int ra)
 {
     return cpu_op_sra_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-static inline i16 enc_sll_i64(int rc, int rb, int ra)
+__glyph_func__ i16 enc_sll_i64(int rc, int rb, int ra)
 {
     return cpu_op_sll_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-static inline i16 enc_add_i64(int rc, int rb, int ra)
+__glyph_func__ i16 enc_add_i64(int rc, int rb, int ra)
 {
     return cpu_op_add_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-static inline i16 enc_nop(int imm9)
+__glyph_func__ i16 enc_nop(int imm9)
 {
     return cpu_op_nop | ((imm9 & 511)<<7);
 }
-static inline i16 enc_ud1(int imm9)
+__glyph_func__ i16 enc_ud1(int imm9)
 {
     return cpu_op_ud1 | ((imm9 & 511)<<7);
 }
-static inline i16 enc_ud2(int imm9)
+__glyph_func__ i16 enc_ud2(int imm9)
 {
     return cpu_op_ud2 | ((imm9 & 511)<<7);
 }
@@ -779,7 +787,7 @@ static inline i16 enc_ud2(int imm9)
  * cpu implementation
  */
 
-static inline int cpu_exec(cpu_state *cpu, i64 inst)
+__glyph_func__ int cpu_exec(cpu_state *cpu, i64 inst)
 {
     switch (opc(inst)) {
     case cpu_op_break >> 2: return cpu_exec_op_break(cpu, inst);
@@ -818,7 +826,7 @@ static inline int cpu_exec(cpu_state *cpu, i64 inst)
     return -1;
 }
 
-static inline int cpu_disasm(char *b, size_t l, i64 i, i64 c)
+__glyph_func__ int cpu_disasm(char *b, size_t l, i64 i, i64 c)
 {
     switch (opc(i)) {
     case cpu_op_break >> 2: return cpu_disasm_op_break(b, l, i, c);
@@ -857,7 +865,7 @@ static inline int cpu_disasm(char *b, size_t l, i64 i, i64 c)
     return snprintf(b, l, "invalid");
 }
 
-static inline void cpu_init(cpu_state *cpu, size_t mem_size)
+__glyph_func__ void cpu_init(cpu_state *cpu, size_t mem_size)
 {
     cpu->flag = 0;
     memset(cpu->r, 0, sizeof(cpu->r));
@@ -867,7 +875,7 @@ static inline void cpu_init(cpu_state *cpu, size_t mem_size)
     cpu->mem_size = mem_size;
 }
 
-static inline int cpu_dump(cpu_state *cpu)
+__glyph_func__ int cpu_dump(cpu_state *cpu)
 {
     printf("pc:%016llx ib:%016llx flag:%d\n",
         cpu->pc, cpu->ib, cpu->flag);
@@ -878,7 +886,7 @@ static inline int cpu_dump(cpu_state *cpu)
     }
 }
 
-static inline void cpu_run(cpu_state *cpu, int trace, int dump)
+__glyph_func__ void cpu_run(cpu_state *cpu, int trace, int dump)
 {
     i16 inst;
     int ret = 0;
@@ -902,7 +910,7 @@ static inline void cpu_run(cpu_state *cpu, int trace, int dump)
     }
 }
 
-static inline void cpu_setup(cpu_state *cpu,
+__glyph_func__ void cpu_setup(cpu_state *cpu,
     i64 *c, size_t cl, i16 *i, size_t il)
 {
     char buf[128];
@@ -920,7 +928,7 @@ static inline void cpu_setup(cpu_state *cpu,
 }
 
 
-static inline void run_test(const char *name,
+__glyph_func__ void run_test(const char *name,
     i64 *c, size_t cl, i16 *i, size_t il)
 {
     printf("# test: %s\n", name);
