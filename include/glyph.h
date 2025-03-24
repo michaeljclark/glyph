@@ -138,6 +138,8 @@ struct cpu_state
     u64 ib;
     i8 *mem;
     size_t mem_size;
+    i8 is_trace;
+    i8 is_dump;
 };
 
 /*
@@ -813,7 +815,7 @@ __glyph_func__ i16 cpu_encode_op_ud2(int imm9)
 }
 
 /*
- * cpu implementation
+ * cpu dispatch
  */
 
 __glyph_func__ int cpu_exec(cpu_state *cpu, i64 inst)
@@ -894,6 +896,10 @@ __glyph_func__ int cpu_disasm(char *b, size_t l, i64 i, i64 c)
     return snprintf(b, l, "invalid");
 }
 
+/*
+ * cpu implementation
+ */
+
 __glyph_func__ void cpu_init(cpu_state *cpu, size_t mem_size)
 {
     cpu->flag = 0;
@@ -902,6 +908,8 @@ __glyph_func__ void cpu_init(cpu_state *cpu, size_t mem_size)
     cpu->ib = 0x400;
     cpu->mem = calloc(mem_size, 1);
     cpu->mem_size = mem_size;
+    cpu->is_trace = 1;
+    cpu->is_dump = 0;
 }
 
 __glyph_func__ int cpu_dump(cpu_state *cpu)
@@ -915,7 +923,7 @@ __glyph_func__ int cpu_dump(cpu_state *cpu)
     }
 }
 
-__glyph_func__ void cpu_run(cpu_state *cpu, int trace, int dump)
+__glyph_func__ void cpu_run(cpu_state *cpu)
 {
     i16 inst;
     int ret = 0;
@@ -923,12 +931,9 @@ __glyph_func__ void cpu_run(cpu_state *cpu, int trace, int dump)
     for (;;)
     {
         inst = cpu_fetch(cpu);
-        if (trace) {
+        if (cpu->is_trace) {
             cpu_disasm(buf, sizeof(buf), inst, cpu->pc);
             cpu_debug("-- %08llx %04hx %s", cpu->pc, inst, buf);
-        }
-        if (dump) {
-            cpu_dump(cpu);
         }
         ret = cpu_exec(cpu, inst);
         if (ret < 0) {
@@ -936,6 +941,9 @@ __glyph_func__ void cpu_run(cpu_state *cpu, int trace, int dump)
             return;
         }
         cpu->pc += ret;
+        if (cpu->is_dump) {
+            cpu_dump(cpu);
+        }
     }
 }
 
@@ -970,7 +978,7 @@ __glyph_func__ void cpu_test_impl(const char *name,
     cpu_setup(&cpu, c, cl, i, il);
     cpu_debug();
     cpu_debug("++ begin");
-    cpu_run(&cpu, 1, 0);
+    cpu_run(&cpu);
     cpu_debug("++ end\n");
     cpu_debug("# state");
     cpu_dump(&cpu);

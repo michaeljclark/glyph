@@ -227,7 +227,7 @@ def cpu_fetch_i16(cpu):
 #
 
 def cpu_exec_op_break(cpu,inst):
-    raise Exception('break')
+    return -1
 def cpu_exec_op_j(cpu,inst):
     cpu.pc = sux(cpu.pc +  (simm9(inst) << 1) + 2)
     return 0
@@ -368,9 +368,9 @@ def cpu_exec_op_add_i64(cpu,inst):
 def cpu_exec_op_nop(cpu,inst):
     return 2
 def cpu_exec_op_ud1(cpu,inst):
-    raise Exception('ud1')
+    return -1
 def cpu_exec_op_ud2(cpu,inst):
-    raise Exception('ud2')
+    return -1
 
 #
 # cpu disassembly
@@ -541,7 +541,7 @@ def cpu_encode_op_ud2(imm9):
     return Opcode.op_ud2.value | ((imm9 & 511)<<7)
 
 #
-# cpu tables
+# cpu dispatch
 #
 
 cpu_exec_table = {
@@ -614,6 +614,16 @@ cpu_disasm_table = {
     Opcode.op_ud2.value:            cpu_disasm_op_ud2
 }
 
+def cpu_disasm(cpu,inst):
+    op = Opcode(opc(inst) << 2)
+    asm = cpu_disasm_table[op.value](cpu, inst)
+    text = '%04x %s' % (su16(inst), asm)
+    return text
+
+def cpu_exec(cpu,inst):
+    op = Opcode(opc(inst) << 2)
+    return cpu_exec_table[op.value](cpu, inst)
+
 #
 # cpu implementation
 #
@@ -626,28 +636,17 @@ def cpu_dump(cpu):
             i+0, cpu.r[i+0], i+1, cpu.r[i+1],
             i+2, cpu.r[i+2], i+3, cpu.r[i+3]))
 
-def cpu_disasm(cpu,inst):
-    op = Opcode(opc(inst) << 2)
-    text = '%04x %s' % (su16(inst), cpu_disasm_table[op.value](cpu, inst))
-    return text
-
-def cpu_exec(cpu,inst):
-    op = Opcode(opc(inst) << 2)
-    try:
-        advance = cpu_exec_table[op.value](cpu, inst)
-        cpu.pc += advance
-        return True
-    except Exception as err:
-        cpu_debug("** %08x cpu exception" % cpu.pc)
-        return False
-
 def cpu_run(cpu):
     while True:
         inst = cpu_fetch_i16(cpu)
         if cpu.is_trace:
-            cpu_debug('-- %08x %s' % (cpu.pc, cpu_disasm(cpu, inst)))
-        if not cpu_exec(cpu, inst):
+            asm = cpu_disasm(cpu, inst)
+            cpu_debug('-- %08x %s' % (cpu.pc, asm))
+        ret = cpu_exec(cpu, inst)
+        if ret < 0:
+            cpu_debug("** %08x cpu exception" % cpu.pc)
             return
+        cpu.pc += ret
         if cpu.is_dump:
             cpu_dump(cpu)
 
