@@ -140,35 +140,6 @@ struct cpu_state
 };
 
 /*
- * cpu initialization
- */
-
-static inline void cpu_init(cpu_state *cpu, size_t mem_size)
-{
-    cpu->flag = 0;
-    memset(cpu->r, 0, sizeof(cpu->r));
-    cpu->pc = 0x800;
-    cpu->ib = 0x400;
-    cpu->mem = calloc(mem_size, 1);
-    cpu->mem_size = mem_size;
-}
-
-/*
- * cpu state
- */
-
-static inline int cpu_dump(cpu_state *cpu)
-{
-    printf("pc:%016llx ib:%016llx flag:%d\n",
-        cpu->pc, cpu->ib, cpu->flag);
-    for (uint i = 0; i < cpu_reg_count; i += 4) {
-        printf("r%d:%016llx r%d:%016llx r%d:%016llx r%d:%016llx\n",
-            i+0, cpu->r[i+0], i+1, cpu->r[i+1],
-            i+2, cpu->r[i+2], i+3, cpu->r[i+3]);
-    }
-}
-
-/*
  * load, store and constant memory
  */
 
@@ -193,357 +164,486 @@ static inline i16 cpu_fetch(cpu_state *cpu)
 }
 
 /*
- * cpu implementation
+ * cpu emulation
  */
 
-static inline int cpu_exec(cpu_state *cpu, i64 inst)
+static inline int cpu_exec_op_break(cpu_state *cpu, i64 inst)
 {
-    u64 upc, uib, npc, nib;
-    i64 tmp;
-    switch (opc(inst)) {
-    case cpu_op_break >> 2:
-        switch(uimm9(inst)) {
-        case 511: cpu_dump(cpu); break;
-        default: return -1;
-        }
-        break;
-    case cpu_op_j >> 2:
-        cpu->pc = cpu->pc + (simm9(inst) << 1) + 2;
-        return 0;
-    case cpu_op_b >> 2:
-        if (cpu->flag) {
-            cpu->pc = cpu->pc + (simm9(inst) << 1) + 2;
-            return 0;
-        }
-        break;
-    case cpu_op_ibl >> 2:
-        cpu->r[rc(inst)] = cpu->ib;
-        tmp = cpu_const_i64(cpu, uimm6(inst)) & ~7ll;
-        cpu->ib = cpu->ib + tmp;
-        break;
-    case cpu_op_jalib >> 2:
-        tmp = cpu_const_i64(cpu, uimm6(inst));
-        upc = ((tmp << 32 >> 32) & ~1ll);
-        uib = ((tmp       >> 32) & ~7ll);
-        cpu->pc = cpu->pc + upc + 2;
-        cpu->ib = cpu->ib + uib;
-        cpu->r[rc(inst)] = tmp;
-        return 0;
-    case cpu_op_jtlib >> 2:
-        tmp = cpu->r[rc(inst)];
-        upc = ((tmp << 32 >> 32) & ~1ll);
-        uib = ((tmp       >> 32) & ~7ll);
-        tmp = cpu_const_i64(cpu, uimm6(inst));
-        npc = ((tmp << 32 >> 32) & ~1ll);
-        nib = ((tmp       >> 32) & ~7ll);
-        cpu->pc = cpu->pc + npc - upc;
-        cpu->ib = cpu->ib + nib - uib;
-        return 0;
-    case cpu_op_lib_i64 >> 2:
-        tmp = cpu_const_i64(cpu, uimm6(inst));
-        cpu->r[rc(inst)] = tmp;
-        break;
-    case cpu_op_li_i64 >> 2:
-        cpu->r[rc(inst)] = simm6(inst);
-        break;
-    case cpu_op_addi_i64 >> 2:
-        cpu->r[rc(inst)] = cpu->r[rc(inst)] + simm6(inst);
-        break;
-    case cpu_op_srli_i64 >> 2:
-        cpu->r[rc(inst)] = (u64)cpu->r[rc(inst)] >> uimm6(inst);
-        break;
-    case cpu_op_srai_i64 >> 2:
-        cpu->r[rc(inst)] = cpu->r[rc(inst)] >> uimm6(inst);
-        break;
-    case cpu_op_slli_i64 >> 2:
-        cpu->r[rc(inst)] = cpu->r[rc(inst)] << uimm6(inst);
-        break;
-    case cpu_op_addib_i64 >> 2:
-        cpu->r[rc(inst)] = cpu->r[rb(inst)] + cpu_const_i64(cpu, uimm3(inst));
-        break;
-    case cpu_op_load_i64 >> 2:
-        tmp = cpu->r[rb(inst)] + (uimm3(inst) << 3);
-        cpu->r[rc(inst)] = cpu_load_i64(cpu, tmp);
-        break;
-    case cpu_op_loadib_i64 >> 2:
-        tmp = cpu->r[rb(inst)] + cpu_const_i64(cpu, uimm3(inst));
-        cpu->r[rc(inst)] = cpu_load_i64(cpu, tmp);
-        break;
-    case cpu_op_cmp_i64 >> 2:
-        switch(uimm3(inst)) {
-        case cpu_compare_lt:
-            cpu->flag = cpu->r[rc(inst)] < cpu->r[rb(inst)];
-            break;
-        case cpu_compare_ge:
-            cpu->flag = cpu->r[rc(inst)] >= cpu->r[rb(inst)];
-            break;
-        case cpu_compare_eq:
-            cpu->flag = cpu->r[rc(inst)] == cpu->r[rb(inst)];
-            break;
-        case cpu_compare_ne:
-            cpu->flag = cpu->r[rc(inst)] != cpu->r[rb(inst)];
-            break;
-        case cpu_compare_ltu:
-            cpu->flag = (u64)cpu->r[rc(inst)] < (u64)cpu->r[rb(inst)];
-            break;
-        case cpu_compare_geu:
-            cpu->flag = (u64)cpu->r[rc(inst)] >= (u64)cpu->r[rb(inst)];
-            break;
-        }
-        break;
-    case cpu_op_subib_i64 >> 2:
-        cpu->r[rc(inst)] = cpu->r[rb(inst)] - cpu_const_i64(cpu, uimm3(inst));
-        break;
-    case cpu_op_store_i64 >> 2:
-        tmp = cpu->r[rb(inst)] + (uimm3(inst) << 3);
-        cpu_store_i64(cpu, tmp, cpu->r[rc(inst)]);
-        break;
-    case cpu_op_storeib_i64 >> 2:
-        tmp = cpu->r[rb(inst)] + cpu_const_i64(cpu, uimm3(inst));
-        cpu_store_i64(cpu, tmp, cpu->r[rc(inst)]);
-        break;
-    case cpu_op_logic_i64 >> 2:
-        switch(uimm3(inst)) {
-        case cpu_logic_mov:
-            cpu->r[rc(inst)] = cpu->r[rb(inst)];
-            break;
-        case cpu_logic_not:
-            cpu->r[rc(inst)] = ~cpu->r[rb(inst)];
-            break;
-        case cpu_logic_neg:
-            cpu->r[rc(inst)] = -cpu->r[rb(inst)];
-            break;
-        case cpu_logic_bswap:
-            cpu->r[rc(inst)] = __builtin_bswap64(cpu->r[rb(inst)]);
-            break;
-        case cpu_logic_ctz:
-            cpu->r[rc(inst)] = __builtin_ctzll(cpu->r[rb(inst)]);
-            break;
-        case cpu_logic_clz:
-            cpu->r[rc(inst)] = __builtin_clzll(cpu->r[rb(inst)]);
-            break;
-        case cpu_logic_ctpop:
-            cpu->r[rc(inst)] = __builtin_popcountll(cpu->r[rb(inst)]);
-            break;
-        default:
-            return -1;
-        }
-        break;
-    case cpu_op_pin_i64 >> 2:
-        upc = cpu->pc - cpu->r[ra(inst)] + 2;
-        uib = cpu->ib - cpu->r[rb(inst)];
-        tmp = (upc << 32 >> 32) | (uib << 32);
-        cpu->r[rc(inst)] = tmp;
-        break;
-    case cpu_op_and_i64 >> 2:
-        cpu->r[rc(inst)] = cpu->r[rb(inst)] & cpu->r[ra(inst)];
-        break;
-    case cpu_op_or_i64 >> 2:
-        cpu->r[rc(inst)] = cpu->r[rb(inst)] | cpu->r[ra(inst)];
-        break;
-    case cpu_op_xor_i64 >> 2:
-        cpu->r[rc(inst)] = cpu->r[rb(inst)] ^ cpu->r[ra(inst)];
-        break;
-    case cpu_op_sub_i64 >> 2:
-        cpu->r[rc(inst)] = cpu->r[rb(inst)] - cpu->r[ra(inst)];
-        break;
-    case cpu_op_srl_i64 >> 2:
-        cpu->r[rc(inst)] = (u64)cpu->r[rb(inst)] >> cpu->r[ra(inst)];
-        break;
-    case cpu_op_sra_i64 >> 2:
-        cpu->r[rc(inst)] = cpu->r[rb(inst)] >> cpu->r[ra(inst)];
-        break;
-    case cpu_op_sll_i64 >> 2:
-        cpu->r[rc(inst)] = cpu->r[rb(inst)] << cpu->r[ra(inst)];
-        break;
-    case cpu_op_add_i64 >> 2:
-        cpu->r[rc(inst)] = cpu->r[rb(inst)] + cpu->r[ra(inst)];
-        break;
-    case cpu_op_nop >> 2:
-        break;
-    case cpu_op_ud1 >> 2:
-    case cpu_op_ud2 >> 2:
-        return -1;
-    }
-    cpu->pc = cpu->pc + 2;
+    return -1;
+}
+
+static inline int cpu_exec_op_j(cpu_state *cpu, i64 inst)
+{
+    cpu->pc = cpu->pc + (simm9(inst) << 1) + 2;
     return 0;
 }
 
-/*
- * disassembler
- */
-
-static inline int cpu_disasm(char *buf, size_t len, i64 inst, i64 pc_offset)
+static inline int cpu_exec_op_b(cpu_state *cpu, i64 inst)
 {
-    switch (opc(inst)) {
-    case cpu_op_break >> 2:
-        return snprintf(buf, len, "break %llu",
-            uimm9(inst));
-    case cpu_op_j >> 2:
-        return snprintf(buf, len, "j %lld",
-            simm9(inst));
-    case cpu_op_b >> 2:
-        return snprintf(buf, len, "b %lld",
-            simm9(inst));
-    case cpu_op_ibl >> 2:
-        return snprintf(buf, len, "ibl ib(%llu)",
-            uimm6(inst));
-    case cpu_op_jalib >> 2:
-        return snprintf(buf, len, "jalib r%d, ib(%llu)",
-            rc(inst), uimm6(inst));
-    case cpu_op_jtlib >> 2:
-        return snprintf(buf, len, "jtlib ib(%llu), r%d",
-            uimm6(inst), rc(inst));
-    case cpu_op_lib_i64 >> 2:
-        return snprintf(buf, len, "lib.i64 r%d, ib(%llu)",
-            rc(inst), uimm6(inst));
-    case cpu_op_li_i64 >> 2:
-        return snprintf(buf, len, "li.i64 r%d, %lld",
-            rc(inst), simm6(inst));
-    case cpu_op_addi_i64 >> 2:
-        return snprintf(buf, len, "addi.i64 r%d, %lld",
-            rc(inst), simm6(inst));
-    case cpu_op_srli_i64 >> 2:
-        return snprintf(buf, len, "srli.i64 r%d, %llu",
-            rc(inst), uimm6(inst));
-    case cpu_op_srai_i64 >> 2:
-        return snprintf(buf, len, "srai.i64 r%d, %llu",
-            rc(inst), uimm6(inst));
-    case cpu_op_slli_i64 >> 2:
-        return snprintf(buf, len, "slli.i64 r%d, %llu",
-            rc(inst), uimm6(inst));
-    case cpu_op_addib_i64 >> 2:
-        return snprintf(buf, len, "addib.i64 r%d, r%d, ib(%llu)",
-            rc(inst), rb(inst), uimm3(inst));
-    case cpu_op_load_i64 >> 2:
-        return snprintf(buf, len, "load.i64 r%d, %llu(r%d)",
-            rc(inst), uimm3(inst) << 3, rb(inst));
-    case cpu_op_loadib_i64 >> 2:
-        return snprintf(buf, len, "loadib.i64 r%d, ib(%llu)(r%d)",
-            rc(inst), uimm3(inst) << 3, rb(inst));
-    case cpu_op_cmp_i64 >> 2:
-        switch(uimm3(inst)) {
-        case cpu_compare_lt:
-            return snprintf(buf, len, "cmp.lt.i64 r%d, r%d",
-                rc(inst), rb(inst));
-        case cpu_compare_ge:
-            return snprintf(buf, len, "cmp.ge.i64 r%d, r%d",
-                rc(inst), rb(inst));
-        case cpu_compare_eq:
-            return snprintf(buf, len, "cmp.eq.i64 r%d, r%d",
-                rc(inst), rb(inst));
-        case cpu_compare_ne:
-            return snprintf(buf, len, "cmp.ne.i64 r%d, r%d",
-                rc(inst), rb(inst));
-        case cpu_compare_ltu:
-            return snprintf(buf, len, "cmp.ltu.i64 r%d, r%d",
-                rc(inst), rb(inst));
-        case cpu_compare_geu:
-            return snprintf(buf, len, "cmp.geu.i64 r%d, r%d",
-                rc(inst), rb(inst));
-        }
-        break;
-    case cpu_op_subib_i64 >> 2:
-        return snprintf(buf, len, "subib.i64 r%d, r%d, ib(%llu)",
-            rc(inst), rb(inst), uimm3(inst));
-    case cpu_op_store_i64 >> 2:
-        return snprintf(buf, len, "store.i64 r%d, %llu(r%d)",
-            rc(inst), uimm3(inst), rb(inst));
-    case cpu_op_storeib_i64 >> 2:
-        return snprintf(buf, len, "storeib.i64 r%d, ib(%llu)(r%d)",
-            rc(inst), uimm3(inst), rb(inst));
-    case cpu_op_logic_i64 >> 2:
-        switch(uimm3(inst)) {
-        case cpu_logic_mov:
-            return snprintf(buf, len, "mov.i64 r%d, r%d",
-                rc(inst), rb(inst));
-        case cpu_logic_not:
-            return snprintf(buf, len, "not.i64 r%d, r%d",
-                rc(inst), rb(inst));
-        case cpu_logic_neg:
-            return snprintf(buf, len, "neg.i64 r%d, r%d",
-                rc(inst), rb(inst));
-        case cpu_logic_bswap:
-            return snprintf(buf, len, "bswap.i64 r%d, r%d",
-                rc(inst), rb(inst));
-        case cpu_logic_ctz:
-            return snprintf(buf, len, "ctz.i64 r%d, r%d",
-                rc(inst), rb(inst));
-        case cpu_logic_clz:
-            return snprintf(buf, len, "clz.i64 r%d, r%d",
-                rc(inst), rb(inst));
-        case cpu_logic_ctpop:
-            return snprintf(buf, len, "ctpop.i64 r%d, r%d",
-                rc(inst), rb(inst));
-        default:
-            return snprintf(buf, len, "invalid");
-        }
-        break;
-    case cpu_op_pin_i64 >> 2:
-        return snprintf(buf, len, "pin.i64 r%d, r%d, r%d",
-            rc(inst), rb(inst), ra(inst));
-    case cpu_op_and_i64 >> 2:
-        return snprintf(buf, len, "and.i64 r%d, r%d, r%d",
-            rc(inst), rb(inst), ra(inst));
-    case cpu_op_or_i64 >> 2:
-        return snprintf(buf, len, "or.i64 r%d, r%d, r%d",
-            rc(inst), rb(inst), ra(inst));
-    case cpu_op_xor_i64 >> 2:
-        return snprintf(buf, len, "xor.i64 r%d, r%d, r%d",
-            rc(inst), rb(inst), ra(inst));
-    case cpu_op_sub_i64 >> 2:
-        return snprintf(buf, len, "sub.i64 r%d, r%d, r%d",
-            rc(inst), rb(inst), ra(inst));
-    case cpu_op_srl_i64 >> 2:
-        return snprintf(buf, len, "srl.i64 r%d, r%d, r%d",
-            rc(inst), rb(inst), ra(inst));
-    case cpu_op_sra_i64 >> 2:
-        return snprintf(buf, len, "sra.i64 r%d, r%d, r%d",
-            rc(inst), rb(inst), ra(inst));
-    case cpu_op_sll_i64 >> 2:
-        return snprintf(buf, len, "sll.i64 r%d, r%d, r%d",
-            rc(inst), rb(inst), ra(inst));
-    case cpu_op_add_i64 >> 2:
-        return snprintf(buf, len, "add.i64 r%d, r%d, r%d",
-            rc(inst), rb(inst), ra(inst));
-    case cpu_op_nop >> 2:
-        return snprintf(buf, len, "nop %llu",
-            uimm9(inst));
-    case cpu_op_ud1 >> 2:
-        return snprintf(buf, len, "ud1 %llu",
-            uimm9(inst));
-    case cpu_op_ud2 >> 2:
-        return snprintf(buf, len, "ud2 %llu",
-            uimm9(inst));
+    if (cpu->flag) {
+        cpu->pc = cpu->pc + (simm9(inst) << 1) + 2;
+        return 0;
     }
-    return snprintf(buf, len, "invalid");
+    return 2;
+}
+
+static inline int cpu_exec_op_ibl(cpu_state *cpu, i64 inst)
+{
+    i64 tmp;
+    cpu->r[rc(inst)] = cpu->ib;
+    tmp = cpu_const_i64(cpu, uimm6(inst)) & ~7ll;
+    cpu->ib = cpu->ib + tmp;
+    return 2;
+}
+
+static inline int cpu_exec_op_jalib(cpu_state *cpu, i64 inst)
+{
+    u64 upc, uib;
+    i64 tmp;
+    tmp = cpu_const_i64(cpu, uimm6(inst));
+    upc = ((tmp << 32 >> 32) & ~1ll);
+    uib = ((tmp       >> 32) & ~7ll);
+    cpu->pc = cpu->pc + upc + 2;
+    cpu->ib = cpu->ib + uib;
+    cpu->r[rc(inst)] = tmp;
+    return 0;
+}
+
+static inline int cpu_exec_op_jtlib(cpu_state *cpu, i64 inst)
+{
+    u64 upc, uib;
+    u64 npc, nib;
+    i64 tmp;
+    tmp = cpu->r[rc(inst)];
+    upc = ((tmp << 32 >> 32) & ~1ll);
+    uib = ((tmp       >> 32) & ~7ll);
+    tmp = cpu_const_i64(cpu, uimm6(inst));
+    npc = ((tmp << 32 >> 32) & ~1ll);
+    nib = ((tmp       >> 32) & ~7ll);
+    cpu->pc = cpu->pc + npc - upc;
+    cpu->ib = cpu->ib + nib - uib;
+    return 0;
+}
+
+static inline int cpu_exec_op_lib_i64(cpu_state *cpu, i64 inst)
+{
+    i64 tmp;
+    tmp = cpu_const_i64(cpu, uimm6(inst));
+    cpu->r[rc(inst)] = tmp;
+    return 2;
+}
+
+static inline int cpu_exec_op_li_i64(cpu_state *cpu, i64 inst)
+{
+    cpu->r[rc(inst)] = simm6(inst);
+    return 2;
+}
+
+static inline int cpu_exec_op_addi_i64(cpu_state *cpu, i64 inst)
+{
+    cpu->r[rc(inst)] = cpu->r[rc(inst)] + simm6(inst);
+    return 2;
+}
+
+static inline int cpu_exec_op_srli_i64(cpu_state *cpu, i64 inst)
+{
+    cpu->r[rc(inst)] = (u64)cpu->r[rc(inst)] >> uimm6(inst);
+    return 2;
+}
+
+static inline int cpu_exec_op_srai_i64(cpu_state *cpu, i64 inst)
+{
+    cpu->r[rc(inst)] = cpu->r[rc(inst)] >> uimm6(inst);
+    return 2;
+}
+
+static inline int cpu_exec_op_slli_i64(cpu_state *cpu, i64 inst)
+{
+    cpu->r[rc(inst)] = cpu->r[rc(inst)] << uimm6(inst);
+    return 2;
+}
+
+static inline int cpu_exec_op_addib_i64(cpu_state *cpu, i64 inst)
+{
+    cpu->r[rc(inst)] = cpu->r[rb(inst)] + cpu_const_i64(cpu, uimm3(inst));
+    return 2;
+}
+
+static inline int cpu_exec_op_load_i64(cpu_state *cpu, i64 inst)
+{
+    i64 tmp;
+    tmp = cpu->r[rb(inst)] + (uimm3(inst) << 3);
+    cpu->r[rc(inst)] = cpu_load_i64(cpu, tmp);
+    return 2;
+}
+
+static inline int cpu_exec_op_loadib_i64(cpu_state *cpu, i64 inst)
+{
+    i64 tmp;
+    tmp = cpu->r[rb(inst)] + cpu_const_i64(cpu, uimm3(inst));
+    cpu->r[rc(inst)] = cpu_load_i64(cpu, tmp);
+    return 2;
+}
+
+static inline int cpu_exec_op_cmp_i64(cpu_state *cpu, i64 inst)
+{
+    switch(uimm3(inst)) {
+    case cpu_compare_lt:
+        cpu->flag = cpu->r[rc(inst)] < cpu->r[rb(inst)];
+        break;
+    case cpu_compare_ge:
+        cpu->flag = cpu->r[rc(inst)] >= cpu->r[rb(inst)];
+        break;
+    case cpu_compare_eq:
+        cpu->flag = cpu->r[rc(inst)] == cpu->r[rb(inst)];
+        break;
+    case cpu_compare_ne:
+        cpu->flag = cpu->r[rc(inst)] != cpu->r[rb(inst)];
+        break;
+    case cpu_compare_ltu:
+        cpu->flag = (u64)cpu->r[rc(inst)] < (u64)cpu->r[rb(inst)];
+        break;
+    case cpu_compare_geu:
+        cpu->flag = (u64)cpu->r[rc(inst)] >= (u64)cpu->r[rb(inst)];
+        break;
+    default:
+        return -1;
+    }
+    return 2;
+}
+
+static inline int cpu_exec_op_subib_i64(cpu_state *cpu, i64 inst)
+{
+    cpu->r[rc(inst)] = cpu->r[rb(inst)] - cpu_const_i64(cpu, uimm3(inst));
+    return 2;
+}
+
+static inline int cpu_exec_op_store_i64(cpu_state *cpu, i64 inst)
+{
+    i64 tmp;
+    tmp = cpu->r[rb(inst)] + (uimm3(inst) << 3);
+    cpu_store_i64(cpu, tmp, cpu->r[rc(inst)]);
+    return 2;
+}
+
+static inline int cpu_exec_op_storeib_i64(cpu_state *cpu, i64 inst)
+{
+    i64 tmp;
+    tmp = cpu->r[rb(inst)] + cpu_const_i64(cpu, uimm3(inst));
+    cpu_store_i64(cpu, tmp, cpu->r[rc(inst)]);
+    return 2;
+}
+
+static inline int cpu_exec_op_logic_i64(cpu_state *cpu, i64 inst)
+{
+    switch(uimm3(inst)) {
+    case cpu_logic_mov:
+        cpu->r[rc(inst)] = cpu->r[rb(inst)];
+        break;
+    case cpu_logic_not:
+        cpu->r[rc(inst)] = ~cpu->r[rb(inst)];
+        break;
+    case cpu_logic_neg:
+        cpu->r[rc(inst)] = -cpu->r[rb(inst)];
+        break;
+    case cpu_logic_bswap:
+        cpu->r[rc(inst)] = __builtin_bswap64(cpu->r[rb(inst)]);
+        break;
+    case cpu_logic_ctz:
+        cpu->r[rc(inst)] = __builtin_ctzll(cpu->r[rb(inst)]);
+        break;
+    case cpu_logic_clz:
+        cpu->r[rc(inst)] = __builtin_clzll(cpu->r[rb(inst)]);
+        break;
+    case cpu_logic_ctpop:
+        cpu->r[rc(inst)] = __builtin_popcountll(cpu->r[rb(inst)]);
+        break;
+    default:
+        return -1;
+    }
+    return 2;
+}
+
+static inline int cpu_exec_op_pin_i64(cpu_state *cpu, i64 inst)
+{
+    u64 upc, uib;
+    i64 tmp;
+    upc = cpu->pc - cpu->r[ra(inst)] + 2;
+    uib = cpu->ib - cpu->r[rb(inst)];
+    tmp = (upc << 32 >> 32) | (uib << 32);
+    cpu->r[rc(inst)] = tmp;
+    return 2;
+}
+
+static inline int cpu_exec_op_and_i64(cpu_state *cpu, i64 inst)
+{
+    cpu->r[rc(inst)] = cpu->r[rb(inst)] & cpu->r[ra(inst)];
+    return 2;
+}
+
+static inline int cpu_exec_op_or_i64(cpu_state *cpu, i64 inst)
+{
+    cpu->r[rc(inst)] = cpu->r[rb(inst)] | cpu->r[ra(inst)];
+    return 2;
+}
+
+static inline int cpu_exec_op_xor_i64(cpu_state *cpu, i64 inst)
+{
+    cpu->r[rc(inst)] = cpu->r[rb(inst)] ^ cpu->r[ra(inst)];
+    return 2;
+}
+
+static inline int cpu_exec_op_sub_i64(cpu_state *cpu, i64 inst)
+{
+    cpu->r[rc(inst)] = cpu->r[rb(inst)] - cpu->r[ra(inst)];
+    return 2;
+}
+
+static inline int cpu_exec_op_srl_i64(cpu_state *cpu, i64 inst)
+{
+    cpu->r[rc(inst)] = (u64)cpu->r[rb(inst)] >> cpu->r[ra(inst)];
+    return 2;
+}
+
+static inline int cpu_exec_op_sra_i64(cpu_state *cpu, i64 inst)
+{
+    cpu->r[rc(inst)] = cpu->r[rb(inst)] >> cpu->r[ra(inst)];
+    return 2;
+}
+
+static inline int cpu_exec_op_sll_i64(cpu_state *cpu, i64 inst)
+{
+    cpu->r[rc(inst)] = cpu->r[rb(inst)] << cpu->r[ra(inst)];
+    return 2;
+}
+
+static inline int cpu_exec_op_add_i64(cpu_state *cpu, i64 inst)
+{
+    cpu->r[rc(inst)] = cpu->r[rb(inst)] + cpu->r[ra(inst)];
+    return 2;
+}
+
+static inline int cpu_exec_op_nop(cpu_state *cpu, i64 inst)
+{
+    return 2;
+}
+
+static inline int cpu_exec_op_ud1(cpu_state *cpu, i64 inst)
+{
+    return -1;
+}
+
+static inline int cpu_exec_op_ud2(cpu_state *cpu, i64 inst)
+{
+    return -1;
 }
 
 /*
- * runloop
+ * cpu disassembly
  */
 
-static inline int cpu_run(cpu_state *cpu, int trace, int dump)
+static inline int cpu_disasm_op_break(char *b, size_t l, i64 i, i64 c)
 {
-    i16 inst;
-    int ret = 0;
-    char buf[128];
-    while (!ret)
-    {
-        inst = cpu_fetch(cpu);
-        if (trace) {
-            cpu_disasm(buf, sizeof(buf), inst, cpu->pc);
-            printf("-- %08llx %04hx %s\n", cpu->pc, inst, buf);
-        }
-        if (dump) {
-            cpu_dump(cpu);
-        }
-        ret = cpu_exec(cpu, inst);
+    return snprintf(b, l, "break %llu", uimm9(i));
+}
+
+static inline int cpu_disasm_op_j(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "j %lld", simm9(i));
+}
+
+static inline int cpu_disasm_op_b(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "b %lld", simm9(i));
+}
+
+static inline int cpu_disasm_op_ibl(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "ibl ib(%llu)", uimm6(i));
+}
+
+static inline int cpu_disasm_op_jalib(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "jalib r%d, ib(%llu)", rc(i), uimm6(i));
+}
+
+static inline int cpu_disasm_op_jtlib(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "jtlib ib(%llu), r%d", uimm6(i), rc(i));
+}
+
+static inline int cpu_disasm_op_lib_i64(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "lib.i64 r%d, ib(%llu)", rc(i), uimm6(i));
+}
+
+static inline int cpu_disasm_op_li_i64(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "li.i64 r%d, %lld", rc(i), simm6(i));
+}
+
+static inline int cpu_disasm_op_addi_i64(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "addi.i64 r%d, %lld", rc(i), simm6(i));
+}
+
+static inline int cpu_disasm_op_srli_i64(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "srli.i64 r%d, %llu", rc(i), uimm6(i));
+}
+
+static inline int cpu_disasm_op_srai_i64(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "srai.i64 r%d, %llu", rc(i), uimm6(i));
+}
+
+static inline int cpu_disasm_op_slli_i64(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "slli.i64 r%d, %llu", rc(i), uimm6(i));
+}
+
+static inline int cpu_disasm_op_addib_i64(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "addib.i64 r%d, r%d, ib(%llu)",
+        rc(i), rb(i), uimm3(i));
+}
+
+static inline int cpu_disasm_op_load_i64(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "load.i64 r%d, %llu(r%d)",
+        rc(i), uimm3(i) << 3, rb(i));
+}
+
+static inline int cpu_disasm_op_loadib_i64(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "loadib.i64 r%d, ib(%llu)(r%d)",
+        rc(i), uimm3(i) << 3, rb(i));
+}
+
+static inline int cpu_disasm_op_cmp_i64(char *b, size_t l, i64 i, i64 c)
+{
+    switch(uimm3(i)) {
+    case cpu_compare_lt:
+        return snprintf(b, l, "cmp.lt.i64 r%d, r%d", rc(i), rb(i));
+    case cpu_compare_ge:
+        return snprintf(b, l, "cmp.ge.i64 r%d, r%d", rc(i), rb(i));
+    case cpu_compare_eq:
+        return snprintf(b, l, "cmp.eq.i64 r%d, r%d", rc(i), rb(i));
+    case cpu_compare_ne:
+        return snprintf(b, l, "cmp.ne.i64 r%d, r%d", rc(i), rb(i));
+    case cpu_compare_ltu:
+        return snprintf(b, l, "cmp.ltu.i64 r%d, r%d", rc(i), rb(i));
+    case cpu_compare_geu:
+        return snprintf(b, l, "cmp.geu.i64 r%d, r%d", rc(i), rb(i));
+    default:
+        break;
     }
+    return snprintf(b, l, "invalid");
+}
+
+static inline int cpu_disasm_op_subib_i64(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "subib.i64 r%d, r%d, ib(%llu)",
+        rc(i), rb(i), uimm3(i));
+}
+
+static inline int cpu_disasm_op_store_i64(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "store.i64 r%d, %llu(r%d)",
+        rc(i), uimm3(i), rb(i));
+}
+
+static inline int cpu_disasm_op_storeib_i64(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "storeib.i64 r%d, ib(%llu)(r%d)",
+        rc(i), uimm3(i), rb(i));
+}
+
+static inline int cpu_disasm_op_logic_i64(char *b, size_t l, i64 i, i64 c)
+{
+    switch(uimm3(i)) {
+    case cpu_logic_mov:
+        return snprintf(b, l, "mov.i64 r%d, r%d", rc(i), rb(i));
+    case cpu_logic_not:
+        return snprintf(b, l, "not.i64 r%d, r%d", rc(i), rb(i));
+    case cpu_logic_neg:
+        return snprintf(b, l, "neg.i64 r%d, r%d", rc(i), rb(i));
+    case cpu_logic_bswap:
+        return snprintf(b, l, "bswap.i64 r%d, r%d", rc(i), rb(i));
+    case cpu_logic_ctz:
+        return snprintf(b, l, "ctz.i64 r%d, r%d", rc(i), rb(i));
+    case cpu_logic_clz:
+        return snprintf(b, l, "clz.i64 r%d, r%d", rc(i), rb(i));
+    case cpu_logic_ctpop:
+        return snprintf(b, l, "ctpop.i64 r%d, r%d", rc(i), rb(i));
+    default:
+        break;
+    }
+    return snprintf(b, l, "invalid");
+}
+
+static inline int cpu_disasm_op_pin_i64(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "pin.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
+}
+
+static inline int cpu_disasm_op_and_i64(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "and.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
+}
+
+static inline int cpu_disasm_op_or_i64(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "or.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
+}
+
+static inline int cpu_disasm_op_xor_i64(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "xor.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
+}
+
+static inline int cpu_disasm_op_sub_i64(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "sub.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
+}
+
+static inline int cpu_disasm_op_srl_i64(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "srl.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
+}
+
+static inline int cpu_disasm_op_sra_i64(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "sra.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
+}
+
+static inline int cpu_disasm_op_sll_i64(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "sll.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
+}
+
+static inline int cpu_disasm_op_add_i64(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "add.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
+}
+
+static inline int cpu_disasm_op_nop(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "nop %llu", uimm9(i));
+}
+
+static inline int cpu_disasm_op_ud1(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "ud1 %llu", uimm9(i));
+}
+
+static inline int cpu_disasm_op_ud2(char *b, size_t l, i64 i, i64 c)
+{
+    return snprintf(b, l, "ud2 %llu", uimm9(i));
 }
 
 /*
- * instruction encoding
+ * cpu instruction encoding
  */
 
 static inline i16 enc_break(int imm9)
@@ -673,4 +773,148 @@ static inline i16 enc_ud1(int imm9)
 static inline i16 enc_ud2(int imm9)
 {
     return cpu_op_ud2 | ((imm9 & 511)<<7);
+}
+
+/*
+ * cpu implementation
+ */
+
+static inline int cpu_exec(cpu_state *cpu, i64 inst)
+{
+    switch (opc(inst)) {
+    case cpu_op_break >> 2: return cpu_exec_op_break(cpu, inst);
+    case cpu_op_j >> 2: return cpu_exec_op_j(cpu, inst);
+    case cpu_op_b >> 2: return cpu_exec_op_b(cpu, inst);
+    case cpu_op_ibl >> 2: return cpu_exec_op_ibl(cpu, inst);
+    case cpu_op_jalib >> 2: return cpu_exec_op_jalib(cpu, inst);
+    case cpu_op_jtlib >> 2: return cpu_exec_op_jtlib(cpu, inst);
+    case cpu_op_lib_i64 >> 2: return cpu_exec_op_lib_i64(cpu, inst);
+    case cpu_op_li_i64 >> 2: return cpu_exec_op_li_i64(cpu, inst);
+    case cpu_op_addi_i64 >> 2: return cpu_exec_op_addi_i64(cpu, inst);
+    case cpu_op_srli_i64 >> 2: return cpu_exec_op_srli_i64(cpu, inst);
+    case cpu_op_srai_i64 >> 2: return cpu_exec_op_srai_i64(cpu, inst);
+    case cpu_op_slli_i64 >> 2: return cpu_exec_op_slli_i64(cpu, inst);
+    case cpu_op_addib_i64 >> 2: return cpu_exec_op_addib_i64(cpu, inst);
+    case cpu_op_load_i64 >> 2: return cpu_exec_op_load_i64(cpu, inst);
+    case cpu_op_loadib_i64 >> 2: return cpu_exec_op_loadib_i64(cpu, inst);
+    case cpu_op_cmp_i64 >> 2: return cpu_exec_op_cmp_i64(cpu, inst);
+    case cpu_op_subib_i64 >> 2: return cpu_exec_op_subib_i64(cpu, inst);
+    case cpu_op_store_i64 >> 2: return cpu_exec_op_store_i64(cpu, inst);
+    case cpu_op_storeib_i64 >> 2: return cpu_exec_op_storeib_i64(cpu, inst);
+    case cpu_op_logic_i64 >> 2: return cpu_exec_op_logic_i64(cpu, inst);
+    case cpu_op_pin_i64 >> 2: return cpu_exec_op_pin_i64(cpu, inst);
+    case cpu_op_and_i64 >> 2: return cpu_exec_op_and_i64(cpu, inst);
+    case cpu_op_or_i64 >> 2: return cpu_exec_op_or_i64(cpu, inst);
+    case cpu_op_xor_i64 >> 2: return cpu_exec_op_xor_i64(cpu, inst);
+    case cpu_op_sub_i64 >> 2: return cpu_exec_op_sub_i64(cpu, inst);
+    case cpu_op_srl_i64 >> 2: return cpu_exec_op_srl_i64(cpu, inst);
+    case cpu_op_sra_i64 >> 2: return cpu_exec_op_sra_i64(cpu, inst);
+    case cpu_op_sll_i64 >> 2: return cpu_exec_op_sll_i64(cpu, inst);
+    case cpu_op_add_i64 >> 2: return cpu_exec_op_add_i64(cpu, inst);
+    case cpu_op_nop >> 2: return cpu_exec_op_nop(cpu, inst);
+    case cpu_op_ud1 >> 2: return cpu_exec_op_ud1(cpu, inst);
+    case cpu_op_ud2 >> 2: return cpu_exec_op_ud2(cpu, inst);
+    }
+    return -1;
+}
+
+static inline int cpu_disasm(char *b, size_t l, i64 i, i64 c)
+{
+    switch (opc(i)) {
+    case cpu_op_break >> 2: return cpu_disasm_op_break(b, l, i, c);
+    case cpu_op_j >> 2: return cpu_disasm_op_j(b, l, i, c);
+    case cpu_op_b >> 2: return cpu_disasm_op_b(b, l, i, c);
+    case cpu_op_ibl >> 2: return cpu_disasm_op_ibl(b, l, i, c);
+    case cpu_op_jalib >> 2: return cpu_disasm_op_jalib(b, l, i, c);
+    case cpu_op_jtlib >> 2: return cpu_disasm_op_jtlib(b, l, i, c);
+    case cpu_op_lib_i64 >> 2: return cpu_disasm_op_lib_i64(b, l, i, c);
+    case cpu_op_li_i64 >> 2: return cpu_disasm_op_li_i64(b, l, i, c);
+    case cpu_op_addi_i64 >> 2: return cpu_disasm_op_addi_i64(b, l, i, c);
+    case cpu_op_srli_i64 >> 2: return cpu_disasm_op_srli_i64(b, l, i, c);
+    case cpu_op_srai_i64 >> 2: return cpu_disasm_op_srai_i64(b, l, i, c);
+    case cpu_op_slli_i64 >> 2: return cpu_disasm_op_slli_i64(b, l, i, c);
+    case cpu_op_addib_i64 >> 2: return cpu_disasm_op_addib_i64(b, l, i, c);
+    case cpu_op_load_i64 >> 2: return cpu_disasm_op_load_i64(b, l, i, c);
+    case cpu_op_loadib_i64 >> 2: return cpu_disasm_op_loadib_i64(b, l, i, c);
+    case cpu_op_cmp_i64 >> 2: return cpu_disasm_op_cmp_i64(b, l, i, c);
+    case cpu_op_subib_i64 >> 2: return cpu_disasm_op_subib_i64(b, l, i, c);
+    case cpu_op_store_i64 >> 2: return cpu_disasm_op_store_i64(b, l, i, c);
+    case cpu_op_storeib_i64 >> 2: return cpu_disasm_op_storeib_i64(b, l, i, c);
+    case cpu_op_logic_i64 >> 2: return cpu_disasm_op_logic_i64(b, l, i, c);
+    case cpu_op_pin_i64 >> 2: return cpu_disasm_op_pin_i64(b, l, i, c);
+    case cpu_op_and_i64 >> 2: return cpu_disasm_op_and_i64(b, l, i, c);
+    case cpu_op_or_i64 >> 2: return cpu_disasm_op_or_i64(b, l, i, c);
+    case cpu_op_xor_i64 >> 2: return cpu_disasm_op_xor_i64(b, l, i, c);
+    case cpu_op_sub_i64 >> 2: return cpu_disasm_op_sub_i64(b, l, i, c);
+    case cpu_op_srl_i64 >> 2: return cpu_disasm_op_srl_i64(b, l, i, c);
+    case cpu_op_sra_i64 >> 2: return cpu_disasm_op_sra_i64(b, l, i, c);
+    case cpu_op_sll_i64 >> 2: return cpu_disasm_op_sll_i64(b, l, i, c);
+    case cpu_op_add_i64 >> 2: return cpu_disasm_op_add_i64(b, l, i, c);
+    case cpu_op_nop >> 2: return cpu_disasm_op_nop(b, l, i, c);
+    case cpu_op_ud1 >> 2: return cpu_disasm_op_ud1(b, l, i, c);
+    case cpu_op_ud2 >> 2: return cpu_disasm_op_ud2(b, l, i, c);
+    }
+    return snprintf(b, l, "invalid");
+}
+
+static inline void cpu_init(cpu_state *cpu, size_t mem_size)
+{
+    cpu->flag = 0;
+    memset(cpu->r, 0, sizeof(cpu->r));
+    cpu->pc = 0x800;
+    cpu->ib = 0x400;
+    cpu->mem = calloc(mem_size, 1);
+    cpu->mem_size = mem_size;
+}
+
+static inline int cpu_dump(cpu_state *cpu)
+{
+    printf("pc:%016llx ib:%016llx flag:%d\n",
+        cpu->pc, cpu->ib, cpu->flag);
+    for (uint i = 0; i < cpu_reg_count; i += 4) {
+        printf("r%d:%016llx r%d:%016llx r%d:%016llx r%d:%016llx\n",
+            i+0, cpu->r[i+0], i+1, cpu->r[i+1],
+            i+2, cpu->r[i+2], i+3, cpu->r[i+3]);
+    }
+}
+
+static inline void cpu_run(cpu_state *cpu, int trace, int dump)
+{
+    i16 inst;
+    int ret = 0;
+    char buf[128];
+    for (;;)
+    {
+        inst = cpu_fetch(cpu);
+        if (trace) {
+            cpu_disasm(buf, sizeof(buf), inst, cpu->pc);
+            printf("-- %08llx %04hx %s\n", cpu->pc, inst, buf);
+        }
+        if (dump) {
+            cpu_dump(cpu);
+        }
+        ret = cpu_exec(cpu, inst);
+        if (ret < 0) {
+            printf("** %08llx cpu exception\n", cpu->pc);
+            return;
+        }
+        cpu->pc += ret;
+    }
+}
+
+static inline void cpu_setup(cpu_state *cpu,
+    i64 *c, size_t cl, i16 *i, size_t il)
+{
+    char buf[128];
+    memcpy(cpu->mem + cpu->ib, c, cl);
+    memcpy(cpu->mem + cpu->pc, i, il);
+    printf("\n# constants:\n");
+    for(size_t x = 0; x < (cl>>3); x++) {
+        printf("# %08llx ib(%zu) <- %016llx\n", cpu->ib + (x<<3), x, c[x]);
+    }
+    printf("\n# instructions:\n");
+    for(size_t x = 0; x < (il>>1); x++) {
+        cpu_disasm(buf, sizeof(buf), i[x], cpu->pc + (x<<1));
+        printf("# %08llx %04hx %s\n", cpu->pc + (x<<1), i[x], buf);
+    }
 }
