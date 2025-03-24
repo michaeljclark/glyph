@@ -22,6 +22,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+/*
+ * forward decls
+ */
+
 typedef unsigned int uint;
 
 typedef signed char i8;
@@ -43,6 +47,9 @@ typedef struct cpu_state cpu_state;
 #ifndef __glyph_func__
 #define __glyph_func__  static inline
 #endif
+
+#define VA_ARGS(...) , ##__VA_ARGS__
+#define cpu_debug(fmt, ...) printf(fmt "\n" VA_ARGS(__VA_ARGS__))
 
 /*
  * opcodes
@@ -877,10 +884,10 @@ __glyph_func__ void cpu_init(cpu_state *cpu, size_t mem_size)
 
 __glyph_func__ int cpu_dump(cpu_state *cpu)
 {
-    printf("pc:%016llx ib:%016llx flag:%d\n",
+    cpu_debug("pc:%016llx ib:%016llx flag:%d",
         cpu->pc, cpu->ib, cpu->flag);
     for (uint i = 0; i < cpu_reg_count; i += 4) {
-        printf("r%d:%016llx r%d:%016llx r%d:%016llx r%d:%016llx\n",
+        cpu_debug("r%d:%016llx r%d:%016llx r%d:%016llx r%d:%016llx",
             i+0, cpu->r[i+0], i+1, cpu->r[i+1],
             i+2, cpu->r[i+2], i+3, cpu->r[i+3]);
     }
@@ -896,14 +903,14 @@ __glyph_func__ void cpu_run(cpu_state *cpu, int trace, int dump)
         inst = cpu_fetch(cpu);
         if (trace) {
             cpu_disasm(buf, sizeof(buf), inst, cpu->pc);
-            printf("-- %08llx %04hx %s\n", cpu->pc, inst, buf);
+            cpu_debug("-- %08llx %04hx %s", cpu->pc, inst, buf);
         }
         if (dump) {
             cpu_dump(cpu);
         }
         ret = cpu_exec(cpu, inst);
         if (ret < 0) {
-            printf("** %08llx cpu exception\n", cpu->pc);
+            cpu_debug("** %08llx cpu exception", cpu->pc);
             return;
         }
         cpu->pc += ret;
@@ -916,14 +923,16 @@ __glyph_func__ void cpu_setup(cpu_state *cpu,
     char buf[128];
     memcpy(cpu->mem + cpu->ib, c, cl);
     memcpy(cpu->mem + cpu->pc, i, il);
-    printf("\n# constants:\n");
+    cpu_debug();
+    cpu_debug("# constants:");
     for(size_t x = 0; x < (cl>>3); x++) {
-        printf("# %08llx ib(%zu) <- %016llx\n", cpu->ib + (x<<3), x, c[x]);
+        cpu_debug("# %08llx ib(%zu) <- %016llx", cpu->ib + (x<<3), x, c[x]);
     }
-    printf("\n# instructions:\n");
+    cpu_debug();
+    cpu_debug("# instructions:");
     for(size_t x = 0; x < (il>>1); x++) {
         cpu_disasm(buf, sizeof(buf), i[x], cpu->pc + (x<<1));
-        printf("# %08llx %04hx %s\n", cpu->pc + (x<<1), i[x], buf);
+        cpu_debug("# %08llx %04hx %s", cpu->pc + (x<<1), i[x], buf);
     }
 }
 
@@ -931,13 +940,14 @@ __glyph_func__ void cpu_setup(cpu_state *cpu,
 __glyph_func__ void run_test(const char *name,
     i64 *c, size_t cl, i16 *i, size_t il)
 {
-    printf("# test: %s\n", name);
+    cpu_debug("# test: %s", name);
     cpu_state cpu;
     cpu_init(&cpu, 8192);
     cpu_setup(&cpu, c, cl, i, il);
-    printf("\n++ begin\n");
+    cpu_debug();
+    cpu_debug("++ begin");
     cpu_run(&cpu, 1, 0);
-    printf("++ end\n\n");
-    printf("# state\n");
+    cpu_debug("++ end\n");
+    cpu_debug("# state");
     cpu_dump(&cpu);
 }

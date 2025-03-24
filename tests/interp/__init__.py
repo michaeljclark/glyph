@@ -89,6 +89,9 @@ class CpuState():
         self.is_trace = True
         self.is_dump = False
 
+def cpu_debug(*args):
+    print(*args)
+
 # bitmanip functions
 
 def bswap(w,v):
@@ -603,10 +606,10 @@ cpu_disasm_table = {
 #
 
 def cpu_dump(cpu):
-    print("pc:%016x ib:%016x flag:%d" % (
+    cpu_debug("pc:%016x ib:%016x flag:%d" % (
         cpu.pc, cpu.ib, cpu.flag))
     for i in range(0,reg_count-1,4):
-        print("r%d:%016x r%d:%016x r%d:%016x r%d:%016x" % (
+        cpu_debug("r%d:%016x r%d:%016x r%d:%016x r%d:%016x" % (
             i+0, cpu.r[i+0], i+1, cpu.r[i+1],
             i+2, cpu.r[i+2], i+3, cpu.r[i+3]))
 
@@ -622,40 +625,40 @@ def cpu_exec(cpu,inst):
         cpu.pc += advance
         return True
     except Exception as err:
-        print("** %08x cpu exception" % cpu.pc)
+        cpu_debug("** %08x cpu exception" % cpu.pc)
         return False
 
 def cpu_run(cpu):
     while True:
         inst = cpu_fetch_i16(cpu)
         if cpu.is_trace:
-            print('-- %08x %s' % (cpu.pc, cpu_disasm(cpu, inst)))
+            cpu_debug('-- %08x %s' % (cpu.pc, cpu_disasm(cpu, inst)))
         if not cpu_exec(cpu, inst):
             return
         if cpu.is_dump:
             cpu_dump(cpu)
 
 def cpu_setup(cpu,c,i):
-    print("\n# constants:")
+    cpu_debug("\n# constants:")
     for j,k in enumerate(c):
         a = cpu.ib + j * 8
-        print("# %08x ib(%u) <- %016x" % (a, j, su64(k)))
+        cpu_debug("# %08x ib(%u) <- %016x" % (a, j, su64(k)))
         cpu_store_i64(cpu, a, k)
-    print("\n# instructions:")
+    cpu_debug("\n# instructions:")
     for j,k in enumerate(i):
         a = cpu.pc + j * 2
         t = cpu_disasm(cpu, k)
-        print("# %08x %s" % (a, t))
+        cpu_debug("# %08x %s" % (a, t))
         cpu_store_i16(cpu, a, k)
-    print()
+    cpu_debug()
 
 def run_test(name,c,i):
-    print("# test: %s" % name)
+    cpu_debug("# test: %s" % name)
     cpu = CpuState(8192)
     cpu_setup(cpu,c,i)
-    print("++ begin")
+    cpu_debug("++ begin")
     cpu_run(cpu)
-    print("++ end")
-    print()
-    print("# state")
+    cpu_debug("++ end")
+    cpu_debug()
+    cpu_debug("# state")
     cpu_dump(cpu)
