@@ -18,7 +18,9 @@
 
 from enum import Enum
 
+#
 # opcodes
+#
 
 class Opcode(Enum):
     op_break        = 0b00000 << 2 # op0r_imm9
@@ -54,7 +56,9 @@ class Opcode(Enum):
     op_ud1          = 0b11110 << 2 # op0r_imm9
     op_ud2          = 0b11111 << 2 # op0r_imm9
 
+#
 # compare op fun3
+#
 
 class Fun3Compare(Enum):
     compare_lt      = 0b000
@@ -64,7 +68,9 @@ class Fun3Compare(Enum):
     compare_ltu     = 0b100
     compare_geu     = 0b101
 
+#
 # logic op fun3
+#
 
 class Fun3Logic(Enum):
     logic_mov       = 0b000
@@ -75,7 +81,9 @@ class Fun3Logic(Enum):
     logic_clz       = 0b101
     logic_ctpop     = 0b110
 
+#
 # cpu state
+#
 
 reg_count = 8
 
@@ -92,7 +100,9 @@ class CpuState():
 def cpu_debug(*args):
     print(*args)
 
+#
 # bitmanip functions
+#
 
 def bswap(w,v):
     return int.from_bytes(v.to_bytes(w>>3, byteorder='little'), byteorder='big')
@@ -122,8 +132,9 @@ def ctpop(v):
             count += 1
     return count
 
-
+#
 # integer utilities
+#
 
 def IntToUInt(w,n):
     if n < 0:
@@ -159,7 +170,9 @@ def sux(val):
 def usx(val):
     return us64(val)
 
+#
 # instruction decode helpers
+#
 
 def opc(inst):
     return (inst >> 2) & 0b11111

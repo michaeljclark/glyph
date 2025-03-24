@@ -23,35 +23,6 @@
 #include <string.h>
 
 /*
- * forward decls
- */
-
-typedef unsigned int uint;
-
-typedef signed char i8;
-typedef signed short i16;
-typedef signed int i32;
-typedef signed long long i64;
-
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-typedef unsigned long long u64;
-
-typedef struct cpu_state cpu_state;
-
-#ifndef __glyph_inline__
-#define __glyph_inline__ static inline
-#endif
-
-#ifndef __glyph_func__
-#define __glyph_func__  static inline
-#endif
-
-#define VA_ARGS(...) , ##__VA_ARGS__
-#define cpu_debug(fmt, ...) printf(fmt "\n" VA_ARGS(__VA_ARGS__))
-
-/*
  * opcodes
  */
 
@@ -119,6 +90,35 @@ enum
     cpu_logic_clz       = 0b101,
     cpu_logic_ctpop     = 0b110,
 };
+
+/*
+ * forward decls
+ */
+
+typedef unsigned int uint;
+
+typedef signed char i8;
+typedef signed short i16;
+typedef signed int i32;
+typedef signed long long i64;
+
+typedef unsigned char u8;
+typedef unsigned short u16;
+typedef unsigned int u32;
+typedef unsigned long long u64;
+
+typedef struct cpu_state cpu_state;
+
+#ifndef __glyph_inline__
+#define __glyph_inline__ static inline
+#endif
+
+#ifndef __glyph_func__
+#define __glyph_func__  static inline
+#endif
+
+#define VA_ARGS(...) , ##__VA_ARGS__
+#define cpu_debug(fmt, ...) printf(fmt "\n" VA_ARGS(__VA_ARGS__))
 
 /*
  * cpu state
