@@ -75,6 +75,51 @@ class Fun3Logic(Enum):
     logic_clz       = 0b101
     logic_ctpop     = 0b110
 
+# cpu state
+
+reg_count = 8
+
+class CpuState():
+    def __init__(self, mem_size):
+        self.flag = 0
+        self.r = [ 0 ] * reg_count
+        self.pc = 0x800
+        self.ib = 0x400
+        self.mem = bytearray(mem_size)
+        self.is_trace = True
+        self.is_dump = False
+
+# bitmanip functions
+
+def bswap(w,v):
+    return int.from_bytes(v.to_bytes(w>>3, byteorder='little'), byteorder='big')
+
+def clz(v):
+    count = 0
+    for i in reversed(range(128)):
+        if (v & (1 << i)) == 0:
+            count += 1
+        else:
+            break
+    return count
+
+def ctz(v):
+    count = 0
+    for i in range(v.bit_length()):
+        if (v & (1 << i)) == 0:
+            count += 1
+        else:
+            break
+    return count
+
+def ctpop(v):
+    count = 0
+    for i in range(v.bit_length()):
+        if (v & (1 << i)) != 0:
+            count += 1
+    return count
+
+
 # integer utilities
 
 def IntToUInt(w,n):
@@ -111,37 +156,7 @@ def sux(val):
 def usx(val):
     return us64(val)
 
-# bitmanip functions
-
-def bswap(w,v):
-    return int.from_bytes(v.to_bytes(w>>3, byteorder='little'), byteorder='big')
-
-def clz(v):
-    count = 0
-    for i in reversed(range(128)):
-        if (v & (1 << i)) == 0:
-            count += 1
-        else:
-            break
-    return count
-
-def ctz(v):
-    count = 0
-    for i in range(v.bit_length()):
-        if (v & (1 << i)) == 0:
-            count += 1
-        else:
-            break
-    return count
-
-def ctpop(v):
-    count = 0
-    for i in range(v.bit_length()):
-        if (v & (1 << i)) != 0:
-            count += 1
-    return count
-
-# decode
+# instruction decode helpers
 
 def opc(inst):
     return (inst >> 2) & 0b11111
@@ -163,20 +178,6 @@ def rb(inst):
     return (inst >> 10) & 0b111
 def rc(inst):
     return (inst >> 13) & 0b111
-
-# state
-
-reg_count = 8
-
-class CpuState():
-    def __init__(self, mem_size):
-        self.flag = 0
-        self.r = [ 0 ] * reg_count
-        self.pc = 0x800
-        self.ib = 0x400
-        self.mem = bytearray(mem_size)
-        self.is_trace = True
-        self.is_dump = False
 
 #
 # cpu load, store and constants
@@ -455,7 +456,7 @@ def cpu_disasm_op_ud2(cpu,inst):
     return "ud2 %u" % uimm9(inst)
 
 #
-# cpu encoding
+# cpu instruction encoding
 #
 
 def enc_break(imm9):

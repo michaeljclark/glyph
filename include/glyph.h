@@ -114,22 +114,7 @@ enum
 };
 
 /*
- * decode
- */
-
-__glyph_inline__ uint opc(int64_t insn) { return (insn >> 2) & 0b11111; }
-__glyph_inline__ i64 uimm9(int64_t insn) { return (u64)insn << 48 >> 55; }
-__glyph_inline__ i64 uimm6(int64_t insn) { return (u64)insn << 51 >> 58; }
-__glyph_inline__ i64 uimm3(int64_t insn) { return (u64)insn << 54 >> 61; }
-__glyph_inline__ i64 simm9(int64_t insn) { return insn << 48 >> 55; }
-__glyph_inline__ i64 simm6(int64_t insn) { return insn << 51 >> 58; }
-__glyph_inline__ i64 simm3(int64_t insn) { return insn << 54 >> 61; }
-__glyph_inline__ uint ra(int64_t insn) { return (insn >> 7) & 7; }
-__glyph_inline__ uint rb(int64_t insn) { return (insn >> 10) & 7; }
-__glyph_inline__ uint rc(int64_t insn) { return (insn >> 13) & 7; }
-
-/*
- * state
+ * cpu state
  */
 
 enum
@@ -148,7 +133,22 @@ struct cpu_state
 };
 
 /*
- * load, store and constant memory
+ * instruction decode helpers
+ */
+
+__glyph_inline__ uint opc(int64_t insn) { return (insn >> 2) & 0b11111; }
+__glyph_inline__ i64 uimm9(int64_t insn) { return (u64)insn << 48 >> 55; }
+__glyph_inline__ i64 uimm6(int64_t insn) { return (u64)insn << 51 >> 58; }
+__glyph_inline__ i64 uimm3(int64_t insn) { return (u64)insn << 54 >> 61; }
+__glyph_inline__ i64 simm9(int64_t insn) { return insn << 48 >> 55; }
+__glyph_inline__ i64 simm6(int64_t insn) { return insn << 51 >> 58; }
+__glyph_inline__ i64 simm3(int64_t insn) { return insn << 54 >> 61; }
+__glyph_inline__ uint ra(int64_t insn) { return (insn >> 7) & 7; }
+__glyph_inline__ uint rb(int64_t insn) { return (insn >> 10) & 7; }
+__glyph_inline__ uint rc(int64_t insn) { return (insn >> 13) & 7; }
+
+/*
+ * cpu load, store and constants
  */
 
 __glyph_inline__ i64 cpu_load_i64(cpu_state *cpu, u64 offset)
