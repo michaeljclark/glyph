@@ -342,19 +342,19 @@ def cpu_exec_op_pin_i64(cpu,inst):
     cpu.r[rc(inst)] = tmp
     return 2
 def cpu_exec_op_and_i64(cpu,inst):
-    cpu.r[rc(inst)] = cpu.r[rb(inst)] & cpu.r[ra(inst)]
+    cpu.r[rc(inst)] = sux(cpu.r[rb(inst)] & cpu.r[ra(inst)])
     return 2
 def cpu_exec_op_or_i64(cpu,inst):
-    cpu.r[rc(inst)] = cpu.r[rb(inst)] | cpu.r[ra(inst)]
+    cpu.r[rc(inst)] = sux(cpu.r[rb(inst)] | cpu.r[ra(inst)])
     return 2
 def cpu_exec_op_xor_i64(cpu,inst):
-    cpu.r[rc(inst)] = cpu.r[rb(inst)] ^ cpu.r[ra(inst)]
+    cpu.r[rc(inst)] = sux(cpu.r[rb(inst)] ^ cpu.r[ra(inst)])
     return 2
 def cpu_exec_op_sub_i64(cpu,inst):
     cpu.r[rc(inst)] = sux(cpu.r[rb(inst)] - cpu.r[ra(inst)])
     return 2
 def cpu_exec_op_srl_i64(cpu,inst):
-    cpu.r[rc(inst)] = cpu.r[rb(inst)] >> cpu.r[ra(inst)]
+    cpu.r[rc(inst)] = sux(cpu.r[rb(inst)] >> cpu.r[ra(inst)])
     return 2
 def cpu_exec_op_sra_i64(cpu,inst):
     cpu.r[rc(inst)] = sux(usx(cpu.r[rb(inst)]) >> cpu.r[ra(inst)])
