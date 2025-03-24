@@ -163,17 +163,38 @@ __glyph_inline__ i64 cpu_load_i64(cpu_state *cpu, u64 offset)
 {
     return *(i64*)(cpu->mem + offset);
 }
-
+__glyph_inline__ i32 cpu_load_i32(cpu_state *cpu, u64 offset)
+{
+    return *(i32*)(cpu->mem + offset);
+}
+__glyph_inline__ i16 cpu_load_i16(cpu_state *cpu, u64 offset)
+{
+    return *(i16*)(cpu->mem + offset);
+}
+__glyph_inline__ i8 cpu_load_i8(cpu_state *cpu, u64 offset)
+{
+    return *(i8*)(cpu->mem + offset);
+}
 __glyph_inline__ void cpu_store_i64(cpu_state *cpu, u64 offset, i64 val)
 {
     *(i64*)(cpu->mem + offset) = val;
 }
-
+__glyph_inline__ void cpu_store_i32(cpu_state *cpu, u64 offset, i32 val)
+{
+    *(i32*)(cpu->mem + offset) = val;
+}
+__glyph_inline__ void cpu_store_i16(cpu_state *cpu, u64 offset, i16 val)
+{
+    *(i16*)(cpu->mem + offset) = val;
+}
+__glyph_inline__ void cpu_store_i8(cpu_state *cpu, u64 offset, i8 val)
+{
+    *(i8*)(cpu->mem + offset) = val;
+}
 __glyph_inline__ i64 cpu_const_i64(cpu_state *cpu, u64 offset)
 {
     return *(i64*)(cpu->mem + cpu->ib + offset * 8);
 }
-
 __glyph_inline__ i16 cpu_fetch(cpu_state *cpu)
 {
     return *(i16*)(cpu->mem + cpu->pc);
@@ -922,18 +943,20 @@ __glyph_func__ void cpu_setup(cpu_state *cpu,
     i64 *c, size_t cl, i16 *i, size_t il)
 {
     char buf[128];
-    memcpy(cpu->mem + cpu->ib, c, cl);
-    memcpy(cpu->mem + cpu->pc, i, il);
     cpu_debug();
     cpu_debug("# constants:");
     for(size_t x = 0; x < (cl>>3); x++) {
-        cpu_debug("# %08llx ib(%zu) <- %016llx", cpu->ib + (x<<3), x, c[x]);
+        i64 a = cpu->ib + (x<<3);
+        cpu_debug("# %08llx ib(%zu) <- %016llx", a, x, c[x]);
+        cpu_store_i64(cpu, a, c[x]);
     }
     cpu_debug();
     cpu_debug("# instructions:");
     for(size_t x = 0; x < (il>>1); x++) {
-        cpu_disasm(buf, sizeof(buf), i[x], cpu->pc + (x<<1));
-        cpu_debug("# %08llx %04hx %s", cpu->pc + (x<<1), i[x], buf);
+        i64 a = cpu->pc + (x<<1);
+        cpu_disasm(buf, sizeof(buf), i[x], a);
+        cpu_debug("# %08llx %04hx %s", a, i[x], buf);
+        cpu_store_i16(cpu, a, i[x]);
     }
 }
 

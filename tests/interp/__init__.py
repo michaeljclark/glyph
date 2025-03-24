@@ -663,12 +663,12 @@ def cpu_setup(cpu,c,i):
         t = cpu_disasm(cpu, k)
         cpu_debug("# %08x %s" % (a, t))
         cpu_store_i16(cpu, a, k)
-    cpu_debug()
 
 def cpu_test(name,c,i):
     cpu_debug("# test: %s" % name)
     cpu = CpuState(8192)
     cpu_setup(cpu,c,i)
+    cpu_debug()
     cpu_debug("++ begin")
     cpu_run(cpu)
     cpu_debug("++ end")
