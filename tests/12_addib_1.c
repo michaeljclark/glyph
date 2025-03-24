@@ -1,6 +1,4 @@
-#include <stdio.h>
 #include "glyph.h"
-#include "test.h"
 
 void t()
 {
