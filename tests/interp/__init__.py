@@ -227,11 +227,10 @@ def cpu_exec_op_j(cpu,inst):
     cpu.pc = sux(cpu.pc +  (simm9(inst) << 1) + 2)
     return 0
 def cpu_exec_op_b(cpu,inst):
-    if cpu.flag:
-        cpu.pc = sux(cpu.pc +  (simm9(inst) << 1) + 2)
-        return 0
-    else:
+    if not cpu.flag:
         return 2
+    cpu.pc = sux(cpu.pc +  (simm9(inst) << 1) + 2)
+    return 0
 def cpu_exec_op_ibl(cpu,inst):
     cpu.r[rc(inst)] = cpu.ib
     tmp = cpu_const_i64(cpu, uimm6(inst)) & ~7

@@ -217,11 +217,9 @@ __glyph_func__ int cpu_exec_op_j(cpu_state *cpu, i64 inst)
 }
 __glyph_func__ int cpu_exec_op_b(cpu_state *cpu, i64 inst)
 {
-    if (cpu->flag) {
-        cpu->pc = cpu->pc + (simm9(inst) << 1) + 2;
-        return 0;
-    }
-    return 2;
+    if (!cpu->flag) return 2;
+    cpu->pc = cpu->pc + (simm9(inst) << 1) + 2;
+    return 0;
 }
 __glyph_func__ int cpu_exec_op_ibl(cpu_state *cpu, i64 inst)
 {
