@@ -136,34 +136,31 @@ def ctpop(v):
 # integer utilities
 #
 
-def IntToUInt(w,n):
-    if n < 0:
-        n = ((-n ^ (2 ** w - 1)) + 1) % (2 ** w)
-        return n
-    return n % (2 ** w)
+def suw(w,n):
+    x = (2 ** w)
+    return n & (x-1)
 
-def UIntToInt(w,n):
-    if n & ~((2 ** (w-1))-1):
-        n = -(((n ^ (2 ** w - 1)) + 1) % (2 ** w))
-        return n
-    return n % (2 ** w)
+def usw(w,n):
+    x = (2 ** w)
+    t = n & (x-1)
+    return t - x if n & (x >> 1) else t
 
 def su64(val):
-    return IntToUInt(64, val)
+    return suw(64, val)
 def su32(val):
-    return IntToUInt(32, val)
+    return suw(32, val)
 def su16(val):
-    return IntToUInt(16, val)
+    return suw(16, val)
 def su8(val):
-    return IntToUInt(8, val)
+    return suw(8, val)
 def us64(val):
-    return UIntToInt(64, val)
+    return usw(64, val)
 def us32(val):
-    return UIntToInt(32, val)
+    return usw(32, val)
 def us16(val):
-    return UIntToInt(16, val)
+    return usw(16, val)
 def us8(val):
-    return UIntToInt(8, val)
+    return usw(8, val)
 
 def sux(val):
     return su64(val)
@@ -183,11 +180,9 @@ def uimm6(inst):
 def uimm3(inst):
     return (inst >> 7) & 0b111
 def simm9(inst):
-    return UIntToInt(9, (inst >> 7) & 0b111111111)
+    return usw(9, (inst >> 7))
 def simm6(inst):
-    return UIntToInt(6, (inst >> 7) & 0b111111)
-def simm3(inst):
-    return UIntToInt(3, (inst >> 7) & 0b111)
+    return usw(6, (inst >> 7))
 def ra(inst):
     return (inst >> 7) & 0b111
 def rb(inst):
@@ -244,19 +239,19 @@ def cpu_exec_op_ibl(cpu,inst):
     return 2
 def cpu_exec_op_jalib(cpu,inst):
     tmp = cpu_const_i64(cpu, uimm6(inst))
-    upc = us32((tmp      ) & 0xffffffff & ~1)
-    uib = us32((tmp >> 32) & 0xffffffff & ~7)
+    upc = us32((tmp      ) & ~1)
+    uib = us32((tmp >> 32) & ~7)
     cpu.pc = sux(cpu.pc + upc + 2)
     cpu.ib = sux(cpu.ib + uib)
     cpu.r[rc(inst)] = sux(tmp)
     return 0
 def cpu_exec_op_jtlib(cpu,inst):
     tmp = cpu.r[rc(inst)]
-    upc = us32((tmp      ) & 0xffffffff & ~1)
-    uib = us32((tmp >> 32) & 0xffffffff & ~7)
+    upc = us32((tmp      ) & ~1)
+    uib = us32((tmp >> 32) & ~7)
     tmp = cpu_const_i64(cpu, uimm6(inst))
-    npc = us32((tmp      ) & 0xffffffff & ~1)
-    nib = us32((tmp >> 32) & 0xffffffff & ~7)
+    npc = us32((tmp      ) & ~1)
+    nib = us32((tmp >> 32) & ~7)
     cpu.pc = sux(cpu.pc + npc - upc)
     cpu.ib = sux(cpu.ib + nib - uib)
     return 0
