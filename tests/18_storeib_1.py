@@ -8,11 +8,11 @@ def t():
         0xfedcba9876543210,
     ]
     i = [
-        enc_li_i64(0,0),
-        enc_lib_i64(1,1),
-        enc_storeib_i64(1,0,0),
-        enc_break(0)
+        cpu_encode_op_li_i64(0,0),
+        cpu_encode_op_lib_i64(1,1),
+        cpu_encode_op_storeib_i64(1,0,0),
+        cpu_encode_op_break(0)
     ]
-    run_test("storeib_1", c, i)
+    cpu_test("storeib_1", c, i)
 
 t()

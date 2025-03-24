@@ -475,69 +475,69 @@ def cpu_disasm_op_ud2(cpu,inst):
 # cpu instruction encoding
 #
 
-def enc_break(imm9):
+def cpu_encode_op_break(imm9):
     return Opcode.op_break.value | ((imm9 & 511)<<7)
-def enc_j(pcrel9):
+def cpu_encode_op_j(pcrel9):
     return Opcode.op_j.value | ((pcrel9 & 511)<<7)
-def enc_b(pcrel9):
+def cpu_encode_op_b(pcrel9):
     return Opcode.op_b.value | ((pcrel9 & 511)<<7)
-def enc_ibl(rc, ibrel6):
+def cpu_encode_op_ibl(rc, ibrel6):
     return Opcode.op_ibl.value | ((ibrel6 & 63)<<7) | ((rc & 7)<<13)
-def enc_jalib(rc, ibrel6):
+def cpu_encode_op_jalib(rc, ibrel6):
     return Opcode.op_jalib.value | ((ibrel6 & 63)<<7) | ((rc & 7)<<13)
-def enc_jtlib(rc, ibrel6):
+def cpu_encode_op_jtlib(rc, ibrel6):
     return Opcode.op_jtlib.value | ((ibrel6 & 63)<<7) | ((rc & 7)<<13)
-def enc_lib_i64(rc, ibrel6):
+def cpu_encode_op_lib_i64(rc, ibrel6):
     return Opcode.op_lib_i64.value | ((ibrel6 & 63)<<7) | ((rc & 7)<<13)
-def enc_li_i64(rc, imm6):
+def cpu_encode_op_li_i64(rc, imm6):
     return Opcode.op_li_i64.value | ((imm6 & 63)<<7) | ((rc & 7)<<13)
-def enc_addi_i64(rc, imm6):
+def cpu_encode_op_addi_i64(rc, imm6):
     return Opcode.op_addi_i64.value | ((imm6 & 63)<<7) | ((rc & 7)<<13)
-def enc_srli_i64(rc, imm6):
+def cpu_encode_op_srli_i64(rc, imm6):
     return Opcode.op_srli_i64.value | ((imm6 & 63)<<7) | ((rc & 7)<<13)
-def enc_srai_i64(rc, imm6):
+def cpu_encode_op_srai_i64(rc, imm6):
     return Opcode.op_srai_i64.value | ((imm6 & 63)<<7) | ((rc & 7)<<13)
-def enc_slli_i64(rc, imm6):
+def cpu_encode_op_slli_i64(rc, imm6):
     return Opcode.op_slli_i64.value | ((imm6 & 63)<<7) | ((rc & 7)<<13)
-def enc_addib_i64(rc, rb, ibimm3):
+def cpu_encode_op_addib_i64(rc, rb, ibimm3):
     return Opcode.op_addib_i64.value | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
-def enc_load_i64(rc, rb, imm3):
+def cpu_encode_op_load_i64(rc, rb, imm3):
     return Opcode.op_load_i64.value | ((imm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
-def enc_loadib_i64(rc, rb, ibimm3):
+def cpu_encode_op_loadib_i64(rc, rb, ibimm3):
     return Opcode.op_loadib_i64.value | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
-def enc_cmp_i64(rc, rb, fun3):
+def cpu_encode_op_cmp_i64(rc, rb, fun3):
     return Opcode.op_cmp_i64.value | ((fun3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
-def enc_subib_i64(rc, rb, ibimm3):
+def cpu_encode_op_subib_i64(rc, rb, ibimm3):
     return Opcode.op_subib_i64.value | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
-def enc_store_i64(rc, rb, imm3):
+def cpu_encode_op_store_i64(rc, rb, imm3):
     return Opcode.op_store_i64.value | ((imm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
-def enc_storeib_i64(rc, rb, ibimm3):
+def cpu_encode_op_storeib_i64(rc, rb, ibimm3):
     return Opcode.op_storeib_i64.value | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
-def enc_logic_i64(rc, rb, fun3):
+def cpu_encode_op_logic_i64(rc, rb, fun3):
     return Opcode.op_logic_i64.value | ((fun3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
-def enc_pin_i64(rc, rb, ra):
+def cpu_encode_op_pin_i64(rc, rb, ra):
     return Opcode.op_pin_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
-def enc_and_i64(rc, rb, ra):
+def cpu_encode_op_and_i64(rc, rb, ra):
     return Opcode.op_and_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
-def enc_or_i64(rc, rb, ra):
+def cpu_encode_op_or_i64(rc, rb, ra):
     return Opcode.op_or_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
-def enc_xor_i64(rc, rb, ra):
+def cpu_encode_op_xor_i64(rc, rb, ra):
     return Opcode.op_xor_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
-def enc_sub_i64(rc, rb, ra):
+def cpu_encode_op_sub_i64(rc, rb, ra):
     return Opcode.op_sub_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
-def enc_srl_i64(rc, rb, ra):
+def cpu_encode_op_srl_i64(rc, rb, ra):
     return Opcode.op_srl_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
-def enc_sra_i64(rc, rb, ra):
+def cpu_encode_op_sra_i64(rc, rb, ra):
     return Opcode.op_sra_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
-def enc_sll_i64(rc, rb, ra):
+def cpu_encode_op_sll_i64(rc, rb, ra):
     return Opcode.op_sll_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
-def enc_add_i64(rc, rb, ra):
+def cpu_encode_op_add_i64(rc, rb, ra):
     return Opcode.op_add_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
-def enc_nop(imm9):
+def cpu_encode_op_nop(imm9):
     return Opcode.op_nop.value | ((imm9 & 511)<<7)
-def enc_ud1(imm9):
+def cpu_encode_op_ud1(imm9):
     return Opcode.op_ud1.value | ((imm9 & 511)<<7)
-def enc_ud2(imm9):
+def cpu_encode_op_ud2(imm9):
     return Opcode.op_ud2.value | ((imm9 & 511)<<7)
 
 #
@@ -665,7 +665,7 @@ def cpu_setup(cpu,c,i):
         cpu_store_i16(cpu, a, k)
     cpu_debug()
 
-def run_test(name,c,i):
+def cpu_test(name,c,i):
     cpu_debug("# test: %s" % name)
     cpu = CpuState(8192)
     cpu_setup(cpu,c,i)

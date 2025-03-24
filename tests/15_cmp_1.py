@@ -8,11 +8,11 @@ def t():
         2,
     ]
     i = [
-        enc_lib_i64(0,0),
-        enc_lib_i64(1,1),
-        enc_cmp_i64(0,1, Fun3Compare.compare_lt.value),
-        enc_break(0)
+        cpu_encode_op_lib_i64(0,0),
+        cpu_encode_op_lib_i64(1,1),
+        cpu_encode_op_cmp_i64(0,1, Fun3Compare.compare_lt.value),
+        cpu_encode_op_break(0)
     ]
-    run_test("cmp_1", c, i)
+    cpu_test("cmp_1", c, i)
 
 t()

@@ -3,13 +3,14 @@
 from interp import *
 
 def t():
-    c = []
-    i = [
-        enc_li_i64(0,1),
-        enc_li_i64(1,2),
-        enc_add_i64(2,0,1),
-        enc_break(0)
+    c = [
     ]
-    run_test("add_1", c, i)
+    i = [
+        cpu_encode_op_li_i64(0,1),
+        cpu_encode_op_li_i64(1,2),
+        cpu_encode_op_add_i64(2,0,1),
+        cpu_encode_op_break(0)
+    ]
+    cpu_test("add_1", c, i)
 
 t()

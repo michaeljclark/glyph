@@ -5,10 +5,10 @@ void t()
     u64 c[] = {
     };
     u16 i[] = {
-        enc_ud1(0),
-        enc_break(0)
+        cpu_encode_op_ud1(0),
+        cpu_encode_op_break(0)
     };
-    run_test("ud1_1", c, sizeof(c), i, sizeof(i));
+    cpu_test("ud1_1", c, i);
 }
 
 int main(int argc, char **argv)

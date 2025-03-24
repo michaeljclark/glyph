@@ -7,12 +7,12 @@ void t()
         0xfedcba9876543210ull,
     };
     u16 i[] = {
-        enc_lib_i64(0,0),
-        enc_lib_i64(1,1),
-        enc_store_i64(1,0,0),
-        enc_break(0)
+        cpu_encode_op_lib_i64(0,0),
+        cpu_encode_op_lib_i64(1,1),
+        cpu_encode_op_store_i64(1,0,0),
+        cpu_encode_op_break(0)
     };
-    run_test("store_1", c, sizeof(c), i, sizeof(i));
+    cpu_test("store_1", c, i);
 }
 
 int main(int argc, char **argv)

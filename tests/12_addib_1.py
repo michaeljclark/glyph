@@ -7,10 +7,10 @@ def t():
         0xa0000000a
     ]
     i = [
-        enc_li_i64(0,1),
-        enc_addib_i64(1,0,0),
-        enc_break(0)
+        cpu_encode_op_li_i64(0,1),
+        cpu_encode_op_addib_i64(1,0,0),
+        cpu_encode_op_break(0)
     ]
-    run_test("addib_1", c, i)
+    cpu_test("addib_1", c, i)
 
 t()

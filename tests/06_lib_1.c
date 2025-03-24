@@ -14,17 +14,17 @@ void t()
         0x7777777777777777ull,
     };
     u16 i[] = {
-        enc_lib_i64(0,0),
-        enc_lib_i64(1,1),
-        enc_lib_i64(2,2),
-        enc_lib_i64(3,3),
-        enc_lib_i64(4,4),
-        enc_lib_i64(5,5),
-        enc_lib_i64(6,6),
-        enc_lib_i64(7,7),
-        enc_break(0)
+        cpu_encode_op_lib_i64(0,0),
+        cpu_encode_op_lib_i64(1,1),
+        cpu_encode_op_lib_i64(2,2),
+        cpu_encode_op_lib_i64(3,3),
+        cpu_encode_op_lib_i64(4,4),
+        cpu_encode_op_lib_i64(5,5),
+        cpu_encode_op_lib_i64(6,6),
+        cpu_encode_op_lib_i64(7,7),
+        cpu_encode_op_break(0)
     };
-    run_test("lib_1", c, sizeof(c), i, sizeof(i));
+    cpu_test("lib_1", c, i);
 }
 
 int main(int argc, char **argv)

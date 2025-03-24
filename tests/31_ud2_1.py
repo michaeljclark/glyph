@@ -3,11 +3,12 @@
 from interp import *
 
 def t():
-    c = []
-    i = [
-        enc_ud2(0),
-        enc_break(0)
+    c = [
     ]
-    run_test("ud2_1", c, i)
+    i = [
+        cpu_encode_op_ud2(0),
+        cpu_encode_op_break(0)
+    ]
+    cpu_test("ud2_1", c, i)
 
 t()

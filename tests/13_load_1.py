@@ -8,10 +8,10 @@ def t():
         0xfedcba9876543210,
     ]
     i = [
-        enc_lib_i64(0,0),
-        enc_load_i64(1,0,0),
-        enc_break(0)
+        cpu_encode_op_lib_i64(0,0),
+        cpu_encode_op_load_i64(1,0,0),
+        cpu_encode_op_break(0)
     ]
-    run_test("load_1", c, i)
+    cpu_test("load_1", c, i)
 
 t()

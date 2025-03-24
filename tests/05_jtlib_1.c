@@ -8,13 +8,13 @@ void t()
         -1,
     };
     u16 i[] = {
-        enc_jalib(7,0),
-        enc_break(0),
-        enc_lib_i64(0,1),
-        enc_nop(0),
-        enc_jtlib(7,0)
+        cpu_encode_op_jalib(7,0),
+        cpu_encode_op_break(0),
+        cpu_encode_op_lib_i64(0,1),
+        cpu_encode_op_nop(0),
+        cpu_encode_op_jtlib(7,0)
     };
-    run_test("jtlib_1", c, sizeof(c), i, sizeof(i));
+    cpu_test("jtlib_1", c, i);
 }
 
 int main(int argc, char **argv)

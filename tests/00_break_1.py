@@ -5,8 +5,8 @@ from interp import *
 def t():
     c = []
     i = [
-        enc_break(0)
+        cpu_encode_op_break(0)
     ]
-    run_test("break_1", c, i)
+    cpu_test("break_1", c, i)
 
 t()

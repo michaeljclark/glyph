@@ -119,6 +119,7 @@ typedef struct cpu_state cpu_state;
 
 #define VA_ARGS(...) , ##__VA_ARGS__
 #define cpu_debug(fmt, ...) printf(fmt "\n" VA_ARGS(__VA_ARGS__))
+#define cpu_test(name,c,i) cpu_test_impl(name,c,sizeof(c),i,sizeof(i))
 
 /*
  * cpu state
@@ -661,131 +662,131 @@ __glyph_func__ int cpu_disasm_op_ud2(char *b, size_t l, i64 i, i64 c)
  * cpu instruction encoding
  */
 
-__glyph_func__ i16 enc_break(int imm9)
+__glyph_func__ i16 cpu_encode_op_break(int imm9)
 {
     return cpu_op_break | ((imm9 & 511)<<7);
 }
-__glyph_func__ i16 enc_j(int pcrel9)
+__glyph_func__ i16 cpu_encode_op_j(int pcrel9)
 {
     return cpu_op_j | ((pcrel9 & 511)<<7);
 }
-__glyph_func__ i16 enc_b(int pcrel9)
+__glyph_func__ i16 cpu_encode_op_b(int pcrel9)
 {
     return cpu_op_b | ((pcrel9 & 511)<<7);
 }
-__glyph_func__ i16 enc_ibl(int rc, int ibrel6)
+__glyph_func__ i16 cpu_encode_op_ibl(int rc, int ibrel6)
 {
     return cpu_op_ibl | ((ibrel6 & 63)<<7) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_jalib(int rc, int ibrel6)
+__glyph_func__ i16 cpu_encode_op_jalib(int rc, int ibrel6)
 {
     return cpu_op_jalib | ((ibrel6 & 63)<<7) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_jtlib(int rc, int ibrel6)
+__glyph_func__ i16 cpu_encode_op_jtlib(int rc, int ibrel6)
 {
     return cpu_op_jtlib | ((ibrel6 & 63)<<7) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_lib_i64(int rc, int ibrel6)
+__glyph_func__ i16 cpu_encode_op_lib_i64(int rc, int ibrel6)
 {
     return cpu_op_lib_i64 | ((ibrel6 & 63)<<7) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_li_i64(int rc, int imm6)
+__glyph_func__ i16 cpu_encode_op_li_i64(int rc, int imm6)
 {
     return cpu_op_li_i64 | ((imm6 & 63)<<7) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_addi_i64(int rc, int imm6)
+__glyph_func__ i16 cpu_encode_op_addi_i64(int rc, int imm6)
 {
     return cpu_op_addi_i64 | ((imm6 & 63)<<7) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_srli_i64(int rc, int imm6)
+__glyph_func__ i16 cpu_encode_op_srli_i64(int rc, int imm6)
 {
     return cpu_op_srli_i64 | ((imm6 & 63)<<7) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_srai_i64(int rc, int imm6)
+__glyph_func__ i16 cpu_encode_op_srai_i64(int rc, int imm6)
 {
     return cpu_op_srai_i64 | ((imm6 & 63)<<7) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_slli_i64(int rc, int imm6)
+__glyph_func__ i16 cpu_encode_op_slli_i64(int rc, int imm6)
 {
     return cpu_op_slli_i64 | ((imm6 & 63)<<7) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_addib_i64(int rc, int rb, int ibimm3)
+__glyph_func__ i16 cpu_encode_op_addib_i64(int rc, int rb, int ibimm3)
 {
     return cpu_op_addib_i64 | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_load_i64(int rc, int rb, int imm3)
+__glyph_func__ i16 cpu_encode_op_load_i64(int rc, int rb, int imm3)
 {
     return cpu_op_load_i64 | ((imm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_loadib_i64(int rc, int rb, int ibimm3)
+__glyph_func__ i16 cpu_encode_op_loadib_i64(int rc, int rb, int ibimm3)
 {
     return cpu_op_loadib_i64 | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_cmp_i64(int rc, int rb, int fun3)
+__glyph_func__ i16 cpu_encode_op_cmp_i64(int rc, int rb, int fun3)
 {
     return cpu_op_cmp_i64 | ((fun3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_subib_i64(int rc, int rb, int ibimm3)
+__glyph_func__ i16 cpu_encode_op_subib_i64(int rc, int rb, int ibimm3)
 {
     return cpu_op_subib_i64 | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_store_i64(int rc, int rb, int imm3)
+__glyph_func__ i16 cpu_encode_op_store_i64(int rc, int rb, int imm3)
 {
     return cpu_op_store_i64 | ((imm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_storeib_i64(int rc, int rb, int ibimm3)
+__glyph_func__ i16 cpu_encode_op_storeib_i64(int rc, int rb, int ibimm3)
 {
     return cpu_op_storeib_i64 | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_logic_i64(int rc, int rb, int fun3)
+__glyph_func__ i16 cpu_encode_op_logic_i64(int rc, int rb, int fun3)
 {
     return cpu_op_logic_i64 | ((fun3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_pin_i64(int rc, int rb, int ra)
+__glyph_func__ i16 cpu_encode_op_pin_i64(int rc, int rb, int ra)
 {
     return cpu_op_pin_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_and_i64(int rc, int rb, int ra)
+__glyph_func__ i16 cpu_encode_op_and_i64(int rc, int rb, int ra)
 {
     return cpu_op_and_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_or_i64(int rc, int rb, int ra)
+__glyph_func__ i16 cpu_encode_op_or_i64(int rc, int rb, int ra)
 {
     return cpu_op_or_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_xor_i64(int rc, int rb, int ra)
+__glyph_func__ i16 cpu_encode_op_xor_i64(int rc, int rb, int ra)
 {
     return cpu_op_xor_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_sub_i64(int rc, int rb, int ra)
+__glyph_func__ i16 cpu_encode_op_sub_i64(int rc, int rb, int ra)
 {
     return cpu_op_sub_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_srl_i64(int rc, int rb, int ra)
+__glyph_func__ i16 cpu_encode_op_srl_i64(int rc, int rb, int ra)
 {
     return cpu_op_srl_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_sra_i64(int rc, int rb, int ra)
+__glyph_func__ i16 cpu_encode_op_sra_i64(int rc, int rb, int ra)
 {
     return cpu_op_sra_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_sll_i64(int rc, int rb, int ra)
+__glyph_func__ i16 cpu_encode_op_sll_i64(int rc, int rb, int ra)
 {
     return cpu_op_sll_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_add_i64(int rc, int rb, int ra)
+__glyph_func__ i16 cpu_encode_op_add_i64(int rc, int rb, int ra)
 {
     return cpu_op_add_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13);
 }
-__glyph_func__ i16 enc_nop(int imm9)
+__glyph_func__ i16 cpu_encode_op_nop(int imm9)
 {
     return cpu_op_nop | ((imm9 & 511)<<7);
 }
-__glyph_func__ i16 enc_ud1(int imm9)
+__glyph_func__ i16 cpu_encode_op_ud1(int imm9)
 {
     return cpu_op_ud1 | ((imm9 & 511)<<7);
 }
-__glyph_func__ i16 enc_ud2(int imm9)
+__glyph_func__ i16 cpu_encode_op_ud2(int imm9)
 {
     return cpu_op_ud2 | ((imm9 & 511)<<7);
 }
@@ -937,7 +938,7 @@ __glyph_func__ void cpu_setup(cpu_state *cpu,
 }
 
 
-__glyph_func__ void run_test(const char *name,
+__glyph_func__ void cpu_test_impl(const char *name,
     i64 *c, size_t cl, i16 *i, size_t il)
 {
     cpu_debug("# test: %s", name);
