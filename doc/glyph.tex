@@ -674,32 +674,32 @@ is addressed with the \emph{immediate base register (ib)}.
 \node [above,scale=0.9,anchor=south] at (32,5)  {\textbf{instruction stream (pc-relative)}};
 \node [font=\small,above,scale=0.9,anchor=south] at (8,2)  {\textbf{16-bit instruction packet}};
 
-\node [font=\tiny,below,scale=0.9,anchor=north] at (-1.5,0.66)  {$\textbf{(pc)}$};
+\node [font=\tiny,below,scale=0.9,anchor=north] at (-1.5,0.25)  {$\textbf{(pc)}$};
 
-\fill [black!15] (0,0)    rectangle (9,1);
-\draw [line width=0.2mm, black!80] (0,0)    rectangle (9,1);
-\node [font=\tiny,below,scale=0.9,anchor=north] at (0.5,0.66)  {$\textbf{15}$};
-\node [font=\tiny,below,scale=0.9,anchor=north] at (8.5,0.66)  {$\textbf{7}$};
+\fill [black!15] (0,-1)    rectangle (9,1);
+\draw [line width=0.2mm, black!80] (0,-1)    rectangle (9,1);
+\node [font=\tiny,below,scale=0.9,anchor=north] at (1,0.25)  {$\textbf{15}$};
+\node [font=\tiny,below,scale=0.9,anchor=north] at (8,0.25)  {$\textbf{7}$};
 
-\fill [black!10] (9,0)     rectangle (14,1);
-\draw [line width=0.2mm, black!80] (9,0)     rectangle (14,1);
-\node [font=\tiny,below,scale=0.9,anchor=north] at (9.5,0.66)  {$\textbf{6}$};
-\node [font=\tiny,below,scale=0.9,anchor=north] at (13.5,0.66)  {$\textbf{2}$};
+\fill [black!10] (9,-1)     rectangle (14,1);
+\draw [line width=0.2mm, black!80] (9,-1)     rectangle (14,1);
+\node [font=\tiny,below,scale=0.9,anchor=north] at (10,0.25)  {$\textbf{6}$};
+\node [font=\tiny,below,scale=0.9,anchor=north] at (13,0.25)  {$\textbf{2}$};
 
-\fill [black!5] (14,0)     rectangle (16,1);
-\draw [line width=0.2mm, black!80] (14,0)     rectangle (16,1);
-\node [font=\tiny,below,scale=0.9,anchor=north] at (14.5,0.66)  {$\textbf{1}$};
-\node [font=\tiny,below,scale=0.9,anchor=north] at (15.5,0.66)  {$\textbf{0}$};
+\fill [black!5] (14,-1)     rectangle (16,1);
+\draw [line width=0.2mm, black!80] (14,-1)     rectangle (16,1);
+\node [font=\tiny,below,scale=0.9,anchor=north] at (14.5,0.25)  {$\textbf{1}$};
+\node [font=\tiny,below,scale=0.9,anchor=north] at (15.5,0.25)  {$\textbf{0}$};
 
-\draw [line width=0.2mm, black!80,dashed] (16,0)     rectangle (32,1);
-\draw [line width=0.2mm, black!80,dashed] (32,0)     rectangle (48,1);
-\draw [line width=0.2mm, black!80,dashed] (48,0)     rectangle (64,1);
+\draw [line width=0.2mm, black!80,dashed] (16,-1)     rectangle (32,1);
+\draw [line width=0.2mm, black!80,dashed] (32,-1)     rectangle (48,1);
+\draw [line width=0.2mm, black!80,dashed] (48,-1)     rectangle (64,1);
 
 \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
     (0,1.5) -- (9,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{operands}};
 
 \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
-    (9,1.5) -- (14,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{opcode}};
+    (9,1.5) -- (14,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{code}};
 
 \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
     (14,1.5) -- (16,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{size}};
@@ -707,16 +707,16 @@ is addressed with the \emph{immediate base register (ib)}.
 \node [above,scale=0.9,anchor=south] at (32,-7)  {\textbf{constant stream (ib-relative)}};
 \node [font=\small,above,scale=0.9,anchor=south] at (8,-10)  {\textbf{64-bit immediate data}};
 
-\node [font=\tiny,below,scale=0.9,anchor=north] at (-1.5,-11.33)  {$\textbf{(ib)}$};
+\node [font=\tiny,below,scale=0.9,anchor=north] at (-1.5,-11.75)  {$\textbf{(ib)}$};
 
 \foreach \x in {0,1,2,3,4,5,6,7}
-  \fill [black!15] (\x*8,-12)    rectangle (\x*8+8,-11);
+  \fill [black!15] (\x*8,-13)    rectangle (\x*8+8,-11);
 
 \foreach \x in {0,1,2,3,4,5,6,7}
-  \draw [line width=0.2mm, black!80] (\x*8,-12)     rectangle (\x*8+8,-11);
+  \draw [line width=0.2mm, black!80] (\x*8,-13)     rectangle (\x*8+8,-11);
 
 \foreach \x in {0,1,2,3,4,5,6,7}
-  \node [font=\tiny,below,scale=0.9,anchor=north] at (\x*8 + 4,-11.33)  {$\textbf{\x}$};
+  \node [font=\tiny,below,scale=0.9,anchor=north] at (\x*8 + 4,-11.75)  {$\textbf{\x}$};
 
 \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
     (0,-10.5) -- (64,-10.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{ib-relative constant}};
