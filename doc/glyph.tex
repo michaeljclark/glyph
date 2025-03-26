@@ -1184,4 +1184,129 @@ illegal instruction trap.
 the \emph{ud2} or \emph{undefined-2} instruction causes an
 illegal instruction trap.
 
+\appendix
+
+\chapter{Appendix}
+
+\section{16-bit opcodes}
+
+\newcommand{\ainsnimmnine}[5]{
+\draw [line width=0.2mm, black!80] (0,0-#1)    rectangle (9,1-#1);
+\node [font=\small,anchor=base] at (4.5,0.25-#1)  {\textbf{#2}};
+
+\draw [line width=0.2mm, black!80] (9,0-#1)     rectangle (14,1-#1);
+\node [font=\small,anchor=base] at (11.5,0.25-#1)  {\textbf{#3}};
+
+\draw [line width=0.2mm, black!80] (14,0-#1)     rectangle (16,1-#1);
+\node [font=\small,anchor=base] at (15.0,0.25-#1)  {\textbf{#4}};
+
+\node [font=\small,anchor=base west] at (17.0,0.25-#1)  {#5};
+}
+
+\newcommand{\ainsrcimmsix}[6]{
+\draw [line width=0.2mm, black!80] (0,0-#1)    rectangle (3,1-#1);
+\node [font=\small,anchor=base] at (1.5,0.25-#1)  {\textbf{#2}};
+
+\draw [line width=0.2mm, black!80] (3,0-#1)    rectangle (9,1-#1);
+\node [font=\small,anchor=base] at (6.0,0.25-#1)  {\textbf{#3}};
+
+\draw [line width=0.2mm, black!80] (9,0-#1)     rectangle (14,1-#1);
+\node [font=\small,anchor=base] at (11.5,0.25-#1)  {\textbf{#4}};
+
+\draw [line width=0.2mm, black!80] (14,0-#1)     rectangle (16,1-#1);
+\node [font=\small,anchor=base] at (15.0,0.25-#1)  {\textbf{#5}};
+
+\node [font=\small,anchor=base west] at (17.0,0.25-#1)  {#6};
+}
+
+\newcommand{\ainsrcrbimmthree}[7]{
+\draw [line width=0.2mm, black!80] (0,0-#1)    rectangle (3,1-#1);
+\node [font=\small,anchor=base] at (1.5,0.25-#1)  {\textbf{#2}};
+
+\draw [line width=0.2mm, black!80] (3,0-#1)    rectangle (6,1-#1);
+\node [font=\small,anchor=base] at (4.5,0.25-#1)  {\textbf{#3}};
+
+\draw [line width=0.2mm, black!80] (6,0-#1)    rectangle (9,1-#1);
+\node [font=\small,anchor=base] at (7.5,0.25-#1)  {\textbf{#4}};
+
+\draw [line width=0.2mm, black!80] (9,0-#1)     rectangle (14,1-#1);
+\node [font=\small,anchor=base] at (11.5,0.25-#1)  {\textbf{#5}};
+
+\draw [line width=0.2mm, black!80] (14,0-#1)     rectangle (16,1-#1);
+\node [font=\small,anchor=base] at (15.0,0.25-#1)  {\textbf{#6}};
+
+\node [font=\small,anchor=base west] at (17.0,0.25-#1)  {#7};
+}
+
+\newcommand{\ainsrcrbrc}[7]{
+\draw [line width=0.2mm, black!80] (0,0-#1)    rectangle (3,1-#1);
+\node [font=\small,anchor=base] at (1.5,0.25-#1)  {\textbf{#2}};
+
+\draw [line width=0.2mm, black!80] (3,0-#1)    rectangle (6,1-#1);
+\node [font=\small,anchor=base] at (4.5,0.25-#1)  {\textbf{#3}};
+
+\draw [line width=0.2mm, black!80] (6,0-#1)    rectangle (9,1-#1);
+\node [font=\small,anchor=base] at (7.5,0.25-#1)  {\textbf{#4}};
+
+\draw [line width=0.2mm, black!80] (9,0-#1)     rectangle (14,1-#1);
+\node [font=\small,anchor=base] at (11.5,0.25-#1)  {\textbf{#5}};
+
+\draw [line width=0.2mm, black!80] (14,0-#1)     rectangle (16,1-#1);
+\node [font=\small,anchor=base] at (15.0,0.25-#1)  {\textbf{#6}};
+
+\node [font=\small,anchor=base west] at (17.0,0.25-#1)  {#7};
+}
+
+\begin{minipage}[c]{\textwidth}
+\begin{tikzpicture}[scale=0.50]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+
+\node [font=\tiny,anchor=base] at (0.5,1.2)  {$\textbf{15}$};
+\node [font=\tiny,anchor=base] at (2.5,1.2)  {$\textbf{13}$};
+\node [font=\tiny,anchor=base] at (3.5,1.2)  {$\textbf{12}$};
+\node [font=\tiny,anchor=base] at (5.5,1.2)  {$\textbf{10}$};
+\node [font=\tiny,anchor=base] at (6.5,1.2)  {$\textbf{9}$};
+\node [font=\tiny,anchor=base] at (8.5,1.2)  {$\textbf{7}$};
+\node [font=\tiny,anchor=base] at (9.5,1.2)  {$\textbf{6}$};
+\node [font=\tiny,anchor=base] at (13.5,1.2)  {$\textbf{2}$};
+\node [font=\tiny,anchor=base] at (14.5,1.2)  {$\textbf{1}$};
+\node [font=\tiny,anchor=base] at (15.5,1.2)  {$\textbf{0}$};
+
+\ainsnimmnine{0}{uimm}{00000}{00}{\textbf{break} uimm9}
+\ainsnimmnine{1}{simm}{00001}{00}{\textbf{j} simm9}
+\ainsnimmnine{2}{simm}{00010}{00}{\textbf{b} simm9}
+\ainsrcimmsix{3}{rc}{uimm}{00011}{00}{\textbf{ibl} rc, uimm6}
+\ainsrcimmsix{4}{rc}{uimm}{00100}{00}{\textbf{jalib} rc, ib32x2(uimm6*8)}
+\ainsrcimmsix{5}{rc}{uimm}{00101}{00}{\textbf{jtlib} rc, ib32x2(uimm6*8)}
+\ainsrcimmsix{6}{rc}{uimm}{00110}{00}{\textbf{lib.i64} rc, ib64(uimm6*8)}
+\ainsrcimmsix{7}{rc}{simm}{00111}{00}{\textbf{li.i64} rc, simm6}
+\ainsrcimmsix{8}{rc}{simm}{01000}{00}{\textbf{addi.i64} rc, simm6}
+\ainsrcimmsix{9}{rc}{uimm}{01001}{00}{\textbf{srli.i64} rc, uimm6}
+\ainsrcimmsix{10}{rc}{uimm}{01010}{00}{\textbf{srai.i64} rc, uimm6}
+\ainsrcimmsix{11}{rc}{uimm}{01011}{00}{\textbf{slli.i64} rc, uimm6}
+\ainsrcrbimmthree{12}{rc}{rb}{uimm}{01100}{00}{\textbf{addib.i64} rc, rb, ib64(uimm3*8)}
+\ainsrcrbimmthree{13}{rc}{rb}{uimm}{01101}{00}{\textbf{load.i64} rc, uimm3(rb))}
+\ainsrcrbimmthree{14}{rc}{rb}{uimm}{01110}{00}{\textbf{loadib.i64} rc, ib64(uimm3*8)(rb)}
+\ainsrcrbimmthree{15}{rc}{rb}{uimm}{01111}{00}{\textbf{cmp.i64} rc, rb, fun3}
+\ainsrcrbimmthree{16}{rc}{rb}{uimm}{10000}{00}{\textbf{subib.i64} rc, rb, ib64(uimm3*8)}
+\ainsrcrbimmthree{17}{rc}{rb}{uimm}{10001}{00}{\textbf{store.i64} rc, uimm3(rb))}
+\ainsrcrbimmthree{18}{rc}{rb}{uimm}{10010}{00}{\textbf{storeib.i64} rc, ib64(uimm3*8)(rb)}
+\ainsrcrbimmthree{19}{rc}{rb}{uimm}{10011}{00}{\textbf{logic.i64} rc, rb, fun3}
+\ainsrcrbrc{20}{rc}{rb}{ra}{10100}{00}{\textbf{pin.i64} rc, rb, ra}
+\ainsrcrbrc{21}{rc}{rb}{ra}{10101}{00}{\textbf{and.i64} rc, rb, ra}
+\ainsrcrbrc{22}{rc}{rb}{ra}{10110}{00}{\textbf{or.i64} rc, rb, ra}
+\ainsrcrbrc{23}{rc}{rb}{ra}{10111}{00}{\textbf{xor.i64} rc, rb, ra}
+\ainsrcrbrc{24}{rc}{rb}{ra}{11000}{00}{\textbf{sub.i64} rc, rb, ra}
+\ainsrcimmsix{25}{rc}{uimm}{11001}{00}{\textbf{srl.i64} rc, rb, ra}
+\ainsrcimmsix{26}{rc}{uimm}{11010}{00}{\textbf{sra.i64} rc, rb, ra}
+\ainsrcimmsix{27}{rc}{uimm}{11011}{00}{\textbf{sll.i64} rc, rb, ra6}
+\ainsrcrbrc{28}{rc}{rb}{ra}{11100}{00}{\textbf{add.i64} rc, rb, ra}
+\ainsnimmnine{29}{uimm}{11101}{00}{\textbf{nop} uimm9}
+\ainsnimmnine{30}{uimm}{11110}{00}{\textbf{ud1} uimm9}
+\ainsnimmnine{31}{uimm}{11111}{00}{\textbf{ud2} uimm9}
+
+\end{scope}
+\end{tikzpicture}
+\end{minipage}
+
 \end{document}
