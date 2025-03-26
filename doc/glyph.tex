@@ -1,0 +1,1187 @@
+\documentclass{scrreprt}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usepackage{minitoc}
+\usepackage{fancyvrb}
+\usepackage{textcomp}
+\usepackage{needspace}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{caption}
+\usetikzlibrary{decorations.pathreplacing}
+\title{Instructions}
+
+\def\verbatim@font{\linespread{1}\normalfont\ttfamily}
+
+\begin{document}
+\title{GLYPH}
+\subtitle{a super regular RISC architecture}
+\author{Michael Clark}
+\date{\small \today \quad DRAFT}
+\maketitle
+
+\cleardoublepage
+\dominitoc
+\tableofcontents
+\linespread{1.5}
+\pagenumbering{arabic}
+\pagestyle{headings}
+
+\newcommand{\insnimmnine}[4]{
+\begin{minipage}[c]{\textwidth}
+\begin{tikzpicture}[fill=blue!20,scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+
+\fill [black!10] (0,0)    rectangle (9,1);
+\draw [line width=0.2mm, black!80] (0,0)    rectangle (9,1);
+\draw [line width=0.2mm, black!80] (0,-1)   rectangle (9,0);
+\node [font=\tiny,anchor=base] at (0.5,1.2)  {$\textbf{15}$};
+\node [font=\tiny,anchor=base] at (8.5,1.2)  {$\textbf{7}$};
+\node [font=\small,anchor=base] at (4.5,0.25)  {$imm9$};
+\node [font=\small,anchor=base] at (4.5,-0.8)  {\textbf{#1}};
+
+\fill [black!10] (9,0)     rectangle (14,1);
+\draw [line width=0.2mm, black!80] (9,0)     rectangle (14,1);
+\draw [line width=0.2mm, black!80] (9,-1)    rectangle (14,0);
+\node [font=\tiny,anchor=base] at (9.5,1.2)  {$\textbf{6}$};
+\node [font=\tiny,anchor=base] at (13.5,1.2)  {$\textbf{2}$};
+\node [font=\small,anchor=base] at (11.5,0.25)  {$opcode$};
+\node [font=\small,anchor=base] at (11.5,-0.8)  {\textbf{#2}};
+
+\fill [black!10] (14,0)     rectangle (16,1);
+\draw [line width=0.2mm, black!80] (14,0)     rectangle (16,1);
+\draw [line width=0.2mm, black!80] (14,-1)    rectangle (16,0);
+\node [font=\tiny,anchor=base] at (14.5,1.2)  {$\textbf{1}$};
+\node [font=\tiny,anchor=base] at (15.5,1.2)  {$\textbf{0}$};
+\node [font=\small,anchor=base] at (15.0,0.25)  {$size$};
+\node [font=\small,anchor=base] at (15.0,-0.8)  {\textbf{#3}};
+
+\node [font=\small,anchor=base west] at (17.0,-0.8)  {#4};
+
+\end{scope}
+\end{tikzpicture}
+\end{minipage}
+}
+
+\newcommand{\insrcimmsix}[5]{
+\begin{minipage}[c]{\textwidth}
+\begin{tikzpicture}[fill=blue!20,scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+
+\fill [black!10] (0,0)    rectangle (3,1);
+\draw [line width=0.2mm, black!80] (0,0)    rectangle (3,1);
+\draw [line width=0.2mm, black!80] (0,-1)   rectangle (3,0);
+\node [font=\tiny,anchor=base] at (0.5,1.2)  {$\textbf{15}$};
+\node [font=\tiny,anchor=base] at (2.5,1.2)  {$\textbf{13}$};
+\node [font=\small,anchor=base] at (1.5,0.25)  {$rc$};
+\node [font=\small,anchor=base] at (1.5,-0.8)  {\textbf{#1}};
+
+\fill [black!10] (3,0)    rectangle (9,1);
+\draw [line width=0.2mm, black!80] (3,0)    rectangle (9,1);
+\draw [line width=0.2mm, black!80] (3,-1)   rectangle (9,0);
+\node [font=\tiny,anchor=base] at (3.5,1.2)  {$\textbf{12}$};
+\node [font=\tiny,anchor=base] at (8.5,1.2)  {$\textbf{7}$};
+\node [font=\small,anchor=base] at (6.0,0.25)  {$imm6$};
+\node [font=\small,anchor=base] at (6.0,-0.8)  {\textbf{#2}};
+
+\fill [black!10] (9,0)     rectangle (14,1);
+\draw [line width=0.2mm, black!80] (9,0)     rectangle (14,1);
+\draw [line width=0.2mm, black!80] (9,-1)    rectangle (14,0);
+\node [font=\tiny,anchor=base] at (9.5,1.2)  {$\textbf{6}$};
+\node [font=\tiny,anchor=base] at (13.5,1.2)  {$\textbf{2}$};
+\node [font=\small,anchor=base] at (11.5,0.25)  {$opcode$};
+\node [font=\small,anchor=base] at (11.5,-0.8)  {\textbf{#3}};
+
+\fill [black!10] (14,0)     rectangle (16,1);
+\draw [line width=0.2mm, black!80] (14,0)     rectangle (16,1);
+\draw [line width=0.2mm, black!80] (14,-1)    rectangle (16,0);
+\node [font=\tiny,anchor=base] at (14.5,1.2)  {$\textbf{1}$};
+\node [font=\tiny,anchor=base] at (15.5,1.2)  {$\textbf{0}$};
+\node [font=\small,anchor=base] at (15.0,0.25)  {$size$};
+\node [font=\small,anchor=base] at (15.0,-0.8)  {\textbf{#4}};
+
+\node [font=\small,anchor=base west] at (17.0,-0.8)  {#5};
+
+\end{scope}
+\end{tikzpicture}
+\end{minipage}
+}
+
+\newcommand{\insrcrbimmthree}[6]{
+\begin{tikzpicture}[scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+
+\fill [black!10] (0,0)    rectangle (3,1);
+\draw [line width=0.2mm, black!80] (0,0)    rectangle (3,1);
+\draw [line width=0.2mm, black!80] (0,-1)   rectangle (3,0);
+\node [font=\tiny,anchor=base] at (0.5,1.2)  {$\textbf{15}$};
+\node [font=\tiny,anchor=base] at (2.5,1.2)  {$\textbf{13}$};
+\node [font=\small,anchor=base] at (1.5,0.25)  {$rc$};
+\node [font=\small,anchor=south,] at (1.5,-0.8)  {\textbf{#1}};
+
+\fill [black!10] (3,0)    rectangle (6,1);
+\draw [line width=0.2mm, black!80] (3,0)    rectangle (6,1);
+\draw [line width=0.2mm, black!80] (3,-1)   rectangle (6,0);
+\node [font=\tiny,anchor=base] at (3.5,1.2)  {$\textbf{12}$};
+\node [font=\tiny,anchor=base] at (5.5,1.2)  {$\textbf{10}$};
+\node [font=\small,anchor=base] at (4.5,0.25)  {$rb$};
+\node [font=\small,anchor=base] at (4.5,-0.8)  {\textbf{#2}};
+
+\fill [black!10] (6,0)    rectangle (9,1);
+\draw [line width=0.2mm, black!80] (6,0)    rectangle (9,1);
+\draw [line width=0.2mm, black!80] (6,-1)   rectangle (9,0);
+\node [font=\tiny,anchor=base] at (6.5,1.2)  {$\textbf{9}$};
+\node [font=\tiny,anchor=base] at (8.5,1.2)  {$\textbf{7}$};
+\node [font=\small,anchor=base] at (7.5,0.25)  {$imm3$};
+\node [font=\small,anchor=base] at (7.5,-0.8)  {\textbf{#3}};
+
+\fill [black!10] (9,0)     rectangle (14,1);
+\draw [line width=0.2mm, black!80] (9,0)     rectangle (14,1);
+\draw [line width=0.2mm, black!80] (9,-1)    rectangle (14,0);
+\node [font=\tiny,anchor=base] at (9.5,1.2)  {$\textbf{6}$};
+\node [font=\tiny,anchor=base] at (13.5,1.2)  {$\textbf{2}$};
+\node [font=\small,anchor=base] at (11.5,0.25)  {$opcode$};
+\node [font=\small,anchor=base] at (11.5,-0.8)  {\textbf{#4}};
+
+\fill [black!10] (14,0)     rectangle (16,1);
+\draw [line width=0.2mm, black!80] (14,0)     rectangle (16,1);
+\draw [line width=0.2mm, black!80] (14,-1)    rectangle (16,0);
+\node [font=\tiny,anchor=base] at (14.5,1.2)  {$\textbf{1}$};
+\node [font=\tiny,anchor=base] at (15.5,1.2)  {$\textbf{0}$};
+\node [font=\small,anchor=base] at (15.0,0.25)  {$size$};
+\node [font=\small,anchor=base] at (15.0,-0.8)  {\textbf{#5}};
+
+\node [font=\small,anchor=base west] at (17.0,-0.8)  {#6};
+
+\end{scope}
+\end{tikzpicture}
+}
+
+\newcommand{\insrcrbrc}[6]{
+\begin{tikzpicture}[scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+
+\fill [black!10] (0,0)    rectangle (3,1);
+\draw [line width=0.2mm, black!80] (0,0)    rectangle (3,1);
+\draw [line width=0.2mm, black!80] (0,-1)   rectangle (3,0);
+\node [font=\tiny,anchor=base] at (0.5,1.2)  {$\textbf{15}$};
+\node [font=\tiny,anchor=base] at (2.5,1.2)  {$\textbf{13}$};
+\node [font=\small,anchor=base] at (1.5,0.25)  {$rc$};
+\node [font=\small,anchor=south,] at (1.5,-0.8)  {\textbf{#1}};
+
+\fill [black!10] (3,0)    rectangle (6,1);
+\draw [line width=0.2mm, black!80] (3,0)    rectangle (6,1);
+\draw [line width=0.2mm, black!80] (3,-1)   rectangle (6,0);
+\node [font=\tiny,anchor=base] at (3.5,1.2)  {$\textbf{12}$};
+\node [font=\tiny,anchor=base] at (5.5,1.2)  {$\textbf{10}$};
+\node [font=\small,anchor=base] at (4.5,0.25)  {$rb$};
+\node [font=\small,anchor=base] at (4.5,-0.8)  {\textbf{#2}};
+
+\fill [black!10] (6,0)    rectangle (9,1);
+\draw [line width=0.2mm, black!80] (6,0)    rectangle (9,1);
+\draw [line width=0.2mm, black!80] (6,-1)   rectangle (9,0);
+\node [font=\tiny,anchor=base] at (6.5,1.2)  {$\textbf{9}$};
+\node [font=\tiny,anchor=base] at (8.5,1.2)  {$\textbf{7}$};
+\node [font=\small,anchor=base] at (7.5,0.25)  {$ra$};
+\node [font=\small,anchor=base] at (7.5,-0.8)  {\textbf{#3}};
+
+\fill [black!10] (9,0)     rectangle (14,1);
+\draw [line width=0.2mm, black!80] (9,0)     rectangle (14,1);
+\draw [line width=0.2mm, black!80] (9,-1)    rectangle (14,0);
+\node [font=\tiny,anchor=base] at (9.5,1.2)  {$\textbf{6}$};
+\node [font=\tiny,anchor=base] at (13.5,1.2)  {$\textbf{2}$};
+\node [font=\small,anchor=base] at (11.5,0.25)  {$opcode$};
+\node [font=\small,anchor=base] at (11.5,-0.8)  {\textbf{#4}};
+
+\fill [black!10] (14,0)     rectangle (16,1);
+\draw [line width=0.2mm, black!80] (14,0)     rectangle (16,1);
+\draw [line width=0.2mm, black!80] (14,-1)    rectangle (16,0);
+\node [font=\tiny,anchor=base] at (14.5,1.2)  {$\textbf{1}$};
+\node [font=\tiny,anchor=base] at (15.5,1.2)  {$\textbf{0}$};
+\node [font=\small,anchor=base] at (15.0,0.25)  {$size$};
+\node [font=\small,anchor=base] at (15.0,-0.8)  {\textbf{#5}};
+
+\node [font=\small,anchor=base west] at (17.0,-0.8)  {#6};
+
+\end{scope}
+\end{tikzpicture}
+}
+
+\chapter{Architecture}
+
+\section{Introduction}
+
+\par\noindent
+glyph is a super regular RISC architecture that encodes constants in a
+secondary constant stream accessed via an immediate base register. the
+immediate base register branches like the program counter and the call
+instructions sets \emph{(pc,ib)} together for procedure calls and returns.
+\\
+\par\noindent
+glyph uses relative addresses in its link register which is different
+to typical RISC architectures. glyph needs to do this for the branch
+instruction to fit \emph{(pc,ib)} into the link register for compatibility.
+glyph achieves this by packing together two 32-bit relative \emph{(pc,ib)}
+displacements in an \emph{i32x2} vector.
+\\
+\par\noindent
+immediate blocks can be linked together using relative displacements
+and switched using the constant branch instruction detailed below.
+immediate blocks, unlike typical RISC architectures, mean that most
+relocations are word sized like CISC architectures, and can use C-style
+structure packing and alignment rules.
+\\
+\par\noindent
+this list outlines some differentiating elements of the super regular
+RISC architecture:
+
+\begin{itemize}[itemsep=0pt]
+\item variable length instruction format supporting 16, 32, 64, and 128-bit
+instructions.
+\item 16-bit compressed instruction packets can access 8x64-bit registers.
+\item \emph{(pc,ib)} is a special program counter and immediate base
+register address vector.
+\item link register contains packed \emph{i32x2} relative address vector to
+function entry.
+\item \texttt{ibl} \emph{immediate-block-link} adds a relative address to
+the immediate base register.
+\item \texttt{lib} \emph{load-immediate-block} uses unsigned displacement
+to access constants.
+\item \texttt{jalib} \emph{jump-and-link-immediate-block} or \emph{call}
+links address vector and adds constants to \emph{(pc,ib)} and is used
+to branch the program counter and immediate base register at the same time
+for calling procedures.
+\item \texttt{jtlib} \emph{jump-to-link-immediate-block} or \emph{ret}
+subtracts link vector from and adds constants to \emph{(pc,ib)} and is used
+to branch the program counter and immediate base register at the same time
+for returning from called procedures.
+\item \texttt{pin} \emph{pack-indirect} packs two absolute addresses as
+relative address vector from \emph{(pc,ib)} and is used for calling
+absolute addresses such as virtual functions.
+\end{itemize}
+
+\newpage
+\section{Instruction format}
+
+glyph has a variable length instruction format supporting 16, 32, 64,
+and 128-bit instruction packets. the instruction packet has been
+designed to use a \emph{super regular} scheme, whereby successive
+instruction packets extend the fields in the previous packet.
+
+\subsection{instruction templates}
+
+the variable length instruction format has a single base format
+where fields in the template instruction form are extended by
+successive instruction packets.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
+\end{tikzpicture}
+\caption{16-bit instruction template.}
+\label{fig:glyph-instruction-template-16}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {$sz_{[3:2]}$};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (5.500000,-0.500000) [font=\scriptsize] {$operand_{[17:9]}$};
+\end{tikzpicture}
+\caption{32-bit instruction template.}
+\label{fig:glyph-instruction-template-32}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {$sz_{[3:2]}$};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (5.500000,-0.500000) [font=\scriptsize] {$operand_{[17:9]}$};
+\fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\node at (16.000000,-1.500000) [font=\scriptsize] {$sz_{[5:4]}$};
+\fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
+\fill [black!5]  (1.000000,-2.000000) rectangle (10.000000,-1.000000);
+\draw [black!90]  (1.000000,-2.000000) rectangle (10.000000,-1.000000);
+\node at (5.500000,-1.500000) [font=\scriptsize] {$operand_{[26:18]}$};
+\fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\node at (16.000000,-2.500000) [font=\scriptsize] {$sz_{[7:6]}$};
+\fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
+\fill [black!5]  (1.000000,-3.000000) rectangle (10.000000,-2.000000);
+\draw [black!90]  (1.000000,-3.000000) rectangle (10.000000,-2.000000);
+\node at (5.500000,-2.500000) [font=\scriptsize] {$operand_{[35:27]}$};
+\end{tikzpicture}
+\caption{64-bit instruction template.}
+\label{fig:glyph-instruction-template-64}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {$sz_{[3:2]}$};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (5.500000,-0.500000) [font=\scriptsize] {$operand_{[17:9]}$};
+\fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\node at (16.000000,-1.500000) [font=\scriptsize] {$sz_{[5:4]}$};
+\fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
+\fill [black!5]  (1.000000,-2.000000) rectangle (10.000000,-1.000000);
+\draw [black!90]  (1.000000,-2.000000) rectangle (10.000000,-1.000000);
+\node at (5.500000,-1.500000) [font=\scriptsize] {$operand_{[26:18]}$};
+\fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\node at (16.000000,-2.500000) [font=\scriptsize] {$sz_{[7:6]}$};
+\fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
+\fill [black!5]  (1.000000,-3.000000) rectangle (10.000000,-2.000000);
+\draw [black!90]  (1.000000,-3.000000) rectangle (10.000000,-2.000000);
+\node at (5.500000,-2.500000) [font=\scriptsize] {$operand_{[35:27]}$};
+\fill [black!5]  (15.000000,-4.000000) rectangle (17.000000,-3.000000);
+\draw [black!90]  (15.000000,-4.000000) rectangle (17.000000,-3.000000);
+\node at (16.000000,-3.500000) [font=\scriptsize] {$sz_{[9:8]}$};
+\fill [black!5]  (10.000000,-4.000000) rectangle (15.000000,-3.000000);
+\draw [black!90]  (10.000000,-4.000000) rectangle (15.000000,-3.000000);
+\node at (12.500000,-3.500000) [font=\scriptsize] {$opcode_{[24:20]}$};
+\fill [black!5]  (1.000000,-4.000000) rectangle (10.000000,-3.000000);
+\draw [black!90]  (1.000000,-4.000000) rectangle (10.000000,-3.000000);
+\node at (5.500000,-3.500000) [font=\scriptsize] {$operand_{[44:36]}$};
+\fill [black!5]  (15.000000,-5.000000) rectangle (17.000000,-4.000000);
+\draw [black!90]  (15.000000,-5.000000) rectangle (17.000000,-4.000000);
+\node at (16.000000,-4.500000) [font=\scriptsize] {$sz_{[11:10]}$};
+\fill [black!5]  (10.000000,-5.000000) rectangle (15.000000,-4.000000);
+\draw [black!90]  (10.000000,-5.000000) rectangle (15.000000,-4.000000);
+\node at (12.500000,-4.500000) [font=\scriptsize] {$opcode_{[29:25]}$};
+\fill [black!5]  (1.000000,-5.000000) rectangle (10.000000,-4.000000);
+\draw [black!90]  (1.000000,-5.000000) rectangle (10.000000,-4.000000);
+\node at (5.500000,-4.500000) [font=\scriptsize] {$operand_{[53:45]}$};
+\fill [black!5]  (15.000000,-6.000000) rectangle (17.000000,-5.000000);
+\draw [black!90]  (15.000000,-6.000000) rectangle (17.000000,-5.000000);
+\node at (16.000000,-5.500000) [font=\scriptsize] {$sz_{[13:12]}$};
+\fill [black!5]  (10.000000,-6.000000) rectangle (15.000000,-5.000000);
+\draw [black!90]  (10.000000,-6.000000) rectangle (15.000000,-5.000000);
+\node at (12.500000,-5.500000) [font=\scriptsize] {$opcode_{[34:30]}$};
+\fill [black!5]  (1.000000,-6.000000) rectangle (10.000000,-5.000000);
+\draw [black!90]  (1.000000,-6.000000) rectangle (10.000000,-5.000000);
+\node at (5.500000,-5.500000) [font=\scriptsize] {$operand_{[62:54]}$};
+\fill [black!5]  (15.000000,-7.000000) rectangle (17.000000,-6.000000);
+\draw [black!90]  (15.000000,-7.000000) rectangle (17.000000,-6.000000);
+\node at (16.000000,-6.500000) [font=\scriptsize] {$sz_{[15:14]}$};
+\fill [black!5]  (10.000000,-7.000000) rectangle (15.000000,-6.000000);
+\draw [black!90]  (10.000000,-7.000000) rectangle (15.000000,-6.000000);
+\node at (12.500000,-6.500000) [font=\scriptsize] {$opcode_{[39:35]}$};
+\fill [black!5]  (1.000000,-7.000000) rectangle (10.000000,-6.000000);
+\draw [black!90]  (1.000000,-7.000000) rectangle (10.000000,-6.000000);
+\node at (5.500000,-6.500000) [font=\scriptsize] {$operand_{[71:63]}$};
+\end{tikzpicture}
+\caption{128-bit instruction template.}
+\label{fig:glyph-instruction-template-128}
+\end{figure}
+
+\subsection{size encoding}
+
+the variable length instruction format has a \emph{2-bit} size field in a
+fixed position in every 16-bit instruction packet, somewhat inspired by
+LEB128, to reduce the complexity of variable length instruction size decoding.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|c|l|}
+\hline
+\textbf{Instruction Size} & \textbf{Size Fields} \\ 
+\hline
+16-bit   & \texttt{\{00}\}                        \\ 
+32-bit   & \texttt{\{01,11\}}                     \\ 
+64-bit   & \texttt{\{10,11,11,11\}}               \\ 
+128-bit  & \texttt{\{11,11,11,11,11,11,11,11\}}   \\ 
+\hline
+\end{tabular}
+\caption{Variable-length instruction size fields}
+\label{tab:instruction-size-fields}
+\end{table}
+
+\subsection{16-bit instructions}
+
+the 16-bit instructions forms are super regular in that operand and opcode
+bits do not overlap and the number and complexity of the formats is reduced
+so that vectorized instruction decoding is easier in software. the scheme
+is designed so that \emph{1-bit} of coding space in the larger packet can be
+used to extend register sizes for the 16-bit ops.
+
+%\subsubsection{op0ri9 - large immediate}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{00}};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$imm_{[5:0]}$};
+\end{tikzpicture}
+\caption{16-bit large immediate.}
+\label{fig:glyph-iform-opi-16}
+\end{figure}
+
+%\subsubsection{op1ri6 - one operand with immediate}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (4.500000,1.250000) [font=\scriptsize] {12};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (3.500000,1.250000) [font=\scriptsize] {13};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (4.000000,1.000000) -- (4.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{00}};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (4.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (4.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (7.000000,0.500000) [font=\scriptsize] {$imm_{[5:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\end{tikzpicture}
+\caption{16-bit one operand with immediate.}
+\label{fig:glyph-iform-op1ri-16}
+\end{figure}
+
+%\subsubsection{op2ri3 - two operands with immediate}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (7.500000,1.250000) [font=\scriptsize] {9};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (4.500000,1.250000) [font=\scriptsize] {12};
+\node at (6.500000,1.250000) [font=\scriptsize] {10};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (3.500000,1.250000) [font=\scriptsize] {13};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (7.000000,1.000000) -- (7.000000,1.500000);
+\draw (4.000000,1.000000) -- (4.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{00}};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (8.500000,0.500000) [font=\scriptsize] {$imm_{[2:0]}$};
+\fill [black!5]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\draw [black!90]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$rb_{[2:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\end{tikzpicture}
+\caption{16-bit two operand with immediate.}
+\label{fig:glyph-iform-op2ri-16}
+\end{figure}
+
+%\subsubsection{op3r - three operands}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (7.500000,1.250000) [font=\scriptsize] {9};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (4.500000,1.250000) [font=\scriptsize] {12};
+\node at (6.500000,1.250000) [font=\scriptsize] {10};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (3.500000,1.250000) [font=\scriptsize] {13};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (7.000000,1.000000) -- (7.000000,1.500000);
+\draw (4.000000,1.000000) -- (4.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{00}};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (8.500000,0.500000) [font=\scriptsize] {$ra_{[2:0]}$};
+\fill [black!5]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\draw [black!90]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$rb_{[2:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\end{tikzpicture}
+\caption{16-bit three operand.}
+\label{fig:glyph-iform-op3r-16}
+\end{figure}
+
+\newpage
+\section{Constant stream}
+
+glyph seperates the instruction stream into two streams, one with
+instructions and one with constants. the instruction stream is
+addressed with the \emph{program counter (pc)} and the constant stream
+is addressed with the \emph{immediate base register (ib)}.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[fill=blue!20,scale=0.2]
+\begin{scope}[every node/.style={font=\normalsize, inner sep=0pt, right}]
+
+\node [above,scale=0.9,anchor=south] at (32,5)  {\textbf{instruction stream (pc-relative)}};
+\node [font=\small,above,scale=0.9,anchor=south] at (8,2)  {\textbf{16-bit instruction packet}};
+
+\node [font=\tiny,below,scale=0.9,anchor=north] at (-1.5,0.66)  {$\textbf{(pc)}$};
+
+\fill [black!15] (0,0)    rectangle (9,1);
+\draw [line width=0.2mm, black!80] (0,0)    rectangle (9,1);
+\node [font=\tiny,below,scale=0.9,anchor=north] at (0.5,0.66)  {$\textbf{15}$};
+\node [font=\tiny,below,scale=0.9,anchor=north] at (8.5,0.66)  {$\textbf{7}$};
+
+\fill [black!10] (9,0)     rectangle (14,1);
+\draw [line width=0.2mm, black!80] (9,0)     rectangle (14,1);
+\node [font=\tiny,below,scale=0.9,anchor=north] at (9.5,0.66)  {$\textbf{6}$};
+\node [font=\tiny,below,scale=0.9,anchor=north] at (13.5,0.66)  {$\textbf{2}$};
+
+\fill [black!5] (14,0)     rectangle (16,1);
+\draw [line width=0.2mm, black!80] (14,0)     rectangle (16,1);
+\node [font=\tiny,below,scale=0.9,anchor=north] at (14.5,0.66)  {$\textbf{1}$};
+\node [font=\tiny,below,scale=0.9,anchor=north] at (15.5,0.66)  {$\textbf{0}$};
+
+\draw [line width=0.2mm, black!80,dashed] (16,0)     rectangle (32,1);
+\draw [line width=0.2mm, black!80,dashed] (32,0)     rectangle (48,1);
+\draw [line width=0.2mm, black!80,dashed] (48,0)     rectangle (64,1);
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
+    (0,1.5) -- (9,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{operands}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
+    (9,1.5) -- (14,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{opcode}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
+    (14,1.5) -- (16,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{size}};
+
+\node [above,scale=0.9,anchor=south] at (32,-7)  {\textbf{constant stream (ib-relative)}};
+\node [font=\small,above,scale=0.9,anchor=south] at (8,-10)  {\textbf{64-bit immediate data}};
+
+\node [font=\tiny,below,scale=0.9,anchor=north] at (-1.5,-11.33)  {$\textbf{(ib)}$};
+
+\foreach \x in {0,1,2,3,4,5,6,7}
+  \fill [black!15] (\x*8,-12)    rectangle (\x*8+8,-11);
+
+\foreach \x in {0,1,2,3,4,5,6,7}
+  \draw [line width=0.2mm, black!80] (\x*8,-12)     rectangle (\x*8+8,-11);
+
+\foreach \x in {0,1,2,3,4,5,6,7}
+  \node [font=\tiny,below,scale=0.9,anchor=north] at (\x*8 + 4,-11.33)  {$\textbf{\x}$};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
+    (0,-10.5) -- (64,-10.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{ib-relative constant}};
+
+\end{scope}
+\end{tikzpicture}
+\caption{program counter and immediate base register.}
+\label{fig:glyph-constant-stream}
+\end{figure}
+
+\par\noindent
+the instruction and constant streams can branch at the same time using
+special call and return instructions; \emph{jump-and-link-immediate-block},
+\emph{jump-to-link-immediate-block}, and \emph{pack-indirect} which
+add and subtract relative address vectors to \emph{(pc,ib)}, the program
+counter and the immediate base register.
+\\
+\par\noindent
+immediate blocks can navigated by branching the constant stream independently
+with the \emph{ib-link} instruction. the link register contains packed
+\emph{i32x2} relative address vector to support backward compatibility
+with a single link register.
+\\
+\par\noindent
+the instruction forms only use bonded register slots for immediate operands
+and they do not overlap opcode bits. the use of immediate blocks means
+large immediate constants can all be accessed with short references encoded
+inside of register slots.
+\\
+
+\newpage
+\section{Register file}
+
+the glyph register file is extensible due to the variable length
+instruction format and supports a different number of registers
+depending on the instruction size.
+\begin{itemize}[itemsep=0pt]
+\item 16-bit instruction packet can access \emph{8 * 64-bit}
+      registers with up to 3 operands.
+\item 32-bit instruction packet can access \emph{64 * 64-bit}
+      registers with up to 3 operands.
+\item 64-bit instruction packet can access \emph{64 * 64-bit}
+      registers with up to 6 operands.
+\end{itemize}
+
+\par\noindent
+the following diagram shows the register state accessible by the 16-bit
+instruction packet:
+\\
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+\foreach \x in {0,...,7}
+  \fill [black!5] (0,\x)    rectangle (16,\x+1);
+\foreach \x in {0,...,7}
+  \draw [black!95] (0,\x)    rectangle (16,\x+1);
+\node [font=\small,anchor=base] at (8,0.25)  {$\textbf{r7}$};
+\node [font=\small,anchor=base] at (8,1.25)  {$\textbf{r6}$};
+\node [font=\small,anchor=base] at (8,2.25)  {$\textbf{r5}$};
+\node [font=\small,anchor=base] at (8,3.25)  {$\textbf{r4}$};
+\node [font=\small,anchor=base] at (8,4.25)  {$\textbf{r3}$};
+\node [font=\small,anchor=base] at (8,5.25)  {$\textbf{r2}$};
+\node [font=\small,anchor=base] at (8,6.25)  {$\textbf{r1}$};
+\node [font=\small,anchor=base] at (8,7.25)  {$\textbf{r0}$};
+
+\node [font=\tiny,anchor=base] at (0.5,11.2)  {$\textbf{0}$};
+\node [font=\tiny,anchor=base] at (15.5,11.2)  {$\textbf{64}$};
+
+\fill [black!5] (0,9)    rectangle (16,10);
+\draw [black!95] (0,9)    rectangle (16,10);
+
+\fill [black!5] (0,10)    rectangle (16,11);
+\draw [black!95] (0,10)    rectangle (16,11);
+
+\fill [black!5] (0,-2)    rectangle (2,-1);
+\draw [black!95] (0,-2)    rectangle (2,-1);
+
+\node [font=\small,anchor=base] at (8,9.25)  {$\textbf{ib}$};
+\node [font=\small,anchor=base] at (8,10.25)  {$\textbf{pc}$};
+\node [font=\small,anchor=base] at (1,-1.75)  {$\textbf{flag}$};
+\end{scope}
+\end{tikzpicture}
+\caption{64-bit register state accessible by 16-bit instruction packet.}
+\label{fig:glyph-register-state-64}
+\end{figure}
+
+\chapter{Instructions}
+
+\section{16-bit opcodes}
+
+\needspace{8\baselineskip}
+\subsection{break}
+\insnimmnine{uimm}{00000}{00}{\textbf{break} uimm9}
+\\
+The \emph{break} instruction causes a trap to the debugger.
+The program counter and trap cause are saved to privileged
+registers for the operating system to dispatch to a debugger.
+
+\needspace{8\baselineskip}
+\subsection{j}
+\insnimmnine{simm}{00001}{00}{\textbf{j} simm9}
+\\
+The \emph{j} or \emph{jump} instruction is an unconditional branch instruction
+that adds a relative immediate address to the program counter.
+The resulting address is \emph{pc + simm9 + 2}.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    pc = pc + simm9 + 2
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{b}
+\insnimmnine{simm}{00010}{00}{\textbf{b} simm9}
+\\
+The \emph{b} or \emph{branch} instruction is a conditional branch instruction
+that adds a relative immediate address to the program counter, if
+the \emph{flag} register has been set by a compare instruction.
+The resulting address is \emph{pc + simm9 + 2}.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    if flag:
+        pc = pc + simm9 + 2
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{ibl}
+\insrcimmsix{rc}{uimm}{00011}{00}{\textbf{ibl} rc, uimm6}
+\\
+the \emph{ibl} or \emph{immediate-block-link} instruction saves
+the old immediate base register to the desination register and
+adds a 64-bit relative address stored in constant memory at
+address \emph{ib + simm6 * 8}, to the immediate base register.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    rc = ib
+    ib = (i64)[ib + uimm6 * 8]
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{jalib}
+\insrcimmsix{rc}{uimm}{00100}{00}{\textbf{jalib} rc, ib32x2(uimm6*8)}
+\\
+the \emph{jalib} or \emph{jump-and-link-immediate-block} instruction
+loads a 64-bit constant addressed by \emph{ib + uimm6 * 8} containing a
+\emph{i32x2} relative address vector, adds it to \emph{(pc,ib)},
+then saves the relative address vector to the \emph{rc} register.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    rc = (i32x2)[ib + uimm6 * 8]
+    (pc,ib) += (i32x2)rc + (i32x2){2,0}
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{jtlib}
+\insrcimmsix{rc}{uimm}{00101}{00}{\textbf{jtlib} rc, ib32x2(uimm6*8)}
+\\
+the \emph{jtlib} or \emph{jump-and-link-immediate-block} instruction
+loads a 64-bit constant addressed by \emph{ib + uimm6 * 8} containing a
+\emph{i32x2} relative address vector, subtracts the \emph{i32x2}
+relative address vector in the \emph{rc} register from it, then adds it
+to \emph{(pc,ib)}.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    (pc,ib) += (i32x2)[ib + uimm6 * 8] - (i32x2)rc
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{lib.i64}
+\insrcimmsix{rc}{uimm}{00110}{00}{\textbf{lib.i64} rc, ib64(uimm6*8)}
+\\
+the \emph{lib} or \emph{load-immediate-block} instruction loads a 64-bit
+constant addressed by \emph{ib + uimm6 * 8} then saves it to the
+\emph{rc} register.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = (i64)[ib + uimm6 * 8]
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{li.i64}
+\insrcimmsix{rc}{simm}{00111}{00}{\textbf{li.i64} rc, simm6}
+\\
+the \emph{li} or \emph{load-immediate} instruction sign-extends \emph{simm6}
+then saves it to the \emph{rc} register.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = simm6
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{addi.i64}
+\insrcimmsix{rc}{simm}{01000}{00}{\textbf{addi.i64} rc, simm6}
+\\
+the \emph{addi} or \emph{add-immediate} instruction sign-extends \emph{simm6}
+then adds it to the \emph{rc} register.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = r[rc] + simm6
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{srli.i64}
+\insrcimmsix{rc}{uimm}{01001}{00}{\textbf{srli.i64} rc, uimm6}
+\\
+the \emph{srli} or \emph{shift-right-logical-immediate} instruction
+performs a logical right shift by \emph{uimm6} bits of the value in
+the \emph{rc} register. zeros are copied into the right most bits.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = (u64)r[rc] >> simm6
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{srai.i64}
+\insrcimmsix{rc}{uimm}{01010}{00}{\textbf{srai.i64} rc, uimm6}
+\\
+the \emph{srai} or \emph{shift-right-arithmetic-immediate} instruction
+performs an arithmetic right shift by \emph{uimm6} bits of the value in
+the \emph{rc} register. sign is copied into the right most bits.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = (i64)r[rc] >> simm6
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{slli.i64}
+\insrcimmsix{rc}{uimm}{01011}{00}{\textbf{slli.i64} rc, uimm6}
+\\
+the \emph{slli} or \emph{shift-left-logical-immediate} instruction
+performs a logical left shift by \emph{uimm6} bits of the value in
+the \emph{rc} register.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = r[rc] << simm6
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{addib.i64}
+\insrcrbimmthree{rc}{rb}{uimm}{01100}{00}{\textbf{addib.i64} rc, rb, ib64(uimm3*8)}
+\\
+the \emph{addib} or \emph{add-immediate-block} instruction loads a 64-bit
+constant addressed by \emph{ib + uimm3 * 8} then adds it to the \emph{rb}
+register and saves the result in the \emph{rc} register.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = r[rb] + (i64)[ib + uimm3 * 8]
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{load.i64}
+\insrcrbimmthree{rc}{rb}{uimm}{01101}{00}{\textbf{load.i64} rc, uimm3(rb))}
+\\
+the \emph{load} instruction adds \emph{uimm3 * 8} to the \emph{rb}
+to form an address, then loads a 64-bit value from memory at that
+address and saves the result in the \emph{rc} register.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = (i64)[r[rb] + uimm3 * 8]
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{loadib.i64}
+\insrcrbimmthree{rc}{rb}{uimm}{01110}{00}{\textbf{loadib.i64} rc, ib64(uimm3*8)(rb)}
+\\
+the \emph{loadib} instruction loads a 64-bit constant addressed by
+\emph{ib + uimm6 * 8} and adds to the \emph{rb} to form an address,
+then loads a 64-bit value from memory at that address and saves the
+result in the \emph{rc} register.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = (i64)[r[rb] + (i64)[ib + uimm3 * 8]]
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{cmp.i64}
+\insrcrbimmthree{rc}{rb}{uimm}{01111}{00}{\textbf{cmp.i64} rc, rb, fun3}
+\\
+the \emph{cmp} instruction performs a comparison between the value
+in \emph{rb} and \emph{rc} then saves the result to the \emph{flag}
+register. the type of comparsion in \emph{fun3} can be one of:
+\emph{0} \textrightarrow \emph{less than},
+\emph{1} \textrightarrow \emph{greather than or equal},
+\emph{2} \textrightarrow \emph{equal},
+\emph{3} \textrightarrow \emph{not equal},
+\emph{4} \textrightarrow \emph{less than (unsigned)}, or
+\emph{5} \textrightarrow \emph{greater than or equal (unsigned)}.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    flag = match fun3
+           | le  -> (i64)r[rc] <  (i64)r[rb] 
+           | ge  -> (i64)r[rc] >= (i64)r[rb]
+           | eq  ->      r[rc] =       r[rb]
+           | ne  ->      r[rc] !=      r[rb]
+           | leu -> (u64)r[rc] <  (u64)r[rb]
+           | geu -> (u64)r[rc] >= (u64)r[rb]
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{subib.i64}
+\insrcrbimmthree{rc}{rb}{uimm}{10000}{00}{\textbf{subib.i64} rc, rb, ib64(uimm3*8)}
+\\
+the \emph{subib} or \emph{sub-immediate-block} instruction loads a 64-bit
+constant addressed by \emph{ib + uimm3 * 8} then subtracts it from the
+\emph{rb} register and saves the result in the \emph{rc} register.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = r[rb] - (i64)[ib + uimm3 * 8]
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{store.i64}
+\insrcrbimmthree{rc}{rb}{uimm}{10001}{00}{\textbf{store.i64} rc, uimm3(rb))}
+\\
+the \emph{store} instruction adds \emph{uimm3 * 8} to the \emph{rb}
+register to form an address, then stores to memory at that address a
+64-bit value from the \emph{rc} register.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    (i64)[r[rb] + uimm3 * 8] = r[rc]
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{storeib.i64}
+\insrcrbimmthree{rc}{rb}{uimm}{10010}{00}{\textbf{storeib.i64} rc, ib64(uimm3*8)(rb)}
+\\
+the \emph{storeib} instruction loads a 64-bit constant addressed by
+\emph{ib + uimm6 * 8} and adds to the the \emph{rb} register to form
+an address, then stores to memory at that address a 64-bit value from
+the \emph{rc} register.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    (i64)[r[rb] + (i64)[ib + uimm3 * 8]] = r[rc]
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{logic.i64}
+\insrcrbimmthree{rc}{rb}{uimm}{10011}{00}{\textbf{logic.i64} rc, rb, fun3}
+\\
+the \emph{logic} instruction performs a logic operation on the value
+in the \emph{rb} register then stores the result in the \emph{rc}
+register. the type of logic operations in \emph{fun3} can be one of:
+\emph{0} \textrightarrow \emph{move},
+\emph{1} \textrightarrow \emph{logical not},
+\emph{2} \textrightarrow \emph{negate},
+\emph{3} \textrightarrow \emph{bswap},
+\emph{4} \textrightarrow \emph{count trailing zeros},
+\emph{5} \textrightarrow \emph{count leading zeros}, or
+\emph{6} \textrightarrow \emph{count population}.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    flag = match fun3
+           | mov   -> r[rc] = r[rb] 
+           | not   -> r[rc] = ~r[rb]
+           | neg   -> r[rc] = -r[rb]
+           | bswap -> r[rc] bswap64(r[rb])
+           | ctz   -> r[rc] ctz64(r[rb])
+           | clz   -> r[rc] clz64(r[rb])
+           | ctpop -> r[rc] ctpop(r[rb])
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{pin.i64}
+\insrcrbrc{rc}{rb}{ra}{10100}{00}{\textbf{pin.i64} rc, rb, ra}
+\\
+the \emph{pin} or \emph{pack-indirect} instruction packs two absolute
+addresses as an \emph{i32x2} \emph{(pc,ib)} relative address vector.
+the register \emph{ra} is subtracted from the \emph{program counter + 2},
+and the register \emph{rb} is subtracted from \emph{immediate base register},
+and the results are packed into an \emph{i32x2} relative address vector
+and saved to the register \emph{rc}.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = (i32x2){pc-r[ra]+2,ib-r[rb]};
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{and.i64}
+\insrcrbrc{rc}{rb}{ra}{10101}{00}{\textbf{and.i64} rc, rb, ra}
+\\
+the \emph{and} instruction performs a \emph{logical-and} of the register
+\emph{rb} and the register \emph{ra} and saves the result in the
+register \emph{rc}.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = [ra] & r[rb];
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{or.i64}
+\insrcrbrc{rc}{rb}{ra}{10110}{00}{\textbf{or.i64} rc, rb, ra}
+\\
+the \emph{or} instruction performs a \emph{logical-or} of the register
+\emph{rb} and the register \emph{ra} and saves the result in the
+register \emph{rc}.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = [ra] | r[rb];
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{xor.i64}
+\insrcrbrc{rc}{rb}{ra}{10111}{00}{\textbf{xor.i64} rc, rb, ra}
+\\
+the \emph{xor} instruction performs a \emph{logical-exclusive-or}
+of the register \emph{rb} and the register \emph{ra} and saves the
+result in the register \emph{rc}.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = [ra] ^ r[rb];
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{sub.i64}
+\insrcrbrc{rc}{rb}{ra}{11000}{00}{\textbf{sub.i64} rc, rb, ra}
+\\
+the \emph{sub} instruction subtracts the \emph{ra} register from
+the \emph{rb} register and saves the result in the \emph{rc} register.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = r[rb] - r[ra]
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{srli.i64}
+\insrcimmsix{rc}{uimm}{11001}{00}{\textbf{srl.i64} rc, rb, ra}
+\\
+the \emph{srl} or \emph{shift-right-logical} instruction performs a
+logical right shift of the value in the \emph{rb} register by the
+number of bits in register \emph{ra} then saves the result in the
+\emph{rc} register.
+zeros are copied into the right most bits.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = (u64)r[rc] >> r[ra]
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{srai.i64}
+\insrcimmsix{rc}{uimm}{11010}{00}{\textbf{sra.i64} rc, rb, ra}
+\\
+the \emph{sra} or \emph{shift-right-arithmetic} instruction performs an
+arithmetic right shift of the value in the \emph{rb} register by the
+number of bits in register \emph{ra} then saves the result in the
+\emph{rc} register. sign is copied into the right most bits.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = (i64)r[rc] >> r[ra]
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{slli.i64}
+\insrcimmsix{rc}{uimm}{11011}{00}{\textbf{sll.i64} rc, rb, ra6}
+\\
+the \emph{sll} or \emph{shift-left-logical} instruction performs a
+logical left shift of the value in the \emph{rb} register by the
+number of bits in register \emph{ra} then saves the result in the
+\emph{rc} register.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = r[rc] << r[ra]
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{add.i64}
+\insrcrbrc{rc}{rb}{ra}{11100}{00}{\textbf{add.i64} rc, rb, ra}
+\\
+the \emph{add} instruction adds the \emph{ra} register to
+the \emph{rb} register and saves the result in the \emph{rc} register.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = r[rb] + r[ra]
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{nop}
+\insnimmnine{uimm}{11101}{00}{\textbf{nop} uimm9}
+\\
+the \emph{nop} or \emph{no-operation} instruction does nothing.
+
+\needspace{8\baselineskip}
+\subsection{ud1}
+\insnimmnine{uimm}{11110}{00}{\textbf{ud1} uimm9}
+\\
+the \emph{ud1} or \emph{undefined-1} instruction causes an
+illegal instruction trap.
+
+\needspace{8\baselineskip}
+\subsection{ud2}
+\insnimmnine{uimm}{11111}{00}{\textbf{ud2} uimm9}
+\\
+the \emph{ud2} or \emph{undefined-2} instruction causes an
+illegal instruction trap.
+
+\end{document}

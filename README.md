@@ -33,7 +33,7 @@ the super regular RISC architecture:
 - variable length instruction format supporting 16, 32, 64, and 128-bit
   instruction packets.
 - instruction formats and 2-bit size encoding is detailed here:
-  [packet.pdf](/doc/packet.pdf).
+  [packet.pdf](/doc/packet.pdf) and here [glyph.pdf](/doc/glyph.pdf).
 - 16-bit compressed instruction packets can access 8x64-bit registers.
 - (pc,ib) is a special program counter and immediate base register address
   vector.
