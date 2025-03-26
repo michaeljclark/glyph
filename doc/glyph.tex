@@ -1050,14 +1050,14 @@ register. the type of logic operations in \emph{fun3} can be one of:
 \emph{5} \textrightarrow \emph{count leading zeros}, or
 \emph{6} \textrightarrow \emph{count population}.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    flag = match fun3
-           | mov   -> r[rc] = r[rb] 
-           | not   -> r[rc] = ~r[rb]
-           | neg   -> r[rc] = -r[rb]
-           | bswap -> r[rc] bswap64(r[rb])
-           | ctz   -> r[rc] ctz64(r[rb])
-           | clz   -> r[rc] clz64(r[rb])
-           | ctpop -> r[rc] ctpop(r[rb])
+    match fun3
+    | mov   -> r[rc] = r[rb]
+    | not   -> r[rc] = ~r[rb]
+    | neg   -> r[rc] = -r[rb]
+    | bswap -> r[rc] bswap64(r[rb])
+    | ctz   -> r[rc] ctz64(r[rb])
+    | clz   -> r[rc] clz64(r[rb])
+    | ctpop -> r[rc] ctpop(r[rb])
 \end{Verbatim}
 
 \needspace{8\baselineskip}
