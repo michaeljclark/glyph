@@ -9,7 +9,7 @@ void t()
         cpu_encode_op_logic_i64(1,0,cpu_logic_not),
         cpu_encode_op_break(0)
     };
-    cpu_test("log_1", c, i);
+    cpu_test("logic_1", c, i);
 }
 
 int main(int argc, char **argv)

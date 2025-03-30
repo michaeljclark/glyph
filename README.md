@@ -160,15 +160,14 @@ _Figure 4 - one, two, and three operand 64-bit instruction formats_
 
 ## implementations
 
-this repository contains two implementations of the super regular
-RISC architecture. there is a simple interpreter written in C, and
-a reference interpreter written in Python.
+this repository contains three implementations of the super regular
+RISC architecture. there is a simple interpreter written in C, another
+one written in Go, and a reference interpreter written in Python.
 
 ### simple interpreter
 
-the simple interpreter written in C currently supports the 16-bit
-compressed opcodes and can be built using CMake. at present the
-implementation is constrained to inline functions in one header.
+the simple interpreter in C can be built using CMake. presently
+the implementation is constrained to inline functions in one header.
 
 ```
 cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo
@@ -177,10 +176,10 @@ cmake --build build
 
 ### differential testing
 
-the reference interpreter in Python also supports the 16-bit compressed
-opcodes and can be launched using the test script which runs both the
-simple C interpreter and the Python reference interpreter and diffs
-the output of the test cases to perform differential testing between them.
+the simple interpreter in C, the Go interpreter and the reference
+interpreter in Python all support the 16-bit compressed opcodes and can
+be launched using the test script which runs all three then diffs the
+output of the tests to perform differential testing between them.
 
 ```
 python3 scripts/test.py
