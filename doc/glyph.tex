@@ -1071,7 +1071,7 @@ and the register \emph{rb} is subtracted from \emph{immediate base register},
 and the results are packed into an \emph{i32x2} relative address vector
 and saved to the register \emph{rc}.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = (i32x2){pc-r[ra]+2,ib-r[rb]};
+    r[rc] = (i32x2){pc-r[ra]+2,ib-r[rb]}
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1082,7 +1082,7 @@ the \emph{and} instruction performs a \emph{logical-and} of the register
 \emph{rb} and the register \emph{ra} and saves the result in the
 register \emph{rc}.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = [ra] & r[rb];
+    r[rc] = r[rb] & r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1093,7 +1093,7 @@ the \emph{or} instruction performs a \emph{logical-or} of the register
 \emph{rb} and the register \emph{ra} and saves the result in the
 register \emph{rc}.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = [ra] | r[rb];
+    r[rc] = r[rb] | r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1104,7 +1104,7 @@ the \emph{xor} instruction performs a \emph{logical-exclusive-or}
 of the register \emph{rb} and the register \emph{ra} and saves the
 result in the register \emph{rc}.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = [ra] ^ r[rb];
+    r[rc] = r[rb] ^ r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1127,7 +1127,7 @@ number of bits in register \emph{ra} then saves the result in the
 \emph{rc} register.
 zeros are copied into the right most bits.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = (u64)r[rc] >> r[ra]
+    r[rc] = (u64)r[rb] >> r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1139,19 +1139,19 @@ arithmetic right shift of the value in the \emph{rb} register by the
 number of bits in register \emph{ra} then saves the result in the
 \emph{rc} register. sign is copied into the right most bits.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = (i64)r[rc] >> r[ra]
+    r[rc] = (i64)r[rb] >> r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
 \subsection{sll.i64}
-\insrcrbrc{rc}{rb}{ra}{11011}{00}{\textbf{sll.i64} rc, rb, ra6}
+\insrcrbrc{rc}{rb}{ra}{11011}{00}{\textbf{sll.i64} rc, rb, ra}
 \\
 the \emph{sll} or \emph{shift-left-logical} instruction performs a
 logical left shift of the value in the \emph{rb} register by the
 number of bits in register \emph{ra} then saves the result in the
 \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = r[rc] << r[ra]
+    r[rc] = r[rb] << r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
