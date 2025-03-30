@@ -10,7 +10,7 @@ void t()
         cpu_encode_op_li_i64(0,0),
         cpu_encode_op_lib_i64(1,1),
         cpu_encode_op_storeib_i64(1,0,0),
-        cpu_encode_op_break(0)
+        cpu_encode_op_break(0),
     };
     cpu_test("storeib_1", c, i);
 }

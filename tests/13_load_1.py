@@ -10,7 +10,7 @@ def t():
     i = [
         cpu_encode_op_lib_i64(0,0),
         cpu_encode_op_load_i64(1,0,0),
-        cpu_encode_op_break(0)
+        cpu_encode_op_break(0),
     ]
     cpu_test("load_1", c, i)
 

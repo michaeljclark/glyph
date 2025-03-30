@@ -11,7 +11,7 @@ def t():
         cpu_encode_op_lib_i64(0,0),
         cpu_encode_op_lib_i64(1,1),
         cpu_encode_op_store_i64(1,0,0),
-        cpu_encode_op_break(0)
+        cpu_encode_op_break(0),
     ]
     cpu_test("store_1", c, i)
 

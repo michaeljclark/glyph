@@ -22,7 +22,7 @@ void t()
         cpu_encode_op_lib_i64(5,5),
         cpu_encode_op_lib_i64(6,6),
         cpu_encode_op_lib_i64(7,7),
-        cpu_encode_op_break(0)
+        cpu_encode_op_break(0),
     };
     cpu_test("lib_1", c, i);
 }

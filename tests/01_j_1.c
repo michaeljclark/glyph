@@ -7,7 +7,7 @@ void t()
     u16 i[] = {
         cpu_encode_op_j(1),
         cpu_encode_op_nop(0),
-        cpu_encode_op_break(0)
+        cpu_encode_op_break(0),
     };
     cpu_test("j_1", c, i);
 }

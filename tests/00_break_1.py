@@ -3,9 +3,10 @@
 from interp import *
 
 def t():
-    c = []
+    c = [
+    ]
     i = [
-        cpu_encode_op_break(0)
+        cpu_encode_op_break(0),
     ]
     cpu_test("break_1", c, i)
 

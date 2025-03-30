@@ -7,7 +7,7 @@ def t():
     ]
     i = [
         cpu_encode_op_nop(0),
-        cpu_encode_op_break(0)
+        cpu_encode_op_break(0),
     ]
     cpu_test("nop_1", c, i)
 

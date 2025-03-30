@@ -14,7 +14,7 @@ def t():
         cpu_encode_op_li_i64(5,-5),
         cpu_encode_op_li_i64(6,6),
         cpu_encode_op_li_i64(7,-7),
-        cpu_encode_op_break(0)
+        cpu_encode_op_break(0),
     ]
     cpu_test("li_1", c, i)
 
