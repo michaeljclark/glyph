@@ -5,7 +5,7 @@ from interp import *
 def t():
     c = [
         0x0000000800000002,
-        -1,
+        0xffffffffffffffff,
     ]
     i = [
         cpu_encode_op_jalib(7,0),

@@ -5,7 +5,7 @@ void t()
     u64 c[] = {
         0x0000000800000002ull,
         0x00000000fffffffcull,
-        -1,
+        0xffffffffffffffffull,
     };
     u16 i[] = {
         cpu_encode_op_jalib(7,0),

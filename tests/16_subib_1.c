@@ -3,7 +3,7 @@
 void t()
 {
     u64 c[] = {
-        -0xa0000000aull,
+        0xfffffff5fffffff6ull,
     };
     u16 i[] = {
         cpu_encode_op_li_i64(0,1),

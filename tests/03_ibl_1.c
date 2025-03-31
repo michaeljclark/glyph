@@ -4,7 +4,7 @@ void t()
 {
     u64 c[] = {
         8,
-        -1,
+        0xffffffffffffffffull,
     };
     u16 i[] = {
         cpu_encode_op_ibl(0,0),

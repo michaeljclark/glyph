@@ -5,7 +5,7 @@ from interp import *
 def t():
     c = [
         8,
-        -1,
+        0xffffffffffffffff,
     ]
     i = [
         cpu_encode_op_ibl(0,0),

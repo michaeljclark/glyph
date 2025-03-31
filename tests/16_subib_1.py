@@ -4,7 +4,7 @@ from interp import *
 
 def t():
     c = [
-        -0xa0000000a,
+        0xfffffff5fffffff6,
     ]
     i = [
         cpu_encode_op_li_i64(0,1),
