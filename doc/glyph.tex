@@ -1073,9 +1073,9 @@ register. the type of logic operations in \emph{fun3} can be one of:
     | mov   -> r[rc] = r[rb]
     | not   -> r[rc] = ~r[rb]
     | neg   -> r[rc] = -r[rb]
-    | bswap -> r[rc] bswap64(r[rb])
-    | ctz   -> r[rc] ctz64(r[rb])
-    | clz   -> r[rc] clz64(r[rb])
+    | bswap -> r[rc] bswap(r[rb])
+    | ctz   -> r[rc] ctz(r[rb])
+    | clz   -> r[rc] clz(r[rb])
     | ctpop -> r[rc] ctpop(r[rb])
 \end{Verbatim}
 
