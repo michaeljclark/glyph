@@ -976,7 +976,7 @@ register and saves the result in the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{load.i64}
-\insrcrbimmthree{rc}{rb}{uimm}{01101}{00}{\textbf{load.i64} rc, uimm3(rb))}
+\insrcrbimmthree{rc}{rb}{uimm}{01101}{00}{\textbf{load.i64} rc, uimm3(rb)}
 \\
 the \emph{load} instruction adds \emph{uimm3 * 8} to the \emph{rb}
 to form an address, then loads a 64-bit value from memory at that
@@ -1033,7 +1033,7 @@ constant addressed by \emph{ib + uimm3 * 8} then subtracts it from the
 
 \needspace{8\baselineskip}
 \subsection{store.i64}
-\insrcrbimmthree{rc}{rb}{uimm}{10001}{00}{\textbf{store.i64} rc, uimm3(rb))}
+\insrcrbimmthree{rc}{rb}{uimm}{10001}{00}{\textbf{store.i64} rc, uimm3(rb)}
 \\
 the \emph{store} instruction adds \emph{uimm3 * 8} to the \emph{rb}
 register to form an address, then stores to memory at that address a
@@ -1315,11 +1315,11 @@ the \emph{illegal} instruction causes an illegal instruction trap.
 \ainsrcimmsix{10}{rc}{uimm}{01010}{00}{\textbf{srai.i64} rc, uimm6}
 \ainsrcimmsix{11}{rc}{uimm}{01011}{00}{\textbf{slli.i64} rc, uimm6}
 \ainsrcrbimmthree{12}{rc}{rb}{uimm}{01100}{00}{\textbf{addib.i64} rc, rb, ib64(uimm3*8)}
-\ainsrcrbimmthree{13}{rc}{rb}{uimm}{01101}{00}{\textbf{load.i64} rc, uimm3(rb))}
+\ainsrcrbimmthree{13}{rc}{rb}{uimm}{01101}{00}{\textbf{load.i64} rc, uimm3(rb)}
 \ainsrcrbimmthree{14}{rc}{rb}{uimm}{01110}{00}{\textbf{loadib.i64} rc, ib64(uimm3*8)(rb)}
 \ainsrcrbimmthree{15}{rc}{rb}{uimm}{01111}{00}{\textbf{cmp.i64} rc, rb, fun3}
 \ainsrcrbimmthree{16}{rc}{rb}{uimm}{10000}{00}{\textbf{subib.i64} rc, rb, ib64(uimm3*8)}
-\ainsrcrbimmthree{17}{rc}{rb}{uimm}{10001}{00}{\textbf{store.i64} rc, uimm3(rb))}
+\ainsrcrbimmthree{17}{rc}{rb}{uimm}{10001}{00}{\textbf{store.i64} rc, uimm3(rb)}
 \ainsrcrbimmthree{18}{rc}{rb}{uimm}{10010}{00}{\textbf{storeib.i64} rc, ib64(uimm3*8)(rb)}
 \ainsrcrbimmthree{19}{rc}{rb}{uimm}{10011}{00}{\textbf{logic.i64} rc, rb, fun3}
 \ainsrcrbrc{20}{rc}{rb}{ra}{10100}{00}{\textbf{pin.i64} rc, rb, ra}
