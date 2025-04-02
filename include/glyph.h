@@ -228,29 +228,29 @@ __glyph_func__ int cpu_exec_op_ibj(cpu_state *cpu, u64 inst)
 }
 __glyph_func__ int cpu_exec_op_jalib(cpu_state *cpu, u64 inst)
 {
-    i32 upc, uib;
+    i32 rpc, rib;
     u64 tmp;
     tmp = cpu_const_i64(cpu, uimm6(inst));
-    upc = (i32)((tmp      ) & ~1ull);
-    uib = (i32)((tmp >> 32) & ~7ull);
-    cpu->pc = cpu->pc + (u64)upc + 2ull;
-    cpu->ib = cpu->ib + (u64)uib;
+    rpc = (i32)(tmp      );
+    rib = (i32)(tmp >> 32);
+    cpu->pc = cpu->pc + (u64)rpc + 2ull;
+    cpu->ib = cpu->ib + (u64)rib;
     cpu->r[rc(inst)] = tmp;
     return 0;
 }
 __glyph_func__ int cpu_exec_op_jtlib(cpu_state *cpu, u64 inst)
 {
-    i32 upc, uib;
-    i32 npc, nib;
+    i32 rpc, rib;
+    i32 dpc, dib;
     u64 tmp;
     tmp = cpu->r[rc(inst)];
-    upc = (i32)((tmp      ) & ~1ull);
-    uib = (i32)((tmp >> 32) & ~7ull);
+    rpc = (i32)(tmp      );
+    rib = (i32)(tmp >> 32);
     tmp = cpu_const_i64(cpu, uimm6(inst));
-    npc = (i32)((tmp      ) & ~1ull);
-    nib = (i32)((tmp >> 32) & ~7ull);
-    cpu->pc = cpu->pc + (u64)(npc - upc);
-    cpu->ib = cpu->ib + (u64)(nib - uib);
+    dpc = (i32)(tmp      );
+    dib = (i32)(tmp >> 32);
+    cpu->pc = cpu->pc + (u64)(dpc - rpc);
+    cpu->ib = cpu->ib + (u64)(dib - rib);
     return 0;
 }
 __glyph_func__ int cpu_exec_op_lib_i64(cpu_state *cpu, u64 inst)
@@ -380,11 +380,11 @@ __glyph_func__ int cpu_exec_op_logic_i64(cpu_state *cpu, u64 inst)
 }
 __glyph_func__ int cpu_exec_op_pin_i64(cpu_state *cpu, u64 inst)
 {
-    i32 upc, uib;
+    i32 rpc, rib;
     u64 tmp;
-    upc = (i32)(cpu->pc - cpu->r[ra(inst)] + 2ull);
-    uib = (i32)(cpu->ib - cpu->r[rb(inst)]);
-    tmp = (u64)(u32)upc | ((u64)uib << 32);
+    rpc = (i32)(cpu->pc - cpu->r[ra(inst)] + 2ull);
+    rib = (i32)(cpu->ib - cpu->r[rb(inst)]);
+    tmp = (u64)(u32)rpc | ((u64)rib << 32);
     cpu->r[rc(inst)] = tmp;
     return 2;
 }

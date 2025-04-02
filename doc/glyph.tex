@@ -8,6 +8,7 @@
 \usepackage{float}
 \usepackage{enumitem}
 \usepackage{caption}
+\usepackage{amsmath}
 \usetikzlibrary{decorations.pathreplacing}
 \title{Instructions}
 
@@ -735,10 +736,12 @@ add and subtract relative address vectors to \emph{(pc,ib)}, the program
 counter and the immediate base register.
 \\
 \par\noindent
-immediate blocks can navigated by branching the constant stream independently
-with the \emph{ib-link} instruction. the link register contains packed
-\emph{i32x2} relative address vector to support backward compatibility
-with a single link register.
+immediate blocks are 64-byte aligned blocks addressed by the \emph{immediate
+base register} which contain eight 64-bit constants. immediate blocks can be
+navigated by branching the constant stream independently using the
+\emph{immediate-block-jump} instruction. return from procedure restores
+\emph{(pc,ib)} using a link register containing a packed \emph{i32x2} relative
+address vector to support backward compatibility with a single link register.
 \\
 \par\noindent
 the instruction forms only use bonded register slots for immediate operands
@@ -754,12 +757,21 @@ the glyph register file is extensible due to the variable length
 instruction format and supports a different number of registers
 depending on the instruction size.
 \begin{itemize}[itemsep=0pt]
-\item 16-bit instruction packet can access \emph{8 * 64-bit}
+\item 16-bit instruction packet can access \emph{$8 \times 64\text{-}bit$}
       registers with up to 3 operands.
-\item 32-bit instruction packet can access \emph{64 * 64-bit}
+\item 32-bit instruction packet can access \emph{$64 \times 64\text{-}bit$}
       registers with up to 3 operands.
-\item 64-bit instruction packet can access \emph{64 * 64-bit}
+\item 64-bit instruction packet can access \emph{$64 \times 64\text{-}bit$}
       registers with up to 6 operands.
+\end{itemize}
+
+\par\noindent
+the register state accessible by the 16-bit instruction packet is comprised of:
+\begin{itemize}[itemsep=0pt]
+\item \emph{$64\text{-}bit$} program counter register (aligned to 2 bytes).
+\item \emph{$64\text{-}bit$} immediate base register (aligned to 64 bytes).
+\item \emph{$8 \times 64\text{-}bit$} general purpose registers.
+\item \emph{$1 \times 1\text{-}bit$} predicate register.
 \end{itemize}
 
 \par\noindent
@@ -799,6 +811,10 @@ instruction packet:
 \node [font=\small,anchor=base] at (8,9.25)  {$\textbf{ib}$};
 \node [font=\small,anchor=base] at (8,10.25)  {$\textbf{pc}$};
 \node [font=\small,anchor=base] at (1,-1.75)  {$\textbf{flag}$};
+
+\node [font=\tiny,anchor=base west] at (0.25,9.25)  {$000000$};
+\node [font=\tiny,anchor=base west] at (0.25,10.25)  {$0$};
+
 \end{scope}
 \end{tikzpicture}
 \caption{64-bit register state accessible by 16-bit instruction packet.}
@@ -860,21 +876,27 @@ loads a 64-bit constant addressed by \emph{ib + uimm6 * 8} containing a
 \emph{i32x2} relative address vector, adds it to \emph{(pc,ib)},
 then saves the relative address vector to the \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    rc = (i32x2)[ib + uimm6 * 8]
-    (pc,ib) += (i32x2)rc + (i32x2){2,0}
+    tmp = (i32x2)[ib + uimm6 * 8]
+    {rpc,rib} = (i32x2)tmp
+    pc += rpc + 2
+    ib += rib
+    r[rc] = tmp
 \end{Verbatim}
 
 \needspace{8\baselineskip}
 \subsection{jtlib}
 \insrcimmsix{rc}{uimm}{00101}{00}{\textbf{jtlib} rc, ib32x2(uimm6*8)}
 \\
-the \emph{jtlib} or \emph{jump-and-link-immediate-block} instruction
+the \emph{jtlib} or \emph{jump-to-link-immediate-block} instruction
 loads a 64-bit constant addressed by \emph{ib + uimm6 * 8} containing a
 \emph{i32x2} relative address vector, subtracts the \emph{i32x2}
 relative address vector in the \emph{rc} register from it, then adds it
 to \emph{(pc,ib)}.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    (pc,ib) += (i32x2)[ib + uimm6 * 8] - (i32x2)rc
+    {rpc,rib} = (i32x2)r[rc]
+    {dpc,dib} = (i32x2)[ib + uimm6 * 8]
+    pc += dpc - rpc
+    ib += dib - rib
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1068,7 +1090,9 @@ and the register \emph{rb} is subtracted from \emph{immediate base register},
 and the results are packed into an \emph{i32x2} relative address vector
 and saved to the register \emph{rc}.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = (i32x2){pc-r[ra]+2,ib-r[rb]}
+    rpc = (i32)(pc - r[ra] + 2)
+    rib = (i32)(ib - r[rb]    )
+    r[rc] = (i32x2){rpc,rib}
 \end{Verbatim}
 
 \needspace{8\baselineskip}

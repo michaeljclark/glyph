@@ -3,7 +3,14 @@
 void t()
 {
     u64 c[] = {
-        0x0000000800000002ull,
+        0x0000004000000002ull,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
         0x00000000fffffffcull,
         0xffffffffffffffffull,
     };

@@ -4,7 +4,14 @@ from interp import *
 
 def t():
     c = [
-        0x0000000800000002,
+        0x0000004000000002,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
         0x00000000fffffffc,
         0xffffffffffffffff,
     ]

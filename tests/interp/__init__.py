@@ -236,21 +236,21 @@ def cpu_exec_op_ibj(cpu,inst):
     return 2
 def cpu_exec_op_jalib(cpu,inst):
     tmp = cpu_const_i64(cpu, uimm6(inst))
-    upc = us32((tmp      ) & ~1)
-    uib = us32((tmp >> 32) & ~7)
-    cpu.pc = sux(cpu.pc + upc + 2)
-    cpu.ib = sux(cpu.ib + uib)
+    rpc = us32(tmp      )
+    rib = us32(tmp >> 32)
+    cpu.pc = sux(cpu.pc + rpc + 2)
+    cpu.ib = sux(cpu.ib + rib)
     cpu.r[rc(inst)] = sux(tmp)
     return 0
 def cpu_exec_op_jtlib(cpu,inst):
     tmp = cpu.r[rc(inst)]
-    upc = us32((tmp      ) & ~1)
-    uib = us32((tmp >> 32) & ~7)
+    rpc = us32(tmp      )
+    rib = us32(tmp >> 32)
     tmp = cpu_const_i64(cpu, uimm6(inst))
-    npc = us32((tmp      ) & ~1)
-    nib = us32((tmp >> 32) & ~7)
-    cpu.pc = sux(cpu.pc + npc - upc)
-    cpu.ib = sux(cpu.ib + nib - uib)
+    dpc = us32(tmp      )
+    dib = us32(tmp >> 32)
+    cpu.pc = sux(cpu.pc + dpc - rpc)
+    cpu.ib = sux(cpu.ib + dib - rib)
     return 0
 def cpu_exec_op_lib_i64(cpu,inst):
     tmp = cpu_const_i64(cpu, uimm6(inst))
@@ -328,9 +328,9 @@ def cpu_exec_op_logic_i64(cpu,inst):
         cpu.r[rc(inst)] = ctpop(cpu.r[rb(inst)])
     return 2
 def cpu_exec_op_pin_i64(cpu,inst):
-    upc = cpu.pc - cpu.r[ra(inst)] + 2
-    uib = cpu.ib - cpu.r[rb(inst)]
-    tmp = su32(upc) | (su32(uib) << 32)
+    rpc = cpu.pc - cpu.r[ra(inst)] + 2
+    rib = cpu.ib - cpu.r[rb(inst)]
+    tmp = su32(rpc) | (su32(rib) << 32)
     cpu.r[rc(inst)] = tmp
     return 2
 def cpu_exec_op_and_i64(cpu,inst):
