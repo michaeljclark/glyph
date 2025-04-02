@@ -214,23 +214,23 @@
 
 \par\noindent
 glyph is a super regular RISC architecture that encodes constants in a
-secondary constant stream accessed via an immediate base register. the
-immediate base register branches like the program counter and the call
-instructions sets \emph{(pc,ib)} together for procedure calls and returns.
+secondary stream accessed via an immediate base register that points at
+immediate blocks containing constants accessed via a constant address
+mode. the immediate base register branches like the program counter, and
+procedure call and return set and restore \emph{(pc,ib)} together.
 \\
 \par\noindent
-glyph uses relative addresses in its link register which is different
-to typical RISC architectures. glyph needs to do this for the branch
-instruction to fit \emph{(pc,ib)} into the link register for compatibility.
-glyph achieves this by packing together two relative \emph{(pc,ib)}
+glyph uses relative address vectors in its link register which is different
+to typical RISC architectures. glyph does this so that the branch
+instructions can fit \emph{(pc,ib)} into the a single link register for
+compatibility. glyph achieves this by packing two relative \emph{(pc,ib)}
 displacements into a relative address vector.
 \\
 \par\noindent
-immediate blocks can be linked together using relative displacements
-and switched using the constant branch instruction detailed below.
-immediate blocks, unlike typical RISC architectures, mean that most
-relocations are word sized like CISC architectures, and can use C-style
-structure packing and alignment rules.
+immediate blocks can be switched using the immediate block branch
+instruction. immediate blocks, unlike typical RISC architectures, mean
+that most relocations are word sized like CISC architectures, and can
+use C-style structure packing and alignment rules.
 \\
 \par\noindent
 this list outlines some differentiating elements of the super regular
@@ -706,7 +706,7 @@ is addressed with the \emph{immediate base register (ib)}.
     (14,1.5) -- (16,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{size}};
 
 \node [above,scale=0.9,anchor=south] at (32,-7)  {\textbf{constant stream (ib-relative)}};
-\node [font=\small,above,scale=0.9,anchor=south] at (8,-10)  {\textbf{immediate data}};
+\node [font=\small,above,scale=0.9,anchor=south] at (8,-10)  {\textbf{immediate block}};
 
 \node [font=\tiny,below,scale=0.9,anchor=north] at (-1.5,-11.75)  {$\textbf{(ib)}$};
 
@@ -729,25 +729,32 @@ is addressed with the \emph{immediate base register (ib)}.
 \end{figure}
 
 \par\noindent
-the instruction and constant streams can branch at the same time using
-special call and return instructions; \emph{jump-and-link-immediate-block},
-\emph{jump-to-link-immediate-block}, and \emph{pack-indirect} which
-add and subtract relative address vectors to \emph{(pc,ib)}, the program
-counter and the immediate base register.
+immediate blocks are aligned memory blocks addressed by the \emph{immediate
+base register}.
 \\
 \par\noindent
-immediate blocks are aligned memory blocks addressed by the \emph{immediate
-base register}. immediate blocks can be navigated by branching the constant
-stream independently using the \emph{immediate-block-jump} instruction.
-procedure calls and procedure returns set and restore \emph{(pc,ib)} using
-a link register containing a packed relative address vector to support
+immediate blocks can be navigated by branching the constant stream
+independently using the \emph{immediate-block-jump} instruction, or together
+with the program counter using procedure call and return instructions that
+set and restore \emph{(pc,ib)} via a link register that contains a packed
+relative address vector. the use of packed relative address vectors is for
 backward compatibility with a single link register.
 \\
 \par\noindent
+for procedure calls and returns, the instruction and constant streams are
+set at the same time using the call and return instructions;
+\emph{jump-and-link-immediate-block}, \emph{jump-to-link-immediate-block},
+which add and subtract relative address vectors to \emph{(pc,ib)}, the
+program counter and the immediate base register. the \emph{pack-indirect}
+instruction allows absolute \emph{(pc,ib)} addresses to be packed into a
+relative address vector for indirect calls.
+\\
+\par\noindent
 the instruction forms only use bonded register slots for immediate operands
-and they do not overlap opcode bits. the use of immediate blocks means
+and operand bits do not overlap opcode bits. the use of immediate blocks means
 large immediate constants can all be accessed with short references encoded
-inside of register slots.
+inside of register slots for instructions that use an immediate block
+relative addressing mode.
 \\
 
 \newpage
