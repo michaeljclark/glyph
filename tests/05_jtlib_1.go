@@ -12,7 +12,7 @@ func t() {
         CPU_encode_op_jalib(7,0),
         CPU_encode_op_break(0),
         CPU_encode_op_lib_i64(0,1),
-        CPU_encode_op_nop(0),
+        CPU_encode_op_or_i64(0,0,0),
         CPU_encode_op_jtlib(7,0),
     }
     CPU_test("jtlib_1", c, i);

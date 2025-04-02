@@ -97,8 +97,8 @@ this list outlines instructions, opcodes, and descriptions used in the
 | 26 | sra.i64      | op3r_16      | 11010 | **shift-right-arith** rc,rb,ra              |
 | 27 | sll.i64      | op3r_16      | 11011 | **shift-left-logical** rc,rb,ra             |
 | 28 | add.i64      | op3r_16      | 11100 | **add** rc,rb,ra                            |
-| 29 | nop          | op0r_imm9_16 | 11101 | **nop** uimm9                               |
-| 30 | ud1          | op0r_imm9_16 | 11110 | **ud1** uimm9                               |
+| 29 | mul.i64      | op3r_16      | 11101 | **mul** rc,rb,ra                            |
+| 30 | div.i64      | op3r_16      | 11110 | **div** rc,rb,ra                            |
 | 31 | ud2          | op0r_imm9_16 | 11111 | **ud2** uimm9                               |
 
 ## registers

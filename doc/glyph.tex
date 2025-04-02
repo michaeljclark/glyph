@@ -1155,31 +1155,40 @@ number of bits in register \emph{ra} then saves the result in the
 \subsection{add.i64}
 \insrcrbrc{rc}{rb}{ra}{11100}{00}{\textbf{add.i64} rc, rb, ra}
 \\
-the \emph{add} instruction adds the \emph{ra} register to
-the \emph{rb} register and saves the result in the \emph{rc} register.
+the \emph{add} instruction adds the \emph{rb} register to
+the \emph{ra} register and saves the result in the \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     r[rc] = r[rb] + r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
-\subsection{nop}
-\insnimmnine{uimm}{11101}{00}{\textbf{nop} uimm9}
+\subsection{mul.i64}
+\insrcrbrc{rc}{rb}{ra}{11101}{00}{\textbf{mul.i64} rc, rb, ra}
 \\
-the \emph{nop} or \emph{no-operation} instruction does nothing.
+the \emph{mul} instruction performs signed multiplication of the
+\emph{rb} register with the \emph{ra} register and saves the
+result in the \emph{rc} register.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = r[rb] * r[ra]
+\end{Verbatim}
 
 \needspace{8\baselineskip}
-\subsection{ud1}
-\insnimmnine{uimm}{11110}{00}{\textbf{ud1} uimm9}
+\subsection{div.i64}
+\insrcrbrc{rc}{rb}{ra}{11110}{00}{\textbf{div.i64} rc, rb, ra}
 \\
-the \emph{ud1} or \emph{undefined-1} instruction causes an
-illegal instruction trap.
+the \emph{div} instruction performs signed division of the
+\emph{rb} register by the \emph{ra} register and saves the
+result in the \emph{rc} register. division by zero causes
+a divide by zero exception.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = r[rb] / r[ra]
+\end{Verbatim}
 
 \needspace{8\baselineskip}
-\subsection{ud2}
-\insnimmnine{uimm}{11111}{00}{\textbf{ud2} uimm9}
+\subsection{illegal}
+\insnimmnine{uimm}{11111}{00}{\textbf{illegal} uimm9}
 \\
-the \emph{ud2} or \emph{undefined-2} instruction causes an
-illegal instruction trap.
+the \emph{illegal} instruction causes an illegal instruction trap.
 
 \appendix
 
@@ -1296,11 +1305,11 @@ illegal instruction trap.
 \ainsrcrbrc{24}{rc}{rb}{ra}{11000}{00}{\textbf{sub.i64} rc, rb, ra}
 \ainsrcrbrc{25}{rc}{rb}{ra}{11001}{00}{\textbf{srl.i64} rc, rb, ra}
 \ainsrcrbrc{26}{rc}{rb}{ra}{11010}{00}{\textbf{sra.i64} rc, rb, ra}
-\ainsrcrbrc{27}{rc}{rb}{ra}{11011}{00}{\textbf{sll.i64} rc, rb, ra6}
+\ainsrcrbrc{27}{rc}{rb}{ra}{11011}{00}{\textbf{sll.i64} rc, rb, ra}
 \ainsrcrbrc{28}{rc}{rb}{ra}{11100}{00}{\textbf{add.i64} rc, rb, ra}
-\ainsnimmnine{29}{uimm}{11101}{00}{\textbf{nop} uimm9}
-\ainsnimmnine{30}{uimm}{11110}{00}{\textbf{ud1} uimm9}
-\ainsnimmnine{31}{uimm}{11111}{00}{\textbf{ud2} uimm9}
+\ainsrcrbrc{29}{rc}{rb}{ra}{11101}{00}{\textbf{mul.i64} rc, rb, ra}
+\ainsrcrbrc{30}{rc}{rb}{ra}{11110}{00}{\textbf{div.i64} rc, rb, ra}
+\ainsnimmnine{31}{uimm}{11111}{00}{\textbf{illegal} uimm9}
 
 \end{scope}
 \end{tikzpicture}

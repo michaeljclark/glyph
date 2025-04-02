@@ -44,9 +44,9 @@ const (
     Op_sra_i64      Opcode = 0b11010 << 2 // op3r
     Op_sll_i64      Opcode = 0b11011 << 2 // op3r
     Op_add_i64      Opcode = 0b11100 << 2 // op3r
-    Op_nop          Opcode = 0b11101 << 2 // op0r_imm9
-    Op_ud1          Opcode = 0b11110 << 2 // op0r_imm9
-    Op_ud2          Opcode = 0b11111 << 2 // op0r_imm9
+    Op_mul_i64      Opcode = 0b11101 << 2 // op3r
+    Op_div_i64      Opcode = 0b11110 << 2 // op3r
+    Op_illegal      Opcode = 0b11111 << 2 // op0r_imm9
 )
 
 /*
@@ -344,13 +344,15 @@ func CPU_exec_op_add_i64(cpu *CPUState, inst uint64) int {
     cpu.R[rc(inst)] = cpu.R[rb(inst)] + cpu.R[ra(inst)]
     return 2
 }
-func CPU_exec_op_nop(cpu *CPUState, inst uint64) int {
+func CPU_exec_op_mul_i64(cpu *CPUState, inst uint64) int {
+    cpu.R[rc(inst)] = uint64(int64(cpu.R[rb(inst)]) * int64(cpu.R[ra(inst)]))
     return 2
 }
-func CPU_exec_op_ud1(cpu *CPUState, inst uint64) int {
-    return -1
+func CPU_exec_op_div_i64(cpu *CPUState, inst uint64) int {
+    cpu.R[rc(inst)] = uint64(int64(cpu.R[rb(inst)]) / int64(cpu.R[ra(inst)]))
+    return 2
 }
-func CPU_exec_op_ud2(cpu *CPUState, inst uint64) int {
+func CPU_exec_op_illegal(cpu *CPUState, inst uint64) int {
     return -1
 }
 
@@ -485,14 +487,14 @@ func CPU_disasm_op_sll_i64(i, c uint64) string {
 func CPU_disasm_op_add_i64(i, c uint64) string {
     return fmt.Sprintf("add.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i))
 }
-func CPU_disasm_op_nop(i, c uint64) string {
-    return fmt.Sprintf("nop %d", uimm9(i))
+func CPU_disasm_op_mul_i64(i, c uint64) string {
+    return fmt.Sprintf("mul.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i))
 }
-func CPU_disasm_op_ud1(i, c uint64) string {
-    return fmt.Sprintf("ud1 %d", uimm9(i))
+func CPU_disasm_op_div_i64(i, c uint64) string {
+    return fmt.Sprintf("div.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i))
 }
-func CPU_disasm_op_ud2(i, c uint64) string {
-    return fmt.Sprintf("ud2 %d", uimm9(i))
+func CPU_disasm_op_illegal(i, c uint64) string {
+    return fmt.Sprintf("illegal %d", uimm9(i))
 }
 
 
@@ -587,14 +589,14 @@ func CPU_encode_op_sll_i64(rc, rb, ra int) uint16 {
 func CPU_encode_op_add_i64(rc, rb, ra int) uint16 {
     return uint16(int(Op_add_i64) | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13))
 }
-func CPU_encode_op_nop(imm9 int) uint16 {
-    return uint16(int(Op_nop) | ((imm9 & 511)<<7))
+func CPU_encode_op_mul_i64(rc, rb, ra int) uint16 {
+    return uint16(int(Op_mul_i64) | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13))
 }
-func CPU_encode_op_ud1(imm9 int) uint16 {
-    return uint16(int(Op_ud1) | ((imm9 & 511)<<7))
+func CPU_encode_op_div_i64(rc, rb, ra int) uint16 {
+    return uint16(int(Op_div_i64) | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13))
 }
-func CPU_encode_op_ud2(imm9 int) uint16 {
-    return uint16(int(Op_ud2) | ((imm9 & 511)<<7))
+func CPU_encode_op_illegal(imm9 int) uint16 {
+    return uint16(int(Op_illegal) | ((imm9 & 511)<<7))
 }
 
 /*
@@ -632,9 +634,9 @@ func CPU_exec(cpu *CPUState, inst uint64) int {
     case Op_sra_i64 >> 2: return CPU_exec_op_sra_i64(cpu, inst)
     case Op_sll_i64 >> 2: return CPU_exec_op_sll_i64(cpu, inst)
     case Op_add_i64 >> 2: return CPU_exec_op_add_i64(cpu, inst)
-    case Op_nop >> 2: return CPU_exec_op_nop(cpu, inst)
-    case Op_ud1 >> 2: return CPU_exec_op_ud1(cpu, inst)
-    case Op_ud2 >> 2: return CPU_exec_op_ud2(cpu, inst)
+    case Op_mul_i64 >> 2: return CPU_exec_op_mul_i64(cpu, inst)
+    case Op_div_i64 >> 2: return CPU_exec_op_div_i64(cpu, inst)
+    case Op_illegal >> 2: return CPU_exec_op_illegal(cpu, inst)
     }
     return -1
 }
@@ -671,9 +673,9 @@ func CPU_disasm(i, c uint64) string {
     case Op_sra_i64 >> 2: return CPU_disasm_op_sra_i64(i, c)
     case Op_sll_i64 >> 2: return CPU_disasm_op_sll_i64(i, c)
     case Op_add_i64 >> 2: return CPU_disasm_op_add_i64(i, c)
-    case Op_nop >> 2: return CPU_disasm_op_nop(i, c)
-    case Op_ud1 >> 2: return CPU_disasm_op_ud1(i, c)
-    case Op_ud2 >> 2: return CPU_disasm_op_ud2(i, c)
+    case Op_mul_i64 >> 2: return CPU_disasm_op_mul_i64(i, c)
+    case Op_div_i64 >> 2: return CPU_disasm_op_div_i64(i, c)
+    case Op_illegal >> 2: return CPU_disasm_op_illegal(i, c)
     }
     return "unknown"
 }

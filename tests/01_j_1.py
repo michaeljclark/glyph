@@ -7,7 +7,7 @@ def t():
     ]
     i = [
         cpu_encode_op_j(2),
-        cpu_encode_op_nop(0),
+        cpu_encode_op_or_i64(0,0,0),
         cpu_encode_op_break(0),
     ]
     cpu_test("j_1", c, i)

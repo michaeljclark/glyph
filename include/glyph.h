@@ -57,9 +57,9 @@ enum
     cpu_op_sra_i64      = 0b11010 << 2, // op3r
     cpu_op_sll_i64      = 0b11011 << 2, // op3r
     cpu_op_add_i64      = 0b11100 << 2, // op3r
-    cpu_op_nop          = 0b11101 << 2, // op0r_imm9
-    cpu_op_ud1          = 0b11110 << 2, // op0r_imm9
-    cpu_op_ud2          = 0b11111 << 2, // op0r_imm9
+    cpu_op_mul_i64      = 0b11101 << 2, // op3r
+    cpu_op_div_i64      = 0b11110 << 2, // op3r
+    cpu_op_illegal      = 0b11111 << 2, // op0r_imm9
 };
 
 /*
@@ -428,15 +428,17 @@ __glyph_func__ int cpu_exec_op_add_i64(cpu_state *cpu, u64 inst)
     cpu->r[rc(inst)] = cpu->r[rb(inst)] + cpu->r[ra(inst)];
     return 2;
 }
-__glyph_func__ int cpu_exec_op_nop(cpu_state *cpu, u64 inst)
+__glyph_func__ int cpu_exec_op_mul_i64(cpu_state *cpu, u64 inst)
 {
+    cpu->r[rc(inst)] = (u64)((i64)cpu->r[rb(inst)] * (i64)cpu->r[ra(inst)]);
     return 2;
 }
-__glyph_func__ int cpu_exec_op_ud1(cpu_state *cpu, u64 inst)
+__glyph_func__ int cpu_exec_op_div_i64(cpu_state *cpu, u64 inst)
 {
-    return -1;
+    cpu->r[rc(inst)] = (u64)((i64)cpu->r[rb(inst)] / (i64)cpu->r[ra(inst)]);
+    return 2;
 }
-__glyph_func__ int cpu_exec_op_ud2(cpu_state *cpu, u64 inst)
+__glyph_func__ int cpu_exec_op_illegal(cpu_state *cpu, u64 inst)
 {
     return -1;
 }
@@ -601,17 +603,17 @@ __glyph_func__ int cpu_disasm_op_add_i64(char *b, size_t l, u64 i, u64 c)
 {
     return snprintf(b, l, "add.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
 }
-__glyph_func__ int cpu_disasm_op_nop(char *b, size_t l, u64 i, u64 c)
+__glyph_func__ int cpu_disasm_op_mul_i64(char *b, size_t l, u64 i, u64 c)
 {
-    return snprintf(b, l, "nop %llu", uimm9(i));
+    return snprintf(b, l, "mul.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
 }
-__glyph_func__ int cpu_disasm_op_ud1(char *b, size_t l, u64 i, u64 c)
+__glyph_func__ int cpu_disasm_op_div_i64(char *b, size_t l, u64 i, u64 c)
 {
-    return snprintf(b, l, "ud1 %llu", uimm9(i));
+    return snprintf(b, l, "div.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
 }
-__glyph_func__ int cpu_disasm_op_ud2(char *b, size_t l, u64 i, u64 c)
+__glyph_func__ int cpu_disasm_op_illegal(char *b, size_t l, u64 i, u64 c)
 {
-    return snprintf(b, l, "ud2 %llu", uimm9(i));
+    return snprintf(b, l, "illegal %llu", uimm9(i));
 }
 
 /*
@@ -734,17 +736,17 @@ __glyph_func__ u16 cpu_encode_op_add_i64(int rc, int rb, int ra)
 {
     return (u16)(cpu_op_add_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
 }
-__glyph_func__ u16 cpu_encode_op_nop(int imm9)
+__glyph_func__ u16 cpu_encode_op_mul_i64(int rc, int rb, int ra)
 {
-    return (u16)(cpu_op_nop | ((imm9 & 511)<<7));
+    return (u16)(cpu_op_mul_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
 }
-__glyph_func__ u16 cpu_encode_op_ud1(int imm9)
+__glyph_func__ u16 cpu_encode_op_div_i64(int rc, int rb, int ra)
 {
-    return (u16)(cpu_op_ud1 | ((imm9 & 511)<<7));
+    return (u16)(cpu_op_div_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
 }
-__glyph_func__ u16 cpu_encode_op_ud2(int imm9)
+__glyph_func__ u16 cpu_encode_op_illegal(int imm9)
 {
-    return (u16)(cpu_op_ud2 | ((imm9 & 511)<<7));
+    return (u16)(cpu_op_illegal | ((imm9 & 511)<<7));
 }
 
 /*
@@ -783,9 +785,9 @@ __glyph_func__ int cpu_exec(cpu_state *cpu, u64 inst)
     case cpu_op_sra_i64 >> 2: return cpu_exec_op_sra_i64(cpu, inst);
     case cpu_op_sll_i64 >> 2: return cpu_exec_op_sll_i64(cpu, inst);
     case cpu_op_add_i64 >> 2: return cpu_exec_op_add_i64(cpu, inst);
-    case cpu_op_nop >> 2: return cpu_exec_op_nop(cpu, inst);
-    case cpu_op_ud1 >> 2: return cpu_exec_op_ud1(cpu, inst);
-    case cpu_op_ud2 >> 2: return cpu_exec_op_ud2(cpu, inst);
+    case cpu_op_mul_i64 >> 2: return cpu_exec_op_mul_i64(cpu, inst);
+    case cpu_op_div_i64 >> 2: return cpu_exec_op_div_i64(cpu, inst);
+    case cpu_op_illegal >> 2: return cpu_exec_op_illegal(cpu, inst);
     }
     return -1;
 }
@@ -822,9 +824,9 @@ __glyph_func__ int cpu_disasm(char *b, size_t l, u64 i, u64 c)
     case cpu_op_sra_i64 >> 2: return cpu_disasm_op_sra_i64(b, l, i, c);
     case cpu_op_sll_i64 >> 2: return cpu_disasm_op_sll_i64(b, l, i, c);
     case cpu_op_add_i64 >> 2: return cpu_disasm_op_add_i64(b, l, i, c);
-    case cpu_op_nop >> 2: return cpu_disasm_op_nop(b, l, i, c);
-    case cpu_op_ud1 >> 2: return cpu_disasm_op_ud1(b, l, i, c);
-    case cpu_op_ud2 >> 2: return cpu_disasm_op_ud2(b, l, i, c);
+    case cpu_op_mul_i64 >> 2: return cpu_disasm_op_mul_i64(b, l, i, c);
+    case cpu_op_div_i64 >> 2: return cpu_disasm_op_div_i64(b, l, i, c);
+    case cpu_op_illegal >> 2: return cpu_disasm_op_illegal(b, l, i, c);
     }
     return snprintf(b, l, "invalid");
 }

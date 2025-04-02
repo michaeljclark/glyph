@@ -9,7 +9,7 @@ func t() {
     }
     i := []uint16{
         CPU_encode_op_jalib(7,0),
-        CPU_encode_op_nop(0),
+        CPU_encode_op_or_i64(0,0,0),
         CPU_encode_op_lib_i64(0,0),
         CPU_encode_op_break(0),
     }

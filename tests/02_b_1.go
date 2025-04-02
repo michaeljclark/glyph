@@ -7,7 +7,7 @@ func t() {
     }
     i := []uint16{
         CPU_encode_op_b(2),
-        CPU_encode_op_nop(0),
+        CPU_encode_op_or_i64(0,0,0),
         CPU_encode_op_break(0),
     }
     CPU_test("b_1", c, i);

@@ -6,9 +6,9 @@ def t():
     c = [
     ]
     i = [
-        cpu_encode_op_ud2(0),
+        cpu_encode_op_illegal(0),
         cpu_encode_op_break(0),
     ]
-    cpu_test("ud2_1", c, i)
+    cpu_test("illegal_1", c, i)
 
 t()

@@ -52,9 +52,9 @@ class Opcode(Enum):
     op_sra_i64      = 0b11010 << 2 # op3r
     op_sll_i64      = 0b11011 << 2 # op3r
     op_add_i64      = 0b11100 << 2 # op3r
-    op_nop          = 0b11101 << 2 # op0r_imm9
-    op_ud1          = 0b11110 << 2 # op0r_imm9
-    op_ud2          = 0b11111 << 2 # op0r_imm9
+    op_mul_i64      = 0b11101 << 2 # op3r
+    op_div_i64      = 0b11110 << 2 # op3r
+    op_illegal      = 0b11111 << 2 # op0r_imm9
 
 #
 # compare op fun3
@@ -357,11 +357,13 @@ def cpu_exec_op_sll_i64(cpu,inst):
 def cpu_exec_op_add_i64(cpu,inst):
     cpu.r[rc(inst)] = sux(cpu.r[rb(inst)] + cpu.r[ra(inst)]);
     return 2
-def cpu_exec_op_nop(cpu,inst):
+def cpu_exec_op_mul_i64(cpu,inst):
+    cpu.r[rc(inst)] = sux(usx(cpu.r[rb(inst)]) * usx(cpu.r[ra(inst)]));
     return 2
-def cpu_exec_op_ud1(cpu,inst):
-    return -1
-def cpu_exec_op_ud2(cpu,inst):
+def cpu_exec_op_div_i64(cpu,inst):
+    cpu.r[rc(inst)] = sux(usx(cpu.r[rb(inst)]) // usx(cpu.r[ra(inst)]));
+    return 2
+def cpu_exec_op_illegal(cpu,inst):
     return -1
 
 #
@@ -456,12 +458,12 @@ def cpu_disasm_op_sll_i64(cpu,inst):
     return "sll.i64 r%d, r%d, r%d" % (rc(inst), rb(inst), ra(inst))
 def cpu_disasm_op_add_i64(cpu,inst):
     return "add.i64 r%d, r%d, r%d" % (rc(inst), rb(inst), ra(inst))
-def cpu_disasm_op_nop(cpu,inst):
-    return "nop %u" % uimm9(inst)
-def cpu_disasm_op_ud1(cpu,inst):
-    return "ud1 %u" % uimm9(inst)
-def cpu_disasm_op_ud2(cpu,inst):
-    return "ud2 %u" % uimm9(inst)
+def cpu_disasm_op_mul_i64(cpu,inst):
+    return "mul.i64 r%d, r%d, r%d" % (rc(inst), rb(inst), ra(inst))
+def cpu_disasm_op_div_i64(cpu,inst):
+    return "div.i64 r%d, r%d, r%d" % (rc(inst), rb(inst), ra(inst))
+def cpu_disasm_op_illegal(cpu,inst):
+    return "illegal %u" % uimm9(inst)
 
 #
 # cpu instruction encoding
@@ -525,12 +527,12 @@ def cpu_encode_op_sll_i64(rc, rb, ra):
     return Opcode.op_sll_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
 def cpu_encode_op_add_i64(rc, rb, ra):
     return Opcode.op_add_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
-def cpu_encode_op_nop(imm9):
-    return Opcode.op_nop.value | ((imm9 & 511)<<7)
-def cpu_encode_op_ud1(imm9):
-    return Opcode.op_ud1.value | ((imm9 & 511)<<7)
-def cpu_encode_op_ud2(imm9):
-    return Opcode.op_ud2.value | ((imm9 & 511)<<7)
+def cpu_encode_op_mul_i64(rc, rb, ra):
+    return Opcode.op_mul_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+def cpu_encode_op_div_i64(rc, rb, ra):
+    return Opcode.op_div_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+def cpu_encode_op_illegal(imm9):
+    return Opcode.op_illegal.value | ((imm9 & 511)<<7)
 
 #
 # cpu dispatch
@@ -566,9 +568,9 @@ cpu_exec_table = {
     Opcode.op_sra_i64.value:        cpu_exec_op_sra_i64,
     Opcode.op_sll_i64.value:        cpu_exec_op_sll_i64,
     Opcode.op_add_i64.value:        cpu_exec_op_add_i64,
-    Opcode.op_nop.value:            cpu_exec_op_nop,
-    Opcode.op_ud1.value:            cpu_exec_op_ud1,
-    Opcode.op_ud2.value:            cpu_exec_op_ud2
+    Opcode.op_mul_i64.value:        cpu_exec_op_mul_i64,
+    Opcode.op_div_i64.value:        cpu_exec_op_div_i64,
+    Opcode.op_illegal.value:        cpu_exec_op_illegal
 }
 
 cpu_disasm_table = {
@@ -601,9 +603,9 @@ cpu_disasm_table = {
     Opcode.op_sra_i64.value:        cpu_disasm_op_sra_i64,
     Opcode.op_sll_i64.value:        cpu_disasm_op_sll_i64,
     Opcode.op_add_i64.value:        cpu_disasm_op_add_i64,
-    Opcode.op_nop.value:            cpu_disasm_op_nop,
-    Opcode.op_ud1.value:            cpu_disasm_op_ud1,
-    Opcode.op_ud2.value:            cpu_disasm_op_ud2
+    Opcode.op_mul_i64.value:        cpu_disasm_op_mul_i64,
+    Opcode.op_div_i64.value:        cpu_disasm_op_div_i64,
+    Opcode.op_illegal.value:        cpu_disasm_op_illegal
 }
 
 def cpu_disasm(cpu,inst):
