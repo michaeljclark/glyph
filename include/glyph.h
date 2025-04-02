@@ -31,7 +31,7 @@ enum
     cpu_op_break        = 0b00000 << 2, // op0r_imm9
     cpu_op_j            = 0b00001 << 2, // op0r_imm9 pcrel9*2
     cpu_op_b            = 0b00010 << 2, // op0r_imm9 pcrel9*2
-    cpu_op_ibl          = 0b00011 << 2, // op1r_imm6 ibrel(imm6*8,i64)
+    cpu_op_ibj          = 0b00011 << 2, // op0r_imm9 pcrel9*64
     cpu_op_jalib        = 0b00100 << 2, // op1r_imm6 ibrel(imm6*8,i32x2)
     cpu_op_jtlib        = 0b00101 << 2, // op1r_imm6 ibrel(imm6*8,i32x2)
     cpu_op_lib_i64      = 0b00110 << 2, // op1r_imm6 ibrel(imm6*8,i64)
@@ -221,12 +221,9 @@ __glyph_func__ int cpu_exec_op_b(cpu_state *cpu, u64 inst)
     cpu->pc = cpu->pc + (u64)(simm9(inst) << 1) + 2ull;
     return 0;
 }
-__glyph_func__ int cpu_exec_op_ibl(cpu_state *cpu, u64 inst)
+__glyph_func__ int cpu_exec_op_ibj(cpu_state *cpu, u64 inst)
 {
-    u64 tmp;
-    cpu->r[rc(inst)] = cpu->ib;
-    tmp = cpu_const_i64(cpu, uimm6(inst)) & ~7ull;
-    cpu->ib = cpu->ib + tmp;
+    cpu->ib = cpu->ib + (u64)(simm9(inst) << 6);
     return 2;
 }
 __glyph_func__ int cpu_exec_op_jalib(cpu_state *cpu, u64 inst)
@@ -454,15 +451,15 @@ __glyph_func__ int cpu_disasm_op_break(char *b, size_t l, u64 i, u64 c)
 }
 __glyph_func__ int cpu_disasm_op_j(char *b, size_t l, u64 i, u64 c)
 {
-    return snprintf(b, l, "j %lld", simm9(i));
+    return snprintf(b, l, "j %lld", simm9(i)<<1);
 }
 __glyph_func__ int cpu_disasm_op_b(char *b, size_t l, u64 i, u64 c)
 {
-    return snprintf(b, l, "b %lld", simm9(i));
+    return snprintf(b, l, "b %lld", simm9(i)<<1);
 }
-__glyph_func__ int cpu_disasm_op_ibl(char *b, size_t l, u64 i, u64 c)
+__glyph_func__ int cpu_disasm_op_ibj(char *b, size_t l, u64 i, u64 c)
 {
-    return snprintf(b, l, "ibl ib(%llu)", uimm6(i));
+    return snprintf(b, l, "ibj %lld", uimm6(i)<<6);
 }
 __glyph_func__ int cpu_disasm_op_jalib(char *b, size_t l, u64 i, u64 c)
 {
@@ -627,15 +624,15 @@ __glyph_func__ u16 cpu_encode_op_break(int imm9)
 }
 __glyph_func__ u16 cpu_encode_op_j(int pcrel9)
 {
-    return (u16)(cpu_op_j | ((pcrel9 & 511)<<7));
+    return (u16)(cpu_op_j | (((pcrel9>>1) & 511)<<7));
 }
 __glyph_func__ u16 cpu_encode_op_b(int pcrel9)
 {
-    return (u16)(cpu_op_b | ((pcrel9 & 511)<<7));
+    return (u16)(cpu_op_b | (((pcrel9>>1) & 511)<<7));
 }
-__glyph_func__ u16 cpu_encode_op_ibl(int rc, int ibrel6)
+__glyph_func__ u16 cpu_encode_op_ibj(int pcrel9)
 {
-    return (u16)(cpu_op_ibl | ((ibrel6 & 63)<<7) | ((rc & 7)<<13));
+    return (u16)(cpu_op_ibj | (((pcrel9>>6) & 511)<<7));
 }
 __glyph_func__ u16 cpu_encode_op_jalib(int rc, int ibrel6)
 {
@@ -760,7 +757,7 @@ __glyph_func__ int cpu_exec(cpu_state *cpu, u64 inst)
     case cpu_op_break >> 2: return cpu_exec_op_break(cpu, inst);
     case cpu_op_j >> 2: return cpu_exec_op_j(cpu, inst);
     case cpu_op_b >> 2: return cpu_exec_op_b(cpu, inst);
-    case cpu_op_ibl >> 2: return cpu_exec_op_ibl(cpu, inst);
+    case cpu_op_ibj >> 2: return cpu_exec_op_ibj(cpu, inst);
     case cpu_op_jalib >> 2: return cpu_exec_op_jalib(cpu, inst);
     case cpu_op_jtlib >> 2: return cpu_exec_op_jtlib(cpu, inst);
     case cpu_op_lib_i64 >> 2: return cpu_exec_op_lib_i64(cpu, inst);
@@ -799,7 +796,7 @@ __glyph_func__ int cpu_disasm(char *b, size_t l, u64 i, u64 c)
     case cpu_op_break >> 2: return cpu_disasm_op_break(b, l, i, c);
     case cpu_op_j >> 2: return cpu_disasm_op_j(b, l, i, c);
     case cpu_op_b >> 2: return cpu_disasm_op_b(b, l, i, c);
-    case cpu_op_ibl >> 2: return cpu_disasm_op_ibl(b, l, i, c);
+    case cpu_op_ibj >> 2: return cpu_disasm_op_ibj(b, l, i, c);
     case cpu_op_jalib >> 2: return cpu_disasm_op_jalib(b, l, i, c);
     case cpu_op_jtlib >> 2: return cpu_disasm_op_jtlib(b, l, i, c);
     case cpu_op_lib_i64 >> 2: return cpu_disasm_op_lib_i64(b, l, i, c);

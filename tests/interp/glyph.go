@@ -18,7 +18,7 @@ const (
     Op_break        Opcode = 0b00000 << 2 // op0r_imm9
     Op_j            Opcode = 0b00001 << 2 // op0r_imm9 pcrel9*2
     Op_b            Opcode = 0b00010 << 2 // op0r_imm9 pcrel9*2
-    Op_ibl          Opcode = 0b00011 << 2 // op1r_imm6 ibrel(imm6*8,i64)
+    Op_ibj          Opcode = 0b00011 << 2 // op0r_imm9 pcrel9*64
     Op_jalib        Opcode = 0b00100 << 2 // op1r_imm6 ibrel(imm6*8,i32x2)
     Op_jtlib        Opcode = 0b00101 << 2 // op1r_imm6 ibrel(imm6*8,i32x2)
     Op_lib_i64      Opcode = 0b00110 << 2 // op1r_imm6 ibrel(imm6*8,i64)
@@ -163,11 +163,8 @@ func CPU_exec_op_b(cpu *CPUState, inst uint64) int {
     cpu.PC = cpu.PC + uint64((simm9(inst) << 1) + 2)
     return 0
 }
-func CPU_exec_op_ibl(cpu *CPUState, inst uint64) int {
-    var tmp uint64
-    cpu.R[rc(inst)] = cpu.IB
-    tmp = CPU_const_i64(cpu, uimm6(inst)) &^ 7
-    cpu.IB =  cpu.IB + tmp
+func CPU_exec_op_ibj(cpu *CPUState, inst uint64) int {
+    cpu.IB =  cpu.IB + uint64(simm9(inst) << 6)
     return 2
 }
 func CPU_exec_op_jalib(cpu *CPUState, inst uint64) int {
@@ -365,13 +362,13 @@ func CPU_disasm_op_break(i, c uint64) string {
     return fmt.Sprintf("break %d", uimm9(i))
 }
 func CPU_disasm_op_j(i, c uint64) string {
-    return fmt.Sprintf("j %d", simm9(i))
+    return fmt.Sprintf("j %d", simm9(i)<<1)
 }
 func CPU_disasm_op_b(i, c uint64) string {
-    return fmt.Sprintf("b %d", simm9(i))
+    return fmt.Sprintf("b %d", simm9(i)<<1)
 }
-func CPU_disasm_op_ibl(i, c uint64) string {
-    return fmt.Sprintf("ibl ib(%d)", uimm6(i))
+func CPU_disasm_op_ibj(i, c uint64) string {
+    return fmt.Sprintf("ibj %d", simm9(i)<<6)
 }
 func CPU_disasm_op_jalib(i, c uint64) string {
     return fmt.Sprintf("jalib r%d, ib(%d)", rc(i), uimm6(i))
@@ -507,13 +504,13 @@ func CPU_encode_op_break(imm9 int) uint16 {
     return uint16(int(Op_break) | ((imm9 & 511)<<7))
 }
 func CPU_encode_op_j(pcrel9 int) uint16 {
-    return uint16(int(Op_j) | ((pcrel9 & 511)<<7))
+    return uint16(int(Op_j) | (((pcrel9>>1) & 511)<<7))
 }
 func CPU_encode_op_b(pcrel9 int) uint16 {
-    return uint16(int(Op_b) | ((pcrel9 & 511)<<7))
+    return uint16(int(Op_b) | (((pcrel9>>1) & 511)<<7))
 }
-func CPU_encode_op_ibl(rc, ibrel6 int) uint16 {
-    return uint16(int(Op_ibl) | ((ibrel6 & 63)<<7) | ((rc & 7)<<13))
+func CPU_encode_op_ibj(pcrel9 int) uint16 {
+    return uint16(int(Op_ibj) | (((pcrel9>>6) & 511)<<7))
 }
 func CPU_encode_op_jalib(rc, ibrel6 int) uint16 {
     return uint16(int(Op_jalib) | ((ibrel6 & 63)<<7) | ((rc & 7)<<13))
@@ -609,7 +606,7 @@ func CPU_exec(cpu *CPUState, inst uint64) int {
     case Op_break >> 2: return CPU_exec_op_break(cpu, inst)
     case Op_j >> 2: return CPU_exec_op_j(cpu, inst)
     case Op_b >> 2: return CPU_exec_op_b(cpu, inst)
-    case Op_ibl >> 2: return CPU_exec_op_ibl(cpu, inst)
+    case Op_ibj >> 2: return CPU_exec_op_ibj(cpu, inst)
     case Op_jalib >> 2: return CPU_exec_op_jalib(cpu, inst)
     case Op_jtlib >> 2: return CPU_exec_op_jtlib(cpu, inst)
     case Op_lib_i64 >> 2: return CPU_exec_op_lib_i64(cpu, inst)
@@ -648,7 +645,7 @@ func CPU_disasm(i, c uint64) string {
     case Op_break >> 2: return CPU_disasm_op_break(i, c)
     case Op_j >> 2: return CPU_disasm_op_j(i, c)
     case Op_b >> 2: return CPU_disasm_op_b(i, c)
-    case Op_ibl >> 2: return CPU_disasm_op_ibl(i, c)
+    case Op_ibj >> 2: return CPU_disasm_op_ibj(i, c)
     case Op_jalib >> 2: return CPU_disasm_op_jalib(i, c)
     case Op_jtlib >> 2: return CPU_disasm_op_jtlib(i, c)
     case Op_lib_i64 >> 2: return CPU_disasm_op_lib_i64(i, c)

@@ -26,7 +26,7 @@ class Opcode(Enum):
     op_break        = 0b00000 << 2 # op0r_imm9
     op_j            = 0b00001 << 2 # op0r_imm9 pcrel9*2
     op_b            = 0b00010 << 2 # op0r_imm9 pcrel9*2
-    op_ibl          = 0b00011 << 2 # op1r_imm6 ibrel(imm6*8,i64)
+    op_ibj          = 0b00011 << 2 # op0r_imm9 pcrel9*64
     op_jalib        = 0b00100 << 2 # op1r_imm6 ibrel(imm6*8,i32x2)
     op_jtlib        = 0b00101 << 2 # op1r_imm6 ibrel(imm6*8,i32x2)
     op_lib_i64      = 0b00110 << 2 # op1r_imm6 ibrel(imm6*8,i64)
@@ -224,17 +224,15 @@ def cpu_fetch_i16(cpu):
 def cpu_exec_op_break(cpu,inst):
     return -1
 def cpu_exec_op_j(cpu,inst):
-    cpu.pc = sux(cpu.pc +  (simm9(inst) << 1) + 2)
+    cpu.pc = sux(cpu.pc + (simm9(inst) << 1) + 2)
     return 0
 def cpu_exec_op_b(cpu,inst):
     if not cpu.flag:
         return 2
-    cpu.pc = sux(cpu.pc +  (simm9(inst) << 1) + 2)
+    cpu.pc = sux(cpu.pc + (simm9(inst) << 1) + 2)
     return 0
-def cpu_exec_op_ibl(cpu,inst):
-    cpu.r[rc(inst)] = cpu.ib
-    tmp = cpu_const_i64(cpu, uimm6(inst)) & ~7
-    cpu.ib = sux(cpu.ib + tmp)
+def cpu_exec_op_ibj(cpu,inst):
+    cpu.ib = sux(cpu.ib +  (simm9(inst) << 6))
     return 2
 def cpu_exec_op_jalib(cpu,inst):
     tmp = cpu_const_i64(cpu, uimm6(inst))
@@ -373,11 +371,11 @@ def cpu_exec_op_ud2(cpu,inst):
 def cpu_disasm_op_break(cpu,inst):
     return "break %u" % uimm9(inst)
 def cpu_disasm_op_j(cpu,inst):
-    return "j %d" % simm9(inst)
+    return "j %d" % (simm9(inst)<<1)
 def cpu_disasm_op_b(cpu,inst):
-    return "b %d" % simm9(inst)
-def cpu_disasm_op_ibl(cpu,inst):
-    return "ibl ib(%u)" % uimm6(inst)
+    return "b %d" % (simm9(inst)<<1)
+def cpu_disasm_op_ibj(cpu,inst):
+    return "ibj %d" % (simm9(inst)<<6)
 def cpu_disasm_op_jalib(cpu,inst):
     return "jalib r%d, ib(%u)" % (rc(inst), uimm6(inst))
 def cpu_disasm_op_jtlib(cpu,inst):
@@ -472,11 +470,11 @@ def cpu_disasm_op_ud2(cpu,inst):
 def cpu_encode_op_break(imm9):
     return Opcode.op_break.value | ((imm9 & 511)<<7)
 def cpu_encode_op_j(pcrel9):
-    return Opcode.op_j.value | ((pcrel9 & 511)<<7)
+    return Opcode.op_j.value | (((pcrel9>>1) & 511)<<7)
 def cpu_encode_op_b(pcrel9):
-    return Opcode.op_b.value | ((pcrel9 & 511)<<7)
-def cpu_encode_op_ibl(rc, ibrel6):
-    return Opcode.op_ibl.value | ((ibrel6 & 63)<<7) | ((rc & 7)<<13)
+    return Opcode.op_b.value | (((pcrel9>>1) & 511)<<7)
+def cpu_encode_op_ibj(pcrel9):
+    return Opcode.op_ibj.value | (((pcrel9>>6) & 511)<<7)
 def cpu_encode_op_jalib(rc, ibrel6):
     return Opcode.op_jalib.value | ((ibrel6 & 63)<<7) | ((rc & 7)<<13)
 def cpu_encode_op_jtlib(rc, ibrel6):
@@ -542,7 +540,7 @@ cpu_exec_table = {
     Opcode.op_break.value:          cpu_exec_op_break,
     Opcode.op_j.value:              cpu_exec_op_j,
     Opcode.op_b.value:              cpu_exec_op_b,
-    Opcode.op_ibl.value:            cpu_exec_op_ibl,
+    Opcode.op_ibj.value:            cpu_exec_op_ibj,
     Opcode.op_jalib.value:          cpu_exec_op_jalib,
     Opcode.op_jtlib.value:          cpu_exec_op_jtlib,
     Opcode.op_lib_i64.value:        cpu_exec_op_lib_i64,
@@ -577,7 +575,7 @@ cpu_disasm_table = {
     Opcode.op_break.value:          cpu_disasm_op_break,
     Opcode.op_j.value:              cpu_disasm_op_j,
     Opcode.op_b.value:              cpu_disasm_op_b,
-    Opcode.op_ibl.value:            cpu_disasm_op_ibl,
+    Opcode.op_ibj.value:            cpu_disasm_op_ibj,
     Opcode.op_jalib.value:          cpu_disasm_op_jalib,
     Opcode.op_jtlib.value:          cpu_disasm_op_jtlib,
     Opcode.op_lib_i64.value:        cpu_disasm_op_lib_i64,

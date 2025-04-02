@@ -243,7 +243,7 @@ instructions.
 register address vector.
 \item link register contains packed \emph{i32x2} relative address vector to
 function entry.
-\item \texttt{ibl} \emph{immediate-block-link} adds a relative address to
+\item \texttt{ibj} \emph{immediate-block-jump} adds a relative address to
 the immediate base register.
 \item \texttt{lib} \emph{load-immediate-block} uses unsigned displacement
 to access constants.
@@ -825,7 +825,7 @@ The \emph{j} or \emph{jump} instruction is an unconditional branch instruction
 that adds a relative immediate address to the program counter.
 The resulting address is \emph{pc + simm9 + 2}.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    pc = pc + simm9 + 2
+    pc += simm9 * 2 + 2
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -838,20 +838,17 @@ the \emph{flag} register has been set by a compare instruction.
 The resulting address is \emph{pc + simm9 + 2}.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     if flag:
-        pc = pc + simm9 + 2
+        pc += simm9 * 2 + 2
 \end{Verbatim}
 
 \needspace{8\baselineskip}
-\subsection{ibl}
-\insrcimmsix{rc}{uimm}{00011}{00}{\textbf{ibl} rc, uimm6}
+\subsection{ibj}
+\insnimmnine{simm}{00011}{00}{\textbf{ibj} simm9}
 \\
-the \emph{ibl} or \emph{immediate-block-link} instruction saves
-the old immediate base register to the desination register and
-adds a 64-bit relative address stored in constant memory at
-address \emph{ib + simm6 * 8}, to the immediate base register.
+the \emph{ibj} or \emph{immediate-block-jump} instruction adds a
+64-bit relative address to the immediate base register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    rc = ib
-    ib = (i64)[ib + uimm6 * 8]
+    ib += simm9 * 64
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1275,7 +1272,7 @@ illegal instruction trap.
 \ainsnimmnine{0}{uimm}{00000}{00}{\textbf{break} uimm9}
 \ainsnimmnine{1}{simm}{00001}{00}{\textbf{j} simm9}
 \ainsnimmnine{2}{simm}{00010}{00}{\textbf{b} simm9}
-\ainsrcimmsix{3}{rc}{uimm}{00011}{00}{\textbf{ibl} rc, uimm6}
+\ainsnimmnine{3}{simm}{00011}{00}{\textbf{ibj} simm9}
 \ainsrcimmsix{4}{rc}{uimm}{00100}{00}{\textbf{jalib} rc, ib32x2(uimm6*8)}
 \ainsrcimmsix{5}{rc}{uimm}{00101}{00}{\textbf{jtlib} rc, ib32x2(uimm6*8)}
 \ainsrcimmsix{6}{rc}{uimm}{00110}{00}{\textbf{lib.i64} rc, ib64(uimm6*8)}

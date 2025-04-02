@@ -39,7 +39,7 @@ the super regular RISC architecture:
   vector.
 - link register contains packed i32x2 relative address vector to function
   entry.
-- `ibl` _(immediate-block-link)_ adds a relative address to the immediate
+- `ibj` _(immediate-block-jump)_ adds a relative address to the immediate
   base register.
 - `lib` _(load-immediate-block)_ uses unsigned displacement to access
   constants.
@@ -64,9 +64,7 @@ this list outlines instructions, opcodes, and descriptions used in the
 | 00 | break        | op0r_imm9_16 | 00000 | **break** uimm9                             |
 | 01 | j            | op0r_imm9_16 | 00001 | **jump** simm9*2+2                          |
 | 02 | b            | op0r_imm9_16 | 00010 | **branch** simm9*2+2                        |
-| 03 | ibl          | op1r_imm6_16 | 00100 | **ib-link** rc,ib64(uimm6*8)                |
-|    |              |              |       |   rc = ib;                                  |
-|    |              |              |       |   ib += ib64(uimm6*8)                       |
+| 03 | ibj          | op0r_imm9_16 | 00100 | **ib-jump** simm9*64                        |
 | 04 | jalib        | op1r_imm6_16 | 00101 | **jump-and-link-ib** rc,ib32x2(uimm6*8)     |
 |    |              |              |       |   rc = ib32x2(uimm6*8);                     |
 |    |              |              |       |   (pc,ib) += i32x2(rc) + i32x2(2,0);        |

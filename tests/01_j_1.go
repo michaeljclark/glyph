@@ -6,7 +6,7 @@ func t() {
     c := []uint64{
     }
     i := []uint16{
-        CPU_encode_op_j(1),
+        CPU_encode_op_j(2),
         CPU_encode_op_nop(0),
         CPU_encode_op_break(0),
     }
