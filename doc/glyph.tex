@@ -8,7 +8,7 @@
 \usepackage{float}
 \usepackage{enumitem}
 \usepackage{caption}
-\usepackage{amsmath}
+\usepackage{textcomp}
 \usetikzlibrary{decorations.pathreplacing}
 \title{Instructions}
 
@@ -222,8 +222,8 @@ instructions sets \emph{(pc,ib)} together for procedure calls and returns.
 glyph uses relative addresses in its link register which is different
 to typical RISC architectures. glyph needs to do this for the branch
 instruction to fit \emph{(pc,ib)} into the link register for compatibility.
-glyph achieves this by packing together two 32-bit relative \emph{(pc,ib)}
-displacements in an \emph{i32x2} vector.
+glyph achieves this by packing together two relative \emph{(pc,ib)}
+displacements into a relative address vector.
 \\
 \par\noindent
 immediate blocks can be linked together using relative displacements
@@ -239,14 +239,14 @@ RISC architecture:
 \begin{itemize}[itemsep=0pt]
 \item variable length instruction format supporting 16, 32, 64, and 128-bit
 instructions.
-\item 16-bit compressed instruction packets can access 8x64-bit registers.
+\item 16-bit compressed instruction packets can access 8 registers.
 \item \emph{(pc,ib)} is a special program counter and immediate base
 register address vector.
-\item link register contains packed \emph{i32x2} relative address vector to
-function entry.
+\item link register contains packed relative \emph{(pc,ib)} address vector
+to function entry.
 \item \texttt{ibj} \emph{immediate-block-jump} adds a relative address to
 the immediate base register.
-\item \texttt{lib} \emph{load-immediate-block} uses unsigned displacement
+\item \texttt{lib} \emph{load-immediate-block} uses an unsigned displacement
 to access constants.
 \item \texttt{jalib} \emph{jump-and-link-immediate-block} or \emph{call}
 links address vector and adds constants to \emph{(pc,ib)} and is used
@@ -673,7 +673,7 @@ is addressed with the \emph{immediate base register (ib)}.
 \begin{scope}[every node/.style={font=\normalsize, inner sep=0pt, right}]
 
 \node [above,scale=0.9,anchor=south] at (32,5)  {\textbf{instruction stream (pc-relative)}};
-\node [font=\small,above,scale=0.9,anchor=south] at (8,2)  {\textbf{16-bit instruction packet}};
+\node [font=\small,above,scale=0.9,anchor=south] at (8,2)  {\textbf{instruction packet}};
 
 \node [font=\tiny,below,scale=0.9,anchor=north] at (-1.5,0.25)  {$\textbf{(pc)}$};
 
@@ -706,7 +706,7 @@ is addressed with the \emph{immediate base register (ib)}.
     (14,1.5) -- (16,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{size}};
 
 \node [above,scale=0.9,anchor=south] at (32,-7)  {\textbf{constant stream (ib-relative)}};
-\node [font=\small,above,scale=0.9,anchor=south] at (8,-10)  {\textbf{64-bit immediate data}};
+\node [font=\small,above,scale=0.9,anchor=south] at (8,-10)  {\textbf{immediate data}};
 
 \node [font=\tiny,below,scale=0.9,anchor=north] at (-1.5,-11.75)  {$\textbf{(ib)}$};
 
@@ -736,12 +736,12 @@ add and subtract relative address vectors to \emph{(pc,ib)}, the program
 counter and the immediate base register.
 \\
 \par\noindent
-immediate blocks are 64-byte aligned blocks addressed by the \emph{immediate
-base register} which contain eight 64-bit constants. immediate blocks can be
-navigated by branching the constant stream independently using the
-\emph{immediate-block-jump} instruction. return from procedure restores
-\emph{(pc,ib)} using a link register containing a packed \emph{i32x2} relative
-address vector to support backward compatibility with a single link register.
+immediate blocks are aligned memory blocks addressed by the \emph{immediate
+base register}. immediate blocks can be navigated by branching the constant
+stream independently using the \emph{immediate-block-jump} instruction.
+procedure calls and procedure returns set and restore \emph{(pc,ib)} using
+a link register containing a packed relative address vector to support
+backward compatibility with a single link register.
 \\
 \par\noindent
 the instruction forms only use bonded register slots for immediate operands
@@ -757,21 +757,18 @@ the glyph register file is extensible due to the variable length
 instruction format and supports a different number of registers
 depending on the instruction size.
 \begin{itemize}[itemsep=0pt]
-\item 16-bit instruction packet can access \emph{$8 \times 64\text{-}bit$}
-      registers with up to 3 operands.
-\item 32-bit instruction packet can access \emph{$64 \times 64\text{-}bit$}
-      registers with up to 3 operands.
-\item 64-bit instruction packet can access \emph{$64 \times 64\text{-}bit$}
-      registers with up to 6 operands.
+\item 16-bit instruction packet can access 8 registers with up to 3 operands.
+\item 32-bit instruction packet can access 64 registers with up to 3 operands.
+\item 64-bit instruction packet can access 64 registers with up to 6 operands.
 \end{itemize}
 
 \par\noindent
 the register state accessible by the 16-bit instruction packet is comprised of:
 \begin{itemize}[itemsep=0pt]
-\item \emph{$64\text{-}bit$} program counter register (aligned to 2 bytes).
-\item \emph{$64\text{-}bit$} immediate base register (aligned to 64 bytes).
-\item \emph{$8 \times 64\text{-}bit$} general purpose registers.
-\item \emph{$1 \times 1\text{-}bit$} predicate register.
+\item program counter register (aligned to 2 bytes).
+\item immediate base register (aligned to 64 bytes).
+\item 8 \texttimes general purpose registers.
+\item 1 \texttimes predicate register.
 \end{itemize}
 
 \par\noindent
@@ -797,7 +794,7 @@ instruction packet:
 \node [font=\small,anchor=base] at (8,7.25)  {$\textbf{r0}$};
 
 \node [font=\tiny,anchor=base] at (0.5,11.2)  {$\textbf{0}$};
-\node [font=\tiny,anchor=base] at (15.5,11.2)  {$\textbf{64}$};
+\node [font=\tiny,anchor=base east] at (15.75,11.2)  {$\textbf{XLEN}$};
 
 \fill [black!5] (0,9)    rectangle (16,10);
 \draw [black!95] (0,9)    rectangle (16,10);
@@ -817,7 +814,7 @@ instruction packet:
 
 \end{scope}
 \end{tikzpicture}
-\caption{64-bit register state accessible by 16-bit instruction packet.}
+\caption{register state accessible by 16-bit instruction packet.}
 \label{fig:glyph-register-state-64}
 \end{figure}
 
