@@ -399,7 +399,7 @@ def cpu_disasm_op_addib_i64(cpu,inst):
 def cpu_disasm_op_load_i64(cpu,inst):
     return "load.i64 r%d, %u(r%d)" % (rc(inst), uimm3(inst) << 3, rb(inst))
 def cpu_disasm_op_loadib_i64(cpu,inst):
-    return "loadib.i64 r%d, ib(%u)(r%d)" % (rc(inst), rb(inst), uimm3(inst))
+    return "loadib.i64 r%d, ib(%u)(r%d)" % (rc(inst), uimm3(inst), rb(inst))
 def cpu_disasm_op_cmp_i64(cpu,inst):
     fun = Fun3Compare(uimm3(inst))
     if fun == Fun3Compare.compare_lt:
@@ -419,7 +419,7 @@ def cpu_disasm_op_cmp_i64(cpu,inst):
 def cpu_disasm_op_subib_i64(cpu,inst):
     return "subib.i64 r%d, r%d, ib(%u)" % (rc(inst), uimm3(inst), rb(inst))
 def cpu_disasm_op_store_i64(cpu,inst):
-    return "store.i64 r%d, %u(r%d)" % (rc(inst), uimm3(inst), rb(inst))
+    return "store.i64 r%d, %u(r%d)" % (rc(inst), uimm3(inst) << 3, rb(inst))
 def cpu_disasm_op_storeib_i64(cpu,inst):
     return "storeib.i64 r%d, ib(%u)(r%d)" % (rc(inst), uimm3(inst), rb(inst))
 def cpu_disasm_op_logic_i64(cpu,inst):
@@ -496,7 +496,7 @@ def cpu_encode_op_slli_i64(rc, imm6):
 def cpu_encode_op_addib_i64(rc, rb, ibimm3):
     return Opcode.op_addib_i64.value | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
 def cpu_encode_op_load_i64(rc, rb, imm3):
-    return Opcode.op_load_i64.value | ((imm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+    return Opcode.op_load_i64.value | (((imm3>>3) & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
 def cpu_encode_op_loadib_i64(rc, rb, ibimm3):
     return Opcode.op_loadib_i64.value | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
 def cpu_encode_op_cmp_i64(rc, rb, fun3):
@@ -504,7 +504,7 @@ def cpu_encode_op_cmp_i64(rc, rb, fun3):
 def cpu_encode_op_subib_i64(rc, rb, ibimm3):
     return Opcode.op_subib_i64.value | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
 def cpu_encode_op_store_i64(rc, rb, imm3):
-    return Opcode.op_store_i64.value | ((imm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+    return Opcode.op_store_i64.value | (((imm3>>3) & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
 def cpu_encode_op_storeib_i64(rc, rb, ibimm3):
     return Opcode.op_storeib_i64.value | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
 def cpu_encode_op_logic_i64(rc, rb, fun3):

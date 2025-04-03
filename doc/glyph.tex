@@ -873,7 +873,7 @@ the \emph{ibj} or \emph{immediate-block-jump} instruction adds a
 
 \needspace{8\baselineskip}
 \subsection{jalib}
-\insrcimmsix{rc}{uimm}{00100}{00}{\textbf{jalib} rc, ib32x2(uimm6*8)}
+\insrcimmsix{rc}{uimm}{00100}{00}{\textbf{jalib} rc, ib(uimm6*8)}
 \\
 the \emph{jalib} or \emph{jump-and-link-immediate-block} instruction
 loads a 64-bit constant addressed by \emph{ib + uimm6 * 8} containing a
@@ -889,7 +889,7 @@ then saves the relative address vector to the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{jtlib}
-\insrcimmsix{rc}{uimm}{00101}{00}{\textbf{jtlib} rc, ib32x2(uimm6*8)}
+\insrcimmsix{rc}{uimm}{00101}{00}{\textbf{jtlib} rc, ib(uimm6*8)}
 \\
 the \emph{jtlib} or \emph{jump-to-link-immediate-block} instruction
 loads a 64-bit constant addressed by \emph{ib + uimm6 * 8} containing a
@@ -905,7 +905,7 @@ to \emph{(pc,ib)}.
 
 \needspace{8\baselineskip}
 \subsection{lib.i64}
-\insrcimmsix{rc}{uimm}{00110}{00}{\textbf{lib.i64} rc, ib64(uimm6*8)}
+\insrcimmsix{rc}{uimm}{00110}{00}{\textbf{lib.i64} rc, ib(uimm6*8)}
 \\
 the \emph{lib} or \emph{load-immediate-block} instruction loads a 64-bit
 constant addressed by \emph{ib + uimm6 * 8} then saves it to the
@@ -969,7 +969,7 @@ the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{addib.i64}
-\insrcrbimmthree{rc}{rb}{uimm}{01100}{00}{\textbf{addib.i64} rc, rb, ib64(uimm3*8)}
+\insrcrbimmthree{rc}{rb}{uimm}{01100}{00}{\textbf{addib.i64} rc, rb, ib(uimm3*8)}
 \\
 the \emph{addib} or \emph{add-immediate-block} instruction loads a 64-bit
 constant addressed by \emph{ib + uimm3 * 8} then adds it to the \emph{rb}
@@ -980,7 +980,7 @@ register and saves the result in the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{load.i64}
-\insrcrbimmthree{rc}{rb}{uimm}{01101}{00}{\textbf{load.i64} rc, uimm3(rb)}
+\insrcrbimmthree{rc}{rb}{uimm}{01101}{00}{\textbf{load.i64} rc, (uimm3*8)(rb)}
 \\
 the \emph{load} instruction adds \emph{uimm3 * 8} to the \emph{rb}
 to form an address, then loads a 64-bit value from memory at that
@@ -991,7 +991,7 @@ address and saves the result in the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{loadib.i64}
-\insrcrbimmthree{rc}{rb}{uimm}{01110}{00}{\textbf{loadib.i64} rc, ib64(uimm3*8)(rb)}
+\insrcrbimmthree{rc}{rb}{uimm}{01110}{00}{\textbf{loadib.i64} rc, ib(uimm3*8)(rb)}
 \\
 the \emph{loadib} instruction loads a 64-bit constant addressed by
 \emph{ib + uimm6 * 8} and adds to the \emph{rb} to form an address,
@@ -1026,7 +1026,7 @@ register. the type of comparsion in \emph{fun3} can be one of:
 
 \needspace{8\baselineskip}
 \subsection{subib.i64}
-\insrcrbimmthree{rc}{rb}{uimm}{10000}{00}{\textbf{subib.i64} rc, rb, ib64(uimm3*8)}
+\insrcrbimmthree{rc}{rb}{uimm}{10000}{00}{\textbf{subib.i64} rc, rb, ib(uimm3*8)}
 \\
 the \emph{subib} or \emph{sub-immediate-block} instruction loads a 64-bit
 constant addressed by \emph{ib + uimm3 * 8} then subtracts it from the
@@ -1037,7 +1037,7 @@ constant addressed by \emph{ib + uimm3 * 8} then subtracts it from the
 
 \needspace{8\baselineskip}
 \subsection{store.i64}
-\insrcrbimmthree{rc}{rb}{uimm}{10001}{00}{\textbf{store.i64} rc, uimm3(rb)}
+\insrcrbimmthree{rc}{rb}{uimm}{10001}{00}{\textbf{store.i64} rc, (uimm3*8)(rb)}
 \\
 the \emph{store} instruction adds \emph{uimm3 * 8} to the \emph{rb}
 register to form an address, then stores to memory at that address a
@@ -1048,7 +1048,7 @@ register to form an address, then stores to memory at that address a
 
 \needspace{8\baselineskip}
 \subsection{storeib.i64}
-\insrcrbimmthree{rc}{rb}{uimm}{10010}{00}{\textbf{storeib.i64} rc, ib64(uimm3*8)(rb)}
+\insrcrbimmthree{rc}{rb}{uimm}{10010}{00}{\textbf{storeib.i64} rc, ib(uimm3*8)(rb)}
 \\
 the \emph{storeib} instruction loads a 64-bit constant addressed by
 \emph{ib + uimm6 * 8} and adds to the the \emph{rb} register to form
@@ -1310,21 +1310,21 @@ the \emph{illegal} instruction causes an illegal instruction trap.
 \ainsnimmnine{1}{simm}{00001}{00}{\textbf{j} simm9}
 \ainsnimmnine{2}{simm}{00010}{00}{\textbf{b} simm9}
 \ainsnimmnine{3}{simm}{00011}{00}{\textbf{ibj} simm9}
-\ainsrcimmsix{4}{rc}{uimm}{00100}{00}{\textbf{jalib} rc, ib32x2(uimm6*8)}
-\ainsrcimmsix{5}{rc}{uimm}{00101}{00}{\textbf{jtlib} rc, ib32x2(uimm6*8)}
-\ainsrcimmsix{6}{rc}{uimm}{00110}{00}{\textbf{lib.i64} rc, ib64(uimm6*8)}
+\ainsrcimmsix{4}{rc}{uimm}{00100}{00}{\textbf{jalib} rc, ib(uimm6*8)}
+\ainsrcimmsix{5}{rc}{uimm}{00101}{00}{\textbf{jtlib} rc, ib(uimm6*8)}
+\ainsrcimmsix{6}{rc}{uimm}{00110}{00}{\textbf{lib.i64} rc, ib(uimm6*8)}
 \ainsrcimmsix{7}{rc}{simm}{00111}{00}{\textbf{li.i64} rc, simm6}
 \ainsrcimmsix{8}{rc}{simm}{01000}{00}{\textbf{addi.i64} rc, simm6}
 \ainsrcimmsix{9}{rc}{uimm}{01001}{00}{\textbf{srli.i64} rc, uimm6}
 \ainsrcimmsix{10}{rc}{uimm}{01010}{00}{\textbf{srai.i64} rc, uimm6}
 \ainsrcimmsix{11}{rc}{uimm}{01011}{00}{\textbf{slli.i64} rc, uimm6}
-\ainsrcrbimmthree{12}{rc}{rb}{uimm}{01100}{00}{\textbf{addib.i64} rc, rb, ib64(uimm3*8)}
-\ainsrcrbimmthree{13}{rc}{rb}{uimm}{01101}{00}{\textbf{load.i64} rc, uimm3(rb)}
-\ainsrcrbimmthree{14}{rc}{rb}{uimm}{01110}{00}{\textbf{loadib.i64} rc, ib64(uimm3*8)(rb)}
+\ainsrcrbimmthree{12}{rc}{rb}{uimm}{01100}{00}{\textbf{addib.i64} rc, rb, ib(uimm3*8)}
+\ainsrcrbimmthree{13}{rc}{rb}{uimm}{01101}{00}{\textbf{load.i64} rc, (uimm3*8)(rb)}
+\ainsrcrbimmthree{14}{rc}{rb}{uimm}{01110}{00}{\textbf{loadib.i64} rc, ib(uimm3*8)(rb)}
 \ainsrcrbimmthree{15}{rc}{rb}{uimm}{01111}{00}{\textbf{cmp.i64} rc, rb, fun3}
-\ainsrcrbimmthree{16}{rc}{rb}{uimm}{10000}{00}{\textbf{subib.i64} rc, rb, ib64(uimm3*8)}
-\ainsrcrbimmthree{17}{rc}{rb}{uimm}{10001}{00}{\textbf{store.i64} rc, uimm3(rb)}
-\ainsrcrbimmthree{18}{rc}{rb}{uimm}{10010}{00}{\textbf{storeib.i64} rc, ib64(uimm3*8)(rb)}
+\ainsrcrbimmthree{16}{rc}{rb}{uimm}{10000}{00}{\textbf{subib.i64} rc, rb, ib(uimm3*8)}
+\ainsrcrbimmthree{17}{rc}{rb}{uimm}{10001}{00}{\textbf{store.i64} rc, (uimm3*8)(rb)}
+\ainsrcrbimmthree{18}{rc}{rb}{uimm}{10010}{00}{\textbf{storeib.i64} rc, ib(uimm3*8)(rb)}
 \ainsrcrbimmthree{19}{rc}{rb}{uimm}{10011}{00}{\textbf{logic.i64} rc, rb, fun3}
 \ainsrcrbrc{20}{rc}{rb}{ra}{10100}{00}{\textbf{pin.i64} rc, rb, ra}
 \ainsrcrbrc{21}{rc}{rb}{ra}{10101}{00}{\textbf{and.i64} rc, rb, ra}

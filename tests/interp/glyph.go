@@ -406,7 +406,7 @@ func CPU_disasm_op_load_i64(i, c uint64) string {
 }
 func CPU_disasm_op_loadib_i64(i, c uint64) string {
     return fmt.Sprintf("loadib.i64 r%d, ib(%d)(r%d)",
-        rc(i), uimm3(i) << 3, rb(i))
+        rc(i), uimm3(i), rb(i))
 }
 func CPU_disasm_op_cmp_i64(i, c uint64) string {
     switch(Fun3Compare(uimm3(i))) {
@@ -433,7 +433,7 @@ func CPU_disasm_op_subib_i64(i, c uint64) string {
 }
 func CPU_disasm_op_store_i64(i, c uint64) string {
     return fmt.Sprintf("store.i64 r%d, %d(r%d)",
-        rc(i), uimm3(i), rb(i))
+        rc(i), uimm3(i) << 3, rb(i))
 }
 func CPU_disasm_op_storeib_i64(i, c uint64) string {
     return fmt.Sprintf("storeib.i64 r%d, ib(%d)(r%d)",
@@ -542,7 +542,7 @@ func CPU_encode_op_addib_i64(rc, rb, ibimm3 int) uint16 {
     return uint16(int(Op_addib_i64) | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13))
 }
 func CPU_encode_op_load_i64(rc, rb, imm3 int) uint16 {
-    return uint16(int(Op_load_i64) | ((imm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13))
+    return uint16(int(Op_load_i64) | (((imm3>>3) & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13))
 }
 func CPU_encode_op_loadib_i64(rc, rb, ibimm3 int) uint16 {
     return uint16(int(Op_loadib_i64) | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13))
@@ -554,7 +554,7 @@ func CPU_encode_op_subib_i64(rc, rb, ibimm3 int) uint16 {
     return uint16(int(Op_subib_i64) | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13))
 }
 func CPU_encode_op_store_i64(rc, rb, imm3 int) uint16 {
-    return uint16(int(Op_store_i64) | ((imm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13))
+    return uint16(int(Op_store_i64) | (((imm3>>3) & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13))
 }
 func CPU_encode_op_storeib_i64(rc, rb, ibimm3 int) uint16 {
     return uint16(int(Op_storeib_i64) | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13))
