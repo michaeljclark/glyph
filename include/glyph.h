@@ -228,36 +228,29 @@ __glyph_func__ int cpu_exec_op_ibj(cpu_state *cpu, u64 inst)
 }
 __glyph_func__ int cpu_exec_op_jalib(cpu_state *cpu, u64 inst)
 {
-    i32 rpc, rib;
-    u64 tmp;
-    tmp = cpu_const_i64(cpu, uimm6(inst));
-    rpc = (i32)(tmp      );
-    rib = (i32)(tmp >> 32);
+    u64 rav = cpu_const_i64(cpu, uimm6(inst));
+    i32 rpc = (i32)(rav      );
+    i32 rib = (i32)(rav >> 32);
     cpu->pc = cpu->pc + (u64)rpc + 2ull;
     cpu->ib = cpu->ib + (u64)rib;
-    cpu->r[rc(inst)] = tmp;
+    cpu->r[rc(inst)] = rav;
     return 0;
 }
 __glyph_func__ int cpu_exec_op_jtlib(cpu_state *cpu, u64 inst)
 {
-    i32 rpc, rib;
-    i32 dpc, dib;
-    u64 tmp;
-    tmp = cpu->r[rc(inst)];
-    rpc = (i32)(tmp      );
-    rib = (i32)(tmp >> 32);
-    tmp = cpu_const_i64(cpu, uimm6(inst));
-    dpc = (i32)(tmp      );
-    dib = (i32)(tmp >> 32);
+    u64 rav = cpu->r[rc(inst)];
+    i32 rpc = (i32)(rav      );
+    i32 rib = (i32)(rav >> 32);
+    u64 dav = cpu_const_i64(cpu, uimm6(inst));
+    i32 dpc = (i32)(dav      );
+    i32 dib = (i32)(dav >> 32);
     cpu->pc = cpu->pc + (u64)(dpc - rpc);
     cpu->ib = cpu->ib + (u64)(dib - rib);
     return 0;
 }
 __glyph_func__ int cpu_exec_op_lib_i64(cpu_state *cpu, u64 inst)
 {
-    u64 tmp;
-    tmp = cpu_const_i64(cpu, uimm6(inst));
-    cpu->r[rc(inst)] = tmp;
+    cpu->r[rc(inst)] = cpu_const_i64(cpu, uimm6(inst));
     return 2;
 }
 __glyph_func__ int cpu_exec_op_li_i64(cpu_state *cpu, u64 inst)
@@ -380,12 +373,9 @@ __glyph_func__ int cpu_exec_op_logic_i64(cpu_state *cpu, u64 inst)
 }
 __glyph_func__ int cpu_exec_op_pin_i64(cpu_state *cpu, u64 inst)
 {
-    i32 rpc, rib;
-    u64 tmp;
-    rpc = (i32)(cpu->pc - cpu->r[ra(inst)] + 2ull);
-    rib = (i32)(cpu->ib - cpu->r[rb(inst)]);
-    tmp = (u64)(u32)rpc | ((u64)rib << 32);
-    cpu->r[rc(inst)] = tmp;
+    i32 rpc = (i32)(cpu->pc - cpu->r[ra(inst)] + 2ull);
+    i32 rib = (i32)(cpu->ib - cpu->r[rb(inst)]);
+    cpu->r[rc(inst)] = (u64)(u32)rpc | ((u64)rib << 32);
     return 2;
 }
 __glyph_func__ int cpu_exec_op_and_i64(cpu_state *cpu, u64 inst)

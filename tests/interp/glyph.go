@@ -169,34 +169,27 @@ func CPU_exec_op_ibj(cpu *CPUState, inst uint64) int {
     return 2
 }
 func CPU_exec_op_jalib(cpu *CPUState, inst uint64) int {
-    var rpc, rib int32
-    var tmp uint64
-    tmp = CPU_const_i64(cpu, uimm6(inst))
-    rpc = int32(tmp      )
-    rib = int32(tmp >> 32)
+    rav := CPU_const_i64(cpu, uimm6(inst))
+    rpc := int32(rav      )
+    rib := int32(rav >> 32)
     cpu.PC = cpu.PC + uint64(rpc) + 2
     cpu.IB = cpu.IB + uint64(rib)
-    cpu.R[rc(inst)] = tmp
+    cpu.R[rc(inst)] = rav
     return 0
 }
 func CPU_exec_op_jtlib(cpu *CPUState, inst uint64) int {
-    var rpc, rib int32
-    var dpc, dib int32
-    var tmp uint64
-    tmp = cpu.R[rc(inst)]
-    rpc = int32(tmp      )
-    rib = int32(tmp >> 32)
-    tmp = CPU_const_i64(cpu, uimm6(inst))
-    dpc = int32(tmp      )
-    dib = int32(tmp >> 32)
+    rav := cpu.R[rc(inst)]
+    rpc := int32(rav      )
+    rib := int32(rav >> 32)
+    dav := CPU_const_i64(cpu, uimm6(inst))
+    dpc := int32(dav      )
+    dib := int32(dav >> 32)
     cpu.PC = cpu.PC + uint64(dpc - rpc)
     cpu.IB = cpu.IB + uint64(dib - rib)
     return 0
 }
 func CPU_exec_op_lib_i64(cpu *CPUState, inst uint64) int {
-    var tmp uint64
-    tmp = CPU_const_i64(cpu, uimm6(inst))
-    cpu.R[rc(inst)] = tmp
+    cpu.R[rc(inst)] = CPU_const_i64(cpu, uimm6(inst))
     return 2
 }
 func CPU_exec_op_li_i64(cpu *CPUState, inst uint64) int {
@@ -305,12 +298,9 @@ func CPU_exec_op_logic_i64(cpu *CPUState, inst uint64) int {
     return 2
 }
 func CPU_exec_op_pin_i64(cpu *CPUState, inst uint64) int {
-    var rpc, rib int32
-    var tmp uint64
-    rpc = int32(cpu.PC - cpu.R[ra(inst)] + 2)
-    rib = int32(cpu.IB - cpu.R[rb(inst)])
-    tmp =  uint64(uint32(rpc)) | (uint64(rib) << 32)
-    cpu.R[rc(inst)] = tmp
+    rpc := int32(cpu.PC - cpu.R[ra(inst)] + 2)
+    rib := int32(cpu.IB - cpu.R[rb(inst)])
+    cpu.R[rc(inst)] = uint64(uint32(rpc)) | (uint64(rib) << 32)
     return 2
 }
 func CPU_exec_op_and_i64(cpu *CPUState, inst uint64) int {
