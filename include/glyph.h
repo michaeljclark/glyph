@@ -447,173 +447,208 @@ __glyph_func__ int cpu_exec_op_illegal(cpu_state *cpu, u64 inst)
  * cpu disassembly
  */
 
-__glyph_func__ int cpu_disasm_op_break(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "break %llu", uimm9(i));
+typedef int (*op_fn)(char *buf, size_t len, u64 inst);
+
+static const char* cpu_opcode_str[128];
+static const char* cpu_fun3_compare_str[8];
+static const char* cpu_fun3_logic_str[8];
+
+__glyph_func__ int op_nm(char *buf, size_t len, u64 inst) {
+    return snprintf(buf, len, "%s", cpu_opcode_str[opc(inst)<<2]);
 }
-__glyph_func__ int cpu_disasm_op_j(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "j %lld", simm9(i)<<1);
+__glyph_func__ int op_compare(char *buf, size_t len, u64 inst) {
+    return snprintf(buf, len, "%s", cpu_fun3_compare_str[uimm3(inst)]);
 }
-__glyph_func__ int cpu_disasm_op_b(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "b %lld", simm9(i)<<1);
+__glyph_func__ int op_logic(char *buf, size_t len, u64 inst) {
+    return snprintf(buf, len, "%s", cpu_fun3_logic_str[uimm3(inst)]);
 }
-__glyph_func__ int cpu_disasm_op_ibj(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "ibj %lld", uimm6(i)<<6);
+__glyph_func__ int op_ib3(char *buf, size_t len, u64 inst) {
+    return snprintf(buf, len, "ib(%llu)", uimm3(inst));
 }
-__glyph_func__ int cpu_disasm_op_jalib(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "jalib r%d, ib(%llu)", rc(i), uimm6(i));
+__glyph_func__ int op_ib6(char *buf, size_t len, u64 inst) {
+    return snprintf(buf, len, "ib(%llu)", uimm6(inst));
 }
-__glyph_func__ int cpu_disasm_op_jtlib(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "jtlib ib(%llu), r%d", uimm6(i), rc(i));
+__glyph_func__ int op_ui3x8(char *buf, size_t len, u64 inst) {
+    return snprintf(buf, len, "%llu", uimm3(inst) << 3);
 }
-__glyph_func__ int cpu_disasm_op_lib_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "lib.i64 r%d, ib(%llu)", rc(i), uimm6(i));
+__glyph_func__ int op_ui6(char *buf, size_t len, u64 inst) {
+    return snprintf(buf, len, "%llu", uimm6(inst));
 }
-__glyph_func__ int cpu_disasm_op_li_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "li.i64 r%d, %lld", rc(i), simm6(i));
+__glyph_func__ int op_ui9(char *buf, size_t len, u64 inst) {
+    return snprintf(buf, len, "%llu", uimm9(inst));
 }
-__glyph_func__ int cpu_disasm_op_addi_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "addi.i64 r%d, %lld", rc(i), simm6(i));
+__glyph_func__ int op_si6(char *buf, size_t len, u64 inst) {
+    return snprintf(buf, len, "%lld", simm6(inst));
 }
-__glyph_func__ int cpu_disasm_op_srli_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "srli.i64 r%d, %llu", rc(i), uimm6(i));
+__glyph_func__ int op_si9x2(char *buf, size_t len, u64 inst) {
+    return snprintf(buf, len, "%lld", simm9(inst) << 1);
 }
-__glyph_func__ int cpu_disasm_op_srai_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "srai.i64 r%d, %llu", rc(i), uimm6(i));
+__glyph_func__ int op_si9x64(char *buf, size_t len, u64 inst) {
+    return snprintf(buf, len, "%lld", simm9(inst) << 6);
 }
-__glyph_func__ int cpu_disasm_op_slli_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "slli.i64 r%d, %llu", rc(i), uimm6(i));
+__glyph_func__ int op_rc(char *buf, size_t len, u64 inst) {
+    return snprintf(buf, len, "r%d", rc(inst));
 }
-__glyph_func__ int cpu_disasm_op_addib_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "addib.i64 r%d, r%d, ib(%llu)",
-        rc(i), rb(i), uimm3(i));
+__glyph_func__ int op_rb(char *buf, size_t len, u64 inst) {
+    return snprintf(buf, len, "r%d", rb(inst));
 }
-__glyph_func__ int cpu_disasm_op_load_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "load.i64 r%d, %llu(r%d)",
-        rc(i), uimm3(i) << 3, rb(i));
+__glyph_func__ int op_ra(char *buf, size_t len, u64 inst) {
+    return snprintf(buf, len, "r%d", ra(inst));
 }
-__glyph_func__ int cpu_disasm_op_loadib_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "loadib.i64 r%d, ib(%llu)(r%d)",
-        rc(i), uimm3(i), rb(i));
+__glyph_func__ int op_sp(char *buf, size_t len, u64 inst) {
+    return snprintf(buf, len, " ");
 }
-__glyph_func__ int cpu_disasm_op_cmp_i64(char *b, size_t l, u64 i, u64 c)
+__glyph_func__ int op_sc(char *buf, size_t len, u64 inst) {
+    return snprintf(buf, len, ", ");
+}
+__glyph_func__ int op_op(char *buf, size_t len, u64 inst) {
+    return snprintf(buf, len, "(");
+}
+__glyph_func__ int op_cp(char *buf, size_t len, u64 inst) {
+    return snprintf(buf, len, ")");
+}
+
+enum
 {
-    switch(uimm3(i)) {
-    case cpu_compare_lt:
-        return snprintf(b, l, "cmp.lt.i64 r%d, r%d", rc(i), rb(i));
-    case cpu_compare_ge:
-        return snprintf(b, l, "cmp.ge.i64 r%d, r%d", rc(i), rb(i));
-    case cpu_compare_eq:
-        return snprintf(b, l, "cmp.eq.i64 r%d, r%d", rc(i), rb(i));
-    case cpu_compare_ne:
-        return snprintf(b, l, "cmp.ne.i64 r%d, r%d", rc(i), rb(i));
-    case cpu_compare_ltu:
-        return snprintf(b, l, "cmp.ltu.i64 r%d, r%d", rc(i), rb(i));
-    case cpu_compare_geu:
-        return snprintf(b, l, "cmp.geu.i64 r%d, r%d", rc(i), rb(i));
-    default:
-        break;
+    op0r_uimm9,
+    op0r_simm9x2,
+    op0r_simm9x64,
+    op1r_ib32x2_uimm6_src,
+    op1r_ib32x2_uimm6_dst,
+    op1r_ib64_uimm6,
+    op1r_simm6,
+    op1r_uimm6,
+    op2r_ib64_uimm3,
+    op2r_mem64_uimm3x8,
+    op2r_mib64_uimm3,
+    op2r_fun3_compare,
+    op2r_fun3_logic,
+    op3r,
+};
+
+static const char* cpu_opcode_str[] =
+{
+    [cpu_op_break]          = "break",
+    [cpu_op_j]              = "j",
+    [cpu_op_b]              = "b",
+    [cpu_op_ibj]            = "ibj",
+    [cpu_op_jalib]          = "jalib",
+    [cpu_op_jtlib]          = "jtlib",
+    [cpu_op_lib_i64]        = "lib.i64",
+    [cpu_op_li_i64]         = "li.i64",
+    [cpu_op_addi_i64]       = "addi.i64",
+    [cpu_op_srli_i64]       = "srli.i64",
+    [cpu_op_srai_i64]       = "srai.i64",
+    [cpu_op_slli_i64]       = "slli.i64",
+    [cpu_op_addib_i64]      = "addib.i64",
+    [cpu_op_load_i64]       = "load.i64",
+    [cpu_op_loadib_i64]     = "loadib.i64",
+    [cpu_op_cmp_i64]        = "cmp.i64",
+    [cpu_op_subib_i64]      = "subib.i64",
+    [cpu_op_store_i64]      = "store.i64",
+    [cpu_op_storeib_i64]    = "storeib.i64",
+    [cpu_op_logic_i64]      = "logic.i64",
+    [cpu_op_pin_i64]        = "pin.i64",
+    [cpu_op_and_i64]        = "and.i64",
+    [cpu_op_or_i64]         = "or.i64",
+    [cpu_op_xor_i64]        = "xor.i64",
+    [cpu_op_sub_i64]        = "sub.i64",
+    [cpu_op_srl_i64]        = "srl.i64",
+    [cpu_op_sra_i64]        = "sra.i64",
+    [cpu_op_sll_i64]        = "sll.i64",
+    [cpu_op_add_i64]        = "add.i64",
+    [cpu_op_mul_i64]        = "mul.i64",
+    [cpu_op_div_i64]        = "div.i64",
+    [cpu_op_illegal]        = "illegal",
+};
+
+static const char* cpu_fun3_compare_str[8] =
+{
+    [cpu_compare_lt]        = "cmp.lt.i64",
+    [cpu_compare_ge]        = "cmp.ge.i64",
+    [cpu_compare_eq]        = "cmp.eq.i64",
+    [cpu_compare_ne]        = "cmp.ne.i64",
+    [cpu_compare_ltu]       = "cmp.ltu.i64",
+    [cpu_compare_geu]       = "cmp.geu.i64",
+};
+
+static const char* cpu_fun3_logic_str[8] =
+{
+    [cpu_logic_mov]         = "mov.i64",
+    [cpu_logic_not]         = "not.i64",
+    [cpu_logic_neg]         = "neg.i64",
+    [cpu_logic_bswap]       = "bswap.i64",
+    [cpu_logic_ctz]         = "ctz.i64",
+    [cpu_logic_clz]         = "clz.i64",
+    [cpu_logic_ctpop]       = "ctpop.i64",
+};
+
+static const op_fn cpu_op_format_args[][10] =
+{
+    [op0r_uimm9]            = { op_nm, op_sp, op_ui9 },
+    [op0r_simm9x2]          = { op_nm, op_sp, op_si9x2 },
+    [op0r_simm9x64]         = { op_nm, op_sp, op_si9x64 },
+    [op1r_ib32x2_uimm6_src] = { op_nm, op_sp, op_rc, op_sc, op_ib6 },
+    [op1r_ib32x2_uimm6_dst] = { op_nm, op_sp, op_ib6, op_sc, op_rc },
+    [op1r_ib64_uimm6]       = { op_nm, op_sp, op_rc, op_sc, op_ib6 },
+    [op1r_simm6]            = { op_nm, op_sp, op_rc, op_sc, op_si6 },
+    [op1r_uimm6]            = { op_nm, op_sp, op_rc, op_sc, op_ui6 },
+    [op2r_ib64_uimm3]       = { op_nm, op_sp, op_rc, op_sc, op_rb,
+                                op_sc, op_ib3 },
+    [op2r_mem64_uimm3x8]    = { op_nm, op_sp, op_rc, op_sc, op_ui3x8,
+                                op_op, op_rb, op_cp },
+    [op2r_mib64_uimm3]      = { op_nm, op_sp, op_rc, op_sc, op_ib3,
+                                op_op, op_rb, op_cp },
+    [op2r_fun3_compare]     = { op_compare, op_sp, op_rc, op_sc, op_rb },
+    [op2r_fun3_logic]       = { op_logic, op_sp, op_rc, op_sc, op_rb },
+    [op3r]                  = { op_nm, op_sp, op_rc, op_sc, op_rb,
+                                op_sc, op_ra },
+};
+
+static const int cpu_op_format_type[] =
+{
+    [cpu_op_break]          = op0r_uimm9,
+    [cpu_op_j]              = op0r_simm9x2,
+    [cpu_op_b]              = op0r_simm9x2,
+    [cpu_op_ibj]            = op0r_simm9x64,
+    [cpu_op_jalib]          = op1r_ib32x2_uimm6_src,
+    [cpu_op_jtlib]          = op1r_ib32x2_uimm6_dst,
+    [cpu_op_lib_i64]        = op1r_ib64_uimm6,
+    [cpu_op_li_i64]         = op1r_simm6,
+    [cpu_op_addi_i64]       = op1r_simm6,
+    [cpu_op_srli_i64]       = op1r_uimm6,
+    [cpu_op_srai_i64]       = op1r_uimm6,
+    [cpu_op_slli_i64]       = op1r_uimm6,
+    [cpu_op_addib_i64]      = op2r_ib64_uimm3,
+    [cpu_op_load_i64]       = op2r_mem64_uimm3x8,
+    [cpu_op_loadib_i64]     = op2r_mib64_uimm3,
+    [cpu_op_cmp_i64]        = op2r_fun3_compare,
+    [cpu_op_subib_i64]      = op2r_ib64_uimm3,
+    [cpu_op_store_i64]      = op2r_mem64_uimm3x8,
+    [cpu_op_storeib_i64]    = op2r_mib64_uimm3,
+    [cpu_op_logic_i64]      = op2r_fun3_logic,
+    [cpu_op_pin_i64]        = op3r,
+    [cpu_op_and_i64]        = op3r,
+    [cpu_op_or_i64]         = op3r,
+    [cpu_op_xor_i64]        = op3r,
+    [cpu_op_sub_i64]        = op3r,
+    [cpu_op_srl_i64]        = op3r,
+    [cpu_op_sra_i64]        = op3r,
+    [cpu_op_sll_i64]        = op3r,
+    [cpu_op_add_i64]        = op3r,
+    [cpu_op_mul_i64]        = op3r,
+    [cpu_op_div_i64]        = op3r,
+    [cpu_op_illegal]        = op0r_uimm9,
+};
+
+__glyph_func__ int cpu_disasm(char *buf, size_t len, u64 inst, u64 c)
+{
+    size_t offset = 0;
+    const op_fn* fn = cpu_op_format_args[cpu_op_format_type[opc(inst)<<2]];
+    while (*fn) {
+        offset += (size_t)(*fn++)(buf + offset, len - offset, inst);
     }
-    return snprintf(b, l, "invalid");
-}
-__glyph_func__ int cpu_disasm_op_subib_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "subib.i64 r%d, r%d, ib(%llu)",
-        rc(i), rb(i), uimm3(i));
-}
-__glyph_func__ int cpu_disasm_op_store_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "store.i64 r%d, %llu(r%d)",
-        rc(i), uimm3(i) << 3, rb(i));
-}
-__glyph_func__ int cpu_disasm_op_storeib_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "storeib.i64 r%d, ib(%llu)(r%d)",
-        rc(i), uimm3(i), rb(i));
-}
-__glyph_func__ int cpu_disasm_op_logic_i64(char *b, size_t l, u64 i, u64 c)
-{
-    switch(uimm3(i)) {
-    case cpu_logic_mov:
-        return snprintf(b, l, "mov.i64 r%d, r%d", rc(i), rb(i));
-    case cpu_logic_not:
-        return snprintf(b, l, "not.i64 r%d, r%d", rc(i), rb(i));
-    case cpu_logic_neg:
-        return snprintf(b, l, "neg.i64 r%d, r%d", rc(i), rb(i));
-    case cpu_logic_bswap:
-        return snprintf(b, l, "bswap.i64 r%d, r%d", rc(i), rb(i));
-    case cpu_logic_ctz:
-        return snprintf(b, l, "ctz.i64 r%d, r%d", rc(i), rb(i));
-    case cpu_logic_clz:
-        return snprintf(b, l, "clz.i64 r%d, r%d", rc(i), rb(i));
-    case cpu_logic_ctpop:
-        return snprintf(b, l, "ctpop.i64 r%d, r%d", rc(i), rb(i));
-    default:
-        break;
-    }
-    return snprintf(b, l, "invalid");
-}
-__glyph_func__ int cpu_disasm_op_pin_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "pin.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
-}
-__glyph_func__ int cpu_disasm_op_and_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "and.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
-}
-__glyph_func__ int cpu_disasm_op_or_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "or.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
-}
-__glyph_func__ int cpu_disasm_op_xor_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "xor.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
-}
-__glyph_func__ int cpu_disasm_op_sub_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "sub.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
-}
-__glyph_func__ int cpu_disasm_op_srl_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "srl.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
-}
-__glyph_func__ int cpu_disasm_op_sra_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "sra.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
-}
-__glyph_func__ int cpu_disasm_op_sll_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "sll.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
-}
-__glyph_func__ int cpu_disasm_op_add_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "add.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
-}
-__glyph_func__ int cpu_disasm_op_mul_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "mul.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
-}
-__glyph_func__ int cpu_disasm_op_div_i64(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "div.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i));
-}
-__glyph_func__ int cpu_disasm_op_illegal(char *b, size_t l, u64 i, u64 c)
-{
-    return snprintf(b, l, "illegal %llu", uimm9(i));
+    return (int)offset;
 }
 
 /*
@@ -790,45 +825,6 @@ __glyph_func__ int cpu_exec(cpu_state *cpu, u64 inst)
     case cpu_op_illegal >> 2: return cpu_exec_op_illegal(cpu, inst);
     }
     return -1;
-}
-
-__glyph_func__ int cpu_disasm(char *b, size_t l, u64 i, u64 c)
-{
-    switch (opc(i)) {
-    case cpu_op_break >> 2: return cpu_disasm_op_break(b, l, i, c);
-    case cpu_op_j >> 2: return cpu_disasm_op_j(b, l, i, c);
-    case cpu_op_b >> 2: return cpu_disasm_op_b(b, l, i, c);
-    case cpu_op_ibj >> 2: return cpu_disasm_op_ibj(b, l, i, c);
-    case cpu_op_jalib >> 2: return cpu_disasm_op_jalib(b, l, i, c);
-    case cpu_op_jtlib >> 2: return cpu_disasm_op_jtlib(b, l, i, c);
-    case cpu_op_lib_i64 >> 2: return cpu_disasm_op_lib_i64(b, l, i, c);
-    case cpu_op_li_i64 >> 2: return cpu_disasm_op_li_i64(b, l, i, c);
-    case cpu_op_addi_i64 >> 2: return cpu_disasm_op_addi_i64(b, l, i, c);
-    case cpu_op_srli_i64 >> 2: return cpu_disasm_op_srli_i64(b, l, i, c);
-    case cpu_op_srai_i64 >> 2: return cpu_disasm_op_srai_i64(b, l, i, c);
-    case cpu_op_slli_i64 >> 2: return cpu_disasm_op_slli_i64(b, l, i, c);
-    case cpu_op_addib_i64 >> 2: return cpu_disasm_op_addib_i64(b, l, i, c);
-    case cpu_op_load_i64 >> 2: return cpu_disasm_op_load_i64(b, l, i, c);
-    case cpu_op_loadib_i64 >> 2: return cpu_disasm_op_loadib_i64(b, l, i, c);
-    case cpu_op_cmp_i64 >> 2: return cpu_disasm_op_cmp_i64(b, l, i, c);
-    case cpu_op_subib_i64 >> 2: return cpu_disasm_op_subib_i64(b, l, i, c);
-    case cpu_op_store_i64 >> 2: return cpu_disasm_op_store_i64(b, l, i, c);
-    case cpu_op_storeib_i64 >> 2: return cpu_disasm_op_storeib_i64(b, l, i, c);
-    case cpu_op_logic_i64 >> 2: return cpu_disasm_op_logic_i64(b, l, i, c);
-    case cpu_op_pin_i64 >> 2: return cpu_disasm_op_pin_i64(b, l, i, c);
-    case cpu_op_and_i64 >> 2: return cpu_disasm_op_and_i64(b, l, i, c);
-    case cpu_op_or_i64 >> 2: return cpu_disasm_op_or_i64(b, l, i, c);
-    case cpu_op_xor_i64 >> 2: return cpu_disasm_op_xor_i64(b, l, i, c);
-    case cpu_op_sub_i64 >> 2: return cpu_disasm_op_sub_i64(b, l, i, c);
-    case cpu_op_srl_i64 >> 2: return cpu_disasm_op_srl_i64(b, l, i, c);
-    case cpu_op_sra_i64 >> 2: return cpu_disasm_op_sra_i64(b, l, i, c);
-    case cpu_op_sll_i64 >> 2: return cpu_disasm_op_sll_i64(b, l, i, c);
-    case cpu_op_add_i64 >> 2: return cpu_disasm_op_add_i64(b, l, i, c);
-    case cpu_op_mul_i64 >> 2: return cpu_disasm_op_mul_i64(b, l, i, c);
-    case cpu_op_div_i64 >> 2: return cpu_disasm_op_div_i64(b, l, i, c);
-    case cpu_op_illegal >> 2: return cpu_disasm_op_illegal(b, l, i, c);
-    }
-    return snprintf(b, l, "invalid");
 }
 
 /*

@@ -370,100 +370,172 @@ def cpu_exec_op_illegal(cpu,inst):
 # cpu disassembly
 #
 
-def cpu_disasm_op_break(cpu,inst):
-    return "break %u" % uimm9(inst)
-def cpu_disasm_op_j(cpu,inst):
-    return "j %d" % (simm9(inst)<<1)
-def cpu_disasm_op_b(cpu,inst):
-    return "b %d" % (simm9(inst)<<1)
-def cpu_disasm_op_ibj(cpu,inst):
-    return "ibj %d" % (simm9(inst)<<6)
-def cpu_disasm_op_jalib(cpu,inst):
-    return "jalib r%d, ib(%u)" % (rc(inst), uimm6(inst))
-def cpu_disasm_op_jtlib(cpu,inst):
-    return "jtlib ib(%u), r%d" % (uimm6(inst), rc(inst))
-def cpu_disasm_op_lib_i64(cpu,inst):
-    return "lib.i64 r%d, ib(%u)" % (rc(inst), uimm6(inst))
-def cpu_disasm_op_li_i64(cpu,inst):
-    return "li.i64 r%d, %d" % (rc(inst), simm6(inst))
-def cpu_disasm_op_addi_i64(cpu,inst):
-    return "addi.i64 r%d, %d" % (rc(inst), simm6(inst))
-def cpu_disasm_op_srli_i64(cpu,inst):
-    return "srli.i64 r%d, %u" % (rc(inst), uimm6(inst))
-def cpu_disasm_op_srai_i64(cpu,inst):
-    return "srai.i64 r%d, %u" % (rc(inst), uimm6(inst))
-def cpu_disasm_op_slli_i64(cpu,inst):
-    return "slli.i64 r%d, %u" % (rc(inst), uimm6(inst))
-def cpu_disasm_op_addib_i64(cpu,inst):
-    return "addib.i64 r%d, r%d, ib(%u)" % (rc(inst), rb(inst), uimm3(inst))
-def cpu_disasm_op_load_i64(cpu,inst):
-    return "load.i64 r%d, %u(r%d)" % (rc(inst), uimm3(inst) << 3, rb(inst))
-def cpu_disasm_op_loadib_i64(cpu,inst):
-    return "loadib.i64 r%d, ib(%u)(r%d)" % (rc(inst), uimm3(inst), rb(inst))
-def cpu_disasm_op_cmp_i64(cpu,inst):
-    fun = Fun3Compare(uimm3(inst))
-    if fun == Fun3Compare.compare_lt:
-        return "cmp.lt.i64 r%d, r%d" % (rc(inst), rb(inst))
-    elif fun == Fun3Compare.compare_ge:
-        return "cmp.ge.i64 r%d, r%d" % (rc(inst), rb(inst))
-    elif fun == Fun3Compare.compare_eq:
-        return "cmp.eq.i64 r%d, r%d" % (rc(inst), rb(inst))
-    elif fun == Fun3Compare.compare_ne:
-        return "cmp.ne.i64 r%d, r%d" % (rc(inst), rb(inst))
-    elif fun == Fun3Compare.compare_ltu:
-        return "cmp.ltu.i64 r%d, r%d" % (rc(inst), rb(inst))
-    elif fun == Fun3Compare.compare_geu:
-        return "cmp.geu.i64 r%d, r%d" % (rc(inst), rb(inst))
-    else:
-        return "unknown"
-def cpu_disasm_op_subib_i64(cpu,inst):
-    return "subib.i64 r%d, r%d, ib(%u)" % (rc(inst), uimm3(inst), rb(inst))
-def cpu_disasm_op_store_i64(cpu,inst):
-    return "store.i64 r%d, %u(r%d)" % (rc(inst), uimm3(inst) << 3, rb(inst))
-def cpu_disasm_op_storeib_i64(cpu,inst):
-    return "storeib.i64 r%d, ib(%u)(r%d)" % (rc(inst), uimm3(inst), rb(inst))
-def cpu_disasm_op_logic_i64(cpu,inst):
-    fun = Fun3Logic(uimm3(inst))
-    if fun == Fun3Logic.logic_mov:
-        return "mov.i64 r%d, r%d" % (rc(inst), rb(inst))
-    elif fun == Fun3Logic.logic_not:
-        return "not.i64 r%d, r%d" % (rc(inst), rb(inst))
-    elif fun == Fun3Logic.logic_neg:
-        return "neg.i64 r%d, r%d" % (rc(inst), rb(inst))
-    elif fun == Fun3Logic.logic_bswap:
-        return "bswap.i64 r%d, r%d" % (rc(inst), rb(inst))
-    elif fun == Fun3Logic.logic_ctz:
-        return "ctz.i64 r%d, r%d" % (rc(inst), rb(inst))
-    elif fun == Fun3Logic.logic_clz:
-        return "clz.i64 r%d, r%d" % (rc(inst), rb(inst))
-    elif fun == Fun3Logic.logic_ctpop:
-        return "ctpop.i64 r%d, r%d" % (rc(inst), rb(inst))
-    else:
-        return ""
-def cpu_disasm_op_pin_i64(cpu,inst):
-    return "pin.i64 r%d, r%d, r%d" % (rc(inst), rb(inst), ra(inst))
-def cpu_disasm_op_and_i64(cpu,inst):
-    return "and.i64 r%d, r%d, r%d" % (rc(inst), rb(inst), ra(inst))
-def cpu_disasm_op_or_i64(cpu,inst):
-    return "or.i64 r%d, r%d, r%d" % (rc(inst), rb(inst), ra(inst))
-def cpu_disasm_op_xor_i64(cpu,inst):
-    return "xor.i64 r%d, r%d, r%d" % (rc(inst), rb(inst), ra(inst))
-def cpu_disasm_op_sub_i64(cpu,inst):
-    return "sub.i64 r%d, r%d, r%d" % (rc(inst), rb(inst), ra(inst))
-def cpu_disasm_op_srl_i64(cpu,inst):
-    return "srl.i64 r%d, r%d, r%d" % (rc(inst), rb(inst), ra(inst))
-def cpu_disasm_op_sra_i64(cpu,inst):
-    return "sra.i64 r%d, r%d, r%d" % (rc(inst), rb(inst), ra(inst))
-def cpu_disasm_op_sll_i64(cpu,inst):
-    return "sll.i64 r%d, r%d, r%d" % (rc(inst), rb(inst), ra(inst))
-def cpu_disasm_op_add_i64(cpu,inst):
-    return "add.i64 r%d, r%d, r%d" % (rc(inst), rb(inst), ra(inst))
-def cpu_disasm_op_mul_i64(cpu,inst):
-    return "mul.i64 r%d, r%d, r%d" % (rc(inst), rb(inst), ra(inst))
-def cpu_disasm_op_div_i64(cpu,inst):
-    return "div.i64 r%d, r%d, r%d" % (rc(inst), rb(inst), ra(inst))
-def cpu_disasm_op_illegal(cpu,inst):
-    return "illegal %u" % uimm9(inst)
+def op_nm(inst):
+    return "%s" % cpu_opcode_str[Opcode(opc(inst)<<2)]
+def op_compare(inst):
+    return "%s" % cpu_fun3_compare_str[Fun3Compare(uimm3(inst))]
+def op_logic(inst):
+    return "%s" % cpu_fun3_logic_str[Fun3Logic(uimm3(inst))]
+def op_ib3(inst):
+    return "ib(%u)" % uimm3(inst)
+def op_ib6(inst):
+    return "ib(%u)" % uimm6(inst)
+def op_ui3x8(inst):
+    return "%u" % (uimm3(inst) << 3)
+def op_ui6(inst):
+    return "%u" % uimm6(inst)
+def op_ui9(inst):
+    return "%u" % uimm9(inst)
+def op_si6(inst):
+    return "%d" % simm6(inst)
+def op_si9x2(inst):
+    return "%d" % (simm9(inst) << 1)
+def op_si9x64(inst):
+    return "%d" % (simm9(inst) << 6)
+def op_rc(inst):
+    return "r%d" % rc(inst)
+def op_rb(inst):
+    return "r%d" % rb(inst)
+def op_ra(inst):
+    return "r%d" % ra(inst)
+def op_sp(inst):
+    return " "
+def op_sc(inst):
+    return ", "
+def op_op(inst):
+    return "("
+def op_cp(inst):
+    return ")"
+
+class OpForm(Enum):
+    op0r_uimm9            = 0
+    op0r_simm9x2          = 1
+    op0r_simm9x64         = 2
+    op1r_ib32x2_uimm6_src = 3
+    op1r_ib32x2_uimm6_dst = 4
+    op1r_ib64_uimm6       = 5
+    op1r_simm6            = 6
+    op1r_uimm6            = 7
+    op2r_ib64_uimm3       = 8
+    op2r_mem64_uimm3x8    = 9
+    op2r_mib64_uimm3      = 10
+    op2r_fun3_compare     = 11
+    op2r_fun3_logic       = 12
+    op3r                  = 13
+
+cpu_opcode_str = {
+    Opcode.op_break:          "break",
+    Opcode.op_j:              "j",
+    Opcode.op_b:              "b",
+    Opcode.op_ibj:            "ibj",
+    Opcode.op_jalib:          "jalib",
+    Opcode.op_jtlib:          "jtlib",
+    Opcode.op_lib_i64:        "lib.i64",
+    Opcode.op_li_i64:         "li.i64",
+    Opcode.op_addi_i64:       "addi.i64",
+    Opcode.op_srli_i64:       "srli.i64",
+    Opcode.op_srai_i64:       "srai.i64",
+    Opcode.op_slli_i64:       "slli.i64",
+    Opcode.op_addib_i64:      "addib.i64",
+    Opcode.op_load_i64:       "load.i64",
+    Opcode.op_loadib_i64:     "loadib.i64",
+    Opcode.op_cmp_i64:        "cmp.i64",
+    Opcode.op_subib_i64:      "subib.i64",
+    Opcode.op_store_i64:      "store.i64",
+    Opcode.op_storeib_i64:    "storeib.i64",
+    Opcode.op_logic_i64:      "logic.i64",
+    Opcode.op_pin_i64:        "pin.i64",
+    Opcode.op_and_i64:        "and.i64",
+    Opcode.op_or_i64:         "or.i64",
+    Opcode.op_xor_i64:        "xor.i64",
+    Opcode.op_sub_i64:        "sub.i64",
+    Opcode.op_srl_i64:        "srl.i64",
+    Opcode.op_sra_i64:        "sra.i64",
+    Opcode.op_sll_i64:        "sll.i64",
+    Opcode.op_add_i64:        "add.i64",
+    Opcode.op_mul_i64:        "mul.i64",
+    Opcode.op_div_i64:        "div.i64",
+    Opcode.op_illegal:        "illegal",
+}
+
+cpu_fun3_compare_str = {
+    Fun3Compare.compare_lt:   "cmp.lt.i64",
+    Fun3Compare.compare_ge:   "cmp.ge.i64",
+    Fun3Compare.compare_eq:   "cmp.eq.i64",
+    Fun3Compare.compare_ne:   "cmp.ne.i64",
+    Fun3Compare.compare_ltu:  "cmp.ltu.i64",
+    Fun3Compare.compare_geu:  "cmp.geu.i64",
+}
+
+cpu_fun3_logic_str = {
+    Fun3Logic.logic_mov:      "mov.i64",
+    Fun3Logic.logic_not:      "not.i64",
+    Fun3Logic.logic_neg:      "neg.i64",
+    Fun3Logic.logic_bswap:    "bswap.i64",
+    Fun3Logic.logic_ctz:      "ctz.i64",
+    Fun3Logic.logic_clz:      "clz.i64",
+    Fun3Logic.logic_ctpop:    "ctpop.i64",
+}
+
+cpu_op_format_args = {
+    OpForm.op0r_uimm9:            [ op_nm, op_sp, op_ui9 ],
+    OpForm.op0r_simm9x2:          [ op_nm, op_sp, op_si9x2 ],
+    OpForm.op0r_simm9x64:         [ op_nm, op_sp, op_si9x64 ],
+    OpForm.op1r_ib32x2_uimm6_src: [ op_nm, op_sp, op_rc, op_sc, op_ib6 ],
+    OpForm.op1r_ib32x2_uimm6_dst: [ op_nm, op_sp, op_ib6, op_sc, op_rc ],
+    OpForm.op1r_ib64_uimm6:       [ op_nm, op_sp, op_rc, op_sc, op_ib6 ],
+    OpForm.op1r_simm6:            [ op_nm, op_sp, op_rc, op_sc, op_si6 ],
+    OpForm.op1r_uimm6:            [ op_nm, op_sp, op_rc, op_sc, op_ui6 ],
+    OpForm.op2r_ib64_uimm3:       [ op_nm, op_sp, op_rc, op_sc, op_rb,
+                                    op_sc, op_ib3 ],
+    OpForm.op2r_mem64_uimm3x8:    [ op_nm, op_sp, op_rc, op_sc, op_ui3x8,
+                                    op_op, op_rb, op_cp ],
+    OpForm.op2r_mib64_uimm3:      [ op_nm, op_sp, op_rc, op_sc, op_ib3,
+                                    op_op, op_rb, op_cp ],
+    OpForm.op2r_fun3_compare:     [ op_compare, op_sp, op_rc, op_sc, op_rb ],
+    OpForm.op2r_fun3_logic:       [ op_logic, op_sp, op_rc, op_sc, op_rb ],
+    OpForm.op3r:                  [ op_nm, op_sp, op_rc, op_sc, op_rb,
+                                    op_sc, op_ra ],
+}
+
+cpu_op_format_type = {
+    Opcode.op_break:          OpForm.op0r_uimm9,
+    Opcode.op_j:              OpForm.op0r_simm9x2,
+    Opcode.op_b:              OpForm.op0r_simm9x2,
+    Opcode.op_ibj:            OpForm.op0r_simm9x64,
+    Opcode.op_jalib:          OpForm.op1r_ib32x2_uimm6_src,
+    Opcode.op_jtlib:          OpForm.op1r_ib32x2_uimm6_dst,
+    Opcode.op_lib_i64:        OpForm.op1r_ib64_uimm6,
+    Opcode.op_li_i64:         OpForm.op1r_simm6,
+    Opcode.op_addi_i64:       OpForm.op1r_simm6,
+    Opcode.op_srli_i64:       OpForm.op1r_uimm6,
+    Opcode.op_srai_i64:       OpForm.op1r_uimm6,
+    Opcode.op_slli_i64:       OpForm.op1r_uimm6,
+    Opcode.op_addib_i64:      OpForm.op2r_ib64_uimm3,
+    Opcode.op_load_i64:       OpForm.op2r_mem64_uimm3x8,
+    Opcode.op_loadib_i64:     OpForm.op2r_mib64_uimm3,
+    Opcode.op_cmp_i64:        OpForm.op2r_fun3_compare,
+    Opcode.op_subib_i64:      OpForm.op2r_ib64_uimm3,
+    Opcode.op_store_i64:      OpForm.op2r_mem64_uimm3x8,
+    Opcode.op_storeib_i64:    OpForm.op2r_mib64_uimm3,
+    Opcode.op_logic_i64:      OpForm.op2r_fun3_logic,
+    Opcode.op_pin_i64:        OpForm.op3r,
+    Opcode.op_and_i64:        OpForm.op3r,
+    Opcode.op_or_i64:         OpForm.op3r,
+    Opcode.op_xor_i64:        OpForm.op3r,
+    Opcode.op_sub_i64:        OpForm.op3r,
+    Opcode.op_srl_i64:        OpForm.op3r,
+    Opcode.op_sra_i64:        OpForm.op3r,
+    Opcode.op_sll_i64:        OpForm.op3r,
+    Opcode.op_add_i64:        OpForm.op3r,
+    Opcode.op_mul_i64:        OpForm.op3r,
+    Opcode.op_div_i64:        OpForm.op3r,
+    Opcode.op_illegal:        OpForm.op0r_uimm9,
+}
+
+def cpu_disasm(cpu,inst):
+    tab = cpu_op_format_args[cpu_op_format_type[Opcode(opc(inst)<<2)]]
+    return '%04x %s' % (su16(inst), ''.join(fn(inst) for fn in tab))
 
 #
 # cpu instruction encoding
@@ -572,47 +644,6 @@ cpu_exec_table = {
     Opcode.op_div_i64.value:        cpu_exec_op_div_i64,
     Opcode.op_illegal.value:        cpu_exec_op_illegal
 }
-
-cpu_disasm_table = {
-    Opcode.op_break.value:          cpu_disasm_op_break,
-    Opcode.op_j.value:              cpu_disasm_op_j,
-    Opcode.op_b.value:              cpu_disasm_op_b,
-    Opcode.op_ibj.value:            cpu_disasm_op_ibj,
-    Opcode.op_jalib.value:          cpu_disasm_op_jalib,
-    Opcode.op_jtlib.value:          cpu_disasm_op_jtlib,
-    Opcode.op_lib_i64.value:        cpu_disasm_op_lib_i64,
-    Opcode.op_li_i64.value:         cpu_disasm_op_li_i64,
-    Opcode.op_addi_i64.value:       cpu_disasm_op_addi_i64,
-    Opcode.op_srli_i64.value:       cpu_disasm_op_srli_i64,
-    Opcode.op_srai_i64.value:       cpu_disasm_op_srai_i64,
-    Opcode.op_slli_i64.value:       cpu_disasm_op_slli_i64,
-    Opcode.op_addib_i64.value:      cpu_disasm_op_addib_i64,
-    Opcode.op_load_i64.value:       cpu_disasm_op_load_i64,
-    Opcode.op_loadib_i64.value:     cpu_disasm_op_loadib_i64,
-    Opcode.op_cmp_i64.value:        cpu_disasm_op_cmp_i64,
-    Opcode.op_subib_i64.value:      cpu_disasm_op_subib_i64,
-    Opcode.op_store_i64.value:      cpu_disasm_op_store_i64,
-    Opcode.op_storeib_i64.value:    cpu_disasm_op_storeib_i64,
-    Opcode.op_logic_i64.value:      cpu_disasm_op_logic_i64,
-    Opcode.op_pin_i64.value:        cpu_disasm_op_pin_i64,
-    Opcode.op_and_i64.value:        cpu_disasm_op_and_i64,
-    Opcode.op_or_i64.value:         cpu_disasm_op_or_i64,
-    Opcode.op_xor_i64.value:        cpu_disasm_op_xor_i64,
-    Opcode.op_sub_i64.value:        cpu_disasm_op_sub_i64,
-    Opcode.op_srl_i64.value:        cpu_disasm_op_srl_i64,
-    Opcode.op_sra_i64.value:        cpu_disasm_op_sra_i64,
-    Opcode.op_sll_i64.value:        cpu_disasm_op_sll_i64,
-    Opcode.op_add_i64.value:        cpu_disasm_op_add_i64,
-    Opcode.op_mul_i64.value:        cpu_disasm_op_mul_i64,
-    Opcode.op_div_i64.value:        cpu_disasm_op_div_i64,
-    Opcode.op_illegal.value:        cpu_disasm_op_illegal
-}
-
-def cpu_disasm(cpu,inst):
-    op = Opcode(opc(inst) << 2)
-    asm = cpu_disasm_table[op.value](cpu, inst)
-    text = '%04x %s' % (su16(inst), asm)
-    return text
 
 def cpu_exec(cpu,inst):
     op = Opcode(opc(inst) << 2)

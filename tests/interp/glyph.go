@@ -3,6 +3,7 @@ package interp
 import (
     "fmt"
     "unsafe"
+    "strings"
     "math/bits"
 )
 
@@ -360,143 +361,200 @@ func CPU_exec_op_illegal(cpu *CPUState, inst uint64) int {
  * cpu disassembly
  */
 
-func CPU_disasm_op_break(i, c uint64) string {
-    return fmt.Sprintf("break %d", uimm9(i))
+type OpaFn func(inst uint64) string
+type OpForm int
+
+func op_nm(inst uint64) string {
+    return fmt.Sprintf("%s", cpu_opcode_str[opc(inst)<<2])
 }
-func CPU_disasm_op_j(i, c uint64) string {
-    return fmt.Sprintf("j %d", simm9(i)<<1)
+func op_compare(inst uint64) string {
+    return fmt.Sprintf("%s", cpu_fun3_compare_str[uimm3(inst)]);
 }
-func CPU_disasm_op_b(i, c uint64) string {
-    return fmt.Sprintf("b %d", simm9(i)<<1)
+func op_logic(inst uint64) string {
+    return fmt.Sprintf("%s", cpu_fun3_logic_str[uimm3(inst)]);
 }
-func CPU_disasm_op_ibj(i, c uint64) string {
-    return fmt.Sprintf("ibj %d", simm9(i)<<6)
+func op_ib3(inst uint64) string {
+    return fmt.Sprintf("ib(%d)", uimm3(inst));
 }
-func CPU_disasm_op_jalib(i, c uint64) string {
-    return fmt.Sprintf("jalib r%d, ib(%d)", rc(i), uimm6(i))
+func op_ib6(inst uint64) string {
+    return fmt.Sprintf("ib(%d)", uimm6(inst));
 }
-func CPU_disasm_op_jtlib(i, c uint64) string {
-    return fmt.Sprintf("jtlib ib(%d), r%d", uimm6(i), rc(i))
+func op_ui3x8(inst uint64) string {
+    return fmt.Sprintf("%d", uimm3(inst) << 3);
 }
-func CPU_disasm_op_lib_i64(i, c uint64) string {
-    return fmt.Sprintf("lib.i64 r%d, ib(%d)", rc(i), uimm6(i))
+func op_ui6(inst uint64) string {
+    return fmt.Sprintf("%d", uimm6(inst));
 }
-func CPU_disasm_op_li_i64(i, c uint64) string {
-    return fmt.Sprintf("li.i64 r%d, %d", rc(i), simm6(i))
+func op_ui9(inst uint64) string {
+    return fmt.Sprintf("%d", uimm9(inst));
 }
-func CPU_disasm_op_addi_i64(i, c uint64) string {
-    return fmt.Sprintf("addi.i64 r%d, %d", rc(i), simm6(i))
+func op_si6(inst uint64) string {
+    return fmt.Sprintf("%d", simm6(inst));
 }
-func CPU_disasm_op_srli_i64(i, c uint64) string {
-    return fmt.Sprintf("srli.i64 r%d, %d", rc(i), uimm6(i))
+func op_si9x2(inst uint64) string {
+    return fmt.Sprintf("%d", simm9(inst) << 1);
 }
-func CPU_disasm_op_srai_i64(i, c uint64) string {
-    return fmt.Sprintf("srai.i64 r%d, %d", rc(i), uimm6(i))
+func op_si9x64(inst uint64) string {
+    return fmt.Sprintf("%d", simm9(inst) << 6);
 }
-func CPU_disasm_op_slli_i64(i, c uint64) string {
-    return fmt.Sprintf("slli.i64 r%d, %d", rc(i), uimm6(i))
+func op_rc(inst uint64) string {
+    return fmt.Sprintf("r%d", rc(inst));
 }
-func CPU_disasm_op_addib_i64(i, c uint64) string {
-    return fmt.Sprintf("addib.i64 r%d, r%d, ib(%d)",
-        rc(i), rb(i), uimm3(i))
+func op_rb(inst uint64) string {
+    return fmt.Sprintf("r%d", rb(inst));
 }
-func CPU_disasm_op_load_i64(i, c uint64) string {
-    return fmt.Sprintf("load.i64 r%d, %d(r%d)",
-        rc(i), uimm3(i) << 3, rb(i))
+func op_ra(inst uint64) string {
+    return fmt.Sprintf("r%d", ra(inst));
 }
-func CPU_disasm_op_loadib_i64(i, c uint64) string {
-    return fmt.Sprintf("loadib.i64 r%d, ib(%d)(r%d)",
-        rc(i), uimm3(i), rb(i))
+func op_sp(inst uint64) string {
+    return fmt.Sprintf(" ");
 }
-func CPU_disasm_op_cmp_i64(i, c uint64) string {
-    switch(Fun3Compare(uimm3(i))) {
-    case Compare_lt:
-        return fmt.Sprintf("cmp.lt.i64 r%d, r%d", rc(i), rb(i))
-    case Compare_ge:
-        return fmt.Sprintf("cmp.ge.i64 r%d, r%d", rc(i), rb(i))
-    case Compare_eq:
-        return fmt.Sprintf("cmp.eq.i64 r%d, r%d", rc(i), rb(i))
-    case Compare_ne:
-        return fmt.Sprintf("cmp.ne.i64 r%d, r%d", rc(i), rb(i))
-    case Compare_ltu:
-        return fmt.Sprintf("cmp.ltu.i64 r%d, r%d", rc(i), rb(i))
-    case Compare_geu:
-        return fmt.Sprintf("cmp.geu.i64 r%d, r%d", rc(i), rb(i))
-    default:
-        break
-    }
-    return fmt.Sprintf("invalid")
+func op_sc(inst uint64) string {
+    return fmt.Sprintf(", ");
 }
-func CPU_disasm_op_subib_i64(i, c uint64) string {
-    return fmt.Sprintf("subib.i64 r%d, r%d, ib(%d)",
-        rc(i), rb(i), uimm3(i))
+func op_op(inst uint64) string {
+    return fmt.Sprintf("(");
 }
-func CPU_disasm_op_store_i64(i, c uint64) string {
-    return fmt.Sprintf("store.i64 r%d, %d(r%d)",
-        rc(i), uimm3(i) << 3, rb(i))
-}
-func CPU_disasm_op_storeib_i64(i, c uint64) string {
-    return fmt.Sprintf("storeib.i64 r%d, ib(%d)(r%d)",
-        rc(i), uimm3(i), rb(i))
-}
-func CPU_disasm_op_logic_i64(i, c uint64) string {
-    switch(Fun3Logic(uimm3(i))) {
-    case Logic_mov:
-        return fmt.Sprintf("mov.i64 r%d, r%d", rc(i), rb(i))
-    case Logic_not:
-        return fmt.Sprintf("not.i64 r%d, r%d", rc(i), rb(i))
-    case Logic_neg:
-        return fmt.Sprintf("neg.i64 r%d, r%d", rc(i), rb(i))
-    case Logic_bswap:
-        return fmt.Sprintf("bswap.i64 r%d, r%d", rc(i), rb(i))
-    case Logic_ctz:
-        return fmt.Sprintf("ctz.i64 r%d, r%d", rc(i), rb(i))
-    case Logic_clz:
-        return fmt.Sprintf("clz.i64 r%d, r%d", rc(i), rb(i))
-    case Logic_ctpop:
-        return fmt.Sprintf("ctpop.i64 r%d, r%d", rc(i), rb(i))
-    default:
-        break
-    }
-    return fmt.Sprintf("invalid")
-}
-func CPU_disasm_op_pin_i64(i, c uint64) string {
-    return fmt.Sprintf("pin.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i))
-}
-func CPU_disasm_op_and_i64(i, c uint64) string {
-    return fmt.Sprintf("and.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i))
-}
-func CPU_disasm_op_or_i64(i, c uint64) string {
-    return fmt.Sprintf("or.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i))
-}
-func CPU_disasm_op_xor_i64(i, c uint64) string {
-    return fmt.Sprintf("xor.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i))
-}
-func CPU_disasm_op_sub_i64(i, c uint64) string {
-    return fmt.Sprintf("sub.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i))
-}
-func CPU_disasm_op_srl_i64(i, c uint64) string {
-    return fmt.Sprintf("srl.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i))
-}
-func CPU_disasm_op_sra_i64(i, c uint64) string {
-    return fmt.Sprintf("sra.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i))
-}
-func CPU_disasm_op_sll_i64(i, c uint64) string {
-    return fmt.Sprintf("sll.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i))
-}
-func CPU_disasm_op_add_i64(i, c uint64) string {
-    return fmt.Sprintf("add.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i))
-}
-func CPU_disasm_op_mul_i64(i, c uint64) string {
-    return fmt.Sprintf("mul.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i))
-}
-func CPU_disasm_op_div_i64(i, c uint64) string {
-    return fmt.Sprintf("div.i64 r%d, r%d, r%d", rc(i), rb(i), ra(i))
-}
-func CPU_disasm_op_illegal(i, c uint64) string {
-    return fmt.Sprintf("illegal %d", uimm9(i))
+func op_cp(inst uint64) string {
+    return fmt.Sprintf(")");
 }
 
+const (
+    op0r_uimm9 OpForm = iota
+    op0r_simm9x2
+    op0r_simm9x64
+    op1r_ib32x2_uimm6_src
+    op1r_ib32x2_uimm6_dst
+    op1r_ib64_uimm6
+    op1r_simm6
+    op1r_uimm6
+    op2r_ib64_uimm3
+    op2r_mem64_uimm3x8
+    op2r_mib64_uimm3
+    op2r_fun3_compare
+    op2r_fun3_logic
+    op3r
+)
+
+var cpu_opcode_str = [128]string{
+    Op_break:          "break",
+    Op_j:              "j",
+    Op_b:              "b",
+    Op_ibj:            "ibj",
+    Op_jalib:          "jalib",
+    Op_jtlib:          "jtlib",
+    Op_lib_i64:        "lib.i64",
+    Op_li_i64:         "li.i64",
+    Op_addi_i64:       "addi.i64",
+    Op_srli_i64:       "srli.i64",
+    Op_srai_i64:       "srai.i64",
+    Op_slli_i64:       "slli.i64",
+    Op_addib_i64:      "addib.i64",
+    Op_load_i64:       "load.i64",
+    Op_loadib_i64:     "loadib.i64",
+    Op_cmp_i64:        "cmp.i64",
+    Op_subib_i64:      "subib.i64",
+    Op_store_i64:      "store.i64",
+    Op_storeib_i64:    "storeib.i64",
+    Op_logic_i64:      "logic.i64",
+    Op_pin_i64:        "pin.i64",
+    Op_and_i64:        "and.i64",
+    Op_or_i64:         "or.i64",
+    Op_xor_i64:        "xor.i64",
+    Op_sub_i64:        "sub.i64",
+    Op_srl_i64:        "srl.i64",
+    Op_sra_i64:        "sra.i64",
+    Op_sll_i64:        "sll.i64",
+    Op_add_i64:        "add.i64",
+    Op_mul_i64:        "mul.i64",
+    Op_div_i64:        "div.i64",
+    Op_illegal:        "illegal",
+}
+
+var cpu_fun3_compare_str = [8]string{
+    Compare_lt:        "cmp.lt.i64",
+    Compare_ge:        "cmp.ge.i64",
+    Compare_eq:        "cmp.eq.i64",
+    Compare_ne:        "cmp.ne.i64",
+    Compare_ltu:       "cmp.ltu.i64",
+    Compare_geu:       "cmp.geu.i64",
+}
+
+var cpu_fun3_logic_str = [8]string{
+    Logic_mov:         "mov.i64",
+    Logic_not:         "not.i64",
+    Logic_neg:         "neg.i64",
+    Logic_bswap:       "bswap.i64",
+    Logic_ctz:         "ctz.i64",
+    Logic_clz:         "clz.i64",
+    Logic_ctpop:       "ctpop.i64",
+}
+
+var cpu_op_format_args = [14][10]OpaFn{
+    op0r_uimm9:            { op_nm, op_sp, op_ui9 },
+    op0r_simm9x2:          { op_nm, op_sp, op_si9x2 },
+    op0r_simm9x64:         { op_nm, op_sp, op_si9x64 },
+    op1r_ib32x2_uimm6_src: { op_nm, op_sp, op_rc, op_sc, op_ib6 },
+    op1r_ib32x2_uimm6_dst: { op_nm, op_sp, op_ib6, op_sc, op_rc },
+    op1r_ib64_uimm6:       { op_nm, op_sp, op_rc, op_sc, op_ib6 },
+    op1r_simm6:            { op_nm, op_sp, op_rc, op_sc, op_si6 },
+    op1r_uimm6:            { op_nm, op_sp, op_rc, op_sc, op_ui6 },
+    op2r_ib64_uimm3:       { op_nm, op_sp, op_rc, op_sc, op_rb,
+                             op_sc, op_ib3 },
+    op2r_mem64_uimm3x8:    { op_nm, op_sp, op_rc, op_sc, op_ui3x8,
+                             op_op, op_rb, op_cp },
+    op2r_mib64_uimm3:      { op_nm, op_sp, op_rc, op_sc, op_ib3,
+                             op_op, op_rb, op_cp },
+    op2r_fun3_compare:     { op_compare, op_sp, op_rc, op_sc, op_rb },
+    op2r_fun3_logic:       { op_logic, op_sp, op_rc, op_sc, op_rb },
+    op3r:                  { op_nm, op_sp, op_rc, op_sc, op_rb,
+                             op_sc, op_ra },
+};
+
+var cpu_op_format_type = [128]OpForm{
+    Op_break:          op0r_uimm9,
+    Op_j:              op0r_simm9x2,
+    Op_b:              op0r_simm9x2,
+    Op_ibj:            op0r_simm9x64,
+    Op_jalib:          op1r_ib32x2_uimm6_src,
+    Op_jtlib:          op1r_ib32x2_uimm6_dst,
+    Op_lib_i64:        op1r_ib64_uimm6,
+    Op_li_i64:         op1r_simm6,
+    Op_addi_i64:       op1r_simm6,
+    Op_srli_i64:       op1r_uimm6,
+    Op_srai_i64:       op1r_uimm6,
+    Op_slli_i64:       op1r_uimm6,
+    Op_addib_i64:      op2r_ib64_uimm3,
+    Op_load_i64:       op2r_mem64_uimm3x8,
+    Op_loadib_i64:     op2r_mib64_uimm3,
+    Op_cmp_i64:        op2r_fun3_compare,
+    Op_subib_i64:      op2r_ib64_uimm3,
+    Op_store_i64:      op2r_mem64_uimm3x8,
+    Op_storeib_i64:    op2r_mib64_uimm3,
+    Op_logic_i64:      op2r_fun3_logic,
+    Op_pin_i64:        op3r,
+    Op_and_i64:        op3r,
+    Op_or_i64:         op3r,
+    Op_xor_i64:        op3r,
+    Op_sub_i64:        op3r,
+    Op_srl_i64:        op3r,
+    Op_sra_i64:        op3r,
+    Op_sll_i64:        op3r,
+    Op_add_i64:        op3r,
+    Op_mul_i64:        op3r,
+    Op_div_i64:        op3r,
+    Op_illegal:        op0r_uimm9,
+};
+
+func CPU_disasm(inst, c uint64) string {
+    var op Opcode = Opcode(opc(inst)<<2)
+    var arr [10]OpaFn = cpu_op_format_args[cpu_op_format_type[op]]
+    var sb strings.Builder
+    for i := 0; i < len(arr) && arr[i] != nil; i++ {
+        sb.WriteString(arr[i](inst))
+    }
+    return sb.String()
+}
 
 /*
  * cpu instruction encoding
@@ -639,45 +697,6 @@ func CPU_exec(cpu *CPUState, inst uint64) int {
     case Op_illegal >> 2: return CPU_exec_op_illegal(cpu, inst)
     }
     return -1
-}
-
-
-func CPU_disasm(i, c uint64) string {
-    switch Opcode(opc(i)) {
-    case Op_break >> 2: return CPU_disasm_op_break(i, c)
-    case Op_j >> 2: return CPU_disasm_op_j(i, c)
-    case Op_b >> 2: return CPU_disasm_op_b(i, c)
-    case Op_ibj >> 2: return CPU_disasm_op_ibj(i, c)
-    case Op_jalib >> 2: return CPU_disasm_op_jalib(i, c)
-    case Op_jtlib >> 2: return CPU_disasm_op_jtlib(i, c)
-    case Op_lib_i64 >> 2: return CPU_disasm_op_lib_i64(i, c)
-    case Op_li_i64 >> 2: return CPU_disasm_op_li_i64(i, c)
-    case Op_addi_i64 >> 2: return CPU_disasm_op_addi_i64(i, c)
-    case Op_srli_i64 >> 2: return CPU_disasm_op_srli_i64(i, c)
-    case Op_srai_i64 >> 2: return CPU_disasm_op_srai_i64(i, c)
-    case Op_slli_i64 >> 2: return CPU_disasm_op_slli_i64(i, c)
-    case Op_addib_i64 >> 2: return CPU_disasm_op_addib_i64(i, c)
-    case Op_load_i64 >> 2: return CPU_disasm_op_load_i64(i, c)
-    case Op_loadib_i64 >> 2: return CPU_disasm_op_loadib_i64(i, c)
-    case Op_cmp_i64 >> 2: return CPU_disasm_op_cmp_i64(i, c)
-    case Op_subib_i64 >> 2: return CPU_disasm_op_subib_i64(i, c)
-    case Op_store_i64 >> 2: return CPU_disasm_op_store_i64(i, c)
-    case Op_storeib_i64 >> 2: return CPU_disasm_op_storeib_i64(i, c)
-    case Op_logic_i64 >> 2: return CPU_disasm_op_logic_i64(i, c)
-    case Op_pin_i64 >> 2: return CPU_disasm_op_pin_i64(i, c)
-    case Op_and_i64 >> 2: return CPU_disasm_op_and_i64(i, c)
-    case Op_or_i64 >> 2: return CPU_disasm_op_or_i64(i, c)
-    case Op_xor_i64 >> 2: return CPU_disasm_op_xor_i64(i, c)
-    case Op_sub_i64 >> 2: return CPU_disasm_op_sub_i64(i, c)
-    case Op_srl_i64 >> 2: return CPU_disasm_op_srl_i64(i, c)
-    case Op_sra_i64 >> 2: return CPU_disasm_op_sra_i64(i, c)
-    case Op_sll_i64 >> 2: return CPU_disasm_op_sll_i64(i, c)
-    case Op_add_i64 >> 2: return CPU_disasm_op_add_i64(i, c)
-    case Op_mul_i64 >> 2: return CPU_disasm_op_mul_i64(i, c)
-    case Op_div_i64 >> 2: return CPU_disasm_op_div_i64(i, c)
-    case Op_illegal >> 2: return CPU_disasm_op_illegal(i, c)
-    }
-    return "unknown"
 }
 
 /*
