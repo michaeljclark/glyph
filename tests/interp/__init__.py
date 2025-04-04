@@ -67,6 +67,7 @@ class Fun3Compare(Enum):
     compare_ne      = 0b011
     compare_ltu     = 0b100
     compare_geu     = 0b101
+    compare_mov     = 0b110
 
 #
 # logic op fun3
@@ -80,7 +81,6 @@ class Fun3Logic(Enum):
     logic_ctz       = 0b100
     logic_clz       = 0b101
     logic_ctpop     = 0b110
-    logic_cmov      = 0b111
 
 #
 # cpu state
@@ -297,6 +297,9 @@ def cpu_exec_op_cmp_i64(cpu,inst):
         cpu.flag = cpu.r[rc(inst)] < cpu.r[rb(inst)]
     elif fun == Fun3Compare.compare_geu:
         cpu.flag = cpu.r[rc(inst)] >= cpu.r[rb(inst)]
+    elif fun == Fun3Compare.compare_mov:
+        if cpu.flag:
+            cpu.r[rc(inst)] = cpu.r[rb(inst)]
     return 2
 def cpu_exec_op_subib_i64(cpu,inst):
     tmp = cpu.r[rb(inst)] - cpu_const_i64(cpu, uimm3(inst))
@@ -326,9 +329,6 @@ def cpu_exec_op_logic_i64(cpu,inst):
         cpu.r[rc(inst)] = clz(64, cpu.r[rb(inst)])
     elif fun == Fun3Logic.logic_ctpop:
         cpu.r[rc(inst)] = ctpop(64, cpu.r[rb(inst)])
-    elif fun == Fun3Logic.logic_cmov:
-        if cpu.flag:
-            cpu.r[rc(inst)] = cpu.r[rb(inst)]
     return 2
 def cpu_exec_op_pin_i64(cpu,inst):
     rpc = cpu.pc - cpu.r[ra(inst)] + 2
@@ -467,6 +467,7 @@ cpu_fun3_compare_str = {
     Fun3Compare.compare_ne:   "cmp.ne.i64",
     Fun3Compare.compare_ltu:  "cmp.ltu.i64",
     Fun3Compare.compare_geu:  "cmp.geu.i64",
+    Fun3Compare.compare_mov:  "cmov.i64",
 }
 
 cpu_fun3_logic_str = {
@@ -477,7 +478,6 @@ cpu_fun3_logic_str = {
     Fun3Logic.logic_ctz:      "ctz.i64",
     Fun3Logic.logic_clz:      "clz.i64",
     Fun3Logic.logic_ctpop:    "ctpop.i64",
-    Fun3Logic.logic_cmov:     "cmov.i64",
 }
 
 cpu_op_format_args = {
@@ -595,6 +595,8 @@ def cpu_encode_op_cmp_ltu_i64(rc, rb):
     return op2ri3_enc(Opcode.op_cmp_i64, rc, rb, Fun3Compare.compare_ltu.value)
 def cpu_encode_op_cmp_geu_i64(rc, rb):
     return op2ri3_enc(Opcode.op_cmp_i64, rc, rb, Fun3Compare.compare_geu.value)
+def cpu_encode_op_cmov_i64(rc, rb):
+    return op2ri3_enc(Opcode.op_cmp_i64, rc, rb, Fun3Compare.compare_mov.value)
 def cpu_encode_op_subib_i64(rc, rb, ibimm3):
     return op2ri3_enc(Opcode.op_subib_i64, rc, rb, ibimm3)
 def cpu_encode_op_store_i64(rc, rb, imm3):
@@ -615,8 +617,6 @@ def cpu_encode_op_clz_i64(rc, rb):
     return op2ri3_enc(Opcode.op_logic_i64, rc, rb, Fun3Logic.logic_clz.value)
 def cpu_encode_op_ctpop_i64(rc, rb):
     return op2ri3_enc(Opcode.op_logic_i64, rc, rb, Fun3Logic.logic_ctpop.value)
-def cpu_encode_op_cmov_i64(rc, rb):
-    return op2ri3_enc(Opcode.op_logic_i64, rc, rb, Fun3Logic.logic_cmov.value)
 def cpu_encode_op_pin_i64(rc, rb, ra):
     return op3ri0_enc(Opcode.op_pin_i64, rc, rb, ra)
 def cpu_encode_op_and_i64(rc, rb, ra):

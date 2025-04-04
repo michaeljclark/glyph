@@ -1002,26 +1002,30 @@ result in the \emph{rc} register.
 \end{Verbatim}
 
 \needspace{8\baselineskip}
-\subsection{cmp.i64}
+\subsection{compare.i64}
 \insrcrbimmthree{rc}{rb}{uimm}{01111}{00}{\textbf{cmp.i64} rc, rb, fun3}
 \\
-the \emph{cmp} instruction performs a comparison between the value
-in \emph{rb} and \emph{rc} then saves the result to the \emph{flag}
-register. the type of comparsion in \emph{fun3} can be one of:
-\emph{0} \textrightarrow \emph{less than},
-\emph{1} \textrightarrow \emph{greather than or equal},
+the \emph{compare} instruction performs a comparison between the value in
+\emph{rb} and \emph{rc} then saves the result to the \emph{flag} register.
+the \emph{compare} opcode is also used to perform conditional move whereby
+the \emph{rb} register is copied into the \emph{rc} if the \emph{flag}
+register is set. the type of comparsion in \emph{fun3} can be one of:
+\emph{0} \textrightarrow \emph{less than (signed)},
+\emph{1} \textrightarrow \emph{greather or equal (signed)},
 \emph{2} \textrightarrow \emph{equal},
 \emph{3} \textrightarrow \emph{not equal},
-\emph{4} \textrightarrow \emph{less than (unsigned)}, or
-\emph{5} \textrightarrow \emph{greater than or equal (unsigned)}.
+\emph{4} \textrightarrow \emph{less than (unsigned)},
+\emph{5} \textrightarrow \emph{greater or equal (unsigned)}, or
+\emph{6} \textrightarrow \emph{conditional move}.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     match fun3
-    | le  -> flag = (i64)r[rc] <  (i64)r[rb]
+    | lt  -> flag = (i64)r[rc] <  (i64)r[rb]
     | ge  -> flag = (i64)r[rc] >= (i64)r[rb]
     | eq  -> flag =      r[rc] =       r[rb]
     | ne  -> flag =      r[rc] !=      r[rb]
-    | leu -> flag = (u64)r[rc] <  (u64)r[rb]
+    | ltu -> flag = (u64)r[rc] <  (u64)r[rb]
     | geu -> flag = (u64)r[rc] >= (u64)r[rb]
+    | mov -> if (flag) r[rc] = r[rb]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1070,9 +1074,8 @@ register. the type of logic operations in \emph{fun3} can be one of:
 \emph{2} \textrightarrow \emph{negate},
 \emph{3} \textrightarrow \emph{bswap},
 \emph{4} \textrightarrow \emph{count trailing zeros},
-\emph{5} \textrightarrow \emph{count leading zeros},
-\emph{6} \textrightarrow \emph{count population}, or
-\emph{7} \textrightarrow \emph{conditional move}.
+\emph{5} \textrightarrow \emph{count leading zeros}, or
+\emph{6} \textrightarrow \emph{count population}.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     match fun3
     | mov   -> r[rc] = r[rb]
@@ -1082,7 +1085,6 @@ register. the type of logic operations in \emph{fun3} can be one of:
     | ctz   -> r[rc] = ctz(r[rb])
     | clz   -> r[rc] = clz(r[rb])
     | ctpop -> r[rc] = ctpop(r[rb])
-    | cmov  -> if (flag) r[rc] = r[rb]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1323,7 +1325,7 @@ the \emph{illegal} instruction causes an illegal instruction trap.
 \ainsrcrbimmthree{12}{rc}{rb}{uimm}{01100}{00}{\textbf{addib.i64} rc, rb, ib(uimm3*8)}
 \ainsrcrbimmthree{13}{rc}{rb}{uimm}{01101}{00}{\textbf{load.i64} rc, (uimm3*8)(rb)}
 \ainsrcrbimmthree{14}{rc}{rb}{uimm}{01110}{00}{\textbf{loadib.i64} rc, ib(uimm3*8)(rb)}
-\ainsrcrbimmthree{15}{rc}{rb}{uimm}{01111}{00}{\textbf{cmp.i64} rc, rb, fun3}
+\ainsrcrbimmthree{15}{rc}{rb}{uimm}{01111}{00}{\textbf{compare.i64} rc, rb, fun3}
 \ainsrcrbimmthree{16}{rc}{rb}{uimm}{10000}{00}{\textbf{subib.i64} rc, rb, ib(uimm3*8)}
 \ainsrcrbimmthree{17}{rc}{rb}{uimm}{10001}{00}{\textbf{store.i64} rc, (uimm3*8)(rb)}
 \ainsrcrbimmthree{18}{rc}{rb}{uimm}{10010}{00}{\textbf{storeib.i64} rc, ib(uimm3*8)(rb)}
