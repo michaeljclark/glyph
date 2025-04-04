@@ -64,11 +64,11 @@ this list outlines instructions, opcodes, and descriptions used in the
 | 00 | break        | op0r_imm9_16 | 00000 | **break** uimm9                             |
 | 01 | j            | op0r_imm9_16 | 00001 | **jump** simm9*2+2                          |
 | 02 | b            | op0r_imm9_16 | 00010 | **branch** simm9*2+2                        |
-| 03 | ibj          | op0r_imm9_16 | 00100 | **ib-jump** simm9*64                        |
-| 04 | jalib        | op1r_imm6_16 | 00101 | **jump-and-link-ib** rc,ib(uimm6*8)         |
+| 03 | ibj          | op0r_imm9_16 | 00011 | **ib-jump** simm9*64                        |
+| 04 | jalib        | op1r_imm6_16 | 00100 | **jump-and-link-ib** rc,ib(uimm6*8)         |
 |    |              |              |       |   rc = ib32x2(uimm6*8);                     |
 |    |              |              |       |   (pc,ib) += i32x2(rc) + i32x2(2,0);        |
-| 05 | jtlib        | op1r_imm6_16 | 00110 | **jump-to-link-ib** rc,ib(uimm6*8)          |
+| 05 | jtlib        | op1r_imm6_16 | 00101 | **jump-to-link-ib** rc,ib(uimm6*8)          |
 |    |              |              |       |   tmp = ib32x2(uimm6*8) - i32x2(rc);        |
 |    |              |              |       |   (pc,ib) += i32x2(tmp);                    |
 | 06 | lib.i64      | op1r_imm6_16 | 00110 | **load-ib** rc,ib(uimm6*8)                  |
