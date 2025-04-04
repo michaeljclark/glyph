@@ -93,10 +93,60 @@ enum
 };
 
 /*
+ * op arg
+ */
+
+enum
+{
+    op_none,
+    op_nm,
+    op_compare,
+    op_logic,
+    op_ib3,
+    op_ib6,
+    op_ui3x8,
+    op_ui6,
+    op_ui9,
+    op_si6,
+    op_si9x2,
+    op_si9x64,
+    op_rc,
+    op_rb,
+    op_ra,
+    op_sp,
+    op_sc,
+    op_op,
+    op_cp,
+};
+
+/*
+ * op form
+ */
+
+enum
+{
+    op0r_uimm9,
+    op0r_simm9x2,
+    op0r_simm9x64,
+    op1r_ib32x2_uimm6_src,
+    op1r_ib32x2_uimm6_dst,
+    op1r_ib64_uimm6,
+    op1r_simm6,
+    op1r_uimm6,
+    op2r_ib64_uimm3,
+    op2r_mem64_uimm3x8,
+    op2r_mib64_uimm3,
+    op2r_fun3_compare,
+    op2r_fun3_logic,
+    op3r,
+};
+
+/*
  * forward decls
  */
 
 typedef unsigned int uint;
+typedef unsigned char uchar;
 
 typedef signed char i8;
 typedef signed short i16;
@@ -443,84 +493,66 @@ __glyph_func__ int cpu_exec_op_illegal(cpu_state *cpu, u64 inst)
  * cpu disassembly
  */
 
-typedef int (*op_fn)(char *buf, size_t len, u64 inst);
+typedef int (*op_out_fn)(char *buf, size_t len, u64 inst);
 
 static const char* cpu_opcode_str[32];
 static const char* cpu_fun3_compare_str[8];
 static const char* cpu_fun3_logic_str[8];
 
-__glyph_func__ int op_nm(char *buf, size_t len, u64 inst) {
+__glyph_func__ int op_out_nm(char *buf, size_t len, u64 inst) {
     return snprintf(buf, len, "%s", cpu_opcode_str[opc(inst)]);
 }
-__glyph_func__ int op_compare(char *buf, size_t len, u64 inst) {
+__glyph_func__ int op_out_compare(char *buf, size_t len, u64 inst) {
     return snprintf(buf, len, "%s", cpu_fun3_compare_str[uimm3(inst)]);
 }
-__glyph_func__ int op_logic(char *buf, size_t len, u64 inst) {
+__glyph_func__ int op_out_logic(char *buf, size_t len, u64 inst) {
     return snprintf(buf, len, "%s", cpu_fun3_logic_str[uimm3(inst)]);
 }
-__glyph_func__ int op_ib3(char *buf, size_t len, u64 inst) {
+__glyph_func__ int op_out_ib3(char *buf, size_t len, u64 inst) {
     return snprintf(buf, len, "ib(%llu)", uimm3(inst));
 }
-__glyph_func__ int op_ib6(char *buf, size_t len, u64 inst) {
+__glyph_func__ int op_out_ib6(char *buf, size_t len, u64 inst) {
     return snprintf(buf, len, "ib(%llu)", uimm6(inst));
 }
-__glyph_func__ int op_ui3x8(char *buf, size_t len, u64 inst) {
+__glyph_func__ int op_out_ui3x8(char *buf, size_t len, u64 inst) {
     return snprintf(buf, len, "%llu", uimm3(inst) << 3);
 }
-__glyph_func__ int op_ui6(char *buf, size_t len, u64 inst) {
+__glyph_func__ int op_out_ui6(char *buf, size_t len, u64 inst) {
     return snprintf(buf, len, "%llu", uimm6(inst));
 }
-__glyph_func__ int op_ui9(char *buf, size_t len, u64 inst) {
+__glyph_func__ int op_out_ui9(char *buf, size_t len, u64 inst) {
     return snprintf(buf, len, "%llu", uimm9(inst));
 }
-__glyph_func__ int op_si6(char *buf, size_t len, u64 inst) {
+__glyph_func__ int op_out_si6(char *buf, size_t len, u64 inst) {
     return snprintf(buf, len, "%lld", simm6(inst));
 }
-__glyph_func__ int op_si9x2(char *buf, size_t len, u64 inst) {
+__glyph_func__ int op_out_si9x2(char *buf, size_t len, u64 inst) {
     return snprintf(buf, len, "%lld", simm9(inst) << 1);
 }
-__glyph_func__ int op_si9x64(char *buf, size_t len, u64 inst) {
+__glyph_func__ int op_out_si9x64(char *buf, size_t len, u64 inst) {
     return snprintf(buf, len, "%lld", simm9(inst) << 6);
 }
-__glyph_func__ int op_rc(char *buf, size_t len, u64 inst) {
+__glyph_func__ int op_out_rc(char *buf, size_t len, u64 inst) {
     return snprintf(buf, len, "r%d", rc(inst));
 }
-__glyph_func__ int op_rb(char *buf, size_t len, u64 inst) {
+__glyph_func__ int op_out_rb(char *buf, size_t len, u64 inst) {
     return snprintf(buf, len, "r%d", rb(inst));
 }
-__glyph_func__ int op_ra(char *buf, size_t len, u64 inst) {
+__glyph_func__ int op_out_ra(char *buf, size_t len, u64 inst) {
     return snprintf(buf, len, "r%d", ra(inst));
 }
-__glyph_func__ int op_sp(char *buf, size_t len, u64 inst) {
+__glyph_func__ int op_out_sp(char *buf, size_t len, u64 inst) {
     return snprintf(buf, len, " ");
 }
-__glyph_func__ int op_sc(char *buf, size_t len, u64 inst) {
+__glyph_func__ int op_out_sc(char *buf, size_t len, u64 inst) {
     return snprintf(buf, len, ", ");
 }
-__glyph_func__ int op_op(char *buf, size_t len, u64 inst) {
+__glyph_func__ int op_out_op(char *buf, size_t len, u64 inst) {
     return snprintf(buf, len, "(");
 }
-__glyph_func__ int op_cp(char *buf, size_t len, u64 inst) {
+__glyph_func__ int op_out_cp(char *buf, size_t len, u64 inst) {
     return snprintf(buf, len, ")");
 }
-
-enum
-{
-    op0r_uimm9,
-    op0r_simm9x2,
-    op0r_simm9x64,
-    op1r_ib32x2_uimm6_src,
-    op1r_ib32x2_uimm6_dst,
-    op1r_ib64_uimm6,
-    op1r_simm6,
-    op1r_uimm6,
-    op2r_ib64_uimm3,
-    op2r_mem64_uimm3x8,
-    op2r_mib64_uimm3,
-    op2r_fun3_compare,
-    op2r_fun3_logic,
-    op3r,
-};
 
 static const char* cpu_opcode_str[32] =
 {
@@ -580,7 +612,29 @@ static const char* cpu_fun3_logic_str[8] =
     [cpu_logic_ctpop]       = "ctpop.i64",
 };
 
-static const op_fn cpu_op_format_args[][10] =
+static const op_out_fn cpu_op_out[] =
+{
+    [op_nm]                 = op_out_nm,
+    [op_compare]            = op_out_compare,
+    [op_logic]              = op_out_logic,
+    [op_ib3]                = op_out_ib3,
+    [op_ib6]                = op_out_ib6,
+    [op_ui3x8]              = op_out_ui3x8,
+    [op_ui6]                = op_out_ui6,
+    [op_ui9]                = op_out_ui9,
+    [op_si6]                = op_out_si6,
+    [op_si9x2]              = op_out_si9x2,
+    [op_si9x64]             = op_out_si9x64,
+    [op_rc]                 = op_out_rc,
+    [op_rb]                 = op_out_rb,
+    [op_ra]                 = op_out_ra,
+    [op_sp]                 = op_out_sp,
+    [op_sc]                 = op_out_sc,
+    [op_op]                 = op_out_op,
+    [op_cp]                 = op_out_cp,
+};
+
+static const uchar cpu_op_args[][10] =
 {
     [op0r_uimm9]            = { op_nm, op_sp, op_ui9 },
     [op0r_simm9x2]          = { op_nm, op_sp, op_si9x2 },
@@ -602,7 +656,7 @@ static const op_fn cpu_op_format_args[][10] =
                                 op_sc, op_ra },
 };
 
-static const int cpu_op_format_type[32] =
+static const uchar cpu_op_type[32] =
 {
     [cpu_op_break]          = op0r_uimm9,
     [cpu_op_j]              = op0r_simm9x2,
@@ -641,9 +695,9 @@ static const int cpu_op_format_type[32] =
 __glyph_func__ int cpu_disasm(char *buf, size_t len, u64 inst, u64 c)
 {
     size_t offset = 0;
-    const op_fn* fn = cpu_op_format_args[cpu_op_format_type[opc(inst)]];
-    while (*fn) {
-        offset += (size_t)(*fn++)(buf + offset, len - offset, inst);
+    const uchar* arg = cpu_op_args[cpu_op_type[opc(inst)]];
+    while (*arg) {
+        offset += (size_t)cpu_op_out[*arg++](buf + offset, len - offset, inst);
     }
     return (int)offset;
 }
