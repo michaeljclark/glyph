@@ -1015,13 +1015,13 @@ register. the type of comparsion in \emph{fun3} can be one of:
 \emph{4} \textrightarrow \emph{less than (unsigned)}, or
 \emph{5} \textrightarrow \emph{greater than or equal (unsigned)}.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    flag = match fun3
-           | le  -> (i64)r[rc] <  (i64)r[rb] 
-           | ge  -> (i64)r[rc] >= (i64)r[rb]
-           | eq  ->      r[rc] =       r[rb]
-           | ne  ->      r[rc] !=      r[rb]
-           | leu -> (u64)r[rc] <  (u64)r[rb]
-           | geu -> (u64)r[rc] >= (u64)r[rb]
+    match fun3
+    | le  -> flag = (i64)r[rc] <  (i64)r[rb]
+    | ge  -> flag = (i64)r[rc] >= (i64)r[rb]
+    | eq  -> flag =      r[rc] =       r[rb]
+    | ne  -> flag =      r[rc] !=      r[rb]
+    | leu -> flag = (u64)r[rc] <  (u64)r[rb]
+    | geu -> flag = (u64)r[rc] >= (u64)r[rb]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
