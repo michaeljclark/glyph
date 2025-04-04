@@ -28,38 +28,38 @@
 
 enum
 {
-    cpu_op_break        = 0b00000 << 2, // op0r_imm9
-    cpu_op_j            = 0b00001 << 2, // op0r_imm9 pcrel9*2
-    cpu_op_b            = 0b00010 << 2, // op0r_imm9 pcrel9*2
-    cpu_op_ibj          = 0b00011 << 2, // op0r_imm9 pcrel9*64
-    cpu_op_jalib        = 0b00100 << 2, // op1r_imm6 ibrel(imm6*8,i32x2)
-    cpu_op_jtlib        = 0b00101 << 2, // op1r_imm6 ibrel(imm6*8,i32x2)
-    cpu_op_lib_i64      = 0b00110 << 2, // op1r_imm6 ibrel(imm6*8,i64)
-    cpu_op_li_i64       = 0b00111 << 2, // op1r_imm6
-    cpu_op_addi_i64     = 0b01000 << 2, // op1r_imm6
-    cpu_op_srli_i64     = 0b01001 << 2, // op2r_imm3
-    cpu_op_srai_i64     = 0b01010 << 2, // op2r_imm3
-    cpu_op_slli_i64     = 0b01011 << 2, // op2r_imm3
-    cpu_op_addib_i64    = 0b01100 << 2, // op2r_imm3
-    cpu_op_load_i64     = 0b01101 << 2, // op2r_imm3
-    cpu_op_loadib_i64   = 0b01110 << 2, // op2r_imm3
-    cpu_op_cmp_i64      = 0b01111 << 2, // op2r_fun3
-    cpu_op_subib_i64    = 0b10000 << 2, // op2r_imm3
-    cpu_op_store_i64    = 0b10001 << 2, // op2r_imm3
-    cpu_op_storeib_i64  = 0b10010 << 2, // op2r_imm3
-    cpu_op_logic_i64    = 0b10011 << 2, // op2r_fun3
-    cpu_op_pin_i64      = 0b10100 << 2, // op3r
-    cpu_op_and_i64      = 0b10101 << 2, // op3r
-    cpu_op_or_i64       = 0b10110 << 2, // op3r
-    cpu_op_xor_i64      = 0b10111 << 2, // op3r
-    cpu_op_sub_i64      = 0b11000 << 2, // op3r
-    cpu_op_srl_i64      = 0b11001 << 2, // op3r
-    cpu_op_sra_i64      = 0b11010 << 2, // op3r
-    cpu_op_sll_i64      = 0b11011 << 2, // op3r
-    cpu_op_add_i64      = 0b11100 << 2, // op3r
-    cpu_op_mul_i64      = 0b11101 << 2, // op3r
-    cpu_op_div_i64      = 0b11110 << 2, // op3r
-    cpu_op_illegal      = 0b11111 << 2, // op0r_imm9
+    cpu_op_break        = 0b00000, // op0r_imm9
+    cpu_op_j            = 0b00001, // op0r_imm9 pcrel9*2
+    cpu_op_b            = 0b00010, // op0r_imm9 pcrel9*2
+    cpu_op_ibj          = 0b00011, // op0r_imm9 pcrel9*64
+    cpu_op_jalib        = 0b00100, // op1r_imm6 ibrel(imm6*8,i32x2)
+    cpu_op_jtlib        = 0b00101, // op1r_imm6 ibrel(imm6*8,i32x2)
+    cpu_op_lib_i64      = 0b00110, // op1r_imm6 ibrel(imm6*8,i64)
+    cpu_op_li_i64       = 0b00111, // op1r_imm6
+    cpu_op_addi_i64     = 0b01000, // op1r_imm6
+    cpu_op_srli_i64     = 0b01001, // op2r_imm3
+    cpu_op_srai_i64     = 0b01010, // op2r_imm3
+    cpu_op_slli_i64     = 0b01011, // op2r_imm3
+    cpu_op_addib_i64    = 0b01100, // op2r_imm3
+    cpu_op_load_i64     = 0b01101, // op2r_imm3
+    cpu_op_loadib_i64   = 0b01110, // op2r_imm3
+    cpu_op_cmp_i64      = 0b01111, // op2r_fun3
+    cpu_op_subib_i64    = 0b10000, // op2r_imm3
+    cpu_op_store_i64    = 0b10001, // op2r_imm3
+    cpu_op_storeib_i64  = 0b10010, // op2r_imm3
+    cpu_op_logic_i64    = 0b10011, // op2r_fun3
+    cpu_op_pin_i64      = 0b10100, // op3r
+    cpu_op_and_i64      = 0b10101, // op3r
+    cpu_op_or_i64       = 0b10110, // op3r
+    cpu_op_xor_i64      = 0b10111, // op3r
+    cpu_op_sub_i64      = 0b11000, // op3r
+    cpu_op_srl_i64      = 0b11001, // op3r
+    cpu_op_sra_i64      = 0b11010, // op3r
+    cpu_op_sll_i64      = 0b11011, // op3r
+    cpu_op_add_i64      = 0b11100, // op3r
+    cpu_op_mul_i64      = 0b11101, // op3r
+    cpu_op_div_i64      = 0b11110, // op3r
+    cpu_op_illegal      = 0b11111, // op0r_imm9
 };
 
 /*
@@ -439,12 +439,12 @@ __glyph_func__ int cpu_exec_op_illegal(cpu_state *cpu, u64 inst)
 
 typedef int (*op_fn)(char *buf, size_t len, u64 inst);
 
-static const char* cpu_opcode_str[128];
+static const char* cpu_opcode_str[32];
 static const char* cpu_fun3_compare_str[8];
 static const char* cpu_fun3_logic_str[8];
 
 __glyph_func__ int op_nm(char *buf, size_t len, u64 inst) {
-    return snprintf(buf, len, "%s", cpu_opcode_str[opc(inst)<<2]);
+    return snprintf(buf, len, "%s", cpu_opcode_str[opc(inst)]);
 }
 __glyph_func__ int op_compare(char *buf, size_t len, u64 inst) {
     return snprintf(buf, len, "%s", cpu_fun3_compare_str[uimm3(inst)]);
@@ -516,7 +516,7 @@ enum
     op3r,
 };
 
-static const char* cpu_opcode_str[] =
+static const char* cpu_opcode_str[32] =
 {
     [cpu_op_break]          = "break",
     [cpu_op_j]              = "j",
@@ -595,7 +595,7 @@ static const op_fn cpu_op_format_args[][10] =
                                 op_sc, op_ra },
 };
 
-static const int cpu_op_format_type[] =
+static const int cpu_op_format_type[32] =
 {
     [cpu_op_break]          = op0r_uimm9,
     [cpu_op_j]              = op0r_simm9x2,
@@ -634,7 +634,7 @@ static const int cpu_op_format_type[] =
 __glyph_func__ int cpu_disasm(char *buf, size_t len, u64 inst, u64 c)
 {
     size_t offset = 0;
-    const op_fn* fn = cpu_op_format_args[cpu_op_format_type[opc(inst)<<2]];
+    const op_fn* fn = cpu_op_format_args[cpu_op_format_type[opc(inst)]];
     while (*fn) {
         offset += (size_t)(*fn++)(buf + offset, len - offset, inst);
     }
@@ -645,133 +645,114 @@ __glyph_func__ int cpu_disasm(char *buf, size_t len, u64 inst, u64 c)
  * cpu instruction encoding
  */
 
-__glyph_func__ u16 cpu_encode_op_break(int imm9)
-{
-    return (u16)(cpu_op_break | ((imm9 & 511)<<7));
+__glyph_inline__ u16 op0ri9_enc(int opc, int imm9) {
+    return (u16)((opc << 2) | ((imm9 & 511)<<7));
 }
-__glyph_func__ u16 cpu_encode_op_j(int pcrel9)
-{
-    return (u16)(cpu_op_j | (((pcrel9>>1) & 511)<<7));
+__glyph_inline__ u16 op1ri6_enc(int opc, int rc, int imm6) {
+    return (u16)((opc << 2) | ((imm6 & 63)<<7) | ((rc & 7)<<13));
 }
-__glyph_func__ u16 cpu_encode_op_b(int pcrel9)
-{
-    return (u16)(cpu_op_b | (((pcrel9>>1) & 511)<<7));
+__glyph_inline__ u16 op2ri3_enc(int opc, int rc, int rb, int imm3) {
+    return (u16)((opc << 2) | ((imm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
 }
-__glyph_func__ u16 cpu_encode_op_ibj(int pcrel9)
-{
-    return (u16)(cpu_op_ibj | (((pcrel9>>6) & 511)<<7));
+__glyph_inline__ u16 op3ri0_enc(int opc, int rc, int rb, int ra) {
+    return (u16)((opc << 2) | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
 }
-__glyph_func__ u16 cpu_encode_op_jalib(int rc, int ibrel6)
-{
-    return (u16)(cpu_op_jalib | ((ibrel6 & 63)<<7) | ((rc & 7)<<13));
+
+__glyph_func__ u16 cpu_encode_op_break(int imm9) {
+    return op0ri9_enc(cpu_op_break, imm9);
 }
-__glyph_func__ u16 cpu_encode_op_jtlib(int rc, int ibrel6)
-{
-    return (u16)(cpu_op_jtlib | ((ibrel6 & 63)<<7) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_j(int pcrel9) {
+    return op0ri9_enc(cpu_op_j, pcrel9 >> 1);
 }
-__glyph_func__ u16 cpu_encode_op_lib_i64(int rc, int ibrel6)
-{
-    return (u16)(cpu_op_lib_i64 | ((ibrel6 & 63)<<7) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_b(int pcrel9) {
+    return op0ri9_enc(cpu_op_b, pcrel9 >> 1);
 }
-__glyph_func__ u16 cpu_encode_op_li_i64(int rc, int imm6)
-{
-    return (u16)(cpu_op_li_i64 | ((imm6 & 63)<<7) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_ibj(int pcrel9) {
+    return op0ri9_enc(cpu_op_ibj, pcrel9 >> 6);
 }
-__glyph_func__ u16 cpu_encode_op_addi_i64(int rc, int imm6)
-{
-    return (u16)(cpu_op_addi_i64 | ((imm6 & 63)<<7) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_jalib(int rc, int ibrel6) {
+    return op1ri6_enc(cpu_op_jalib, rc, ibrel6);
 }
-__glyph_func__ u16 cpu_encode_op_srli_i64(int rc, int imm6)
-{
-    return (u16)(cpu_op_srli_i64 | ((imm6 & 63)<<7) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_jtlib(int rc, int ibrel6) {
+    return op1ri6_enc(cpu_op_jtlib, rc, ibrel6);
 }
-__glyph_func__ u16 cpu_encode_op_srai_i64(int rc, int imm6)
-{
-    return (u16)(cpu_op_srai_i64 | ((imm6 & 63)<<7) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_lib_i64(int rc, int ibrel6) {
+    return op1ri6_enc(cpu_op_lib_i64, rc, ibrel6);
 }
-__glyph_func__ u16 cpu_encode_op_slli_i64(int rc, int imm6)
-{
-    return (u16)(cpu_op_slli_i64 | ((imm6 & 63)<<7) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_li_i64(int rc, int imm6) {
+    return op1ri6_enc(cpu_op_li_i64, rc, imm6);
 }
-__glyph_func__ u16 cpu_encode_op_addib_i64(int rc, int rb, int ibimm3)
-{
-    return (u16)(cpu_op_addib_i64 | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_addi_i64(int rc, int imm6) {
+    return op1ri6_enc(cpu_op_addi_i64, rc, imm6);
 }
-__glyph_func__ u16 cpu_encode_op_load_i64(int rc, int rb, int imm3)
-{
-    return (u16)(cpu_op_load_i64 | (((imm3>>3) & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_srli_i64(int rc, int imm6) {
+    return op1ri6_enc(cpu_op_srli_i64, rc, imm6);
 }
-__glyph_func__ u16 cpu_encode_op_loadib_i64(int rc, int rb, int ibimm3)
-{
-    return (u16)(cpu_op_loadib_i64 | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_srai_i64(int rc, int imm6) {
+    return op1ri6_enc(cpu_op_srai_i64, rc, imm6);
 }
-__glyph_func__ u16 cpu_encode_op_cmp_i64(int rc, int rb, int fun3)
-{
-    return (u16)(cpu_op_cmp_i64 | ((fun3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_slli_i64(int rc, int imm6) {
+    return op1ri6_enc(cpu_op_slli_i64, rc, imm6);
 }
-__glyph_func__ u16 cpu_encode_op_subib_i64(int rc, int rb, int ibimm3)
-{
-    return (u16)(cpu_op_subib_i64 | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_addib_i64(int rc, int rb, int ibimm3) {
+    return op2ri3_enc(cpu_op_addib_i64, rc, rb, ibimm3);
 }
-__glyph_func__ u16 cpu_encode_op_store_i64(int rc, int rb, int imm3)
-{
-    return (u16)(cpu_op_store_i64 | (((imm3>>3) & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_load_i64(int rc, int rb, int imm3) {
+    return op2ri3_enc(cpu_op_load_i64, rc, rb, imm3 >> 3);
 }
-__glyph_func__ u16 cpu_encode_op_storeib_i64(int rc, int rb, int ibimm3)
-{
-    return (u16)(cpu_op_storeib_i64 | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_loadib_i64(int rc, int rb, int ibimm3) {
+    return op2ri3_enc(cpu_op_loadib_i64, rc, rb, ibimm3);
 }
-__glyph_func__ u16 cpu_encode_op_logic_i64(int rc, int rb, int fun3)
-{
-    return (u16)(cpu_op_logic_i64 | ((fun3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_cmp_i64(int rc, int rb, int fun3) {
+    return op2ri3_enc(cpu_op_cmp_i64, rc, rb, fun3);
 }
-__glyph_func__ u16 cpu_encode_op_pin_i64(int rc, int rb, int ra)
-{
-    return (u16)(cpu_op_pin_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_subib_i64(int rc, int rb, int ibimm3) {
+    return op2ri3_enc(cpu_op_subib_i64, rc, rb, ibimm3);
 }
-__glyph_func__ u16 cpu_encode_op_and_i64(int rc, int rb, int ra)
-{
-    return (u16)(cpu_op_and_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_store_i64(int rc, int rb, int imm3) {
+    return op2ri3_enc(cpu_op_store_i64, rc, rb, imm3 >> 3);
 }
-__glyph_func__ u16 cpu_encode_op_or_i64(int rc, int rb, int ra)
-{
-    return (u16)(cpu_op_or_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_storeib_i64(int rc, int rb, int ibimm3) {
+    return op2ri3_enc(cpu_op_storeib_i64, rc, rb, ibimm3);
 }
-__glyph_func__ u16 cpu_encode_op_xor_i64(int rc, int rb, int ra)
-{
-    return (u16)(cpu_op_xor_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_logic_i64(int rc, int rb, int fun3) {
+    return op2ri3_enc(cpu_op_logic_i64, rc, rb, fun3);
 }
-__glyph_func__ u16 cpu_encode_op_sub_i64(int rc, int rb, int ra)
-{
-    return (u16)(cpu_op_sub_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_pin_i64(int rc, int rb, int ra) {
+    return op3ri0_enc(cpu_op_pin_i64, rc, rb, ra);
 }
-__glyph_func__ u16 cpu_encode_op_srl_i64(int rc, int rb, int ra)
-{
-    return (u16)(cpu_op_srl_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_and_i64(int rc, int rb, int ra) {
+    return op3ri0_enc(cpu_op_and_i64, rc, rb, ra);
 }
-__glyph_func__ u16 cpu_encode_op_sra_i64(int rc, int rb, int ra)
-{
-    return (u16)(cpu_op_sra_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_or_i64(int rc, int rb, int ra) {
+    return op3ri0_enc(cpu_op_or_i64, rc, rb, ra);
 }
-__glyph_func__ u16 cpu_encode_op_sll_i64(int rc, int rb, int ra)
-{
-    return (u16)(cpu_op_sll_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_xor_i64(int rc, int rb, int ra) {
+    return op3ri0_enc(cpu_op_xor_i64, rc, rb, ra);
 }
-__glyph_func__ u16 cpu_encode_op_add_i64(int rc, int rb, int ra)
-{
-    return (u16)(cpu_op_add_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_sub_i64(int rc, int rb, int ra) {
+    return op3ri0_enc(cpu_op_sub_i64, rc, rb, ra);
 }
-__glyph_func__ u16 cpu_encode_op_mul_i64(int rc, int rb, int ra)
-{
-    return (u16)(cpu_op_mul_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_srl_i64(int rc, int rb, int ra) {
+    return op3ri0_enc(cpu_op_srl_i64, rc, rb, ra);
 }
-__glyph_func__ u16 cpu_encode_op_div_i64(int rc, int rb, int ra)
-{
-    return (u16)(cpu_op_div_i64 | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13));
+__glyph_func__ u16 cpu_encode_op_sra_i64(int rc, int rb, int ra) {
+    return op3ri0_enc(cpu_op_sra_i64, rc, rb, ra);
 }
-__glyph_func__ u16 cpu_encode_op_illegal(int imm9)
-{
-    return (u16)(cpu_op_illegal | ((imm9 & 511)<<7));
+__glyph_func__ u16 cpu_encode_op_sll_i64(int rc, int rb, int ra) {
+    return op3ri0_enc(cpu_op_sll_i64, rc, rb, ra);
+}
+__glyph_func__ u16 cpu_encode_op_add_i64(int rc, int rb, int ra) {
+    return op3ri0_enc(cpu_op_add_i64, rc, rb, ra);
+}
+__glyph_func__ u16 cpu_encode_op_mul_i64(int rc, int rb, int ra) {
+    return op3ri0_enc(cpu_op_mul_i64, rc, rb, ra);
+}
+__glyph_func__ u16 cpu_encode_op_div_i64(int rc, int rb, int ra) {
+    return op3ri0_enc(cpu_op_div_i64, rc, rb, ra);
+}
+__glyph_func__ u16 cpu_encode_op_illegal(int imm9) {
+    return op0ri9_enc(cpu_op_illegal, imm9);
 }
 
 /*
@@ -781,38 +762,38 @@ __glyph_func__ u16 cpu_encode_op_illegal(int imm9)
 __glyph_func__ int cpu_exec(cpu_state *cpu, u64 inst)
 {
     switch (opc(inst)) {
-    case cpu_op_break >> 2: return cpu_exec_op_break(cpu, inst);
-    case cpu_op_j >> 2: return cpu_exec_op_j(cpu, inst);
-    case cpu_op_b >> 2: return cpu_exec_op_b(cpu, inst);
-    case cpu_op_ibj >> 2: return cpu_exec_op_ibj(cpu, inst);
-    case cpu_op_jalib >> 2: return cpu_exec_op_jalib(cpu, inst);
-    case cpu_op_jtlib >> 2: return cpu_exec_op_jtlib(cpu, inst);
-    case cpu_op_lib_i64 >> 2: return cpu_exec_op_lib_i64(cpu, inst);
-    case cpu_op_li_i64 >> 2: return cpu_exec_op_li_i64(cpu, inst);
-    case cpu_op_addi_i64 >> 2: return cpu_exec_op_addi_i64(cpu, inst);
-    case cpu_op_srli_i64 >> 2: return cpu_exec_op_srli_i64(cpu, inst);
-    case cpu_op_srai_i64 >> 2: return cpu_exec_op_srai_i64(cpu, inst);
-    case cpu_op_slli_i64 >> 2: return cpu_exec_op_slli_i64(cpu, inst);
-    case cpu_op_addib_i64 >> 2: return cpu_exec_op_addib_i64(cpu, inst);
-    case cpu_op_load_i64 >> 2: return cpu_exec_op_load_i64(cpu, inst);
-    case cpu_op_loadib_i64 >> 2: return cpu_exec_op_loadib_i64(cpu, inst);
-    case cpu_op_cmp_i64 >> 2: return cpu_exec_op_cmp_i64(cpu, inst);
-    case cpu_op_subib_i64 >> 2: return cpu_exec_op_subib_i64(cpu, inst);
-    case cpu_op_store_i64 >> 2: return cpu_exec_op_store_i64(cpu, inst);
-    case cpu_op_storeib_i64 >> 2: return cpu_exec_op_storeib_i64(cpu, inst);
-    case cpu_op_logic_i64 >> 2: return cpu_exec_op_logic_i64(cpu, inst);
-    case cpu_op_pin_i64 >> 2: return cpu_exec_op_pin_i64(cpu, inst);
-    case cpu_op_and_i64 >> 2: return cpu_exec_op_and_i64(cpu, inst);
-    case cpu_op_or_i64 >> 2: return cpu_exec_op_or_i64(cpu, inst);
-    case cpu_op_xor_i64 >> 2: return cpu_exec_op_xor_i64(cpu, inst);
-    case cpu_op_sub_i64 >> 2: return cpu_exec_op_sub_i64(cpu, inst);
-    case cpu_op_srl_i64 >> 2: return cpu_exec_op_srl_i64(cpu, inst);
-    case cpu_op_sra_i64 >> 2: return cpu_exec_op_sra_i64(cpu, inst);
-    case cpu_op_sll_i64 >> 2: return cpu_exec_op_sll_i64(cpu, inst);
-    case cpu_op_add_i64 >> 2: return cpu_exec_op_add_i64(cpu, inst);
-    case cpu_op_mul_i64 >> 2: return cpu_exec_op_mul_i64(cpu, inst);
-    case cpu_op_div_i64 >> 2: return cpu_exec_op_div_i64(cpu, inst);
-    case cpu_op_illegal >> 2: return cpu_exec_op_illegal(cpu, inst);
+    case cpu_op_break: return cpu_exec_op_break(cpu, inst);
+    case cpu_op_j: return cpu_exec_op_j(cpu, inst);
+    case cpu_op_b: return cpu_exec_op_b(cpu, inst);
+    case cpu_op_ibj: return cpu_exec_op_ibj(cpu, inst);
+    case cpu_op_jalib: return cpu_exec_op_jalib(cpu, inst);
+    case cpu_op_jtlib: return cpu_exec_op_jtlib(cpu, inst);
+    case cpu_op_lib_i64: return cpu_exec_op_lib_i64(cpu, inst);
+    case cpu_op_li_i64: return cpu_exec_op_li_i64(cpu, inst);
+    case cpu_op_addi_i64: return cpu_exec_op_addi_i64(cpu, inst);
+    case cpu_op_srli_i64: return cpu_exec_op_srli_i64(cpu, inst);
+    case cpu_op_srai_i64: return cpu_exec_op_srai_i64(cpu, inst);
+    case cpu_op_slli_i64: return cpu_exec_op_slli_i64(cpu, inst);
+    case cpu_op_addib_i64: return cpu_exec_op_addib_i64(cpu, inst);
+    case cpu_op_load_i64: return cpu_exec_op_load_i64(cpu, inst);
+    case cpu_op_loadib_i64: return cpu_exec_op_loadib_i64(cpu, inst);
+    case cpu_op_cmp_i64: return cpu_exec_op_cmp_i64(cpu, inst);
+    case cpu_op_subib_i64: return cpu_exec_op_subib_i64(cpu, inst);
+    case cpu_op_store_i64: return cpu_exec_op_store_i64(cpu, inst);
+    case cpu_op_storeib_i64: return cpu_exec_op_storeib_i64(cpu, inst);
+    case cpu_op_logic_i64: return cpu_exec_op_logic_i64(cpu, inst);
+    case cpu_op_pin_i64: return cpu_exec_op_pin_i64(cpu, inst);
+    case cpu_op_and_i64: return cpu_exec_op_and_i64(cpu, inst);
+    case cpu_op_or_i64: return cpu_exec_op_or_i64(cpu, inst);
+    case cpu_op_xor_i64: return cpu_exec_op_xor_i64(cpu, inst);
+    case cpu_op_sub_i64: return cpu_exec_op_sub_i64(cpu, inst);
+    case cpu_op_srl_i64: return cpu_exec_op_srl_i64(cpu, inst);
+    case cpu_op_sra_i64: return cpu_exec_op_sra_i64(cpu, inst);
+    case cpu_op_sll_i64: return cpu_exec_op_sll_i64(cpu, inst);
+    case cpu_op_add_i64: return cpu_exec_op_add_i64(cpu, inst);
+    case cpu_op_mul_i64: return cpu_exec_op_mul_i64(cpu, inst);
+    case cpu_op_div_i64: return cpu_exec_op_div_i64(cpu, inst);
+    case cpu_op_illegal: return cpu_exec_op_illegal(cpu, inst);
     }
     return -1;
 }

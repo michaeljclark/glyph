@@ -23,38 +23,38 @@ from enum import Enum
 #
 
 class Opcode(Enum):
-    op_break        = 0b00000 << 2 # op0r_imm9
-    op_j            = 0b00001 << 2 # op0r_imm9 pcrel9*2
-    op_b            = 0b00010 << 2 # op0r_imm9 pcrel9*2
-    op_ibj          = 0b00011 << 2 # op0r_imm9 pcrel9*64
-    op_jalib        = 0b00100 << 2 # op1r_imm6 ibrel(imm6*8,i32x2)
-    op_jtlib        = 0b00101 << 2 # op1r_imm6 ibrel(imm6*8,i32x2)
-    op_lib_i64      = 0b00110 << 2 # op1r_imm6 ibrel(imm6*8,i64)
-    op_li_i64       = 0b00111 << 2 # op1r_imm6
-    op_addi_i64     = 0b01000 << 2 # op1r_imm6
-    op_srli_i64     = 0b01001 << 2 # op2r_imm3
-    op_srai_i64     = 0b01010 << 2 # op2r_imm3
-    op_slli_i64     = 0b01011 << 2 # op2r_imm3
-    op_addib_i64    = 0b01100 << 2 # op2r_imm3
-    op_load_i64     = 0b01101 << 2 # op2r_imm3
-    op_loadib_i64   = 0b01110 << 2 # op2r_imm3
-    op_cmp_i64      = 0b01111 << 2 # op2r_fun3
-    op_subib_i64    = 0b10000 << 2 # op2r_imm3
-    op_store_i64    = 0b10001 << 2 # op2r_imm3
-    op_storeib_i64  = 0b10010 << 2 # op2r_imm3
-    op_logic_i64    = 0b10011 << 2 # op2r_fun3
-    op_pin_i64      = 0b10100 << 2 # op3r
-    op_and_i64      = 0b10101 << 2 # op3r
-    op_or_i64       = 0b10110 << 2 # op3r
-    op_xor_i64      = 0b10111 << 2 # op3r
-    op_sub_i64      = 0b11000 << 2 # op3r
-    op_srl_i64      = 0b11001 << 2 # op3r
-    op_sra_i64      = 0b11010 << 2 # op3r
-    op_sll_i64      = 0b11011 << 2 # op3r
-    op_add_i64      = 0b11100 << 2 # op3r
-    op_mul_i64      = 0b11101 << 2 # op3r
-    op_div_i64      = 0b11110 << 2 # op3r
-    op_illegal      = 0b11111 << 2 # op0r_imm9
+    op_break        = 0b00000 # op0r_imm9
+    op_j            = 0b00001 # op0r_imm9 pcrel9*2
+    op_b            = 0b00010 # op0r_imm9 pcrel9*2
+    op_ibj          = 0b00011 # op0r_imm9 pcrel9*64
+    op_jalib        = 0b00100 # op1r_imm6 ibrel(imm6*8,i32x2)
+    op_jtlib        = 0b00101 # op1r_imm6 ibrel(imm6*8,i32x2)
+    op_lib_i64      = 0b00110 # op1r_imm6 ibrel(imm6*8,i64)
+    op_li_i64       = 0b00111 # op1r_imm6
+    op_addi_i64     = 0b01000 # op1r_imm6
+    op_srli_i64     = 0b01001 # op2r_imm3
+    op_srai_i64     = 0b01010 # op2r_imm3
+    op_slli_i64     = 0b01011 # op2r_imm3
+    op_addib_i64    = 0b01100 # op2r_imm3
+    op_load_i64     = 0b01101 # op2r_imm3
+    op_loadib_i64   = 0b01110 # op2r_imm3
+    op_cmp_i64      = 0b01111 # op2r_fun3
+    op_subib_i64    = 0b10000 # op2r_imm3
+    op_store_i64    = 0b10001 # op2r_imm3
+    op_storeib_i64  = 0b10010 # op2r_imm3
+    op_logic_i64    = 0b10011 # op2r_fun3
+    op_pin_i64      = 0b10100 # op3r
+    op_and_i64      = 0b10101 # op3r
+    op_or_i64       = 0b10110 # op3r
+    op_xor_i64      = 0b10111 # op3r
+    op_sub_i64      = 0b11000 # op3r
+    op_srl_i64      = 0b11001 # op3r
+    op_sra_i64      = 0b11010 # op3r
+    op_sll_i64      = 0b11011 # op3r
+    op_add_i64      = 0b11100 # op3r
+    op_mul_i64      = 0b11101 # op3r
+    op_div_i64      = 0b11110 # op3r
+    op_illegal      = 0b11111 # op0r_imm9
 
 #
 # compare op fun3
@@ -369,7 +369,7 @@ def cpu_exec_op_illegal(cpu,inst):
 #
 
 def op_nm(inst):
-    return "%s" % cpu_opcode_str[Opcode(opc(inst)<<2)]
+    return "%s" % cpu_opcode_str[Opcode(opc(inst))]
 def op_compare(inst):
     return "%s" % cpu_fun3_compare_str[Fun3Compare(uimm3(inst))]
 def op_logic(inst):
@@ -532,77 +532,86 @@ cpu_op_format_type = {
 }
 
 def cpu_disasm(cpu,inst):
-    tab = cpu_op_format_args[cpu_op_format_type[Opcode(opc(inst)<<2)]]
+    tab = cpu_op_format_args[cpu_op_format_type[Opcode(opc(inst))]]
     return '%04x %s' % (su16(inst), ''.join(fn(inst) for fn in tab))
 
 #
 # cpu instruction encoding
 #
 
+def op0ri9_enc(opcode,imm9):
+    return (opcode.value << 2) | ((imm9 & 511)<<7)
+def op1ri6_enc(opcode,rc,imm6):
+    return (opcode.value << 2) | ((imm6 & 63)<<7) | ((rc & 7)<<13)
+def op2ri3_enc(opcode,rc,rb,imm3):
+    return (opcode.value << 2) | ((imm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+def op3ri0_enc(opcode,rc,rb,ra):
+    return (opcode.value << 2) | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+
 def cpu_encode_op_break(imm9):
-    return Opcode.op_break.value | ((imm9 & 511)<<7)
+    return op0ri9_enc(Opcode.op_break, imm9)
 def cpu_encode_op_j(pcrel9):
-    return Opcode.op_j.value | (((pcrel9>>1) & 511)<<7)
+    return op0ri9_enc(Opcode.op_j, pcrel9 >> 1)
 def cpu_encode_op_b(pcrel9):
-    return Opcode.op_b.value | (((pcrel9>>1) & 511)<<7)
+    return op0ri9_enc(Opcode.op_b, pcrel9 >> 1)
 def cpu_encode_op_ibj(pcrel9):
-    return Opcode.op_ibj.value | (((pcrel9>>6) & 511)<<7)
+    return op0ri9_enc(Opcode.op_ibj, pcrel9 >> 6)
 def cpu_encode_op_jalib(rc, ibrel6):
-    return Opcode.op_jalib.value | ((ibrel6 & 63)<<7) | ((rc & 7)<<13)
+    return op1ri6_enc(Opcode.op_jalib, rc, ibrel6)
 def cpu_encode_op_jtlib(rc, ibrel6):
-    return Opcode.op_jtlib.value | ((ibrel6 & 63)<<7) | ((rc & 7)<<13)
+    return op1ri6_enc(Opcode.op_jtlib, rc, ibrel6)
 def cpu_encode_op_lib_i64(rc, ibrel6):
-    return Opcode.op_lib_i64.value | ((ibrel6 & 63)<<7) | ((rc & 7)<<13)
+    return op1ri6_enc(Opcode.op_lib_i64, rc, ibrel6)
 def cpu_encode_op_li_i64(rc, imm6):
-    return Opcode.op_li_i64.value | ((imm6 & 63)<<7) | ((rc & 7)<<13)
+    return op1ri6_enc(Opcode.op_li_i64, rc, imm6)
 def cpu_encode_op_addi_i64(rc, imm6):
-    return Opcode.op_addi_i64.value | ((imm6 & 63)<<7) | ((rc & 7)<<13)
+    return op1ri6_enc(Opcode.op_addi_i64, rc, imm6)
 def cpu_encode_op_srli_i64(rc, imm6):
-    return Opcode.op_srli_i64.value | ((imm6 & 63)<<7) | ((rc & 7)<<13)
+    return op1ri6_enc(Opcode.op_srli_i64, rc, imm6)
 def cpu_encode_op_srai_i64(rc, imm6):
-    return Opcode.op_srai_i64.value | ((imm6 & 63)<<7) | ((rc & 7)<<13)
+    return op1ri6_enc(Opcode.op_srai_i64, rc, imm6)
 def cpu_encode_op_slli_i64(rc, imm6):
-    return Opcode.op_slli_i64.value | ((imm6 & 63)<<7) | ((rc & 7)<<13)
+    return op1ri6_enc(Opcode.op_slli_i64, rc, imm6)
 def cpu_encode_op_addib_i64(rc, rb, ibimm3):
-    return Opcode.op_addib_i64.value | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+    return op2ri3_enc(Opcode.op_addib_i64, rc, rb, ibimm3)
 def cpu_encode_op_load_i64(rc, rb, imm3):
-    return Opcode.op_load_i64.value | (((imm3>>3) & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+    return op2ri3_enc(Opcode.op_load_i64, rc, rb, imm3 >> 3)
 def cpu_encode_op_loadib_i64(rc, rb, ibimm3):
-    return Opcode.op_loadib_i64.value | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+    return op2ri3_enc(Opcode.op_loadib_i64, rc, rb, ibimm3)
 def cpu_encode_op_cmp_i64(rc, rb, fun3):
-    return Opcode.op_cmp_i64.value | ((fun3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+    return op2ri3_enc(Opcode.op_cmp_i64, rc, rb, fun3)
 def cpu_encode_op_subib_i64(rc, rb, ibimm3):
-    return Opcode.op_subib_i64.value | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+    return op2ri3_enc(Opcode.op_subib_i64, rc, rb, ibimm3)
 def cpu_encode_op_store_i64(rc, rb, imm3):
-    return Opcode.op_store_i64.value | (((imm3>>3) & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+    return op2ri3_enc(Opcode.op_store_i64, rc, rb, imm3 >> 3)
 def cpu_encode_op_storeib_i64(rc, rb, ibimm3):
-    return Opcode.op_storeib_i64.value | ((ibimm3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+    return op2ri3_enc(Opcode.op_storeib_i64, rc, rb, ibimm3)
 def cpu_encode_op_logic_i64(rc, rb, fun3):
-    return Opcode.op_logic_i64.value | ((fun3 & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+    return op2ri3_enc(Opcode.op_logic_i64, rc, rb, fun3)
 def cpu_encode_op_pin_i64(rc, rb, ra):
-    return Opcode.op_pin_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+    return op3ri0_enc(Opcode.op_pin_i64, rc, rb, ra)
 def cpu_encode_op_and_i64(rc, rb, ra):
-    return Opcode.op_and_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+    return op3ri0_enc(Opcode.op_and_i64, rc, rb, ra)
 def cpu_encode_op_or_i64(rc, rb, ra):
-    return Opcode.op_or_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+    return op3ri0_enc(Opcode.op_or_i64, rc, rb, ra)
 def cpu_encode_op_xor_i64(rc, rb, ra):
-    return Opcode.op_xor_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+    return op3ri0_enc(Opcode.op_xor_i64, rc, rb, ra)
 def cpu_encode_op_sub_i64(rc, rb, ra):
-    return Opcode.op_sub_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+    return op3ri0_enc(Opcode.op_sub_i64, rc, rb, ra)
 def cpu_encode_op_srl_i64(rc, rb, ra):
-    return Opcode.op_srl_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+    return op3ri0_enc(Opcode.op_srl_i64, rc, rb, ra)
 def cpu_encode_op_sra_i64(rc, rb, ra):
-    return Opcode.op_sra_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+    return op3ri0_enc(Opcode.op_sra_i64, rc, rb, ra)
 def cpu_encode_op_sll_i64(rc, rb, ra):
-    return Opcode.op_sll_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+    return op3ri0_enc(Opcode.op_sll_i64, rc, rb, ra)
 def cpu_encode_op_add_i64(rc, rb, ra):
-    return Opcode.op_add_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+    return op3ri0_enc(Opcode.op_add_i64, rc, rb, ra)
 def cpu_encode_op_mul_i64(rc, rb, ra):
-    return Opcode.op_mul_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+    return op3ri0_enc(Opcode.op_mul_i64, rc, rb, ra)
 def cpu_encode_op_div_i64(rc, rb, ra):
-    return Opcode.op_div_i64.value | ((ra & 7)<<7) | ((rb & 7)<<10) | ((rc & 7)<<13)
+    return op3ri0_enc(Opcode.op_div_i64, rc, rb, ra)
 def cpu_encode_op_illegal(imm9):
-    return Opcode.op_illegal.value | ((imm9 & 511)<<7)
+    return op0ri9_enc(Opcode.op_illegal, imm9)
 
 #
 # cpu dispatch
@@ -644,7 +653,7 @@ cpu_exec_table = {
 }
 
 def cpu_exec(cpu,inst):
-    op = Opcode(opc(inst) << 2)
+    op = Opcode(opc(inst))
     return cpu_exec_table[op.value](cpu, inst)
 
 #
