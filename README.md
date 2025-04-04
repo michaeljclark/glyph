@@ -99,7 +99,7 @@ this list outlines instructions, opcodes, and descriptions used in the
 | 28 | add.i64      | op3r_16      | 11100 | **add** rc,rb,ra                            |
 | 29 | mul.i64      | op3r_16      | 11101 | **mul** rc,rb,ra                            |
 | 30 | div.i64      | op3r_16      | 11110 | **div** rc,rb,ra                            |
-| 31 | ud2          | op0r_imm9_16 | 11111 | **ud2** uimm9                               |
+| 31 | illegal      | op0r_imm9_16 | 11111 | **illegal** uimm9                           |
 
 ## registers
 
