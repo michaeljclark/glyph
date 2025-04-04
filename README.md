@@ -86,7 +86,7 @@ this list outlines instructions, opcodes, and descriptions used in the
 | 17 | store.i64    | op2r_imm3_16 | 10001 | **store** rc,(uimm3*8)(rb)                  |
 | 18 | storeib.i64  | op2r_imm3_16 | 10010 | **store-ib** rc,ib(uimm3*8)(rb)             |
 | 19 | logic.i64    | op2r_fun3_16 | 10011 | **logic** rc,rb                             |
-|    |              |              |       |   fun3=mov,not,neg,bswap,ctz,clz,ctpop      |
+|    |              |              |       |   fun3=mov,not,neg,bswap,ctz,clz,ctpop,cmov |
 | 20 | pin.i64      | op3r_16      | 10100 | **pack-indirect** rc,rb,ra                  |
 |    |              |              |       |   i32x2(rc) = (pc-ra+2,ib-rb);              |
 | 21 | and.i64      | op3r_16      | 10101 | **and** rc,rb,ra                            |

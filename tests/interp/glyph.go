@@ -75,6 +75,7 @@ const (
     Logic_ctz       Fun3Logic = 0b100
     Logic_clz       Fun3Logic = 0b101
     Logic_ctpop     Fun3Logic = 0b110
+    Logic_cmov      Fun3Logic = 0b111
 )
 
 /*
@@ -292,6 +293,11 @@ func CPU_exec_op_logic_i64(cpu *CPUState, inst uint64) int {
     case Logic_ctpop:
         cpu.R[rc(inst)] = uint64(bits.OnesCount64(cpu.R[rb(inst)]))
         break
+    case Logic_cmov:
+        if cpu.Flag {
+            cpu.R[rc(inst)] = cpu.R[rb(inst)]
+        }
+        break
     default:
         return -1
     }
@@ -478,6 +484,7 @@ var cpu_fun3_logic_str = [8]string{
     Logic_ctz:         "ctz.i64",
     Logic_clz:         "clz.i64",
     Logic_ctpop:       "ctpop.i64",
+    Logic_cmov:        "cmov.i64",
 }
 
 var cpu_op_format_args = [14][10]OpaFn{
@@ -608,8 +615,23 @@ func CPU_encode_op_load_i64(rc, rb, imm3 int) uint16 {
 func CPU_encode_op_loadib_i64(rc, rb, ibimm3 int) uint16 {
     return op2ri3_enc(Op_loadib_i64, rc, rb, ibimm3)
 }
-func CPU_encode_op_cmp_i64(rc, rb int, fun3 Fun3Compare) uint16 {
-    return op2ri3_enc(Op_cmp_i64, rc, rb, int(fun3))
+func CPU_encode_op_cmp_lt_i64(rc, rb int) uint16 {
+    return op2ri3_enc(Op_cmp_i64, rc, rb, int(Compare_lt))
+}
+func CPU_encode_op_cmp_ge_i64(rc, rb int) uint16 {
+    return op2ri3_enc(Op_cmp_i64, rc, rb, int(Compare_ge))
+}
+func CPU_encode_op_cmp_eq_i64(rc, rb int) uint16 {
+    return op2ri3_enc(Op_cmp_i64, rc, rb, int(Compare_eq))
+}
+func CPU_encode_op_cmp_ne_i64(rc, rb int) uint16 {
+    return op2ri3_enc(Op_cmp_i64, rc, rb, int(Compare_ne))
+}
+func CPU_encode_op_cmp_ltu_i64(rc, rb int) uint16 {
+    return op2ri3_enc(Op_cmp_i64, rc, rb, int(Compare_ltu))
+}
+func CPU_encode_op_cmp_geu_i64(rc, rb int) uint16 {
+    return op2ri3_enc(Op_cmp_i64, rc, rb, int(Compare_geu))
 }
 func CPU_encode_op_subib_i64(rc, rb, ibimm3 int) uint16 {
     return op2ri3_enc(Op_subib_i64, rc, rb, ibimm3)
@@ -620,8 +642,29 @@ func CPU_encode_op_store_i64(rc, rb, imm3 int) uint16 {
 func CPU_encode_op_storeib_i64(rc, rb, ibimm3 int) uint16 {
     return op2ri3_enc(Op_storeib_i64, rc, rb, ibimm3)
 }
-func CPU_encode_op_logic_i64(rc, rb int, fun3 Fun3Logic) uint16 {
-    return op2ri3_enc(Op_logic_i64, rc, rb, int(fun3))
+func CPU_encode_op_mov_i64(rc, rb int) uint16 {
+    return op2ri3_enc(Op_logic_i64, rc, rb, int(Logic_mov))
+}
+func CPU_encode_op_not_i64(rc, rb int) uint16 {
+    return op2ri3_enc(Op_logic_i64, rc, rb, int(Logic_not))
+}
+func CPU_encode_op_neg_i64(rc, rb int) uint16 {
+    return op2ri3_enc(Op_logic_i64, rc, rb, int(Logic_neg))
+}
+func CPU_encode_op_bswap_i64(rc, rb int) uint16 {
+    return op2ri3_enc(Op_logic_i64, rc, rb, int(Logic_bswap))
+}
+func CPU_encode_op_ctz_i64(rc, rb int) uint16 {
+    return op2ri3_enc(Op_logic_i64, rc, rb, int(Logic_ctz))
+}
+func CPU_encode_op_clz_i64(rc, rb int) uint16 {
+    return op2ri3_enc(Op_logic_i64, rc, rb, int(Logic_clz))
+}
+func CPU_encode_op_ctpop_i64(rc, rb int) uint16 {
+    return op2ri3_enc(Op_logic_i64, rc, rb, int(Logic_ctpop))
+}
+func CPU_encode_op_cmov_i64(rc, rb int) uint16 {
+    return op2ri3_enc(Op_logic_i64, rc, rb, int(Logic_cmov))
 }
 func CPU_encode_op_pin_i64(rc, rb, ra int) uint16 {
     return op3ri0_enc(Op_pin_i64, rc, rb, ra)

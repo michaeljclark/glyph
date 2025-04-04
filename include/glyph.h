@@ -89,6 +89,7 @@ enum
     cpu_logic_ctz       = 0b100,
     cpu_logic_clz       = 0b101,
     cpu_logic_ctpop     = 0b110,
+    cpu_logic_cmov      = 0b111,
 };
 
 /*
@@ -301,10 +302,10 @@ __glyph_func__ int cpu_exec_op_cmp_i64(cpu_state *cpu, u64 inst)
 {
     switch(uimm3(inst)) {
     case cpu_compare_lt:
-        cpu->flag = cpu->r[rc(inst)] < cpu->r[rb(inst)];
+        cpu->flag = (i64)cpu->r[rc(inst)] < (i64)cpu->r[rb(inst)];
         break;
     case cpu_compare_ge:
-        cpu->flag = cpu->r[rc(inst)] >= cpu->r[rb(inst)];
+        cpu->flag = (i64)cpu->r[rc(inst)] >= (i64)cpu->r[rb(inst)];
         break;
     case cpu_compare_eq:
         cpu->flag = cpu->r[rc(inst)] == cpu->r[rb(inst)];
@@ -313,10 +314,10 @@ __glyph_func__ int cpu_exec_op_cmp_i64(cpu_state *cpu, u64 inst)
         cpu->flag = cpu->r[rc(inst)] != cpu->r[rb(inst)];
         break;
     case cpu_compare_ltu:
-        cpu->flag = (u64)cpu->r[rc(inst)] < (u64)cpu->r[rb(inst)];
+        cpu->flag = cpu->r[rc(inst)] < cpu->r[rb(inst)];
         break;
     case cpu_compare_geu:
-        cpu->flag = (u64)cpu->r[rc(inst)] >= (u64)cpu->r[rb(inst)];
+        cpu->flag = cpu->r[rc(inst)] >= cpu->r[rb(inst)];
         break;
     default:
         return -1;
@@ -365,6 +366,11 @@ __glyph_func__ int cpu_exec_op_logic_i64(cpu_state *cpu, u64 inst)
         break;
     case cpu_logic_ctpop:
         cpu->r[rc(inst)] = (u64)__builtin_popcountll(cpu->r[rb(inst)]);
+        break;
+    case cpu_logic_cmov:
+        if (cpu->flag) {
+            cpu->r[rc(inst)] = cpu->r[rb(inst)];
+        }
         break;
     default:
         return -1;
@@ -571,6 +577,7 @@ static const char* cpu_fun3_logic_str[8] =
     [cpu_logic_ctz]         = "ctz.i64",
     [cpu_logic_clz]         = "clz.i64",
     [cpu_logic_ctpop]       = "ctpop.i64",
+    [cpu_logic_cmov]        = "cmov.i64",
 };
 
 static const op_fn cpu_op_format_args[][10] =
@@ -703,8 +710,23 @@ __glyph_func__ u16 cpu_encode_op_load_i64(int rc, int rb, int imm3) {
 __glyph_func__ u16 cpu_encode_op_loadib_i64(int rc, int rb, int ibimm3) {
     return op2ri3_enc(cpu_op_loadib_i64, rc, rb, ibimm3);
 }
-__glyph_func__ u16 cpu_encode_op_cmp_i64(int rc, int rb, int fun3) {
-    return op2ri3_enc(cpu_op_cmp_i64, rc, rb, fun3);
+__glyph_func__ u16 cpu_encode_op_cmp_lt_i64(int rc, int rb) {
+    return op2ri3_enc(cpu_op_cmp_i64, rc, rb, cpu_compare_lt);
+}
+__glyph_func__ u16 cpu_encode_op_cmp_ge_i64(int rc, int rb) {
+    return op2ri3_enc(cpu_op_cmp_i64, rc, rb, cpu_compare_ge);
+}
+__glyph_func__ u16 cpu_encode_op_cmp_eq_i64(int rc, int rb) {
+    return op2ri3_enc(cpu_op_cmp_i64, rc, rb, cpu_compare_eq);
+}
+__glyph_func__ u16 cpu_encode_op_cmp_ne_i64(int rc, int rb) {
+    return op2ri3_enc(cpu_op_cmp_i64, rc, rb, cpu_compare_ne);
+}
+__glyph_func__ u16 cpu_encode_op_cmp_ltu_i64(int rc, int rb) {
+    return op2ri3_enc(cpu_op_cmp_i64, rc, rb, cpu_compare_ltu);
+}
+__glyph_func__ u16 cpu_encode_op_cmp_geu_i64(int rc, int rb) {
+    return op2ri3_enc(cpu_op_cmp_i64, rc, rb, cpu_compare_geu);
 }
 __glyph_func__ u16 cpu_encode_op_subib_i64(int rc, int rb, int ibimm3) {
     return op2ri3_enc(cpu_op_subib_i64, rc, rb, ibimm3);
@@ -715,8 +737,29 @@ __glyph_func__ u16 cpu_encode_op_store_i64(int rc, int rb, int imm3) {
 __glyph_func__ u16 cpu_encode_op_storeib_i64(int rc, int rb, int ibimm3) {
     return op2ri3_enc(cpu_op_storeib_i64, rc, rb, ibimm3);
 }
-__glyph_func__ u16 cpu_encode_op_logic_i64(int rc, int rb, int fun3) {
-    return op2ri3_enc(cpu_op_logic_i64, rc, rb, fun3);
+__glyph_func__ u16 cpu_encode_op_mov_i64(int rc, int rb) {
+    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_mov);
+}
+__glyph_func__ u16 cpu_encode_op_not_i64(int rc, int rb) {
+    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_not);
+}
+__glyph_func__ u16 cpu_encode_op_neg_i64(int rc, int rb) {
+    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_neg);
+}
+__glyph_func__ u16 cpu_encode_op_bswap_i64(int rc, int rb) {
+    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_bswap);
+}
+__glyph_func__ u16 cpu_encode_op_ctz_i64(int rc, int rb) {
+    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_ctz);
+}
+__glyph_func__ u16 cpu_encode_op_clz_i64(int rc, int rb) {
+    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_clz);
+}
+__glyph_func__ u16 cpu_encode_op_ctpop_i64(int rc, int rb) {
+    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_ctpop);
+}
+__glyph_func__ u16 cpu_encode_op_cmov_i64(int rc, int rb) {
+    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_cmov);
 }
 __glyph_func__ u16 cpu_encode_op_pin_i64(int rc, int rb, int ra) {
     return op3ri0_enc(cpu_op_pin_i64, rc, rb, ra);
