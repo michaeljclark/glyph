@@ -197,6 +197,7 @@ struct cpu_state
  * instruction decode helpers
  */
 
+__glyph_inline__ uint ops(u64 insn) { return insn & 0b11; }
 __glyph_inline__ uint opc(u64 insn) { return (insn >> 2) & 0b11111; }
 __glyph_inline__ u64 uimm9(u64 insn) { return insn << 48 >> 55; }
 __glyph_inline__ u64 uimm6(u64 insn) { return insn << 51 >> 58; }
@@ -694,6 +695,9 @@ static const uchar cpu_op_type[32] =
 
 __glyph_func__ int cpu_disasm(char *buf, size_t len, u64 inst, u64 c)
 {
+    if (ops(inst) != 0) {
+        return snprintf(buf, len, "unknown");
+    }
     size_t offset = 0;
     const uchar* arg = cpu_op_args[cpu_op_type[opc(inst)]];
     while (*arg) {
@@ -858,6 +862,7 @@ __glyph_func__ u16 cpu_encode_op_illegal(int imm9) {
 
 __glyph_func__ int cpu_exec(cpu_state *cpu, u64 inst)
 {
+    if (ops(inst) != 0) return -1;
     switch (opc(inst)) {
     case cpu_op_break: return cpu_exec_op_break(cpu, inst);
     case cpu_op_j: return cpu_exec_op_j(cpu, inst);

@@ -209,6 +209,8 @@ def usx(val):
 # instruction decode helpers
 #
 
+def ops(inst):
+    return inst & 0b11
 def opc(inst):
     return (inst >> 2) & 0b11111
 def uimm9(inst):
@@ -579,6 +581,8 @@ cpu_op_type = {
 }
 
 def cpu_disasm(cpu,inst):
+    if ops(inst) != 0:
+        return "unknown"
     tab = cpu_op_args[cpu_op_type[opc(inst)]]
     return ''.join(cpu_op_out[arg](inst) for arg in tab)
 
@@ -724,7 +728,7 @@ cpu_exec_table = {
 }
 
 def cpu_exec(cpu,inst):
-    return cpu_exec_table[opc(inst)](cpu, inst)
+    return -1 if ops(inst) != 0 else cpu_exec_table[opc(inst)](cpu, inst)
 
 #
 # cpu implementation

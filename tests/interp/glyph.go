@@ -148,6 +148,7 @@ type CPUState struct {
  * instruction decode helpers
  */
 
+func ops(insn uint64) uint64 { return insn & 0b11 }
 func opc(insn uint64) Opcode { return Opcode((insn >> 2) & 0b11111) }
 func uimm9(insn uint64) uint64 { return insn << 48 >> 55 }
 func uimm6(insn uint64) uint64 { return insn << 51 >> 58 }
@@ -596,6 +597,9 @@ var cpu_op_type = [32]OpForm{
 }
 
 func CPU_disasm(inst, c uint64) string {
+    if ops(inst) != 0 {
+        return "unknown"
+    }
     var tab [10]OpArg = cpu_op_args[cpu_op_type[Opcode(opc(inst))]]
     var sb strings.Builder
     for i := 0; i < len(tab) && tab[i] != op_none; i++ {
@@ -759,6 +763,9 @@ func CPU_encode_op_illegal(imm9 int) uint16 {
  */
 
 func CPU_exec(cpu *CPUState, inst uint64) int {
+    if ops(inst) != 0 {
+        return -1
+    }
     switch opc(inst) {
     case CPU_op_break: return CPU_exec_op_break(cpu, inst)
     case CPU_op_j: return CPU_exec_op_j(cpu, inst)
@@ -816,7 +823,6 @@ func CPU_init(memSize uintptr) *CPUState {
 func CPU_debug(format string, args ...interface{}) {
     fmt.Printf(format + "\n", args...)
 }
-
 
 func CPU_dump(cpu *CPUState) {
     CPU_debug("pc:%016x ib:%016x flag:%d", cpu.PC, cpu.IB,
