@@ -580,9 +580,7 @@ cpu_op_type = {
 
 def cpu_disasm(cpu,inst):
     tab = cpu_op_args[cpu_op_type[opc(inst)]]
-    return '%04x %s' % (
-        su16(inst), ''.join(cpu_op_out[arg](inst) for arg in tab)
-    )
+    return ''.join(cpu_op_out[arg](inst) for arg in tab)
 
 #
 # cpu instruction encoding
@@ -745,7 +743,7 @@ def cpu_run(cpu):
         inst = cpu_fetch_i16(cpu)
         if cpu.is_trace:
             asm = cpu_disasm(cpu, inst)
-            cpu_debug('-- %08x %s' % (cpu.pc, asm))
+            cpu_debug('-- %08x %04x %s' % (cpu.pc, su16(inst), asm))
         ret = cpu_exec(cpu, inst)
         if ret < 0:
             cpu_debug("** %08x cpu exception" % cpu.pc)
@@ -764,7 +762,7 @@ def cpu_setup(cpu,c,i):
     for j,k in enumerate(i):
         a = cpu.pc + j * 2
         t = cpu_disasm(cpu, k)
-        cpu_debug("# %08x %s" % (a, t))
+        cpu_debug("# %08x %04x %s" % (a, su16(k), t))
         cpu_store_i16(cpu, a, k)
 
 def cpu_test(name,c,i):
