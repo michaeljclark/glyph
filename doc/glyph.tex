@@ -966,7 +966,7 @@ the \emph{srli} or \emph{shift-right-logical-immediate} instruction
 performs a logical right shift by \emph{uimm6} bits of the value in
 the \emph{rc} register. zeros are copied into the right most bits.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = (u64)r[rc] >> simm6
+    r[rc] = (u64)r[rc] >> uimm6
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -977,7 +977,7 @@ the \emph{srai} or \emph{shift-right-arithmetic-immediate} instruction
 performs an arithmetic right shift by \emph{uimm6} bits of the value in
 the \emph{rc} register. sign is copied into the right most bits.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = (i64)r[rc] >> simm6
+    r[rc] = (i64)r[rc] >> uimm6
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -988,7 +988,7 @@ the \emph{slli} or \emph{shift-left-logical-immediate} instruction
 performs a logical left shift by \emph{uimm6} bits of the value in
 the \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = r[rc] << simm6
+    r[rc] = r[rc] << uimm6
 \end{Verbatim}
 
 \needspace{8\baselineskip}
