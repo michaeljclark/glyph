@@ -13,58 +13,82 @@
 \paragraph{ }
 \paragraph{ }
 
-\begin{tikzpicture}[fill=blue!20,scale=0.3]
+\begin{tikzpicture}[scale=0.55]
 \begin{scope}[every node/.style={font=\normalsize, inner sep=0pt, right}]
 
-\node [above,scale=0.9,anchor=south] at (32,4)  {\textbf{instruction stream (pc-relative)}};
-\node [above,scale=0.9,anchor=south] at (8,2)  {\textbf{16-bit instruction packet}};
+\node [above,scale=0.9,anchor=south] at (16,3)  {\textbf{instruction stream (pc-relative)}};
+\node [font=\small,above,scale=0.9,anchor=south] at (4,1.5)  {\textbf{instruction packet}};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (-0.75,0.4)  {$\textbf{pc}$};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (33.0,0.4)  {$\textbf{\ldots}$};
 
-\node [font=\tiny,below,scale=0.9,anchor=north] at (-1.5,0.66)  {$\textbf{(pc)}$};
+\fill [black!15]                   (0.0,0.0)   rectangle (4.5,1.0);
+\draw [line width=0.2mm, black!80] (0.0,0.0)   rectangle (4.5,1.0);
+\node [font=\tiny,below,scale=0.9,anchor=base] at (0.5,0.4)  {$\textbf{15}$};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (4.0,0.4)  {$\textbf{7}$};
 
-\fill [black!15] (0,0)    rectangle (9,1);
-\draw [line width=0.2mm, black!80] (0,0)    rectangle (9,1);
-\node [font=\tiny,below,scale=0.9,anchor=north] at (0.5,0.66)  {$\textbf{15}$};
-\node [font=\tiny,below,scale=0.9,anchor=north] at (8.5,0.66)  {$\textbf{7}$};
+\fill [black!10]                   (4.5,0.0)   rectangle (7.0,1.0);
+\draw [line width=0.2mm, black!80] (4.5,0.0)   rectangle (7.0,1.0);
+\node [font=\tiny,below,scale=0.9,anchor=base] at (5.0,0.4)  {$\textbf{6}$};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (6.5,0.4)  {$\textbf{2}$};
 
-\fill [black!10] (9,0)     rectangle (14,1);
-\draw [line width=0.2mm, black!80] (9,0)     rectangle (14,1);
-\node [font=\tiny,below,scale=0.9,anchor=north] at (9.5,0.66)  {$\textbf{6}$};
-\node [font=\tiny,below,scale=0.9,anchor=north] at (13.5,0.66)  {$\textbf{2}$};
+\fill [black!5]                    (7.0,0.0)   rectangle (8.0,1.0);
+\draw [line width=0.2mm, black!80] (7.0,0,0)   rectangle (8.0,1.0);
+\node [font=\tiny,below,scale=0.9,anchor=base] at (7.25,0.4)  {$\textbf{1}$};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (7.75,0.4)  {$\textbf{0}$};
 
-\fill [black!5] (14,0)     rectangle (16,1);
-\draw [line width=0.2mm, black!80] (14,0)     rectangle (16,1);
-\node [font=\tiny,below,scale=0.9,anchor=north] at (14.5,0.66)  {$\textbf{1}$};
-\node [font=\tiny,below,scale=0.9,anchor=north] at (15.5,0.66)  {$\textbf{0}$};
-
-\draw [line width=0.2mm, black!80,dashed] (16,0)     rectangle (32,1);
-\draw [line width=0.2mm, black!80,dashed] (32,0)     rectangle (48,1);
-\draw [line width=0.2mm, black!80,dashed] (48,0)     rectangle (64,1);
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
-    (0,1.5) -- (9,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{operands}};
+\draw [line width=0.2mm, black!80,dashed] (8,0)      rectangle (16,1);
+\draw [line width=0.2mm, black!80,dashed] (16,0)     rectangle (24,1);
+\draw [line width=0.2mm, black!80,dashed] (24,0)     rectangle (32,1);
 
 \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
-    (9,1.5) -- (14,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{opcode}};
+    (0,0.75) -- (4.5,0.75) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{operands}};
 
 \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
-    (14,1.5) -- (16,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{size}};
+    (4.5,0.75) -- (7,0.75) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{opcode}};
 
-\node [above,scale=0.9,anchor=south] at (32,-5)  {\textbf{constant stream (ib-relative)}};
-\node [above,scale=0.9,anchor=south] at (8,-7)  {\textbf{64-bit immediate data}};
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
+    (7,0.75) -- (8,0.75) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{size}};
 
-\node [font=\tiny,below,scale=0.9,anchor=north] at (-1.5,-8.33)  {$\textbf{(ib)}$};
+\node [above,scale=0.9,anchor=south] at (16,-4)  {\textbf{constant stream (ib-relative)}};
+\node [font=\small,above,scale=0.9,anchor=south] at (4,-5.5)  {\textbf{immediate block}};
 
+\node [font=\tiny,below,scale=0.9,anchor=base] at (33.0,-8.0)  {$\textbf{\ldots}$};
+
+\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-6.6)  {$\textbf{ib8}$};
 \foreach \x in {0,1,2,3,4,5,6,7}
-  \fill [black!15] (\x*8,-9)    rectangle (\x*8+8,-8);
-
+  \fill [black!15]                   (\x*4,-6)     rectangle (\x*4+4,-7);
 \foreach \x in {0,1,2,3,4,5,6,7}
-  \draw [line width=0.2mm, black!80] (\x*8,-9)     rectangle (\x*8+8,-8);
-
+  \draw [line width=0.2mm, black!80] (\x*4,-6)     rectangle (\x*4+4,-7);
 \foreach \x in {0,1,2,3,4,5,6,7}
-  \node [font=\tiny,below,scale=0.9,anchor=north] at (\x*8 + 4,-8.33)  {$\textbf{\x}$};
+  \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*4 + 2,-6.6)  {$\textbf{\x}$};
+
+\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-7.6)  {$\textbf{ib16}$};
+\foreach \x in {0,1,2,3}
+  \fill [black!15]                   (\x*8,-7)     rectangle (\x*8+8,-8);
+\foreach \x in {0,1,2,3}
+  \draw [line width=0.2mm, black!80] (\x*8,-7)     rectangle (\x*8+8,-8);
+\foreach \x in {0,1,2,3}
+  \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*8 + 4,-7.6)  {$\textbf{\x}$};
+
+\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-8.6)  {$\textbf{ib32}$};
+\foreach \x in {0,1}
+  \fill [black!15]                   (\x*16,-8)     rectangle (\x*16+16,-9);
+\foreach \x in {0,1}
+  \draw [line width=0.2mm, black!80] (\x*16,-8)     rectangle (\x*16+16,-9);
+\foreach \x in {0,1}
+  \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*16 + 8,-8.6)  {$\textbf{\x}$};
+
+\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-9.6)  {$\textbf{ib64}$};
+\foreach \x in {0}
+  \fill [black!15]                   (\x*32,-9)     rectangle (\x*32+32,-10);
+\foreach \x in {0}
+  \draw [line width=0.2mm, black!80] (\x*32,-9)     rectangle (\x*32+32,-10);
+\foreach \x in {0}
+  \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*32 + 16,-9.6)  {$\textbf{\x}$};
 
 \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
-    (0,-7.5) -- (64,-7.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{ib-relative constant}};
+    (0,-9.25) -- (32,-9.25) node[font=\tiny,midway,below,yshift=-2.7em]
+        {\textbf{ib-relative constants}};
 
 \end{scope}
 \end{tikzpicture}
