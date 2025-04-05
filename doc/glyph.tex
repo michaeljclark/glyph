@@ -849,7 +849,7 @@ instruction packet:
 \label{fig:glyph-register-state-64}
 \end{figure}
 
-\chapter{Instructions}
+\chapter{Instructions} \label{sec:instructions}
 
 \section{16-bit opcodes}
 
@@ -1247,6 +1247,191 @@ a divide by zero exception.
 \insnimmnine{uimm}{11111}{00}{\textbf{illegal} uimm9}
 \\
 the \emph{illegal} instruction causes an illegal instruction trap.
+
+\chapter{Assembler}
+
+\section{Introduction}
+
+this glyph assembly language reference begins with an introduction to
+assembler and linker concepts, followed by sections describing the glyph
+assembler directives, and pseudo-instruction aliases.
+section~\ref{sec:instructions} contains a complete listing of instruction.
+
+\section{Concepts}
+this section covers assembler high level concepts required to understand
+the concepts involved in assembling and linking executable code from
+source files.
+
+\subsection{assembly file}
+an assembly file contains assembly language directives, macros and
+instructions. it can be emitted by a compiler or it can be handwritten.
+an assembly file is the input file to the assembler. the extensions for
+assembly files are \texttt{.s}.
+
+\subsection{relocatable object file}
+relocatable object files contain compiled object code and data emitted
+by the assembler. an object file cannot be run, rather it is used as
+input to the linker as a step towards producing an executable file.
+the extension for object files is \texttt{.o}.
+
+\subsection{file header}
+an assembler file has a file header that contains magic to indicate how
+the file is formatted, the architecture of the binary, the endianness of
+the binary; \emph{little-endian} in the case of glyph, the file type
+\emph{(relocatable object, executable, shared library)}, the number of
+program headers and their offsets in the file, the number of section
+headers and their offsets in the file, plus fields indicating the file
+format version and various other details.
+
+\subsection{program header}
+program headers provide size and offsets of loadable segments within an
+executable or shared library along with protection attributes used by
+the operating system \emph{(read, write and exec)}. program headers are
+not present in relocatable object files and are primarily for use by the
+operating system to and dynamic linker to map code and data into memory.
+
+\subsection{section header}
+section headers provide size, offset, type, alignment and flags for
+the sections contained within the binary file. section headers are not
+required to execute a static binary but are necessary for dynamic
+linking and program linking. various section types refer to the location
+of the symbol table, relocations and dynamic symbols in the binary file.
+
+\subsection{sections}
+an object file is made up of multiple sections, with each section
+corresponding to distinct types of executable code or data. there are a
+variety of different section types. this list contains the four most
+common sections:
+
+\begin{itemize}[itemsep=0pt]
+\item \texttt{.text} is a read-only section containing executable code
+\item \texttt{.const} is a read-only section containing immediate blocks
+\item \texttt{.data} is a read-write section containing global or static variables
+\item \texttt{.rodata} is a read-only section containing read-only variables
+\item \texttt{.bss} is a read-write section containing uninitialized data
+\end{itemize}
+
+\subsection{program linking}
+program linking is the process of reading multiple relocatable object
+files, merging the sections from each of the source files, calculating
+the new addresses for symbols and applying relocation fixups to text or
+data that is pointed to in relocation entries.
+
+\subsection{linker script}
+linker scripts are text source files that are optionally input to the
+linker containing rules for the linker to use when calculating the load
+address and alignment of the various sections when creating an executable
+output file. the extension for linker scripts is \texttt{.ld}.
+
+\newpage
+\section{Directives}
+the assembler implements a number of directives that control the assembly
+of instructions into object files. these directives give the ability to
+include arbitrary data, align data, export symbols, switch sections, define
+constants and emit metadata.
+\\
+\par\noindent
+the following table lists glyph assembler directives:
+
+\begin{table}[h]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{0.85}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Directive} & \textbf{Arguments} & \textbf{Description} \\
+\hline
+\multicolumn{3}{|l|}{\textbf{Data directives}} \\ \hline
+\texttt{.byte}   & \emph{expression-list}    & 8-bit comma separated words   \\
+\texttt{.short}  & \emph{expression-list}    & 16-bit comma separated words  \\
+\texttt{.long}   & \emph{expression-list}    & 32-bit comma separated words  \\
+\texttt{.quad}   & \emph{expression-list}    & 64-bit comma separated words  \\
+\texttt{.octa}   & \emph{expression-list}    & 128-bit comma separated words \\
+\texttt{.string} & \emph{“string”}           & emit string                   \\
+\texttt{.zero}   & \emph{integer}            & emit zeroes                   \\
+\hline
+\multicolumn{3}{|l|}{\textbf{Alignment directives}} \\ \hline
+\texttt{.align}  & \emph{pow2 [,pad\_val=0] [,max]} & align to power of 2    \\
+\texttt{.balign} & \emph{bytes [,pad\_val=0]}       & byte align             \\
+\hline
+\multicolumn{3}{|l|}{\textbf{Symbol directives}} \\ \hline
+\texttt{.globl}  & \emph{symbol\_name}  & emit symbol \emph{(global scope)}  \\
+\texttt{.local}  & \emph{symbol\_name}  & emit symbol \emph{(local scope)}   \\
+\hline
+\multicolumn{3}{|l|}{\textbf{Section directives}} \\ \hline
+\texttt{.text}    &         & emit \texttt{.text} section or make current    \\
+\texttt{.const}   &         & emit \texttt{.const} section or make current   \\
+\texttt{.data}    &         & emit \texttt{.data} section or make current    \\
+\texttt{.rodata}  &         & emit \texttt{.rodata} section or make current  \\
+\texttt{.bss}     &         & emit \texttt{.bss} section or make current     \\
+\texttt{.common}  & \emph{symbol\_name,size,align} & emit common object to
+\texttt{.bss} section \\
+\texttt{.section} & \emph{section\_name}    & emit section (default
+\texttt{.text}) or make current \\
+\hline
+\multicolumn{3}{|l|}{\textbf{Miscellaneous directives}} \\ \hline
+\texttt{.equ}    & \emph{name, value}       & constant definition            \\
+\texttt{.file}   & \emph{“filename”}        & emit filename symbol           \\
+\texttt{.ident}  & \emph{“string”}          & emit identification string     \\
+\texttt{.size}   & \emph{symbol,symbol}     & emit symbol size               \\
+\texttt{.type}   & \emph{symbol,@function}  & emit symbol type               \\
+\hline
+\end{tabular}
+\caption{Assembler Directives}
+\label{tab:assembler-directives}
+\end{table}
+
+\section{Pseudo-instructions}
+
+the assembler implements a number of convenience psuedo-instruction aliases
+that are formed from regular instructions, but have implicit or deduced arguments.
+\\
+\par\noindent
+the following table lists glyph assembler pseudo instruction aliases:
+
+\begin{table}[h]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{0.85}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Pseudo-instruction} & \textbf{Expansion} & \textbf{Description}   \\
+\texttt{nop}   & \texttt{or.i64 r0,r0,r0} & no-operation                     \\
+\texttt{li} \emph{rc, expression} & (several expansions) & load immediate  \\
+\texttt{la} \emph{rc, symbol}     & (several expansions) & load address    \\
+\texttt{cmp.lt.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rc, rb,}
+\texttt{lt} & compare less than (signed) \\
+\texttt{cmp.ge.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rc, rb,}
+\texttt{ge} & compare greater or equal (signed) \\
+\texttt{cmp.eq.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rc, rb,}
+\texttt{eq} & compare equal (signed) \\
+\texttt{cmp.ne.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rc, rb,}
+\texttt{ne} & compare not equal (signed) \\
+\texttt{cmp.ltu.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rc, rb,}
+\texttt{ltu} & compare less than (unsigned) \\
+\texttt{cmp.geu.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rc, rb,}
+\texttt{geu} & compare greater or equal (unsigned) \\
+\texttt{cmov.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rc, rb,}
+\texttt{mov} & conditional move \\
+\texttt{mov.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
+\texttt{mov} & copy register \\
+\texttt{not.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
+\texttt{not} & logical not \\
+\texttt{neg.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
+\texttt{neg} & signed negate \\
+\texttt{bswap.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
+\texttt{bswap} & byte swap \\
+\texttt{ctz.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
+\texttt{ctz} & count trailing zeros \\
+\texttt{clz.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
+\texttt{clz} & count leading zeroes \\
+\texttt{ctpop.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
+\texttt{ctpop} & count population \\
+\hline
+\end{tabular}
+\caption{Assembler Directives}
+\label{tab:assembler-directives}
+\end{table}
 
 \appendix
 
