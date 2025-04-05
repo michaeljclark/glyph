@@ -22,23 +22,23 @@
 \node [font=\tiny,below,scale=0.9,anchor=base] at (33.0,0.4)  {$\textbf{\ldots}$};
 
 \fill [black!15]                   (0.0,0.0)   rectangle (4.5,1.0);
-\draw [line width=0.2mm, black!80] (0.0,0.0)   rectangle (4.5,1.0);
+\draw [line width=0.3mm, black!80] (0.0,0.0)   rectangle (4.5,1.0);
 \node [font=\tiny,below,scale=0.9,anchor=base] at (0.5,0.4)  {$\textbf{15}$};
 \node [font=\tiny,below,scale=0.9,anchor=base] at (4.0,0.4)  {$\textbf{7}$};
 
 \fill [black!10]                   (4.5,0.0)   rectangle (7.0,1.0);
-\draw [line width=0.2mm, black!80] (4.5,0.0)   rectangle (7.0,1.0);
+\draw [line width=0.3mm, black!80] (4.5,0.0)   rectangle (7.0,1.0);
 \node [font=\tiny,below,scale=0.9,anchor=base] at (5.0,0.4)  {$\textbf{6}$};
 \node [font=\tiny,below,scale=0.9,anchor=base] at (6.5,0.4)  {$\textbf{2}$};
 
 \fill [black!5]                    (7.0,0.0)   rectangle (8.0,1.0);
-\draw [line width=0.2mm, black!80] (7.0,0,0)   rectangle (8.0,1.0);
+\draw [line width=0.3mm, black!80] (7.0,0,0)   rectangle (8.0,1.0);
 \node [font=\tiny,below,scale=0.9,anchor=base] at (7.25,0.4)  {$\textbf{1}$};
 \node [font=\tiny,below,scale=0.9,anchor=base] at (7.75,0.4)  {$\textbf{0}$};
 
-\draw [line width=0.2mm, black!80,dashed] (8,0)      rectangle (16,1);
-\draw [line width=0.2mm, black!80,dashed] (16,0)     rectangle (24,1);
-\draw [line width=0.2mm, black!80,dashed] (24,0)     rectangle (32,1);
+\draw [line width=0.3mm, black!80,dashed] (8,0)      rectangle (16,1);
+\draw [line width=0.3mm, black!80,dashed] (16,0)     rectangle (24,1);
+\draw [line width=0.3mm, black!80,dashed] (24,0)     rectangle (32,1);
 
 \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
     (0,0.75) -- (4.5,0.75) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{operands}};
@@ -56,17 +56,17 @@
 
 \node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-6.6)  {$\textbf{ib8}$};
 \foreach \x in {0,1,2,3,4,5,6,7}
-  \fill [black!15]                   (\x*4,-6)     rectangle (\x*4+4,-7);
+  \fill [black!5]                   (\x*4,-6)     rectangle (\x*4+4,-7);
 \foreach \x in {0,1,2,3,4,5,6,7}
-  \draw [line width=0.2mm, black!80] (\x*4,-6)     rectangle (\x*4+4,-7);
+  \draw [line width=0.3mm, black!80] (\x*4,-6)     rectangle (\x*4+4,-7);
 \foreach \x in {0,1,2,3,4,5,6,7}
   \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*4 + 2,-6.6)  {$\textbf{\x}$};
 
 \node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-7.6)  {$\textbf{ib16}$};
 \foreach \x in {0,1,2,3}
-  \fill [black!15]                   (\x*8,-7)     rectangle (\x*8+8,-8);
+  \fill [black!10]                   (\x*8,-7)     rectangle (\x*8+8,-8);
 \foreach \x in {0,1,2,3}
-  \draw [line width=0.2mm, black!80] (\x*8,-7)     rectangle (\x*8+8,-8);
+  \draw [line width=0.3mm, black!80] (\x*8,-7)     rectangle (\x*8+8,-8);
 \foreach \x in {0,1,2,3}
   \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*8 + 4,-7.6)  {$\textbf{\x}$};
 
@@ -74,15 +74,15 @@
 \foreach \x in {0,1}
   \fill [black!15]                   (\x*16,-8)     rectangle (\x*16+16,-9);
 \foreach \x in {0,1}
-  \draw [line width=0.2mm, black!80] (\x*16,-8)     rectangle (\x*16+16,-9);
+  \draw [line width=0.3mm, black!80] (\x*16,-8)     rectangle (\x*16+16,-9);
 \foreach \x in {0,1}
   \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*16 + 8,-8.6)  {$\textbf{\x}$};
 
 \node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-9.6)  {$\textbf{ib64}$};
 \foreach \x in {0}
-  \fill [black!15]                   (\x*32,-9)     rectangle (\x*32+32,-10);
+  \fill [black!20]                   (\x*32,-9)     rectangle (\x*32+32,-10);
 \foreach \x in {0}
-  \draw [line width=0.2mm, black!80] (\x*32,-9)     rectangle (\x*32+32,-10);
+  \draw [line width=0.3mm, black!80] (\x*32,-9)     rectangle (\x*32+32,-10);
 \foreach \x in {0}
   \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*32 + 16,-9.6)  {$\textbf{\x}$};
 
