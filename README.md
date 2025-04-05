@@ -65,22 +65,22 @@ this list outlines instructions, opcodes, and descriptions used in the
 | 01 | j            | op0r_imm9_16 | 00001 | **jump** simm9*2+2                          |
 | 02 | b            | op0r_imm9_16 | 00010 | **branch** simm9*2+2                        |
 | 03 | ibj          | op0r_imm9_16 | 00011 | **ib-jump** simm9*64                        |
-| 04 | jalib.i64    | op1r_imm6_16 | 00100 | **jump-and-link-pcib64** rc,ib64(uimm6*8)   |
+| 04 | jalib.i64    | op1r_imm6_16 | 00100 | **jump-and-link-ib** rc,ib64(uimm6*8)       |
 |    |              |              |       |   rc = ib32x2(uimm6*8);                     |
 |    |              |              |       |   (pc,ib) += i32x2(rc) + i32x2(2,0);        |
-| 05 | jtlib.i64    | op1r_imm6_16 | 00101 | **jump-to-link-pcib64** rc,ib64(uimm6*8)    |
+| 05 | jtlib.i64    | op1r_imm6_16 | 00101 | **jump-to-link-ib** rc,ib64(uimm6*8)        |
 |    |              |              |       |   tmp = ib32x2(uimm6*8) - i32x2(rc);        |
 |    |              |              |       |   (pc,ib) += i32x2(tmp);                    |
-| 06 | movib.i64    | op1r_imm6_16 | 00110 | **mov-ib64** rc,ib64(uimm6*8)               |
+| 06 | movib.i64    | op1r_imm6_16 | 00110 | **mov-ib** rc,ib64(uimm6*8)                 |
 | 07 | movi.i64     | op1r_imm6_16 | 00111 | **mov-imm6** rc,simm6                       |
 | 08 | addi.i64     | op1r_imm6_16 | 01000 | **add-imm6** rc,simm6                       |
 | 09 | srli.i64     | op1r_imm6_16 | 01001 | **shift-right-logical-imm** rc,uimm6        |
 | 10 | srai.i64     | op1r_imm6_16 | 01010 | **shift-right-arith-imm** rc,uimm6          |
 | 11 | slli.i64     | op1r_imm6_16 | 01011 | **shift-left-logical-imm** rc,uimm6         |
-| 12 | addib.i64    | op1r_imm6_16 | 01100 | **add-ib32** rc,ib32(uimm6*4)               |
-| 13 | leapc.i64    | op1r_imm6_16 | 01101 | **lea-pcib32** rc,ib32(uimm6*4)(pc)         |
-| 14 | loadpc.i64   | op1r_imm6_16 | 01110 | **load-pcib32** rc,ib32(uimm6*4)(pc)        |
-| 15 | storepc.i64  | op1r_imm6_16 | 01111 | **store-pcib32** rc,ib32(uimm6*4)(pc)       |
+| 12 | addib.i64    | op1r_imm6_16 | 01100 | **add-ib** rc,ib32(uimm6*4)                 |
+| 13 | leapc.i64    | op1r_imm6_16 | 01101 | **lea-pc** rc,ib32(uimm6*4)(pc)             |
+| 14 | loadpc.i64   | op1r_imm6_16 | 01110 | **load-pc** rc,ib32(uimm6*4)(pc)            |
+| 15 | storepc.i64  | op1r_imm6_16 | 01111 | **store-pc** rc,ib32(uimm6*4)(pc)           |
 | 16 | load.i64     | op2r_imm3_16 | 10000 | **load** rc,(uimm3*8)(rb)                   |
 | 17 | store.i64    | op2r_imm3_16 | 10001 | **store** rc,(uimm3*8)(rb)                  |
 | 18 | compare.i64  | op2r_fun3_16 | 10010 | **compare** rc,rb                           |
