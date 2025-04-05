@@ -1355,8 +1355,8 @@ the following table lists glyph assembler directives:
 \texttt{.balign} & \emph{bytes [,pad\_val=0]}       & byte align             \\
 \hline
 \multicolumn{3}{|l|}{\textbf{Symbol directives}} \\ \hline
-\texttt{.globl}  & \emph{symbol\_name}  & emit symbol \emph{(global scope)}  \\
-\texttt{.local}  & \emph{symbol\_name}  & emit symbol \emph{(local scope)}   \\
+\texttt{.globl}  & \emph{symbol\_name,const\_name}  & emit symbol \emph{(global scope)}  \\
+\texttt{.local}  & \emph{symbol\_name,const\_name}  & emit symbol \emph{(local scope)}   \\
 \hline
 \multicolumn{3}{|l|}{\textbf{Section directives}} \\ \hline
 \texttt{.text}    &         & emit \texttt{.text} section or make current    \\
@@ -1399,6 +1399,8 @@ the following table lists glyph assembler pseudo instruction aliases:
 \texttt{nop}   & \texttt{or.i64 r0,r0,r0} & no-operation                     \\
 \texttt{li} \emph{rc, expression} & (several expansions) & load immediate  \\
 \texttt{la} \emph{rc, symbol}     & (several expansions) & load address    \\
+\texttt{call} \emph{symbol}     & \texttt{jalib} \emph{ibcall-reloc(text-label,const-label)} & procedure call \\
+\texttt{ret}                    & \texttt{jtlib} \emph{ibret-reloc(block-entry-label)} & procedure return \\
 \texttt{cmp.lt.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rc, rb,}
 \texttt{lt} & compare less than (signed) \\
 \texttt{cmp.ge.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rc, rb,}
@@ -1431,6 +1433,71 @@ the following table lists glyph assembler pseudo instruction aliases:
 \end{tabular}
 \caption{Assembler Directives}
 \label{tab:assembler-directives}
+\end{table}
+
+\newpage
+\section{Calling convention}
+\subsection{16-bit calling convention}
+
+the 16-bit instruction packet, while intended to be used in conjunction
+with the 32-bit opcodes, is designed as a complete subset, so there is
+an ABI variant that targets a subset using only the 16-bit opcodes.
+\\
+\par\noindent
+the register assignment for the 16-bit subset was chosen with this rationale:
+
+\begin{itemize}[itemsep=0pt]
+\item  2 blocks of 4 contiguous non-volatile \emph{callee-save} and volatile
+\emph{caller-save} registers.
+\item  3 special registers, 2 argument registers, 1 temporary register,
+and 3 save registers.
+\item  3 save registers to avoid excessive spilling around function calls.
+\item  1 temporary register to avoid spilling arguments to free a temporary.
+\end{itemize}
+
+\par\noindent
+the calling convention for the 16-bit subset is as follows:
+
+\begin{itemize}[itemsep=0pt]
+\item \emph{immediate base} \texttt{ib} is set by \texttt{call} instructions
+and must point to a valid immediate block on function entry. function
+symbols are exported with two labels; one in the \texttt{.text} section, and
+one in the \texttt{.const} section. \emph{immediate base} must be restored
+to the entry value in the function \emph{epilogue} before it can be restored
+by \texttt{ret}.
+\item \emph{argument registers} \texttt{a0} and \texttt{a1} are used for the
+first two arguments, and the remaining arguments are passed on the stack.
+\emph{return value} is places in \texttt{a0} and \texttt{a1},
+\emph{temporary register} \texttt{t0} is a volatile register, and
+\emph{frame pointer} (if enabled) uses \texttt{s0}. there are two more
+non-volatile \emph{callee-save} registers, \texttt{s1} and \texttt{s2}.
+\end{itemize}
+
+\par\noindent
+the following table outlines the 16-bit register allocation showing
+register name alias, description, and non-volatile \emph{callee-save} or
+volatile \emph{caller-save} status.
+\begin{table}[h]
+\centering
+\footnotesize
+\renewcommand{\arraystretch}{0.85}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{name} & \textbf{alias} & \textbf{description} & \textbf{save} \\
+\hline
+ib    &       & immediate base                              & callee \\
+r0    & sp    & stack pointer                               & callee \\
+r1    & s0/fp & saved register 0 / frame pointer            & callee \\
+r2    & s1    & saved register 1                            & callee \\
+r3    & s2    & saved register 2                            & callee \\
+r4    & t0    & temporary register 0                        & caller \\
+r5    & a0    & argument register 0                         & caller \\
+r6    & a1    & argument register 1                         & caller \\
+r7    & ra    & return address / (pc,ib) link vector        & caller \\
+\hline
+\end{tabular}
+\caption{16-bit register assignment}
+\label{tab:register-allocation-16}
 \end{table}
 
 \appendix
