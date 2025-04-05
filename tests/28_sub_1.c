@@ -3,14 +3,14 @@
 void t()
 {
     u64 c[] = {
-        0xfffffff5fffffff6ull,
     };
     u16 i[] = {
-        cpu_encode_op_li_i64(0,1),
-        cpu_encode_op_subib_i64(1,0,0),
+        cpu_encode_op_movi_i64(0,1),
+        cpu_encode_op_movi_i64(1,2),
+        cpu_encode_op_sub_i64(2,0,1),
         cpu_encode_op_break(0),
     };
-    cpu_test("subib_1", c, i);
+    cpu_test("sub_1", c, i);
 }
 
 int main(int argc, char **argv)

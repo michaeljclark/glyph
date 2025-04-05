@@ -5,7 +5,7 @@ void t()
     u64 c[] = {
     };
     u16 i[] = {
-        cpu_encode_op_li_i64(0,31),
+        cpu_encode_op_movi_i64(0,31),
         cpu_encode_op_mov_i64(1,0),
         cpu_encode_op_neg_i64(2,0),
         cpu_encode_op_not_i64(3,0),

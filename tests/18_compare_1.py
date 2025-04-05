@@ -8,8 +8,8 @@ def t():
         1,
     ]
     i = [
-        cpu_encode_op_lib_i64(0,0),
-        cpu_encode_op_lib_i64(1,1),
+        cpu_encode_op_movib_i64(0,0),
+        cpu_encode_op_movib_i64(1,1),
         cpu_encode_op_cmp_lt_i64(0,1),
         cpu_encode_op_cmov_i64(2,0),
         cpu_encode_op_cmp_geu_i64(0,1),

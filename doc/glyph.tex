@@ -15,7 +15,7 @@
 \def\verbatim@font{\linespread{1}\normalfont\ttfamily}
 
 \begin{document}
-\title{GLYPH}
+\title{GLYPH-X}
 \subtitle{a super regular RISC architecture}
 \author{Michael Clark}
 \date{\small \today \quad DRAFT}
@@ -896,12 +896,12 @@ the \emph{ibj} or \emph{immediate-block-jump} instruction adds a
 \end{Verbatim}
 
 \needspace{8\baselineskip}
-\subsection{jalib}
-\insrcimmsix{rc}{uimm}{00100}{00}{\textbf{jalib} rc, ib(uimm6*8)}
+\subsection{jalib.i64}
+\insrcimmsix{rc}{uimm}{00100}{00}{\textbf{jalib} rc, ib64(uimm6*8)}
 \\
 the \emph{jalib} or \emph{jump-and-link-immediate-block} instruction
-loads a 64-bit constant addressed by \emph{ib + uimm6 * 8} containing a
-\emph{i32x2} relative address vector, adds it to \emph{(pc,ib)},
+loads a 64-bit constant addressed by \emph{[ib + uimm6 * 8]} containing
+a \emph{i32x2} relative address vector, adds it to \emph{(pc,ib)},
 then saves the relative address vector to the \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     tmp = (i32x2)[ib + uimm6 * 8]
@@ -912,11 +912,11 @@ then saves the relative address vector to the \emph{rc} register.
 \end{Verbatim}
 
 \needspace{8\baselineskip}
-\subsection{jtlib}
-\insrcimmsix{rc}{uimm}{00101}{00}{\textbf{jtlib} rc, ib(uimm6*8)}
+\subsection{jtlib.i64}
+\insrcimmsix{rc}{uimm}{00101}{00}{\textbf{jtlib} rc, ib64(uimm6*8)}
 \\
 the \emph{jtlib} or \emph{jump-to-link-immediate-block} instruction
-loads a 64-bit constant addressed by \emph{ib + uimm6 * 8} containing a
+loads a 64-bit constant addressed by \emph{[ib + uimm6 * 8]} containing a
 \emph{i32x2} relative address vector, subtracts the \emph{i32x2}
 relative address vector in the \emph{rc} register from it, then adds it
 to \emph{(pc,ib)}.
@@ -928,22 +928,22 @@ to \emph{(pc,ib)}.
 \end{Verbatim}
 
 \needspace{8\baselineskip}
-\subsection{lib.i64}
-\insrcimmsix{rc}{uimm}{00110}{00}{\textbf{lib.i64} rc, ib(uimm6*8)}
+\subsection{movib.i64}
+\insrcimmsix{rc}{uimm}{00110}{00}{\textbf{movib.i64} rc, ib64(uimm6*8)}
 \\
-the \emph{lib} or \emph{load-immediate-block} instruction loads a 64-bit
-constant addressed by \emph{ib + uimm6 * 8} then saves it to the
+the \emph{movib} or \emph{move-immediate-block} instruction loads a 64-bit
+constant addressed by \emph{[ib + uimm6 * 8]} then saves it to the
 \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     r[rc] = (i64)[ib + uimm6 * 8]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
-\subsection{li.i64}
-\insrcimmsix{rc}{simm}{00111}{00}{\textbf{li.i64} rc, simm6}
+\subsection{movi.i64}
+\insrcimmsix{rc}{simm}{00111}{00}{\textbf{movi.i64} rc, simm6}
 \\
-the \emph{li} or \emph{load-immediate} instruction sign-extends \emph{simm6}
-then saves it to the \emph{rc} register.
+the \emph{movi} or \emph{move-immediate} instruction sign-extends the
+immediate value in \emph{simm6} then saves it to the \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     r[rc] = simm6
 \end{Verbatim}
@@ -952,8 +952,8 @@ then saves it to the \emph{rc} register.
 \subsection{addi.i64}
 \insrcimmsix{rc}{simm}{01000}{00}{\textbf{addi.i64} rc, simm6}
 \\
-the \emph{addi} or \emph{add-immediate} instruction sign-extends \emph{simm6}
-then adds it to the \emph{rc} register.
+the \emph{addi} or \emph{add-immediate} instruction sign-extends the
+immediate value in \emph{simm6} then adds it to the \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     r[rc] = r[rc] + simm6
 \end{Verbatim}
@@ -993,18 +993,55 @@ the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{addib.i64}
-\insrcrbimmthree{rc}{rb}{uimm}{01100}{00}{\textbf{addib.i64} rc, rb, ib(uimm3*8)}
+\insrcimmsix{rc}{uimm}{01100}{00}{\textbf{addib.i64} rc, ib32(uimm6*4)}
 \\
-the \emph{addib} or \emph{add-immediate-block} instruction loads a 64-bit
-constant addressed by \emph{ib + uimm3 * 8} then adds it to the \emph{rb}
-register and saves the result in the \emph{rc} register.
+the \emph{addib} or \emph{add-immediate-block-constant} instruction loads
+a 32-bit constant addressed by \emph{[ib + uimm6 * 4]}, sign-extends
+it to 64-bits, adds it to the \emph{rc} register and saves the result
+in the \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = r[rb] + (i64)[ib + uimm3 * 8]
+    r[rc] = r[rc] + (i64)[ib + uimm6 * 4]
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{leapc.i64}
+\insrcimmsix{rc}{uimm}{01101}{00}{\textbf{leapc.i64} rc, ib32(uimm6*4)(pc)}
+\\
+the \emph{leapc} or \emph{load-effective-address-pc} instruction
+loads a 32-bit constant addressed by \emph{[ib + uimm6 * 4]},
+sign-extends it to 64-bits, adds it to the \emph{program counter}
+and saves the result in the \emph{rc} register.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = pc + (i32)[ib + uimm6 * 4]
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{loadpc.i64}
+\insrcimmsix{rc}{uimm}{01110}{00}{\textbf{loadpc.i64} rc, ib32(uimm6*4)(pc)}
+\\
+the \emph{loadpc} instruction loads a 32-bit constant addressed by
+\emph{[ib + uimm6 * 4]} which it sign-extends to 64-bit, adds it to the
+\emph{program counter} to form an address, then loads a 64-bit value from
+memory at that address and saves the result in the \emph{rc} register.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    r[rc] = (i64)[pc + (i32)[ib + uimm6 * 4]]
+\end{Verbatim}
+
+\needspace{8\baselineskip}
+\subsection{storepc.i64}
+\insrcimmsix{rc}{uimm}{01111}{00}{\textbf{storepc.i64} rc, ib32(uimm6*4)(pc)}
+\\
+the \emph{storepc} instruction loads a 32-bit constant addressed by
+\emph{[ib + uimm6 * 4]} which it sign-extends to 64-bit, adds it to the
+\emph{program counter} to form an address, then stores to memory at that
+address a 64-bit value from the \emph{rc} register.
+\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+    (i64)[pc + (i64)[ib + uimm6 * 4]] = r[rc]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
 \subsection{load.i64}
-\insrcrbimmthree{rc}{rb}{uimm}{01101}{00}{\textbf{load.i64} rc, (uimm3*8)(rb)}
+\insrcrbimmthree{rc}{rb}{uimm}{10000}{00}{\textbf{load.i64} rc, (uimm3*8)(rb)}
 \\
 the \emph{load} instruction adds \emph{uimm3 * 8} to the \emph{rb}
 to form an address, then loads a 64-bit value from memory at that
@@ -1014,20 +1051,19 @@ address and saves the result in the \emph{rc} register.
 \end{Verbatim}
 
 \needspace{8\baselineskip}
-\subsection{loadib.i64}
-\insrcrbimmthree{rc}{rb}{uimm}{01110}{00}{\textbf{loadib.i64} rc, ib(uimm3*8)(rb)}
+\subsection{store.i64}
+\insrcrbimmthree{rc}{rb}{uimm}{10001}{00}{\textbf{store.i64} rc, (uimm3*8)(rb)}
 \\
-the \emph{loadib} instruction loads a 64-bit constant addressed by
-\emph{ib + uimm6 * 8} and adds to the \emph{rb} to form an address,
-then loads a 64-bit value from memory at that address and saves the
-result in the \emph{rc} register.
+the \emph{store} instruction adds \emph{uimm3 * 8} to the \emph{rb}
+register to form an address, then stores to memory at that address a
+64-bit value from the \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = (i64)[r[rb] + (i64)[ib + uimm3 * 8]]
+    (i64)[r[rb] + uimm3 * 8] = r[rc]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
 \subsection{compare.i64}
-\insrcrbimmthree{rc}{rb}{uimm}{01111}{00}{\textbf{cmp.i64} rc, rb, fun3}
+\insrcrbimmthree{rc}{rb}{uimm}{10010}{00}{\textbf{cmp.i64} rc, rb, fun3}
 \\
 the \emph{compare} instruction performs a comparison between the value in
 \emph{rb} and \emph{rc} then saves the result to the \emph{flag} register.
@@ -1050,40 +1086,6 @@ register is set. the type of comparsion in \emph{fun3} can be one of:
     | ltu -> flag = (u64)r[rc] <  (u64)r[rb]
     | geu -> flag = (u64)r[rc] >= (u64)r[rb]
     | mov -> if (flag) r[rc] = r[rb]
-\end{Verbatim}
-
-\needspace{8\baselineskip}
-\subsection{subib.i64}
-\insrcrbimmthree{rc}{rb}{uimm}{10000}{00}{\textbf{subib.i64} rc, rb, ib(uimm3*8)}
-\\
-the \emph{subib} or \emph{sub-immediate-block} instruction loads a 64-bit
-constant addressed by \emph{ib + uimm3 * 8} then subtracts it from the
-\emph{rb} register and saves the result in the \emph{rc} register.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = r[rb] - (i64)[ib + uimm3 * 8]
-\end{Verbatim}
-
-\needspace{8\baselineskip}
-\subsection{store.i64}
-\insrcrbimmthree{rc}{rb}{uimm}{10001}{00}{\textbf{store.i64} rc, (uimm3*8)(rb)}
-\\
-the \emph{store} instruction adds \emph{uimm3 * 8} to the \emph{rb}
-register to form an address, then stores to memory at that address a
-64-bit value from the \emph{rc} register.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    (i64)[r[rb] + uimm3 * 8] = r[rc]
-\end{Verbatim}
-
-\needspace{8\baselineskip}
-\subsection{storeib.i64}
-\insrcrbimmthree{rc}{rb}{uimm}{10010}{00}{\textbf{storeib.i64} rc, ib(uimm3*8)(rb)}
-\\
-the \emph{storeib} instruction loads a 64-bit constant addressed by
-\emph{ib + uimm6 * 8} and adds to the the \emph{rb} register to form
-an address, then stores to memory at that address a 64-bit value from
-the \emph{rc} register.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    (i64)[r[rb] + (i64)[ib + uimm3 * 8]] = r[rc]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1161,13 +1163,13 @@ result in the register \emph{rc}.
 \end{Verbatim}
 
 \needspace{8\baselineskip}
-\subsection{sub.i64}
-\insrcrbrc{rc}{rb}{ra}{11000}{00}{\textbf{sub.i64} rc, rb, ra}
+\subsection{add.i64}
+\insrcrbrc{rc}{rb}{ra}{11000}{00}{\textbf{add.i64} rc, rb, ra}
 \\
-the \emph{sub} instruction subtracts the \emph{ra} register from
-the \emph{rb} register and saves the result in the \emph{rc} register.
+the \emph{add} instruction adds the \emph{rb} register to
+the \emph{ra} register and saves the result in the \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = r[rb] - r[ra]
+    r[rc] = r[rb] + r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1208,13 +1210,13 @@ number of bits in register \emph{ra} then saves the result in the
 \end{Verbatim}
 
 \needspace{8\baselineskip}
-\subsection{add.i64}
-\insrcrbrc{rc}{rb}{ra}{11100}{00}{\textbf{add.i64} rc, rb, ra}
+\subsection{sub.i64}
+\insrcrbrc{rc}{rb}{ra}{11100}{00}{\textbf{sub.i64} rc, rb, ra}
 \\
-the \emph{add} instruction adds the \emph{rb} register to
-the \emph{ra} register and saves the result in the \emph{rc} register.
+the \emph{sub} instruction subtracts the \emph{ra} register from
+the \emph{rb} register and saves the result in the \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = r[rb] + r[ra]
+    r[rc] = r[rb] - r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1338,31 +1340,31 @@ the \emph{illegal} instruction causes an illegal instruction trap.
 \ainsnimmnine{1}{simm}{00001}{00}{\textbf{j} simm9}
 \ainsnimmnine{2}{simm}{00010}{00}{\textbf{b} simm9}
 \ainsnimmnine{3}{simm}{00011}{00}{\textbf{ibj} simm9}
-\ainsrcimmsix{4}{rc}{uimm}{00100}{00}{\textbf{jalib} rc, ib(uimm6*8)}
-\ainsrcimmsix{5}{rc}{uimm}{00101}{00}{\textbf{jtlib} rc, ib(uimm6*8)}
-\ainsrcimmsix{6}{rc}{uimm}{00110}{00}{\textbf{lib.i64} rc, ib(uimm6*8)}
-\ainsrcimmsix{7}{rc}{simm}{00111}{00}{\textbf{li.i64} rc, simm6}
+\ainsrcimmsix{4}{rc}{uimm}{00100}{00}{\textbf{jalib.i64} rc, ib64(uimm6*8)}
+\ainsrcimmsix{5}{rc}{uimm}{00101}{00}{\textbf{jtlib.i64} rc, ib64(uimm6*8)}
+\ainsrcimmsix{6}{rc}{uimm}{00110}{00}{\textbf{movib.i64} rc, ib64(uimm6*8)}
+\ainsrcimmsix{7}{rc}{simm}{00111}{00}{\textbf{movi.i64} rc, simm6}
 \ainsrcimmsix{8}{rc}{simm}{01000}{00}{\textbf{addi.i64} rc, simm6}
 \ainsrcimmsix{9}{rc}{uimm}{01001}{00}{\textbf{srli.i64} rc, uimm6}
 \ainsrcimmsix{10}{rc}{uimm}{01010}{00}{\textbf{srai.i64} rc, uimm6}
 \ainsrcimmsix{11}{rc}{uimm}{01011}{00}{\textbf{slli.i64} rc, uimm6}
-\ainsrcrbimmthree{12}{rc}{rb}{uimm}{01100}{00}{\textbf{addib.i64} rc, rb, ib(uimm3*8)}
-\ainsrcrbimmthree{13}{rc}{rb}{uimm}{01101}{00}{\textbf{load.i64} rc, (uimm3*8)(rb)}
-\ainsrcrbimmthree{14}{rc}{rb}{uimm}{01110}{00}{\textbf{loadib.i64} rc, ib(uimm3*8)(rb)}
-\ainsrcrbimmthree{15}{rc}{rb}{uimm}{01111}{00}{\textbf{compare.i64} rc, rb, fun3}
-\ainsrcrbimmthree{16}{rc}{rb}{uimm}{10000}{00}{\textbf{subib.i64} rc, rb, ib(uimm3*8)}
+\ainsrcimmsix{12}{rc}{uimm}{01100}{00}{\textbf{addib.i64} rc, ib32(uimm6*4)}
+\ainsrcimmsix{13}{rc}{uimm}{01101}{00}{\textbf{leapc.i64} rc, ib32(uimm6*4)(pc)}
+\ainsrcimmsix{14}{rc}{uimm}{01110}{00}{\textbf{loadpc.i64} rc, ib32(uimm6*4)(pc)}
+\ainsrcimmsix{15}{rc}{uimm}{01111}{00}{\textbf{storepc.i64} rc, ib32(uimm6*4)(pc)}
+\ainsrcrbimmthree{16}{rc}{rb}{uimm}{10000}{00}{\textbf{load.i64} rc, (uimm3*8)(rb)}
 \ainsrcrbimmthree{17}{rc}{rb}{uimm}{10001}{00}{\textbf{store.i64} rc, (uimm3*8)(rb)}
-\ainsrcrbimmthree{18}{rc}{rb}{uimm}{10010}{00}{\textbf{storeib.i64} rc, ib(uimm3*8)(rb)}
+\ainsrcrbimmthree{18}{rc}{rb}{uimm}{10010}{00}{\textbf{compare.i64} rc, rb, fun3}
 \ainsrcrbimmthree{19}{rc}{rb}{uimm}{10011}{00}{\textbf{logic.i64} rc, rb, fun3}
 \ainsrcrbrc{20}{rc}{rb}{ra}{10100}{00}{\textbf{pin.i64} rc, rb, ra}
 \ainsrcrbrc{21}{rc}{rb}{ra}{10101}{00}{\textbf{and.i64} rc, rb, ra}
 \ainsrcrbrc{22}{rc}{rb}{ra}{10110}{00}{\textbf{or.i64} rc, rb, ra}
 \ainsrcrbrc{23}{rc}{rb}{ra}{10111}{00}{\textbf{xor.i64} rc, rb, ra}
-\ainsrcrbrc{24}{rc}{rb}{ra}{11000}{00}{\textbf{sub.i64} rc, rb, ra}
+\ainsrcrbrc{24}{rc}{rb}{ra}{11000}{00}{\textbf{add.i64} rc, rb, ra}
 \ainsrcrbrc{25}{rc}{rb}{ra}{11001}{00}{\textbf{srl.i64} rc, rb, ra}
 \ainsrcrbrc{26}{rc}{rb}{ra}{11010}{00}{\textbf{sra.i64} rc, rb, ra}
 \ainsrcrbrc{27}{rc}{rb}{ra}{11011}{00}{\textbf{sll.i64} rc, rb, ra}
-\ainsrcrbrc{28}{rc}{rb}{ra}{11100}{00}{\textbf{add.i64} rc, rb, ra}
+\ainsrcrbrc{28}{rc}{rb}{ra}{11100}{00}{\textbf{sub.i64} rc, rb, ra}
 \ainsrcrbrc{29}{rc}{rb}{ra}{11101}{00}{\textbf{mul.i64} rc, rb, ra}
 \ainsrcrbrc{30}{rc}{rb}{ra}{11110}{00}{\textbf{div.i64} rc, rb, ra}
 \ainsnimmnine{31}{uimm}{11111}{00}{\textbf{illegal} uimm9}

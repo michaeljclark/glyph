@@ -20,31 +20,31 @@ const (
     CPU_op_j            Opcode = 0b00001 // op0r_imm9 pcrel9*2
     CPU_op_b            Opcode = 0b00010 // op0r_imm9 pcrel9*2
     CPU_op_ibj          Opcode = 0b00011 // op0r_imm9 pcrel9*64
-    CPU_op_jalib        Opcode = 0b00100 // op1r_imm6 ibrel(imm6*8,i32x2)
-    CPU_op_jtlib        Opcode = 0b00101 // op1r_imm6 ibrel(imm6*8,i32x2)
-    CPU_op_lib_i64      Opcode = 0b00110 // op1r_imm6 ibrel(imm6*8,i64)
-    CPU_op_li_i64       Opcode = 0b00111 // op1r_imm6
+    CPU_op_jalib        Opcode = 0b00100 // op1r_imm6 ib64(imm6*8)
+    CPU_op_jtlib        Opcode = 0b00101 // op1r_imm6 ib64(imm6*8)
+    CPU_op_movib_i64    Opcode = 0b00110 // op1r_imm6 ib64(imm6*8)
+    CPU_op_movi_i64     Opcode = 0b00111 // op1r_imm6
     CPU_op_addi_i64     Opcode = 0b01000 // op1r_imm6
-    CPU_op_srli_i64     Opcode = 0b01001 // op2r_imm3
-    CPU_op_srai_i64     Opcode = 0b01010 // op2r_imm3
-    CPU_op_slli_i64     Opcode = 0b01011 // op2r_imm3
-    CPU_op_addib_i64    Opcode = 0b01100 // op2r_imm3
-    CPU_op_load_i64     Opcode = 0b01101 // op2r_imm3
-    CPU_op_loadib_i64   Opcode = 0b01110 // op2r_imm3
-    CPU_op_cmp_i64      Opcode = 0b01111 // op2r_fun3
-    CPU_op_subib_i64    Opcode = 0b10000 // op2r_imm3
+    CPU_op_srli_i64     Opcode = 0b01001 // op1r_imm6
+    CPU_op_srai_i64     Opcode = 0b01010 // op1r_imm6
+    CPU_op_slli_i64     Opcode = 0b01011 // op1r_imm6
+    CPU_op_addib_i64    Opcode = 0b01100 // op1r_imm6 ib32(imm6*4)
+    CPU_op_leapc_i64    Opcode = 0b01101 // op1r_imm6 ib32(imm6*4)(pc)
+    CPU_op_loadpc_i64   Opcode = 0b01110 // op1r_imm6 ib32(imm6*4)(pc)
+    CPU_op_storepc_i64  Opcode = 0b01111 // op1r_imm6 ib32(imm6*4)(pc)
+    CPU_op_load_i64     Opcode = 0b10000 // op2r_imm3
     CPU_op_store_i64    Opcode = 0b10001 // op2r_imm3
-    CPU_op_storeib_i64  Opcode = 0b10010 // op2r_imm3
+    CPU_op_compare_i64  Opcode = 0b10010 // op2r_fun3
     CPU_op_logic_i64    Opcode = 0b10011 // op2r_fun3
     CPU_op_pin_i64      Opcode = 0b10100 // op3r
     CPU_op_and_i64      Opcode = 0b10101 // op3r
     CPU_op_or_i64       Opcode = 0b10110 // op3r
     CPU_op_xor_i64      Opcode = 0b10111 // op3r
-    CPU_op_sub_i64      Opcode = 0b11000 // op3r
+    CPU_op_add_i64      Opcode = 0b11000 // op3r
     CPU_op_srl_i64      Opcode = 0b11001 // op3r
     CPU_op_sra_i64      Opcode = 0b11010 // op3r
     CPU_op_sll_i64      Opcode = 0b11011 // op3r
-    CPU_op_add_i64      Opcode = 0b11100 // op3r
+    CPU_op_sub_i64      Opcode = 0b11100 // op3r
     CPU_op_mul_i64      Opcode = 0b11101 // op3r
     CPU_op_div_i64      Opcode = 0b11110 // op3r
     CPU_op_illegal      Opcode = 0b11111 // op0r_imm9
@@ -89,6 +89,7 @@ const (
     op_logic
     op_ib3
     op_ib6
+    op_pcib6
     op_ui3x8
     op_ui6
     op_ui9
@@ -117,9 +118,8 @@ const (
     op1r_ib64_uimm6
     op1r_simm6
     op1r_uimm6
-    op2r_ib64_uimm3
+    op1r_mib64_uimm6
     op2r_mem64_uimm3x8
-    op2r_mib64_uimm3
     op2r_fun3_compare
     op2r_fun3_logic
     op3r
@@ -191,6 +191,9 @@ func CPU_store_i8(cpu *CPUState, offset uint64, val uint64) {
 func CPU_const_i64(cpu *CPUState, offset uint64) uint64 {
     return *(*uint64)(unsafe.Pointer(&cpu.Mem[cpu.IB + offset * 8]))
 }
+func CPU_const_i32(cpu *CPUState, offset uint64) uint64 {
+    return uint64(*(*int32)(unsafe.Pointer(&cpu.Mem[cpu.IB + offset * 4])))
+}
 func CPU_fetch(cpu *CPUState) uint64 {
     return uint64(*(*uint16)(unsafe.Pointer(&cpu.Mem[cpu.PC])))
 }
@@ -237,11 +240,11 @@ func CPU_exec_op_jtlib(cpu *CPUState, inst uint64) int {
     cpu.IB = cpu.IB + uint64(dib - rib)
     return 0
 }
-func CPU_exec_op_lib_i64(cpu *CPUState, inst uint64) int {
+func CPU_exec_op_movib_i64(cpu *CPUState, inst uint64) int {
     cpu.R[rc(inst)] = CPU_const_i64(cpu, uimm6(inst))
     return 2
 }
-func CPU_exec_op_li_i64(cpu *CPUState, inst uint64) int {
+func CPU_exec_op_movi_i64(cpu *CPUState, inst uint64) int {
     cpu.R[rc(inst)] = uint64(simm6(inst))
     return 2
 }
@@ -262,7 +265,23 @@ func CPU_exec_op_slli_i64(cpu *CPUState, inst uint64) int {
     return 2
 }
 func CPU_exec_op_addib_i64(cpu *CPUState, inst uint64) int {
-    cpu.R[rc(inst)] = cpu.R[rb(inst)] + CPU_const_i64(cpu, uint64(uimm3(inst)))
+    cpu.R[rc(inst)] = cpu.R[rc(inst)] + CPU_const_i32(cpu, uimm6(inst))
+    return 2
+}
+func CPU_exec_op_leapc_i64(cpu *CPUState, inst uint64) int {
+    cpu.R[rc(inst)] = cpu.PC + CPU_const_i32(cpu, uimm6(inst))
+    return 2
+}
+func CPU_exec_op_loadpc_i64(cpu *CPUState, inst uint64) int {
+    var tmp uint64
+    tmp = cpu.PC + CPU_const_i32(cpu, uimm6(inst))
+    cpu.R[rc(inst)] = CPU_load_i64(cpu, tmp)
+    return 2
+}
+func CPU_exec_op_storepc_i64(cpu *CPUState, inst uint64) int {
+    var tmp uint64
+    tmp = cpu.PC + CPU_const_i32(cpu, uimm6(inst))
+    CPU_store_i64(cpu, tmp, cpu.R[rc(inst)])
     return 2
 }
 func CPU_exec_op_load_i64(cpu *CPUState, inst uint64) int {
@@ -271,13 +290,13 @@ func CPU_exec_op_load_i64(cpu *CPUState, inst uint64) int {
     cpu.R[rc(inst)] = CPU_load_i64(cpu, tmp)
     return 2
 }
-func CPU_exec_op_loadib_i64(cpu *CPUState, inst uint64) int {
+func CPU_exec_op_store_i64(cpu *CPUState, inst uint64) int {
     var tmp uint64
-    tmp = cpu.R[rb(inst)] + CPU_const_i64(cpu, uimm3(inst))
-    cpu.R[rc(inst)] = CPU_load_i64(cpu, tmp)
+    tmp = cpu.R[rb(inst)] + (uimm3(inst) << 3)
+    CPU_store_i64(cpu, tmp, cpu.R[rc(inst)])
     return 2
 }
-func CPU_exec_op_cmp_i64(cpu *CPUState, inst uint64) int {
+func CPU_exec_op_compare_i64(cpu *CPUState, inst uint64) int {
     switch(Fun3Compare(uimm3(inst))) {
     case CPU_compare_lt:
         cpu.Flag = int64(cpu.R[rc(inst)]) < int64(cpu.R[rb(inst)])
@@ -305,22 +324,6 @@ func CPU_exec_op_cmp_i64(cpu *CPUState, inst uint64) int {
     default:
         return -1
     }
-    return 2
-}
-func CPU_exec_op_subib_i64(cpu *CPUState, inst uint64) int {
-    cpu.R[rc(inst)] = cpu.R[rb(inst)] - CPU_const_i64(cpu, uimm3(inst))
-    return 2
-}
-func CPU_exec_op_store_i64(cpu *CPUState, inst uint64) int {
-    var tmp uint64
-    tmp = cpu.R[rb(inst)] + (uimm3(inst) << 3)
-    CPU_store_i64(cpu, tmp, cpu.R[rc(inst)])
-    return 2
-}
-func CPU_exec_op_storeib_i64(cpu *CPUState, inst uint64) int {
-    var tmp uint64
-    tmp = cpu.R[rb(inst)] + CPU_const_i64(cpu, uimm3(inst))
-    CPU_store_i64(cpu, tmp, cpu.R[rc(inst)])
     return 2
 }
 func CPU_exec_op_logic_i64(cpu *CPUState, inst uint64) int {
@@ -369,8 +372,8 @@ func CPU_exec_op_xor_i64(cpu *CPUState, inst uint64) int {
     cpu.R[rc(inst)] = cpu.R[rb(inst)] ^ cpu.R[ra(inst)]
     return 2
 }
-func CPU_exec_op_sub_i64(cpu *CPUState, inst uint64) int {
-    cpu.R[rc(inst)] = cpu.R[rb(inst)] - cpu.R[ra(inst)]
+func CPU_exec_op_add_i64(cpu *CPUState, inst uint64) int {
+    cpu.R[rc(inst)] = cpu.R[rb(inst)] + cpu.R[ra(inst)]
     return 2
 }
 func CPU_exec_op_srl_i64(cpu *CPUState, inst uint64) int {
@@ -385,8 +388,8 @@ func CPU_exec_op_sll_i64(cpu *CPUState, inst uint64) int {
     cpu.R[rc(inst)] = cpu.R[rb(inst)] << cpu.R[ra(inst)]
     return 2
 }
-func CPU_exec_op_add_i64(cpu *CPUState, inst uint64) int {
-    cpu.R[rc(inst)] = cpu.R[rb(inst)] + cpu.R[ra(inst)]
+func CPU_exec_op_sub_i64(cpu *CPUState, inst uint64) int {
+    cpu.R[rc(inst)] = cpu.R[rb(inst)] - cpu.R[ra(inst)]
     return 2
 }
 func CPU_exec_op_mul_i64(cpu *CPUState, inst uint64) int {
@@ -423,6 +426,9 @@ func op_out_ib3(inst uint64) string {
 }
 func op_out_ib6(inst uint64) string {
     return fmt.Sprintf("ib(%d)", uimm6(inst));
+}
+func op_out_pcib6(inst uint64) string {
+    return fmt.Sprintf("ib(%d)(pc)", uimm6(inst));
 }
 func op_out_ui3x8(inst uint64) string {
     return fmt.Sprintf("%d", uimm3(inst) << 3);
@@ -471,29 +477,29 @@ var cpu_opcode_str = [32]string{
     CPU_op_ibj:            "ibj",
     CPU_op_jalib:          "jalib",
     CPU_op_jtlib:          "jtlib",
-    CPU_op_lib_i64:        "lib.i64",
-    CPU_op_li_i64:         "li.i64",
+    CPU_op_movib_i64:      "movib.i64",
+    CPU_op_movi_i64:       "movi.i64",
     CPU_op_addi_i64:       "addi.i64",
     CPU_op_srli_i64:       "srli.i64",
     CPU_op_srai_i64:       "srai.i64",
     CPU_op_slli_i64:       "slli.i64",
     CPU_op_addib_i64:      "addib.i64",
+    CPU_op_leapc_i64:      "leapc.i64",
+    CPU_op_loadpc_i64:     "loadib.i64",
+    CPU_op_storepc_i64:    "storeib.i64",
     CPU_op_load_i64:       "load.i64",
-    CPU_op_loadib_i64:     "loadib.i64",
-    CPU_op_cmp_i64:        "cmp.i64",
-    CPU_op_subib_i64:      "subib.i64",
     CPU_op_store_i64:      "store.i64",
-    CPU_op_storeib_i64:    "storeib.i64",
+    CPU_op_compare_i64:    "compare.i64",
     CPU_op_logic_i64:      "logic.i64",
     CPU_op_pin_i64:        "pin.i64",
     CPU_op_and_i64:        "and.i64",
     CPU_op_or_i64:         "or.i64",
     CPU_op_xor_i64:        "xor.i64",
-    CPU_op_sub_i64:        "sub.i64",
+    CPU_op_add_i64:        "add.i64",
     CPU_op_srl_i64:        "srl.i64",
     CPU_op_sra_i64:        "sra.i64",
     CPU_op_sll_i64:        "sll.i64",
-    CPU_op_add_i64:        "add.i64",
+    CPU_op_sub_i64:        "sub.i64",
     CPU_op_mul_i64:        "mul.i64",
     CPU_op_div_i64:        "div.i64",
     CPU_op_illegal:        "illegal",
@@ -525,6 +531,7 @@ var cpu_op_out = []OpOutFn{
     op_logic:              op_out_logic,
     op_ib3:                op_out_ib3,
     op_ib6:                op_out_ib6,
+    op_pcib6:              op_out_pcib6,
     op_ui3x8:              op_out_ui3x8,
     op_ui6:                op_out_ui6,
     op_ui9:                op_out_ui9,
@@ -549,11 +556,8 @@ var cpu_op_args = [][10]OpArg{
     op1r_ib64_uimm6:       { op_nm, op_sp, op_rc, op_sc, op_ib6 },
     op1r_simm6:            { op_nm, op_sp, op_rc, op_sc, op_si6 },
     op1r_uimm6:            { op_nm, op_sp, op_rc, op_sc, op_ui6 },
-    op2r_ib64_uimm3:       { op_nm, op_sp, op_rc, op_sc, op_rb,
-                             op_sc, op_ib3 },
+    op1r_mib64_uimm6:      { op_nm, op_sp, op_rc, op_sc, op_pcib6 },
     op2r_mem64_uimm3x8:    { op_nm, op_sp, op_rc, op_sc, op_ui3x8,
-                             op_op, op_rb, op_cp },
-    op2r_mib64_uimm3:      { op_nm, op_sp, op_rc, op_sc, op_ib3,
                              op_op, op_rb, op_cp },
     op2r_fun3_compare:     { op_compare, op_sp, op_rc, op_sc, op_rb },
     op2r_fun3_logic:       { op_logic, op_sp, op_rc, op_sc, op_rb },
@@ -568,29 +572,29 @@ var cpu_op_type = [32]OpForm{
     CPU_op_ibj:            op0r_simm9x64,
     CPU_op_jalib:          op1r_ib32x2_uimm6_src,
     CPU_op_jtlib:          op1r_ib32x2_uimm6_dst,
-    CPU_op_lib_i64:        op1r_ib64_uimm6,
-    CPU_op_li_i64:         op1r_simm6,
+    CPU_op_movib_i64:      op1r_ib64_uimm6,
+    CPU_op_movi_i64:       op1r_simm6,
     CPU_op_addi_i64:       op1r_simm6,
     CPU_op_srli_i64:       op1r_uimm6,
     CPU_op_srai_i64:       op1r_uimm6,
     CPU_op_slli_i64:       op1r_uimm6,
-    CPU_op_addib_i64:      op2r_ib64_uimm3,
+    CPU_op_addib_i64:      op1r_mib64_uimm6,
+    CPU_op_leapc_i64:      op1r_mib64_uimm6,
+    CPU_op_loadpc_i64:     op1r_mib64_uimm6,
+    CPU_op_storepc_i64:    op1r_mib64_uimm6,
     CPU_op_load_i64:       op2r_mem64_uimm3x8,
-    CPU_op_loadib_i64:     op2r_mib64_uimm3,
-    CPU_op_cmp_i64:        op2r_fun3_compare,
-    CPU_op_subib_i64:      op2r_ib64_uimm3,
     CPU_op_store_i64:      op2r_mem64_uimm3x8,
-    CPU_op_storeib_i64:    op2r_mib64_uimm3,
+    CPU_op_compare_i64:    op2r_fun3_compare,
     CPU_op_logic_i64:      op2r_fun3_logic,
     CPU_op_pin_i64:        op3r,
     CPU_op_and_i64:        op3r,
     CPU_op_or_i64:         op3r,
     CPU_op_xor_i64:        op3r,
-    CPU_op_sub_i64:        op3r,
+    CPU_op_add_i64:        op3r,
     CPU_op_srl_i64:        op3r,
     CPU_op_sra_i64:        op3r,
     CPU_op_sll_i64:        op3r,
-    CPU_op_add_i64:        op3r,
+    CPU_op_sub_i64:        op3r,
     CPU_op_mul_i64:        op3r,
     CPU_op_div_i64:        op3r,
     CPU_op_illegal:        op0r_uimm9,
@@ -643,11 +647,11 @@ func CPU_encode_op_jalib(rc, ibrel6 int) uint16 {
 func CPU_encode_op_jtlib(rc, ibrel6 int) uint16 {
     return op1ri6_enc(CPU_op_jtlib, rc, ibrel6)
 }
-func CPU_encode_op_lib_i64(rc, ibrel6 int) uint16 {
-    return op1ri6_enc(CPU_op_lib_i64, rc, ibrel6)
+func CPU_encode_op_movib_i64(rc, ibrel6 int) uint16 {
+    return op1ri6_enc(CPU_op_movib_i64, rc, ibrel6)
 }
-func CPU_encode_op_li_i64(rc, imm6 int) uint16 {
-    return op1ri6_enc(CPU_op_li_i64, rc, imm6)
+func CPU_encode_op_movi_i64(rc, imm6 int) uint16 {
+    return op1ri6_enc(CPU_op_movi_i64, rc, imm6)
 }
 func CPU_encode_op_addi_i64(rc, imm6 int) uint16 {
     return op1ri6_enc(CPU_op_addi_i64, rc, imm6)
@@ -661,44 +665,44 @@ func CPU_encode_op_srai_i64(rc, imm6 int) uint16 {
 func CPU_encode_op_slli_i64(rc, imm6 int) uint16 {
     return op1ri6_enc(CPU_op_slli_i64, rc, imm6)
 }
-func CPU_encode_op_addib_i64(rc, rb, ibimm3 int) uint16 {
-    return op2ri3_enc(CPU_op_addib_i64, rc, rb, ibimm3)
+func CPU_encode_op_addib_i64(rc, ibimm6 int) uint16 {
+    return op1ri6_enc(CPU_op_addib_i64, rc, ibimm6)
+}
+func CPU_encode_op_leapc_i64(rc, ibimm6 int) uint16 {
+    return op1ri6_enc(CPU_op_leapc_i64, rc, ibimm6)
+}
+func CPU_encode_op_loadpc_i64(rc, ibimm6 int) uint16 {
+    return op1ri6_enc(CPU_op_loadpc_i64, rc, ibimm6)
+}
+func CPU_encode_op_storepc_i64(rc, ibimm6 int) uint16 {
+    return op1ri6_enc(CPU_op_storepc_i64, rc, ibimm6)
 }
 func CPU_encode_op_load_i64(rc, rb, imm3 int) uint16 {
     return op2ri3_enc(CPU_op_load_i64, rc, rb, imm3 >> 3)
 }
-func CPU_encode_op_loadib_i64(rc, rb, ibimm3 int) uint16 {
-    return op2ri3_enc(CPU_op_loadib_i64, rc, rb, ibimm3)
-}
-func CPU_encode_op_cmp_lt_i64(rc, rb int) uint16 {
-    return op2ri3_enc(CPU_op_cmp_i64, rc, rb, int(CPU_compare_lt))
-}
-func CPU_encode_op_cmp_ge_i64(rc, rb int) uint16 {
-    return op2ri3_enc(CPU_op_cmp_i64, rc, rb, int(CPU_compare_ge))
-}
-func CPU_encode_op_cmp_eq_i64(rc, rb int) uint16 {
-    return op2ri3_enc(CPU_op_cmp_i64, rc, rb, int(CPU_compare_eq))
-}
-func CPU_encode_op_cmp_ne_i64(rc, rb int) uint16 {
-    return op2ri3_enc(CPU_op_cmp_i64, rc, rb, int(CPU_compare_ne))
-}
-func CPU_encode_op_cmp_ltu_i64(rc, rb int) uint16 {
-    return op2ri3_enc(CPU_op_cmp_i64, rc, rb, int(CPU_compare_ltu))
-}
-func CPU_encode_op_cmp_geu_i64(rc, rb int) uint16 {
-    return op2ri3_enc(CPU_op_cmp_i64, rc, rb, int(CPU_compare_geu))
-}
-func CPU_encode_op_cmov_i64(rc, rb int) uint16 {
-    return op2ri3_enc(CPU_op_cmp_i64, rc, rb, int(CPU_compare_mov))
-}
-func CPU_encode_op_subib_i64(rc, rb, ibimm3 int) uint16 {
-    return op2ri3_enc(CPU_op_subib_i64, rc, rb, ibimm3)
-}
 func CPU_encode_op_store_i64(rc, rb, imm3 int) uint16 {
     return op2ri3_enc(CPU_op_store_i64, rc, rb, imm3 >> 3)
 }
-func CPU_encode_op_storeib_i64(rc, rb, ibimm3 int) uint16 {
-    return op2ri3_enc(CPU_op_storeib_i64, rc, rb, ibimm3)
+func CPU_encode_op_cmp_lt_i64(rc, rb int) uint16 {
+    return op2ri3_enc(CPU_op_compare_i64, rc, rb, int(CPU_compare_lt))
+}
+func CPU_encode_op_cmp_ge_i64(rc, rb int) uint16 {
+    return op2ri3_enc(CPU_op_compare_i64, rc, rb, int(CPU_compare_ge))
+}
+func CPU_encode_op_cmp_eq_i64(rc, rb int) uint16 {
+    return op2ri3_enc(CPU_op_compare_i64, rc, rb, int(CPU_compare_eq))
+}
+func CPU_encode_op_cmp_ne_i64(rc, rb int) uint16 {
+    return op2ri3_enc(CPU_op_compare_i64, rc, rb, int(CPU_compare_ne))
+}
+func CPU_encode_op_cmp_ltu_i64(rc, rb int) uint16 {
+    return op2ri3_enc(CPU_op_compare_i64, rc, rb, int(CPU_compare_ltu))
+}
+func CPU_encode_op_cmp_geu_i64(rc, rb int) uint16 {
+    return op2ri3_enc(CPU_op_compare_i64, rc, rb, int(CPU_compare_geu))
+}
+func CPU_encode_op_cmov_i64(rc, rb int) uint16 {
+    return op2ri3_enc(CPU_op_compare_i64, rc, rb, int(CPU_compare_mov))
 }
 func CPU_encode_op_mov_i64(rc, rb int) uint16 {
     return op2ri3_enc(CPU_op_logic_i64, rc, rb, int(CPU_logic_mov))
@@ -773,29 +777,29 @@ func CPU_exec(cpu *CPUState, inst uint64) int {
     case CPU_op_ibj: return CPU_exec_op_ibj(cpu, inst)
     case CPU_op_jalib: return CPU_exec_op_jalib(cpu, inst)
     case CPU_op_jtlib: return CPU_exec_op_jtlib(cpu, inst)
-    case CPU_op_lib_i64: return CPU_exec_op_lib_i64(cpu, inst)
-    case CPU_op_li_i64: return CPU_exec_op_li_i64(cpu, inst)
+    case CPU_op_movib_i64: return CPU_exec_op_movib_i64(cpu, inst)
+    case CPU_op_movi_i64: return CPU_exec_op_movi_i64(cpu, inst)
     case CPU_op_addi_i64: return CPU_exec_op_addi_i64(cpu, inst)
     case CPU_op_srli_i64: return CPU_exec_op_srli_i64(cpu, inst)
     case CPU_op_srai_i64: return CPU_exec_op_srai_i64(cpu, inst)
     case CPU_op_slli_i64: return CPU_exec_op_slli_i64(cpu, inst)
     case CPU_op_addib_i64: return CPU_exec_op_addib_i64(cpu, inst)
+    case CPU_op_leapc_i64: return CPU_exec_op_leapc_i64(cpu, inst)
+    case CPU_op_loadpc_i64: return CPU_exec_op_loadpc_i64(cpu, inst)
+    case CPU_op_storepc_i64: return CPU_exec_op_storepc_i64(cpu, inst)
     case CPU_op_load_i64: return CPU_exec_op_load_i64(cpu, inst)
-    case CPU_op_loadib_i64: return CPU_exec_op_loadib_i64(cpu, inst)
-    case CPU_op_cmp_i64: return CPU_exec_op_cmp_i64(cpu, inst)
-    case CPU_op_subib_i64: return CPU_exec_op_subib_i64(cpu, inst)
     case CPU_op_store_i64: return CPU_exec_op_store_i64(cpu, inst)
-    case CPU_op_storeib_i64: return CPU_exec_op_storeib_i64(cpu, inst)
+    case CPU_op_compare_i64: return CPU_exec_op_compare_i64(cpu, inst)
     case CPU_op_logic_i64: return CPU_exec_op_logic_i64(cpu, inst)
     case CPU_op_pin_i64: return CPU_exec_op_pin_i64(cpu, inst)
     case CPU_op_and_i64: return CPU_exec_op_and_i64(cpu, inst)
     case CPU_op_or_i64: return CPU_exec_op_or_i64(cpu, inst)
     case CPU_op_xor_i64: return CPU_exec_op_xor_i64(cpu, inst)
-    case CPU_op_sub_i64: return CPU_exec_op_sub_i64(cpu, inst)
+    case CPU_op_add_i64: return CPU_exec_op_add_i64(cpu, inst)
     case CPU_op_srl_i64: return CPU_exec_op_srl_i64(cpu, inst)
     case CPU_op_sra_i64: return CPU_exec_op_sra_i64(cpu, inst)
     case CPU_op_sll_i64: return CPU_exec_op_sll_i64(cpu, inst)
-    case CPU_op_add_i64: return CPU_exec_op_add_i64(cpu, inst)
+    case CPU_op_sub_i64: return CPU_exec_op_sub_i64(cpu, inst)
     case CPU_op_mul_i64: return CPU_exec_op_mul_i64(cpu, inst)
     case CPU_op_div_i64: return CPU_exec_op_div_i64(cpu, inst)
     case CPU_op_illegal: return CPU_exec_op_illegal(cpu, inst)
