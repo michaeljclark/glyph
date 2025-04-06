@@ -909,16 +909,23 @@ __glyph_func__ int cpu_exec(cpu_state *cpu, u64 inst)
  * cpu implementation
  */
 
-__glyph_func__ void cpu_init(cpu_state *cpu, size_t mem_size)
+__glyph_func__ cpu_state cpu_init(size_t mem_size)
 {
-    cpu->flag = 0;
-    memset(cpu->r, 0, sizeof(cpu->r));
-    cpu->pc = 0x800;
-    cpu->ib = 0x400;
-    cpu->mem = calloc(mem_size, 1);
-    cpu->mem_size = mem_size;
-    cpu->is_trace = 1;
-    cpu->is_dump = 0;
+    cpu_state cpu;
+    cpu.flag = 0;
+    memset(cpu.r, 0, sizeof(cpu.r));
+    cpu.pc = 0x800;
+    cpu.ib = 0x400;
+    cpu.mem = calloc(mem_size, 1);
+    cpu.mem_size = mem_size;
+    cpu.is_trace = 1;
+    cpu.is_dump = 0;
+    return cpu;
+}
+
+void cpu_destroy(cpu_state *cpu)
+{
+    free(cpu->mem);
 }
 
 __glyph_func__ void cpu_dump(cpu_state *cpu)
@@ -982,8 +989,7 @@ __glyph_func__ void cpu_test_impl(const char *name,
     u64 *c, size_t cl, u16 *i, size_t il)
 {
     cpu_debug("# test: %s", name);
-    cpu_state cpu;
-    cpu_init(&cpu, 8192);
+    cpu_state cpu = cpu_init(8192);
     cpu_setup(&cpu, c, cl, i, il);
     cpu_debug();
     cpu_debug("++ begin");

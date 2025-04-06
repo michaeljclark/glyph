@@ -737,6 +737,13 @@ def cpu_exec(cpu,inst):
 # cpu implementation
 #
 
+def cpu_init(mem_size):
+    return CpuState(mem_size)
+
+def cpu_destroy(cpu):
+    # release external resources
+    pass
+
 def cpu_dump(cpu):
     cpu_debug("pc:%016x ib:%016x flag:%d" % (
         cpu.pc, cpu.ib, cpu.flag))
@@ -774,7 +781,7 @@ def cpu_setup(cpu,c,i):
 
 def cpu_test(name,c,i):
     cpu_debug("# test: %s" % name)
-    cpu = CpuState(8192)
+    cpu = cpu_init(8192)
     cpu_setup(cpu,c,i)
     cpu_debug()
     cpu_debug("++ begin")

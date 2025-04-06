@@ -824,6 +824,10 @@ func CPU_init(memSize uintptr) *CPUState {
     return cpu
 }
 
+func CPU_destroy(cpu *CPUState) {
+    // release external resources
+}
+
 func CPU_debug(format string, args ...interface{}) {
     fmt.Printf(format + "\n", args...)
 }
