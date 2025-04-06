@@ -1606,8 +1606,8 @@ r7    & ra    & return address / (pc,ib) link vector        & caller \\
 \ainsrcimmsix{15}{rc}{uimm}{01111}{00}{\textbf{storepc.i64} rc, ib32(uimm6*4)(pc)}
 \ainsrcrbimmthree{16}{rc}{rb}{uimm}{10000}{00}{\textbf{load.i64} rc, (uimm3*8)(rb)}
 \ainsrcrbimmthree{17}{rc}{rb}{uimm}{10001}{00}{\textbf{store.i64} rc, (uimm3*8)(rb)}
-\ainsrcrbimmthree{18}{rc}{rb}{uimm}{10010}{00}{\textbf{compare.i64} rc, rb, fun3}
-\ainsrcrbimmthree{19}{rc}{rb}{uimm}{10011}{00}{\textbf{logic.i64} rc, rb, fun3}
+\ainsrcrbimmthree{18}{rc}{rb}{fun3}{10010}{00}{\textbf{compare.i64} rc, rb, fun3}
+\ainsrcrbimmthree{19}{rc}{rb}{fun3}{10011}{00}{\textbf{logic.i64} rc, rb, fun3}
 \ainsrcrbrc{20}{rc}{rb}{ra}{10100}{00}{\textbf{pin.i64} rc, rb, ra}
 \ainsrcrbrc{21}{rc}{rb}{ra}{10101}{00}{\textbf{and.i64} rc, rb, ra}
 \ainsrcrbrc{22}{rc}{rb}{ra}{10110}{00}{\textbf{or.i64} rc, rb, ra}
