@@ -18,7 +18,7 @@ def t():
         cpu_encode_op_movib_i64(0,0),
         cpu_encode_op_movib_i64(1,1),
         cpu_encode_op_pin_i64(2,0,1),
-        cpu_encode_op_jtlib(2,2),
+        cpu_encode_op_jtlib_i64(2,2),
         cpu_encode_op_or_i64(0,0,0),
         cpu_encode_op_movib_i64(3,0),
         cpu_encode_op_break(0),

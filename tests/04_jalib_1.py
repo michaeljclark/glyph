@@ -15,7 +15,7 @@ def t():
         0xffffffffffffffff,
     ]
     i = [
-        cpu_encode_op_jalib(7,0),
+        cpu_encode_op_jalib_i64(7,0),
         cpu_encode_op_or_i64(0,0,0),
         cpu_encode_op_movib_i64(0,0),
         cpu_encode_op_break(0),

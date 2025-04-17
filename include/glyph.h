@@ -32,8 +32,8 @@ enum
     cpu_op_j            = 0b00001, // op0r_imm9 pcrel9*2
     cpu_op_b            = 0b00010, // op0r_imm9 pcrel9*2
     cpu_op_ibj          = 0b00011, // op0r_imm9 pcrel9*64
-    cpu_op_jalib        = 0b00100, // op1r_imm6 ib64(imm6*8)
-    cpu_op_jtlib        = 0b00101, // op1r_imm6 ib64(imm6*8)
+    cpu_op_jalib_i64    = 0b00100, // op1r_imm6 ib64(imm6*8)
+    cpu_op_jtlib_i64    = 0b00101, // op1r_imm6 ib64(imm6*8)
     cpu_op_movib_i64    = 0b00110, // op1r_imm6 ib64(imm6*8)
     cpu_op_movi_i64     = 0b00111, // op1r_imm6
     cpu_op_addi_i64     = 0b01000, // op1r_imm6
@@ -282,7 +282,7 @@ __glyph_func__ int cpu_exec_op_ibj(cpu_state *cpu, u64 inst)
     cpu->ib = cpu->ib + (u64)(simm9(inst) << 6);
     return 2;
 }
-__glyph_func__ int cpu_exec_op_jalib(cpu_state *cpu, u64 inst)
+__glyph_func__ int cpu_exec_op_jalib_i64(cpu_state *cpu, u64 inst)
 {
     u64 rav = cpu_const_i64(cpu, uimm6(inst));
     i32 rpc = (i32)(rav      );
@@ -292,7 +292,7 @@ __glyph_func__ int cpu_exec_op_jalib(cpu_state *cpu, u64 inst)
     cpu->r[rc(inst)] = rav;
     return 0;
 }
-__glyph_func__ int cpu_exec_op_jtlib(cpu_state *cpu, u64 inst)
+__glyph_func__ int cpu_exec_op_jtlib_i64(cpu_state *cpu, u64 inst)
 {
     u64 rav = cpu->r[rc(inst)];
     i32 rpc = (i32)(rav      );
@@ -568,8 +568,8 @@ static const char* cpu_opcode_str[32] =
     [cpu_op_j]              = "j",
     [cpu_op_b]              = "b",
     [cpu_op_ibj]            = "ibj",
-    [cpu_op_jalib]          = "jalib",
-    [cpu_op_jtlib]          = "jtlib",
+    [cpu_op_jalib_i64]      = "jalib.i64",
+    [cpu_op_jtlib_i64]      = "jtlib.i64",
     [cpu_op_movib_i64]      = "movib.i64",
     [cpu_op_movi_i64]       = "movi.i64",
     [cpu_op_addi_i64]       = "addi.i64",
@@ -668,8 +668,8 @@ static const uchar cpu_op_type[32] =
     [cpu_op_j]              = op0r_simm9x2,
     [cpu_op_b]              = op0r_simm9x2,
     [cpu_op_ibj]            = op0r_simm9x64,
-    [cpu_op_jalib]          = op1r_ib32x2_uimm6_src,
-    [cpu_op_jtlib]          = op1r_ib32x2_uimm6_dst,
+    [cpu_op_jalib_i64]      = op1r_ib32x2_uimm6_src,
+    [cpu_op_jtlib_i64]      = op1r_ib32x2_uimm6_dst,
     [cpu_op_movib_i64]      = op1r_ib64_uimm6,
     [cpu_op_movi_i64]       = op1r_simm6,
     [cpu_op_addi_i64]       = op1r_simm6,
@@ -740,11 +740,11 @@ __glyph_func__ u16 cpu_encode_op_b(int pcrel9) {
 __glyph_func__ u16 cpu_encode_op_ibj(int pcrel9) {
     return op0ri9_enc(cpu_op_ibj, pcrel9 >> 6);
 }
-__glyph_func__ u16 cpu_encode_op_jalib(int rc, int ibrel6) {
-    return op1ri6_enc(cpu_op_jalib, rc, ibrel6);
+__glyph_func__ u16 cpu_encode_op_jalib_i64(int rc, int ibrel6) {
+    return op1ri6_enc(cpu_op_jalib_i64, rc, ibrel6);
 }
-__glyph_func__ u16 cpu_encode_op_jtlib(int rc, int ibrel6) {
-    return op1ri6_enc(cpu_op_jtlib, rc, ibrel6);
+__glyph_func__ u16 cpu_encode_op_jtlib_i64(int rc, int ibrel6) {
+    return op1ri6_enc(cpu_op_jtlib_i64, rc, ibrel6);
 }
 __glyph_func__ u16 cpu_encode_op_movib_i64(int rc, int ibrel6) {
     return op1ri6_enc(cpu_op_movib_i64, rc, ibrel6);
@@ -873,8 +873,8 @@ __glyph_func__ int cpu_exec(cpu_state *cpu, u64 inst)
     case cpu_op_j: return cpu_exec_op_j(cpu, inst);
     case cpu_op_b: return cpu_exec_op_b(cpu, inst);
     case cpu_op_ibj: return cpu_exec_op_ibj(cpu, inst);
-    case cpu_op_jalib: return cpu_exec_op_jalib(cpu, inst);
-    case cpu_op_jtlib: return cpu_exec_op_jtlib(cpu, inst);
+    case cpu_op_jalib_i64: return cpu_exec_op_jalib_i64(cpu, inst);
+    case cpu_op_jtlib_i64: return cpu_exec_op_jtlib_i64(cpu, inst);
     case cpu_op_movib_i64: return cpu_exec_op_movib_i64(cpu, inst);
     case cpu_op_movi_i64: return cpu_exec_op_movi_i64(cpu, inst);
     case cpu_op_addi_i64: return cpu_exec_op_addi_i64(cpu, inst);

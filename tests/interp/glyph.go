@@ -20,8 +20,8 @@ const (
     CPU_op_j            Opcode = 0b00001 // op0r_imm9 pcrel9*2
     CPU_op_b            Opcode = 0b00010 // op0r_imm9 pcrel9*2
     CPU_op_ibj          Opcode = 0b00011 // op0r_imm9 pcrel9*64
-    CPU_op_jalib        Opcode = 0b00100 // op1r_imm6 ib64(imm6*8)
-    CPU_op_jtlib        Opcode = 0b00101 // op1r_imm6 ib64(imm6*8)
+    CPU_op_jalib_i64    Opcode = 0b00100 // op1r_imm6 ib64(imm6*8)
+    CPU_op_jtlib_i64    Opcode = 0b00101 // op1r_imm6 ib64(imm6*8)
     CPU_op_movib_i64    Opcode = 0b00110 // op1r_imm6 ib64(imm6*8)
     CPU_op_movi_i64     Opcode = 0b00111 // op1r_imm6
     CPU_op_addi_i64     Opcode = 0b01000 // op1r_imm6
@@ -220,7 +220,7 @@ func CPU_exec_op_ibj(cpu *CPUState, inst uint64) int {
     cpu.IB =  cpu.IB + uint64(simm9(inst) << 6)
     return 2
 }
-func CPU_exec_op_jalib(cpu *CPUState, inst uint64) int {
+func CPU_exec_op_jalib_i64(cpu *CPUState, inst uint64) int {
     rav := CPU_const_i64(cpu, uimm6(inst))
     rpc := int32(rav      )
     rib := int32(rav >> 32)
@@ -229,7 +229,7 @@ func CPU_exec_op_jalib(cpu *CPUState, inst uint64) int {
     cpu.R[rc(inst)] = rav
     return 0
 }
-func CPU_exec_op_jtlib(cpu *CPUState, inst uint64) int {
+func CPU_exec_op_jtlib_i64(cpu *CPUState, inst uint64) int {
     rav := cpu.R[rc(inst)]
     rpc := int32(rav      )
     rib := int32(rav >> 32)
@@ -475,8 +475,8 @@ var cpu_opcode_str = [32]string{
     CPU_op_j:              "j",
     CPU_op_b:              "b",
     CPU_op_ibj:            "ibj",
-    CPU_op_jalib:          "jalib",
-    CPU_op_jtlib:          "jtlib",
+    CPU_op_jalib_i64:      "jalib.i64",
+    CPU_op_jtlib_i64:      "jtlib.i64",
     CPU_op_movib_i64:      "movib.i64",
     CPU_op_movi_i64:       "movi.i64",
     CPU_op_addi_i64:       "addi.i64",
@@ -570,8 +570,8 @@ var cpu_op_type = [32]OpForm{
     CPU_op_j:              op0r_simm9x2,
     CPU_op_b:              op0r_simm9x2,
     CPU_op_ibj:            op0r_simm9x64,
-    CPU_op_jalib:          op1r_ib32x2_uimm6_src,
-    CPU_op_jtlib:          op1r_ib32x2_uimm6_dst,
+    CPU_op_jalib_i64:      op1r_ib32x2_uimm6_src,
+    CPU_op_jtlib_i64:      op1r_ib32x2_uimm6_dst,
     CPU_op_movib_i64:      op1r_ib64_uimm6,
     CPU_op_movi_i64:       op1r_simm6,
     CPU_op_addi_i64:       op1r_simm6,
@@ -641,11 +641,11 @@ func CPU_encode_op_b(pcrel9 int) uint16 {
 func CPU_encode_op_ibj(pcrel9 int) uint16 {
     return op0ri9_enc(CPU_op_ibj, pcrel9 >> 6)
 }
-func CPU_encode_op_jalib(rc, ibrel6 int) uint16 {
-    return op1ri6_enc(CPU_op_jalib, rc, ibrel6)
+func CPU_encode_op_jalib_i64(rc, ibrel6 int) uint16 {
+    return op1ri6_enc(CPU_op_jalib_i64, rc, ibrel6)
 }
-func CPU_encode_op_jtlib(rc, ibrel6 int) uint16 {
-    return op1ri6_enc(CPU_op_jtlib, rc, ibrel6)
+func CPU_encode_op_jtlib_i64(rc, ibrel6 int) uint16 {
+    return op1ri6_enc(CPU_op_jtlib_i64, rc, ibrel6)
 }
 func CPU_encode_op_movib_i64(rc, ibrel6 int) uint16 {
     return op1ri6_enc(CPU_op_movib_i64, rc, ibrel6)
@@ -775,8 +775,8 @@ func CPU_exec(cpu *CPUState, inst uint64) int {
     case CPU_op_j: return CPU_exec_op_j(cpu, inst)
     case CPU_op_b: return CPU_exec_op_b(cpu, inst)
     case CPU_op_ibj: return CPU_exec_op_ibj(cpu, inst)
-    case CPU_op_jalib: return CPU_exec_op_jalib(cpu, inst)
-    case CPU_op_jtlib: return CPU_exec_op_jtlib(cpu, inst)
+    case CPU_op_jalib_i64: return CPU_exec_op_jalib_i64(cpu, inst)
+    case CPU_op_jtlib_i64: return CPU_exec_op_jtlib_i64(cpu, inst)
     case CPU_op_movib_i64: return CPU_exec_op_movib_i64(cpu, inst)
     case CPU_op_movi_i64: return CPU_exec_op_movi_i64(cpu, inst)
     case CPU_op_addi_i64: return CPU_exec_op_addi_i64(cpu, inst)

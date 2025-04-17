@@ -24,8 +24,8 @@ cpu_op_break        = 0b00000 # op0r_imm9
 cpu_op_j            = 0b00001 # op0r_imm9 pcrel9*2
 cpu_op_b            = 0b00010 # op0r_imm9 pcrel9*2
 cpu_op_ibj          = 0b00011 # op0r_imm9 pcrel9*64
-cpu_op_jalib        = 0b00100 # op1r_imm6 ib64(imm6*8)
-cpu_op_jtlib        = 0b00101 # op1r_imm6 ib64(imm6*8)
+cpu_op_jalib_i64    = 0b00100 # op1r_imm6 ib64(imm6*8)
+cpu_op_jtlib_i64    = 0b00101 # op1r_imm6 ib64(imm6*8)
 cpu_op_movib_i64    = 0b00110 # op1r_imm6 ib64(imm6*8)
 cpu_op_movi_i64     = 0b00111 # op1r_imm6
 cpu_op_addi_i64     = 0b01000 # op1r_imm6
@@ -277,7 +277,7 @@ def cpu_exec_op_b(cpu,inst):
 def cpu_exec_op_ibj(cpu,inst):
     cpu.ib = sux(cpu.ib +  (simm9(inst) << 6))
     return 2
-def cpu_exec_op_jalib(cpu,inst):
+def cpu_exec_op_jalib_i64(cpu,inst):
     rav = cpu_const_i64(cpu, uimm6(inst))
     rpc = us32(rav      )
     rib = us32(rav >> 32)
@@ -285,7 +285,7 @@ def cpu_exec_op_jalib(cpu,inst):
     cpu.ib = sux(cpu.ib + rib)
     cpu.r[rc(inst)] = sux(rav)
     return 0
-def cpu_exec_op_jtlib(cpu,inst):
+def cpu_exec_op_jtlib_i64(cpu,inst):
     rav = cpu.r[rc(inst)]
     rpc = us32(rav      )
     rib = us32(rav >> 32)
@@ -458,8 +458,8 @@ cpu_opcode_str = {
     cpu_op_j:              "j",
     cpu_op_b:              "b",
     cpu_op_ibj:            "ibj",
-    cpu_op_jalib:          "jalib",
-    cpu_op_jtlib:          "jtlib",
+    cpu_op_jalib_i64:      "jalib.i64",
+    cpu_op_jtlib_i64:      "jtlib.i64",
     cpu_op_movib_i64:      "movib.i64",
     cpu_op_movi_i64:       "movi.i64",
     cpu_op_addi_i64:       "addi.i64",
@@ -553,8 +553,8 @@ cpu_op_type = {
     cpu_op_j:              op0r_simm9x2,
     cpu_op_b:              op0r_simm9x2,
     cpu_op_ibj:            op0r_simm9x64,
-    cpu_op_jalib:          op1r_ib32x2_uimm6_src,
-    cpu_op_jtlib:          op1r_ib32x2_uimm6_dst,
+    cpu_op_jalib_i64:      op1r_ib32x2_uimm6_src,
+    cpu_op_jtlib_i64:      op1r_ib32x2_uimm6_dst,
     cpu_op_movib_i64:      op1r_ib64_uimm6,
     cpu_op_movi_i64:       op1r_simm6,
     cpu_op_addi_i64:       op1r_simm6,
@@ -610,10 +610,10 @@ def cpu_encode_op_b(pcrel9):
     return op0ri9_enc(cpu_op_b, pcrel9 >> 1)
 def cpu_encode_op_ibj(pcrel9):
     return op0ri9_enc(cpu_op_ibj, pcrel9 >> 6)
-def cpu_encode_op_jalib(rc, ibrel6):
-    return op1ri6_enc(cpu_op_jalib, rc, ibrel6)
-def cpu_encode_op_jtlib(rc, ibrel6):
-    return op1ri6_enc(cpu_op_jtlib, rc, ibrel6)
+def cpu_encode_op_jalib_i64(rc, ibrel6):
+    return op1ri6_enc(cpu_op_jalib_i64, rc, ibrel6)
+def cpu_encode_op_jtlib_i64(rc, ibrel6):
+    return op1ri6_enc(cpu_op_jtlib_i64, rc, ibrel6)
 def cpu_encode_op_movib_i64(rc, ibrel6):
     return op1ri6_enc(cpu_op_movib_i64, rc, ibrel6)
 def cpu_encode_op_movi_i64(rc, imm6):
@@ -700,8 +700,8 @@ cpu_exec_table = {
     cpu_op_j:              cpu_exec_op_j,
     cpu_op_b:              cpu_exec_op_b,
     cpu_op_ibj:            cpu_exec_op_ibj,
-    cpu_op_jalib:          cpu_exec_op_jalib,
-    cpu_op_jtlib:          cpu_exec_op_jtlib,
+    cpu_op_jalib_i64:      cpu_exec_op_jalib_i64,
+    cpu_op_jtlib_i64:      cpu_exec_op_jtlib_i64,
     cpu_op_movib_i64:      cpu_exec_op_movib_i64,
     cpu_op_movi_i64:       cpu_exec_op_movi_i64,
     cpu_op_addi_i64:       cpu_exec_op_addi_i64,
