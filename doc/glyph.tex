@@ -321,7 +321,7 @@ successive instruction packets.
 \draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
 \node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
 \end{tikzpicture}
-\caption{16-bit instruction template.}
+\caption{instruction template --- 16-bit.}
 \label{fig:glyph-instruction-template-16}
 \end{figure}
 
@@ -357,7 +357,7 @@ successive instruction packets.
 \draw [black!90]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
 \node at (5.500000,-0.500000) [font=\scriptsize] {$operand_{[17:9]}$};
 \end{tikzpicture}
-\caption{32-bit instruction template.}
+\caption{instruction template --- 32-bit.}
 \label{fig:glyph-instruction-template-32}
 \end{figure}
 
@@ -411,7 +411,7 @@ successive instruction packets.
 \draw [black!90]  (1.000000,-3.000000) rectangle (10.000000,-2.000000);
 \node at (5.500000,-2.500000) [font=\scriptsize] {$operand_{[35:27]}$};
 \end{tikzpicture}
-\caption{64-bit instruction template.}
+\caption{instruction template --- 64-bit.}
 \label{fig:glyph-instruction-template-64}
 \end{figure}
 
@@ -501,11 +501,11 @@ successive instruction packets.
 \draw [black!90]  (1.000000,-7.000000) rectangle (10.000000,-6.000000);
 \node at (5.500000,-6.500000) [font=\scriptsize] {$operand_{[71:63]}$};
 \end{tikzpicture}
-\caption{128-bit instruction template.}
+\caption{instruction template --- 128-bit.}
 \label{fig:glyph-instruction-template-128}
 \end{figure}
 
-\subsection{size encoding}
+\subsection{instruction size encoding}
 
 the variable length instruction format has a \emph{2-bit} size field in a
 fixed position in every 16-bit instruction packet, somewhat inspired by
@@ -528,7 +528,7 @@ LEB128, to reduce the complexity of variable length instruction size decoding.
 \label{tab:instruction-size-fields}
 \end{table}
 
-\subsection{16-bit instructions}
+\subsection{instruction forms --- 16-bit}
 
 the 16-bit instructions forms are super regular in that operand and opcode
 bits do not overlap and the number and complexity of the formats is reduced
@@ -874,7 +874,7 @@ instruction packet:
 
 \chapter{Instructions} \label{sec:instructions}
 
-\section{16-bit opcodes}
+\section{Instruction listing --- 16-bit}
 
 \needspace{8\baselineskip}
 \subsection{break}
@@ -1460,7 +1460,7 @@ the following table lists glyph assembler pseudo instruction aliases:
 
 \newpage
 \section{Calling convention}
-\subsection{16-bit calling convention}
+\subsection{calling convention --- 16-bit}
 
 the 16-bit instruction packet, while intended to be used in conjunction
 with the 32-bit opcodes, is designed as a complete subset, so there is
@@ -1527,7 +1527,7 @@ r7    & ra    & return address / (pc,ib) link vector        & caller \\
 
 \chapter{Appendix}
 
-\section{16-bit opcodes}
+\section{Opcode summary --- 16-bit}
 
 \newcommand{\ainsnimmnine}[5]{
 \draw [line width=0.2mm, black!80] (0,0-#1)    rectangle (9,1-#1);
