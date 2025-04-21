@@ -1426,14 +1426,22 @@ the following table lists glyph assembler pseudo instruction aliases:
 \texttt{ret}                    & \texttt{jtlib} \emph{ibret-reloc(block-entry-label)} & procedure return \\
 \texttt{cmp.lt.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rc, rb,}
 \texttt{lt} & compare less than (signed) \\
+\texttt{cmp.gt.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rb, rc,}
+\texttt{lt} & compare greater than (signed) \\
+\texttt{cmp.le.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rb, rc,}
+\texttt{ge} & compare less or equal (signed) \\
 \texttt{cmp.ge.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rc, rb,}
 \texttt{ge} & compare greater or equal (signed) \\
 \texttt{cmp.eq.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rc, rb,}
-\texttt{eq} & compare equal (signed) \\
+\texttt{eq} & compare equal \\
 \texttt{cmp.ne.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rc, rb,}
-\texttt{ne} & compare not equal (signed) \\
+\texttt{ne} & compare not equal \\
 \texttt{cmp.ltu.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rc, rb,}
 \texttt{ltu} & compare less than (unsigned) \\
+\texttt{cmp.gtu.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rb, rc,}
+\texttt{ltu} & compare greater than (unsigned) \\
+\texttt{cmp.leu.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rb, rc,}
+\texttt{geu} & compare less or equal (unsigned) \\
 \texttt{cmp.geu.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rc, rb,}
 \texttt{geu} & compare greater or equal (unsigned) \\
 \texttt{cmov.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rc, rb,}
