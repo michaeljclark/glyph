@@ -1123,8 +1123,9 @@ register. the type of logic operations in \emph{fun3} can be one of:
 \emph{2} \textrightarrow \emph{negate},
 \emph{3} \textrightarrow \emph{bswap},
 \emph{4} \textrightarrow \emph{count trailing zeros},
-\emph{5} \textrightarrow \emph{count leading zeros}, or
-\emph{6} \textrightarrow \emph{count population}.
+\emph{5} \textrightarrow \emph{count leading zeros},
+\emph{6} \textrightarrow \emph{count population}, or
+\emph{7} \textrightarrow \emph{sign extend}.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     match fun3
     | mov   -> r[rc] = r[rb]
@@ -1134,6 +1135,7 @@ register. the type of logic operations in \emph{fun3} can be one of:
     | ctz   -> r[rc] = ctz(r[rb])
     | clz   -> r[rc] = clz(r[rb])
     | ctpop -> r[rc] = ctpop(r[rb])
+    | sext  -> r[rc] = sext(r[rb])
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1460,6 +1462,8 @@ the following table lists glyph assembler pseudo instruction aliases:
 \texttt{clz} & count leading zeroes \\
 \texttt{ctpop.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
 \texttt{ctpop} & count population \\
+\texttt{sext.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
+\texttt{sext} & sign extend \\
 \hline
 \end{tabular}
 \caption{Pseudo instructions}

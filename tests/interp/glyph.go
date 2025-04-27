@@ -76,6 +76,7 @@ const (
     CPU_logic_ctz       Fun3Logic = 0b100
     CPU_logic_clz       Fun3Logic = 0b101
     CPU_logic_ctpop     Fun3Logic = 0b110
+    CPU_logic_sext      Fun3Logic = 0b111
 )
 
 /*
@@ -349,6 +350,9 @@ func CPU_exec_op_logic_i64(cpu *CPUState, inst uint64) int {
     case CPU_logic_ctpop:
         cpu.R[rc(inst)] = uint64(bits.OnesCount64(cpu.R[rb(inst)]))
         break
+    case CPU_logic_sext:
+        cpu.R[rc(inst)] = cpu.R[rb(inst)]
+        break
     default:
         return -1
     }
@@ -523,6 +527,7 @@ var cpu_fun3_logic_str = [8]string{
     CPU_logic_ctz:         "ctz.i64",
     CPU_logic_clz:         "clz.i64",
     CPU_logic_ctpop:       "ctpop.i64",
+    CPU_logic_sext:        "sext.i64",
 }
 
 var cpu_op_out = []OpOutFn{
@@ -724,6 +729,9 @@ func CPU_encode_op_clz_i64(rc, rb int) uint16 {
 }
 func CPU_encode_op_ctpop_i64(rc, rb int) uint16 {
     return op2ri3_enc(CPU_op_logic_i64, rc, rb, int(CPU_logic_ctpop))
+}
+func CPU_encode_op_sext_i64(rc, rb int) uint16 {
+    return op2ri3_enc(CPU_op_logic_i64, rc, rb, int(CPU_logic_sext))
 }
 func CPU_encode_op_pin_i64(rc, rb, ra int) uint16 {
     return op3ri0_enc(CPU_op_pin_i64, rc, rb, ra)

@@ -76,6 +76,7 @@ cpu_logic_bswap     = 0b011
 cpu_logic_ctz       = 0b100
 cpu_logic_clz       = 0b101
 cpu_logic_ctpop     = 0b110
+cpu_logic_sext      = 0b111
 
 #
 # op arg
@@ -371,6 +372,8 @@ def cpu_exec_op_logic_i64(cpu,inst):
         cpu.r[rc(inst)] = clz(64, cpu.r[rb(inst)])
     elif fun == cpu_logic_ctpop:
         cpu.r[rc(inst)] = ctpop(64, cpu.r[rb(inst)])
+    elif fun == cpu_logic_sext:
+        cpu.r[rc(inst)] = cpu.r[rb(inst)]
     return 2
 def cpu_exec_op_pin_i64(cpu,inst):
     rpc = cpu.pc - cpu.r[ra(inst)] + 2
@@ -506,6 +509,7 @@ cpu_fun3_logic_str = {
     cpu_logic_ctz:         "ctz.i64",
     cpu_logic_clz:         "clz.i64",
     cpu_logic_ctpop:       "ctpop.i64",
+    cpu_logic_sext:        "sext.i64",
 }
 
 cpu_op_out = {
@@ -666,6 +670,8 @@ def cpu_encode_op_clz_i64(rc, rb):
     return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_clz)
 def cpu_encode_op_ctpop_i64(rc, rb):
     return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_ctpop)
+def cpu_encode_op_sext_i64(rc, rb):
+    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_sext)
 def cpu_encode_op_pin_i64(rc, rb, ra):
     return op3ri0_enc(cpu_op_pin_i64, rc, rb, ra)
 def cpu_encode_op_and_i64(rc, rb, ra):

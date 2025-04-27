@@ -90,6 +90,7 @@ enum
     cpu_logic_ctz       = 0b100,
     cpu_logic_clz       = 0b101,
     cpu_logic_ctpop     = 0b110,
+    cpu_logic_sext      = 0b111,
 };
 
 /*
@@ -427,6 +428,9 @@ __glyph_func__ int cpu_exec_op_logic_i64(cpu_state *cpu, u64 inst)
     case cpu_logic_ctpop:
         cpu->r[rc(inst)] = (u64)__builtin_popcountll(cpu->r[rb(inst)]);
         break;
+    case cpu_logic_sext:
+        cpu->r[rc(inst)] = cpu->r[rb(inst)];
+        break;
     default:
         return -1;
     }
@@ -618,6 +622,7 @@ static const char* cpu_fun3_logic_str[8] =
     [cpu_logic_ctz]         = "ctz.i64",
     [cpu_logic_clz]         = "clz.i64",
     [cpu_logic_ctpop]       = "ctpop.i64",
+    [cpu_logic_sext]        = "sext.i64",
 };
 
 static const op_out_fn cpu_op_out[] =
@@ -823,6 +828,9 @@ __glyph_func__ u16 cpu_encode_op_clz_i64(int rc, int rb) {
 }
 __glyph_func__ u16 cpu_encode_op_ctpop_i64(int rc, int rb) {
     return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_ctpop);
+}
+__glyph_func__ u16 cpu_encode_op_sext_i64(int rc, int rb) {
+    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_sext);
 }
 __glyph_func__ u16 cpu_encode_op_pin_i64(int rc, int rb, int ra) {
     return op3ri0_enc(cpu_op_pin_i64, rc, rb, ra);

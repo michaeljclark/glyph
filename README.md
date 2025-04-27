@@ -86,7 +86,7 @@ this list outlines instructions, opcodes, and descriptions used in the
 | 18 | compare.i64  | op2r_fun3_16 | 10010 | **compare** rc,rb                           |
 |    |              |              |       |   fun3=lt,ge,eq,ne,ltu,geu,mov              |
 | 19 | logic.i64    | op2r_fun3_16 | 10011 | **logic** rc,rb                             |
-|    |              |              |       |   fun3=mov,not,neg,bswap,ctz,clz,ctpop      |
+|    |              |              |       |   fun3=mov,not,neg,bswap,ctz,clz,ctpop,sext |
 | 20 | pin.i64      | op3r_16      | 10100 | **pack-indirect** rc,rb,ra                  |
 |    |              |              |       |   i32x2(rc) = (pc-ra+2,ib-rb);              |
 | 21 | and.i64      | op3r_16      | 10101 | **and** rc,rb,ra                            |
