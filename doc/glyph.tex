@@ -982,7 +982,7 @@ register.
 the \emph{addi} or \emph{add-immediate} instruction sign-extends the
 immediate value in \emph{simm6} then adds it to the \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = r[rc] + simm6
+    r[rc] += simm6
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1026,7 +1026,7 @@ the \emph{addib} or \emph{add-immediate-block-constant} instruction loads
 a 32-bit constant addressed by \emph{$[ib + uimm6 \times 4]$}, which it
 sign-extends to 64-bits, then adds to the \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = r[rc] + (i64)[ib + uimm6 * 4]
+    r[rc] += (i32)[ib + uimm6 * 4]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
