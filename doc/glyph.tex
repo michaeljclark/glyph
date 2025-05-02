@@ -880,17 +880,18 @@ instruction packet:
 \subsection{break}
 \insnimmnine{uimm}{00000}{00}{\textbf{break} uimm9}
 \\
-The \emph{break} instruction causes a trap to the debugger.
-The program counter and trap cause are saved to privileged
-registers for the operating system to dispatch to a debugger.
+the \emph{break} instruction causes a debugger trap.
+\emph{program counter} and trap cause are saved to privileged
+registers for the operating system to dispatch to a debugger
+and the \emph{program counter} is set to a trap vector address.
 
 \needspace{8\baselineskip}
 \subsection{j}
 \insnimmnine{simm}{00001}{00}{\textbf{j} simm9}
 \\
-The \emph{j} or \emph{jump} instruction is an unconditional branch instruction
-that adds a relative immediate address to the program counter.
-The resulting address is \emph{pc + simm9 + 2}.
+the \emph{j} or \emph{jump} instruction is an unconditional branch instruction
+that adds a relative immediate address to the \emph{program counter}. the
+resulting \emph{program counter} address is \emph{$[pc + simm9 \times 2 + 2]$}.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     pc += simm9 * 2 + 2
 \end{Verbatim}
@@ -899,10 +900,11 @@ The resulting address is \emph{pc + simm9 + 2}.
 \subsection{b}
 \insnimmnine{simm}{00010}{00}{\textbf{b} simm9}
 \\
-The \emph{b} or \emph{branch} instruction is a conditional branch instruction
-that adds a relative immediate address to the program counter, if
-the \emph{flag} register has been set by a compare instruction.
-The resulting address is \emph{pc + simm9 + 2}.
+the \emph{b} or \emph{branch} instruction is a conditional branch instruction
+that adds a relative immediate address to the \emph{program counter}. if the
+\emph{flag} register has been set by a compare instruction, the resulting
+\emph{program counter} address is \emph{$[pc + simm9 \times 2 + 2]$},
+otherwise the \emph{program counter} is advanced normally.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     if flag:
         pc += simm9 * 2 + 2
@@ -913,7 +915,8 @@ The resulting address is \emph{pc + simm9 + 2}.
 \insnimmnine{simm}{00011}{00}{\textbf{ibj} simm9}
 \\
 the \emph{ibj} or \emph{immediate-block-jump} instruction adds a
-64-bit relative address to the immediate base register.
+64-bit relative address to the \emph{immediate base} register.
+the resulting \emph{immediate base} address is \emph{$[ib + simm9 \times 64]$}.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     ib += simm9 * 64
 \end{Verbatim}
@@ -923,9 +926,9 @@ the \emph{ibj} or \emph{immediate-block-jump} instruction adds a
 \insrcimmsix{rc}{uimm}{00100}{00}{\textbf{jalib} rc, ib64(uimm6*8)}
 \\
 the \emph{jalib} or \emph{jump-and-link-immediate-block} instruction
-loads a 64-bit constant addressed by \emph{[ib + uimm6 * 8]} containing
-a \emph{i32x2} relative address vector, adds it to \emph{(pc,ib)},
-then saves the relative address vector to the \emph{rc} register.
+loads a 64-bit constant addressed by \emph{$[ib + uimm6 \times 8]$} containing
+a \emph{i32x2} relative address vector, which it adds it to \emph{(pc,ib)},
+then saves the relative address vector in the \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     tmp = (i32x2)[ib + uimm6 * 8]
     {rpc,rib} = (i32x2)tmp
@@ -939,10 +942,10 @@ then saves the relative address vector to the \emph{rc} register.
 \insrcimmsix{rc}{uimm}{00101}{00}{\textbf{jtlib} rc, ib64(uimm6*8)}
 \\
 the \emph{jtlib} or \emph{jump-to-link-immediate-block} instruction
-loads a 64-bit constant addressed by \emph{[ib + uimm6 * 8]} containing a
-\emph{i32x2} relative address vector, subtracts the \emph{i32x2}
-relative address vector in the \emph{rc} register from it, then adds it
-to \emph{(pc,ib)}.
+loads a 64-bit constant addressed by \emph{$[ib + uimm6 \times 8]$}
+containing a \emph{i32x2} relative address vector, then subtracts the
+\emph{i32x2} relative address vector in the \emph{rc} register from it,
+and adds the result to \emph{(pc,ib)}.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     {rpc,rib} = (i32x2)r[rc]
     {dpc,dib} = (i32x2)[ib + uimm6 * 8]
@@ -955,7 +958,7 @@ to \emph{(pc,ib)}.
 \insrcimmsix{rc}{uimm}{00110}{00}{\textbf{movib.i64} rc, ib64(uimm6*8)}
 \\
 the \emph{movib} or \emph{move-immediate-block} instruction loads a 64-bit
-constant addressed by \emph{[ib + uimm6 * 8]} then saves it to the
+constant addressed by \emph{$[ib + uimm6 \times 8]$} then saves it to the
 \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     r[rc] = (i64)[ib + uimm6 * 8]
@@ -966,7 +969,8 @@ constant addressed by \emph{[ib + uimm6 * 8]} then saves it to the
 \insrcimmsix{rc}{simm}{00111}{00}{\textbf{movi.i64} rc, simm6}
 \\
 the \emph{movi} or \emph{move-immediate} instruction sign-extends the
-immediate value in \emph{simm6} then saves it to the \emph{rc} register.
+immediate value in \emph{simm6} then saves the result in the \emph{rc}
+register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     r[rc] = simm6
 \end{Verbatim}
@@ -987,7 +991,7 @@ immediate value in \emph{simm6} then adds it to the \emph{rc} register.
 \\
 the \emph{srli} or \emph{shift-right-logical-immediate} instruction
 performs a logical right shift by \emph{uimm6} bits of the value in
-the \emph{rc} register. zeros are copied into the right most bits.
+the \emph{rc} register. zeros are copied into the left most bits.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     r[rc] = (u64)r[rc] >> uimm6
 \end{Verbatim}
@@ -998,7 +1002,7 @@ the \emph{rc} register. zeros are copied into the right most bits.
 \\
 the \emph{srai} or \emph{shift-right-arithmetic-immediate} instruction
 performs an arithmetic right shift by \emph{uimm6} bits of the value in
-the \emph{rc} register. sign is copied into the right most bits.
+the \emph{rc} register. the sign is copied into the left most bits.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     r[rc] = (i64)r[rc] >> uimm6
 \end{Verbatim}
@@ -1009,7 +1013,7 @@ the \emph{rc} register. sign is copied into the right most bits.
 \\
 the \emph{slli} or \emph{shift-left-logical-immediate} instruction
 performs a logical left shift by \emph{uimm6} bits of the value in
-the \emph{rc} register.
+the \emph{rc} register. zeros are copied into the right most bits.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     r[rc] = r[rc] << uimm6
 \end{Verbatim}
@@ -1019,9 +1023,8 @@ the \emph{rc} register.
 \insrcimmsix{rc}{uimm}{01100}{00}{\textbf{addib.i64} rc, ib32(uimm6*4)}
 \\
 the \emph{addib} or \emph{add-immediate-block-constant} instruction loads
-a 32-bit constant addressed by \emph{[ib + uimm6 * 4]}, sign-extends
-it to 64-bits, adds it to the \emph{rc} register and saves the result
-in the \emph{rc} register.
+a 32-bit constant addressed by \emph{$[ib + uimm6 \times 4]$}, which it
+sign-extends to 64-bits, then adds to the \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     r[rc] = r[rc] + (i64)[ib + uimm6 * 4]
 \end{Verbatim}
@@ -1031,8 +1034,8 @@ in the \emph{rc} register.
 \insrcimmsix{rc}{uimm}{01101}{00}{\textbf{leapc.i64} rc, ib32(uimm6*4)(pc)}
 \\
 the \emph{leapc} or \emph{load-effective-address-pc} instruction
-loads a 32-bit constant addressed by \emph{[ib + uimm6 * 4]},
-sign-extends it to 64-bits, adds it to the \emph{program counter}
+loads a 32-bit constant addressed by \emph{$[ib + uimm6 \times 4]$},
+which it sign-extends to 64-bits, adds it to the \emph{program counter},
 and saves the result in the \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     r[rc] = pc + (i32)[ib + uimm6 * 4]
@@ -1043,9 +1046,9 @@ and saves the result in the \emph{rc} register.
 \insrcimmsix{rc}{uimm}{01110}{00}{\textbf{loadpc.i64} rc, ib32(uimm6*4)(pc)}
 \\
 the \emph{loadpc} instruction loads a 32-bit constant addressed by
-\emph{[ib + uimm6 * 4]} which it sign-extends to 64-bit, adds it to the
-\emph{program counter} to form an address, then loads a 64-bit value from
-memory at that address and saves the result in the \emph{rc} register.
+\emph{$[ib + uimm6 \times 4]$} which it sign-extends to 64-bit, adds it to
+the \emph{program counter} to form an address, then loads a 64-bit value
+from memory at that address and saves the result in the \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     r[rc] = (i64)[pc + (i32)[ib + uimm6 * 4]]
 \end{Verbatim}
@@ -1055,7 +1058,7 @@ memory at that address and saves the result in the \emph{rc} register.
 \insrcimmsix{rc}{uimm}{01111}{00}{\textbf{storepc.i64} rc, ib32(uimm6*4)(pc)}
 \\
 the \emph{storepc} instruction loads a 32-bit constant addressed by
-\emph{[ib + uimm6 * 4]} which it sign-extends to 64-bit, adds it to the
+\emph{$[ib + uimm6 \times 4]$} which it sign-extends to 64-bit, adds it to the
 \emph{program counter} to form an address, then stores to memory at that
 address a 64-bit value from the \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
@@ -1066,9 +1069,9 @@ address a 64-bit value from the \emph{rc} register.
 \subsection{load.i64}
 \insrcrbimmthree{rc}{rb}{uimm}{10000}{00}{\textbf{load.i64} rc, (uimm3*8)(rb)}
 \\
-the \emph{load} instruction adds \emph{uimm3 * 8} to the \emph{rb}
-to form an address, then loads a 64-bit value from memory at that
-address and saves the result in the \emph{rc} register.
+the \emph{load} instruction computes the address \emph{$[rb + uimm3 \times 8]$}
+then loads a 64-bit value from memory at that address and saves the result in
+the \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     r[rc] = (i64)[r[rb] + uimm3 * 8]
 \end{Verbatim}
@@ -1077,9 +1080,9 @@ address and saves the result in the \emph{rc} register.
 \subsection{store.i64}
 \insrcrbimmthree{rc}{rb}{uimm}{10001}{00}{\textbf{store.i64} rc, (uimm3*8)(rb)}
 \\
-the \emph{store} instruction adds \emph{uimm3 * 8} to the \emph{rb}
-register to form an address, then stores to memory at that address a
-64-bit value from the \emph{rc} register.
+the \emph{store} instruction computes the address \emph{$[rb + uimm3 \times 8]$}
+then stores a 64-bit value to memory at that address containing a 64-bit value
+from the \emph{rc} register.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     (i64)[r[rb] + uimm3 * 8] = r[rc]
 \end{Verbatim}
@@ -1089,7 +1092,7 @@ register to form an address, then stores to memory at that address a
 \insrcrbimmthree{rc}{rb}{uimm}{10010}{00}{\textbf{cmp.i64} rc, rb, fun3}
 \\
 the \emph{compare} instruction performs a comparison between the value in
-\emph{rb} and \emph{rc} then saves the result to the \emph{flag} register.
+\emph{rb} and \emph{rc} then saves the result in the \emph{flag} register.
 the \emph{compare} opcode is also used to perform conditional move whereby
 the \emph{rb} register is copied into the \emph{rc} if the \emph{flag}
 register is set. the type of comparsion in \emph{fun3} can be one of:
@@ -1145,9 +1148,9 @@ register. the type of logic operations in \emph{fun3} can be one of:
 the \emph{pin} or \emph{pack-indirect} instruction packs two absolute
 addresses as an \emph{i32x2} \emph{(pc,ib)} relative address vector.
 the register \emph{ra} is subtracted from the \emph{program counter + 2},
-and the register \emph{rb} is subtracted from \emph{immediate base register},
-and the results are packed into an \emph{i32x2} relative address vector
-and saved to the register \emph{rc}.
+and the register \emph{rb} is subtracted from the \emph{immediate base}
+register, and the results are packed into an \emph{i32x2} relative address
+vector and saved to the register \emph{rc}.
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     rpc = (i32)(pc - r[ra] + 2)
     rib = (i32)(ib - r[rb]    )
@@ -1272,6 +1275,10 @@ a divide by zero exception.
 \insnimmnine{uimm}{11111}{00}{\textbf{illegal} uimm9}
 \\
 the \emph{illegal} instruction causes an illegal instruction trap.
+\emph{program counter} and trap cause are saved to privileged registers
+for the operating system to dispatch to an illegal instruction handler
+and the \emph{program counter} is set to a trap vector address.
+
 
 \chapter{Assembler}
 
