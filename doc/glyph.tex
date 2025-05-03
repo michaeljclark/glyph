@@ -823,8 +823,8 @@ the register state accessible by the 16-bit instruction packet is comprised of:
 \begin{itemize}[itemsep=0pt]
 \item \emph{program counter} register (aligned to 2 bytes).
 \item \emph{immediate base} register (aligned to 64 bytes).
-\item 8 \texttimes general purpose registers.
-\item 1 \texttimes predicate register.
+\item 8 \texttimes general purpose registers (\emph{r0} through \emph{r7}).
+\item 1 \texttimes predicate register (\emph{flag}).
 \end{itemize}
 
 \par\noindent
@@ -840,39 +840,47 @@ instruction packet:
   \fill [black!5] (0,\x)    rectangle (16,\x+1);
 \foreach \x in {0,...,7}
   \draw [black!95] (0,\x)    rectangle (16,\x+1);
-\node [font=\small,anchor=base] at (8,0.25)  {$\textbf{r7}$};
-\node [font=\small,anchor=base] at (8,1.25)  {$\textbf{r6}$};
-\node [font=\small,anchor=base] at (8,2.25)  {$\textbf{r5}$};
-\node [font=\small,anchor=base] at (8,3.25)  {$\textbf{r4}$};
-\node [font=\small,anchor=base] at (8,4.25)  {$\textbf{r3}$};
-\node [font=\small,anchor=base] at (8,5.25)  {$\textbf{r2}$};
-\node [font=\small,anchor=base] at (8,6.25)  {$\textbf{r1}$};
-\node [font=\small,anchor=base] at (8,7.25)  {$\textbf{r0}$};
+\node [font=\small,anchor=base] at (8,0.25)  {\textsf{r7}};
+\node [font=\small,anchor=base] at (8,1.25)  {\textsf{r6}};
+\node [font=\small,anchor=base] at (8,2.25)  {\textsf{r5}};
+\node [font=\small,anchor=base] at (8,3.25)  {\textsf{r4}};
+\node [font=\small,anchor=base] at (8,4.25)  {\textsf{r3}};
+\node [font=\small,anchor=base] at (8,5.25)  {\textsf{r2}};
+\node [font=\small,anchor=base] at (8,6.25)  {\textsf{r1}};
+\node [font=\small,anchor=base] at (8,7.25)  {\textsf{r0}};
 
-\node [font=\tiny,anchor=base] at (0.5,11.2)  {$\textbf{0}$};
-\node [font=\tiny,anchor=base east] at (15.75,11.2)  {$\textbf{XLEN}$};
+\node [font=\tiny,anchor=base] at (0.25,11.2)  {\textsf{0}};
+\node [font=\tiny,anchor=base east] at (8,11.2)  {\textsf{ALEN}};
+\node [font=\tiny,anchor=base east] at (16,8.2)  {\textsf{XLEN}};
 
-\fill [black!5] (0,9)    rectangle (16,10);
-\draw [black!95] (0,9)    rectangle (16,10);
+\fill [black!5] (0,9)    rectangle (8,10);
+\draw [black!95] (0,9)    rectangle (8,10);
 
-\fill [black!5] (0,10)    rectangle (16,11);
-\draw [black!95] (0,10)    rectangle (16,11);
+\fill [black!5] (0,10)    rectangle (8,11);
+\draw [black!95] (0,10)    rectangle (8,11);
 
 \fill [black!5] (0,-2)    rectangle (2,-1);
 \draw [black!95] (0,-2)    rectangle (2,-1);
 
-\node [font=\small,anchor=base] at (8,9.25)  {$\textbf{ib}$};
-\node [font=\small,anchor=base] at (8,10.25)  {$\textbf{pc}$};
-\node [font=\small,anchor=base] at (1,-1.75)  {$\textbf{flag}$};
+\node [font=\small,anchor=base] at (4,9.25)  {\textsf{ib}};
+\node [font=\small,anchor=base] at (4,10.25)  {\textsf{pc}};
+\node [font=\small,anchor=base] at (1,-1.75)  {\textsf{flag}};
 
-\node [font=\tiny,anchor=base west] at (0.25,9.25)  {$000000$};
-\node [font=\tiny,anchor=base west] at (0.25,10.25)  {$0$};
+\node [font=\tiny,anchor=base west] at (0.25,9.25)  {\textsf{000000}};
+\node [font=\tiny,anchor=base west] at (0.25,10.25)  {\textsf{0}};
 
 \end{scope}
 \end{tikzpicture}
 \caption{register state accessible by 16-bit instruction packet.}
 \label{fig:glyph-register-state-64}
 \end{figure}
+
+\par\noindent
+the use of
+\emph{ALEN}\footnote{\emph{ALEN} refers to the width of addresses in bits.} and
+\emph{XLEN}\footnote{\emph{XLEN} refers to the width of general purpose registers in bits.}
+parameters is to indicate that the width of addresses can be less than
+the width of the general purpose registers.
 
 \newpage
 \section{Example pipeline}
