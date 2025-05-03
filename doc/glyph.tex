@@ -699,77 +699,77 @@ is addressed with the \emph{immediate base (ib)} register.
 
 \node [above,scale=0.9,anchor=south] at (16,3)  {\textbf{instruction stream (pc-relative)}};
 \node [font=\small,above,scale=0.9,anchor=south] at (4,1.5)  {\textbf{instruction packet}};
-\node [font=\tiny,below,scale=0.9,anchor=base] at (-0.75,0.3)  {$\textbf{pc}$};
-\node [font=\tiny,below,scale=0.9,anchor=base] at (33.0,0.3)  {$\textbf{\ldots}$};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (-0.75,0.3)  {\textsf{pc}};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (33.0,0.3)  {\textsf{\ldots}};
 
 \fill [black!15]                   (0.0,0.0)   rectangle (4.5,1.0);
 \draw [line width=0.2mm, black!80] (0.0,0.0)   rectangle (4.5,1.0);
-\node [font=\tiny,below,scale=0.9,anchor=base] at (0.5,0.3)  {$\textbf{15}$};
-\node [font=\tiny,below,scale=0.9,anchor=base] at (4.0,0.3)  {$\textbf{7}$};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (0.5,0.3)  {\textsf{15}};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (4.0,0.3)  {\textsf{7}};
 
 \fill [black!10]                   (4.5,0.0)   rectangle (7.0,1.0);
 \draw [line width=0.2mm, black!80] (4.5,0.0)   rectangle (7.0,1.0);
-\node [font=\tiny,below,scale=0.9,anchor=base] at (5.0,0.3)  {$\textbf{6}$};
-\node [font=\tiny,below,scale=0.9,anchor=base] at (6.5,0.3)  {$\textbf{2}$};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (5.0,0.3)  {\textsf{6}};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (6.5,0.3)  {\textsf{2}};
 
 \fill [black!5]                    (7.0,0.0)   rectangle (8.0,1.0);
 \draw [line width=0.2mm, black!80] (7.0,0,0)   rectangle (8.0,1.0);
-\node [font=\tiny,below,scale=0.9,anchor=base] at (7.25,0.3)  {$\textbf{1}$};
-\node [font=\tiny,below,scale=0.9,anchor=base] at (7.75,0.3)  {$\textbf{0}$};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (7.25,0.3)  {\textsf{1}};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (7.75,0.3)  {\textsf{0}};
 
 \draw [line width=0.2mm, black!80,dashed] (8,0)      rectangle (16,1);
 \draw [line width=0.2mm, black!80,dashed] (16,0)     rectangle (24,1);
 \draw [line width=0.2mm, black!80,dashed] (24,0)     rectangle (32,1);
 
 \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
-    (0,1.5) -- (4.5,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{operands}};
+    (0,1.5) -- (4.5,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textsf{operands}};
 
 \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
-    (4.5,1.5) -- (7,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{code}};
+    (4.5,1.5) -- (7,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textsf{code}};
 
 \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
-    (7,1.5) -- (8,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textbf{size}};
+    (7,1.5) -- (8,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textsf{size}};
 
 \node [above,scale=0.9,anchor=south] at (16,-4)  {\textbf{constant stream (ib-relative)}};
 \node [font=\small,above,scale=0.9,anchor=south] at (4,-5.5)  {\textbf{immediate block}};
 
-\node [font=\tiny,below,scale=0.9,anchor=base] at (33.0,-8.0)  {$\textbf{\ldots}$};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (33.0,-8.0)  {\textsf{\ldots}};
 
-\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-6.75)  {$\textbf{ib8}$};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-6.75)  {\textsf{ib8}};
 \foreach \x in {0,1,2,3,4,5,6,7}
   \fill [black!5]                   (\x*4,-6)     rectangle (\x*4+4,-7);
 \foreach \x in {0,1,2,3,4,5,6,7}
   \draw [line width=0.2mm, black!80] (\x*4,-6)     rectangle (\x*4+4,-7);
 \foreach \x in {0,1,2,3,4,5,6,7}
-  \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*4 + 2,-6.7)  {$\textbf{\x}$};
+  \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*4 + 2,-6.7)  {\textsf{\x}};
 
-\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-7.75)  {$\textbf{ib16}$};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-7.75)  {\textsf{ib16}};
 \foreach \x in {0,1,2,3}
   \fill [black!10]                   (\x*8,-7)     rectangle (\x*8+8,-8);
 \foreach \x in {0,1,2,3}
   \draw [line width=0.2mm, black!80] (\x*8,-7)     rectangle (\x*8+8,-8);
 \foreach \x in {0,1,2,3}
-  \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*8 + 4,-7.7)  {$\textbf{\x}$};
+  \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*8 + 4,-7.7)  {\textsf{\x}};
 
-\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-8.75)  {$\textbf{ib32}$};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-8.75)  {\textsf{ib32}};
 \foreach \x in {0,1}
   \fill [black!15]                   (\x*16,-8)     rectangle (\x*16+16,-9);
 \foreach \x in {0,1}
   \draw [line width=0.2mm, black!80] (\x*16,-8)     rectangle (\x*16+16,-9);
 \foreach \x in {0,1}
-  \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*16 + 8,-8.7)  {$\textbf{\x}$};
+  \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*16 + 8,-8.7)  {\textsf{\x}};
 
-\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-9.75)  {$\textbf{ib64}$};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-9.75)  {\textsf{ib64}};
 \foreach \x in {0}
   \fill [black!20]                   (\x*32,-9)     rectangle (\x*32+32,-10);
 \foreach \x in {0}
   \draw [line width=0.2mm, black!80] (\x*32,-9)     rectangle (\x*32+32,-10);
 \foreach \x in {0}
-  \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*32 + 16,-9.7)  {$\textbf{\x}$};
+  \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*32 + 16,-9.7)  {\textsf{\x}};
 
 \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
     (0,-8.75) -- (32,-8.75) node[font=\tiny,midway,below,yshift=-2.7em]
-        {\textbf{ib-relative constants}};
+        {\textsf{ib-relative constants}};
 
 \end{scope}
 \end{tikzpicture}
