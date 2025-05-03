@@ -230,24 +230,25 @@ a RISC machine has a set of instructions which comprise basic operations such as
 some instructions have operands that point to values inside of \emph{registers} in a \emph{register-file} which is like a close filing cabinet containing cards with numbers on them, and some of these numbers are addresses that point to values in \emph{main-memory} which is like a larger but slower filing cabinet. some of these values are \emph{immediate} values which are small numbers listed inside of the instructions on the paper tape.
 \\
 \par\noindent
-the paper tape is just a way conceptualize a list of instructions stored in \emph{main-memory}. there is a special register called \emph{PC} short for \emph{program counter}, which points to the current position on the tape. after each instruction executes the tape is advanced to the next instruction and the program counter is incremented, until it encounters a \emph{branch} instruction which causes it to move forwards or backwards to a different position on the tape. branch instructions can be \emph{conditional} or \emph{unconditional}. conditional branches are selectively executed based on the results of a comparison instruction.
+the paper tape is just a way conceptualize a list of instructions stored in \emph{main-memory}. there is a special register called \emph{PC} short for \emph{program counter}, which points to the current position on the tape. after each instruction executes the tape is advanced to the next instruction and the \emph{program counter} is incremented, until it encounters a \emph{branch} instruction which causes it to move forwards or backwards to a different position on the tape. branch instructions can be \emph{conditional} or \emph{unconditional}. conditional branches are selectively executed based on the results of a comparison instruction.
 
 \newpage
 \section{Overview}
 
 \par\noindent
 glyph is a super regular RISC architecture that encodes constants in a
-secondary stream accessed via an immediate base register that points at
+secondary stream accessed via an \emph{immediate base} register that points at
 immediate blocks containing constants accessed via a constant address
-mode. the immediate base register branches like the program counter, and
-procedure call and return set and restore \emph{(pc,ib)} together.
+mode. the \emph{immediate base} register branches like the
+\emph{program counter}, and procedure calls and returns set and restore
+\emph{(pc,ib)} together.
 \\
 \par\noindent
 glyph uses relative address vectors in its link register which is different
-to typical RISC architectures. glyph does this so that the branch
-instructions can fit \emph{(pc,ib)} into the a single link register for
-compatibility. glyph achieves this by packing two relative \emph{(pc,ib)}
-displacements into a relative address vector.
+to typical RISC architectures. glyph does this so that the branch instructions
+can fit \emph{(pc,ib)} into the a single link register for compatibility with
+traditional RISC architectures. glyph achieves this by packing two relative
+\emph{(pc,ib)} displacements into a relative address vector.
 \\
 \par\noindent
 immediate blocks can be switched using the immediate block branch
@@ -263,22 +264,22 @@ RISC architecture:
 \item variable length instruction format supporting 16, 32, 64, and 128-bit
 instructions.
 \item 16-bit compressed instruction packets can access 8 registers.
-\item \emph{(pc,ib)} is a special program counter and immediate base
-register address vector.
-\item link register contains packed relative \emph{(pc,ib)} address vector
+\item \emph{(pc,ib)} is a \emph{program counter} and
+\emph{immediate base} register address vector.
+\item link register contains a packed relative \emph{(pc,ib)} address vector
 to function entry.
 \item \texttt{ibj} \emph{immediate-block-jump} adds a relative address to
-the immediate base register.
+the \emph{immediate base} register.
 \item \texttt{lib} \emph{load-immediate-block} uses an unsigned displacement
 to access constants.
 \item \texttt{jalib} \emph{jump-and-link-immediate-block} or \emph{call}
 links address vector and adds constants to \emph{(pc,ib)} and is used
-to branch the program counter and immediate base register at the same time
-for calling procedures.
+to branch the \emph{program counter} and \emph{immediate base} register
+at the same time for calling procedures.
 \item \texttt{jtlib} \emph{jump-to-link-immediate-block} or \emph{ret}
-subtracts link vector from and adds constants to \emph{(pc,ib)} and is used
-to branch the program counter and immediate base register at the same time
-for returning from called procedures.
+subtracts link vector from and adds constants to \emph{(pc,ib)} and is
+used to branch the \emph{program counter} and \emph{immediate base}
+register at the same time for returning from called procedures.
 \item \texttt{pin} \emph{pack-indirect} packs two absolute addresses as
 relative address vector from \emph{(pc,ib)} and is used for calling
 absolute addresses such as virtual functions.
@@ -688,7 +689,7 @@ used to extend register sizes for the 16-bit ops.
 glyph seperates the instruction stream into two streams, one with
 instructions and one with constants. the instruction stream is
 addressed with the \emph{program counter (pc)} and the constant stream
-is addressed with the \emph{immediate base register (ib)}.
+is addressed with the \emph{immediate base (ib)} register.
 
 \begin{figure}[H]
 \centering
@@ -782,19 +783,19 @@ base register}.
 \par\noindent
 immediate blocks can be navigated by branching the constant stream
 independently using the \emph{immediate-block-jump} instruction, or together
-with the program counter using procedure call and return instructions that
-set and restore \emph{(pc,ib)} via a link register that contains a packed
-relative address vector. the use of packed relative address vectors is for
-backward compatibility with a single link register.
+with the \emph{program counter} using procedure call and return instructions
+that set and restore \emph{(pc,ib)} via a link register that contains a
+packed relative address vector. the use of packed relative address vectors
+is for backward compatibility with a single link register.
 \\
 \par\noindent
 for procedure calls and returns, the instruction and constant streams are
 set at the same time using the call and return instructions;
 \emph{jump-and-link-immediate-block}, \emph{jump-to-link-immediate-block},
 which add and subtract relative address vectors to \emph{(pc,ib)}, the
-program counter and the immediate base register. the \emph{pack-indirect}
-instruction allows absolute \emph{(pc,ib)} addresses to be packed into a
-relative address vector for indirect calls.
+\emph{program counter} and the \emph{immediate base} register. the
+\emph{pack-indirect} instruction allows absolute \emph{(pc,ib)} addresses
+to be packed into a relative address vector for indirect calls.
 \\
 \par\noindent
 the instruction forms only use bonded register slots for immediate operands
@@ -819,8 +820,8 @@ depending on the instruction size.
 \par\noindent
 the register state accessible by the 16-bit instruction packet is comprised of:
 \begin{itemize}[itemsep=0pt]
-\item program counter register (aligned to 2 bytes).
-\item immediate base register (aligned to 64 bytes).
+\item \emph{program counter} register (aligned to 2 bytes).
+\item \emph{immediate base} register (aligned to 64 bytes).
 \item 8 \texttimes general purpose registers.
 \item 1 \texttimes predicate register.
 \end{itemize}
