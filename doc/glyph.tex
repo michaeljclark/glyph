@@ -9,7 +9,8 @@
 \usepackage{enumitem}
 \usepackage{caption}
 \usepackage{textcomp}
-\usetikzlibrary{decorations.pathreplacing}
+\usepackage{tgheros}
+\usetikzlibrary{decorations.pathreplacing, arrows.meta, positioning}
 \title{Instructions}
 
 \def\verbatim@font{\linespread{1}\normalfont\ttfamily}
@@ -871,6 +872,78 @@ instruction packet:
 \end{tikzpicture}
 \caption{register state accessible by 16-bit instruction packet.}
 \label{fig:glyph-register-state-64}
+\end{figure}
+
+\newpage
+\section{Example pipeline}
+
+an illustrative micro-architecture is proposed based on the classic
+5-stage RISC micro-architecture with the addition of an \emph{operand fetch}
+stage and a \emph{constant memory} port. this revised 6-stage
+micro-architecture is composed of the following pipeline stages:
+
+\begin{itemize}[itemsep=0pt]
+\item \textsf{IF} --- \emph{instruction fetch}: reads instructions from memory
+into a fetch buffer.
+\item \textsf{ID} --- \emph{instruction decode}: decodes instruction length, opcode,
+and operands.
+\item \textsf{OF} --- \emph{operand fetch}: reads operands from register file
+and constant memory.
+\item \textsf{EX} --- \emph{execute}: performs logical operations or
+arithmetic on the operands.
+\item \textsf{MA} --- \emph{memory access}: loads data from or stores data to memory.
+\item \textsf{WB} --- \emph{writeback}: writes results back to the register file.
+\end{itemize}
+
+\par\noindent
+a simplified micro-architecture using those pipeline stages might look like this:
+this example omits hazard detection and forwarding logic for the sake of simplicity.
+\\
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  every node/.style={font=\small},
+  stage/.style={rectangle, draw=black, thick, align=center},
+  sidebox/.style={rectangle, draw=black, thick, fill=gray!10},
+  arrow/.style={-{Latex[length=3mm, width=2mm]}, thick},
+  node distance=12mm
+]
+
+% Pipeline stages
+\tikzstyle{stage} = [draw, align=left, text width=40mm, minimum height=5mm, inner sep=2mm]
+\tikzstyle{sidebox} = [draw, fill=black!5, align=right, text width=40mm, minimum height=5mm, inner sep=2mm]
+
+\node[stage] (IF) {\textsf{IF} -- instruction fetch};
+\node[stage, below=of IF] (ID) {\textsf{ID} -- instruction decode};
+\node[stage, below=of ID] (OF) {\textsf{OF} -- operand fetch};
+\node[stage, below=of OF] (EX) {\textsf{EX} -- execute};
+\node[stage, below=of EX] (MA) {\textsf{MA} -- memory access};
+\node[stage, below=of MA] (WB) {\textsf{WB} -- writeback};
+
+% Arrows between pipeline stages
+\draw[arrow] (IF) -- (ID);
+\draw[arrow] (ID) -- (OF);
+\draw[arrow] (OF) -- (EX);
+\draw[arrow] (EX) -- (MA);
+\draw[arrow] (MA) -- (WB);
+
+% Side components
+\node[sidebox, left=2.8cm of IF] (instrmem) {instruction memory -- \textsf{IM}};
+\draw[->] (instrmem.east) -- (IF.west);
+
+\node[sidebox, left=2.8cm of OF] (constmem) {constant memory -- \textsf{KM}};
+\draw[->] ([yshift=1mm]constmem.east) -- ([yshift=1mm]OF.west);
+
+\node[sidebox, left=2.8cm of MA] (datamem) {data memory -- \textsf{DM}};
+\draw[<->] (datamem.east) -- (MA.west);
+
+\node[sidebox, left=2.8cm of WB] (regfile) {register file -- \textsf{RF}};
+\draw[->] ([yshift=1mm]regfile.east) -- ++(1.5,0) -- ++(0,5.5) -- ([yshift=-1mm]OF.west);
+\draw[<-] ([yshift=-1mm]regfile.east) -- ([yshift=-1mm]WB.west);
+
+\end{tikzpicture}
+\caption{sample 6-stage micro-architecture with support for constant memory.}
+\label{fig:glyph-6-stage-uarch}
 \end{figure}
 
 \chapter{Instructions} \label{sec:instructions}
