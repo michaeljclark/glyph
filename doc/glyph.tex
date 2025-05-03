@@ -216,10 +216,25 @@
 this section gives a brief introduction to RISC architectures.
 \\
 \par\noindent
-A RISC\footnote{Reduced Instruction Set Computer} machine is a type of general-purpose computer with the characteristic that it has a reduced set of instructions in contrast to a CISC\footnote{Complex Instruction Set Computer} machine. A RISC machine is Turing complete meaning it can perform any computation that a Turing machine can, given enough time and memory. a Turing machine\footnote{Alan M. Turing, Proceedings of the London Mathematical Society, Series 2, Volume 42, pp. 230–265.} is a theoretical model of computation.
+A RISC\footnote{Reduced Instruction Set Computer} machine is a type of
+general-purpose computer with the characteristic that it has a reduced
+set of instructions in contrast to a CISC\footnote{Complex Instruction
+Set Computer} machine. A RISC machine is Turing complete meaning it can
+perform any computation that a Turing machine can, given enough time and
+memory. a Turing machine\footnote{Alan M. Turing, Proceedings of the
+London Mathematical Society, Series 2, Volume 42, pp. 230–265.} is a
+theoretical model of computation.
 \\
 \par\noindent
-a RISC machine has a set of instructions which comprise basic operations such as: \emph{load-from-memory}, \emph{store-to-memory}, \emph{add}, \emph{subtract}, \emph{compare}, plus \emph{conditional branch} and \emph{unconditional branch} instructions et cetera; which one can imagine as a list of instructions on a paper tape. each instruction has an \emph{opcode}, which is a unique binary pattern that identifies the \emph{operation}, plus several \emph{operands}, which are arguments to the instruction.
+a RISC machine has a set of instructions which comprise basic operations
+such as: \emph{load-from-memory}, \emph{store-to-memory}, \emph{add},
+\emph{subtract}, \emph{compare}, plus \emph{conditional branch} and
+\emph{unconditional branch} instructions et cetera; which one can imagine
+as a list of instructions on a paper tape. each instruction has an
+\emph{opcode}, which is a unique binary pattern that identifies the
+\emph{operation}, plus several \emph{operands}, which are arguments
+to the instruction.
+
 \begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
     register-0 = load-from-memory at tape-address-0
     register-1 = load-from-memory at tape-address-1
@@ -228,10 +243,24 @@ a RISC machine has a set of instructions which comprise basic operations such as
 \end{Verbatim}
 
 \par\noindent
-some instructions have operands that point to values inside of \emph{registers} in a \emph{register-file} which is like a close filing cabinet containing cards with numbers on them, and some of these numbers are addresses that point to values in \emph{main-memory} which is like a larger but slower filing cabinet. some of these values are \emph{immediate} values which are small numbers listed inside of the instructions on the paper tape.
+some instructions have operands that point to values inside of
+\emph{registers} in a \emph{register-file} which is like a close filing
+cabinet containing cards with numbers on them, and some of these numbers
+are addresses that point to values in \emph{main-memory} which is like a
+larger but slower filing cabinet. some of these values are \emph{immediate}
+values which are small numbers listed inside of the instructions on the
+paper tape.
 \\
 \par\noindent
-the paper tape is just a way conceptualize a list of instructions stored in \emph{main-memory}. there is a special register called \emph{PC} short for \emph{program counter}, which points to the current position on the tape. after each instruction executes the tape is advanced to the next instruction and the \emph{program counter} is incremented, until it encounters a \emph{branch} instruction which causes it to move forwards or backwards to a different position on the tape. branch instructions can be \emph{conditional} or \emph{unconditional}. conditional branches are selectively executed based on the results of a comparison instruction.
+the paper tape is just a way conceptualize a list of instructions stored
+in \emph{main-memory}. there is a special register called \emph{PC} short
+for \emph{program counter}, which points to the current position on the
+tape. after each instruction executes the tape is advanced to the next
+instruction and the \emph{program counter} is incremented, until it
+encounters a \emph{branch} instruction which causes it to move forwards
+or backwards to a different position on the tape. branch instructions can
+be \emph{conditional} or \emph{unconditional}. conditional branches are
+selectively executed based on the results of a comparison instruction.
 
 \newpage
 \section{Overview}
