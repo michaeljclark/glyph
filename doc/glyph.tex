@@ -307,8 +307,8 @@ specifiess the width of registers in bits.
   }
   \draw [black!95] (8,\x) rectangle (24,\x+1);
 }
-\node [font=\tiny,anchor=base] at (8.25,4.2)  {\textsf{0}};
-\node [font=\tiny,anchor=base east] at (24,4.2)  {\textsf{XLEN}};
+\node [font=\tiny,anchor=base west] at (8,4.2)  {\textsf{XLEN}};
+\node [font=\tiny,anchor=base east] at (24,4.2)  {\textsf{0}};
 
 \draw [black!95,dashed] (8,-1)      rectangle (24,0);
 
@@ -339,8 +339,8 @@ specifies the width of addresses in bits.
   \pgfmathsetmacro{\z}{int((3-\x)*8)}
   \node [font=\small,anchor=base] at (4,\x+0.25)  {\textsf{address \z}};
 }
-\node [font=\tiny,anchor=base] at (0.25,4.2)  {\textsf{0}};
-\node [font=\tiny,anchor=base east] at (8,4.2)  {\textsf{ALEN}};
+\node [font=\tiny,anchor=base west] at (0,4.2)  {\textsf{ALEN}};
+\node [font=\tiny,anchor=base east] at (8,4.2)  {\textsf{0}};
 
 \draw [black!95,dashed] (0,-1)      rectangle (8,0);
 
@@ -351,14 +351,14 @@ specifies the width of addresses in bits.
     \draw [black!95] (8+\y*2,\x)    rectangle (10+\y*2,\x+1);
   }
 }
-\foreach \x in {0,...,3} {
-  \foreach \y in {0,...,7} {
-    \pgfmathsetmacro{\z}{int(3-\x)}
-    \node [font=\small,anchor=base] at (9+\y*2,\x+0.25)  {\texttt{00}};
-  }
-}
-\node [font=\tiny,anchor=base] at (9,4.2)  {\textsf{byte-0}};
-\node [font=\tiny,anchor=base] at (23,4.2)  {\textsf{byte-7}};
+% \foreach \x in {0,...,3} {
+%   \foreach \y in {0,...,7} {
+%     \pgfmathsetmacro{\z}{int(3-\x)}
+%     \node [font=\small,anchor=base] at (9+\y*2,\x+0.25)  {\texttt{00}};
+%   }
+% }
+\node [font=\tiny,anchor=base] at (9,4.2)  {\textsf{byte-7}};
+\node [font=\tiny,anchor=base] at (23,4.2)  {\textsf{byte-0}};
 
 \draw [black!95,dashed] (8,-1)      rectangle (24,0);
 
@@ -989,9 +989,10 @@ instruction packet:
 \node [font=\small,anchor=base] at (8,6.25)  {\textsf{r1}};
 \node [font=\small,anchor=base] at (8,7.25)  {\textsf{r0}};
 
-\node [font=\tiny,anchor=base] at (0.25,11.2)  {\textsf{0}};
-\node [font=\tiny,anchor=base east] at (8,11.2)  {\textsf{ALEN}};
-\node [font=\tiny,anchor=base east] at (16,8.2)  {\textsf{XLEN}};
+\node [font=\tiny,anchor=base west] at (0,11.2)  {\textsf{ALEN}};
+\node [font=\tiny,anchor=base east] at (8,11.2)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (0,8.2)  {\textsf{XLEN}};
+\node [font=\tiny,anchor=base east] at (16,8.2)  {\textsf{0}};
 
 \fill [black!5] (0,9)    rectangle (8,10);
 \draw [black!95] (0,9)    rectangle (8,10);
