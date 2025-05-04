@@ -989,26 +989,38 @@ instruction packet:
 \node [font=\small,anchor=base] at (8,6.25)  {\textsf{r1}};
 \node [font=\small,anchor=base] at (8,7.25)  {\textsf{r0}};
 
-\node [font=\tiny,anchor=base west] at (0,11.2)  {\textsf{ALEN}};
-\node [font=\tiny,anchor=base east] at (8,11.2)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (8,11.2)  {\textsf{ALEN}};
+\node [font=\tiny,anchor=base east] at (16,11.2)  {\textsf{0}};
 \node [font=\tiny,anchor=base west] at (0,8.2)  {\textsf{XLEN}};
 \node [font=\tiny,anchor=base east] at (16,8.2)  {\textsf{0}};
 
-\fill [black!5] (0,9)    rectangle (8,10);
-\draw [black!95] (0,9)    rectangle (8,10);
+\fill [black!15] (8,9)    rectangle (16,10);
+\draw [black!95] (8,9)    rectangle (16,10);
 
-\fill [black!5] (0,10)    rectangle (8,11);
-\draw [black!95] (0,10)    rectangle (8,11);
+\fill [black!15] (8,10)    rectangle (16,11);
+\draw [black!95] (8,10)    rectangle (16,11);
 
-\fill [black!5] (0,-2)    rectangle (2,-1);
-\draw [black!95] (0,-2)    rectangle (2,-1);
+\fill [black!15] (14,-2)    rectangle (16,-1);
+\draw [black!95] (14,-2)    rectangle (16,-1);
 
-\node [font=\small,anchor=base] at (4,9.25)  {\textsf{ib}};
-\node [font=\small,anchor=base] at (4,10.25)  {\textsf{pc}};
-\node [font=\small,anchor=base] at (1,-1.75)  {\textsf{flag}};
+\node [font=\small,anchor=base] at (12,9.25)  {\textsf{ib}};
+\node [font=\small,anchor=base] at (12,10.25)  {\textsf{pc}};
+\node [font=\small,anchor=base] at (15,-1.75)  {\textsf{flag}};
 
-\node [font=\tiny,anchor=base west] at (0.25,9.25)  {\textsf{000000}};
-\node [font=\tiny,anchor=base west] at (0.25,10.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (8.25,9.25)  {\textsf{000000}};
+\node [font=\tiny,anchor=base west] at (8.25,10.25)  {\textsf{0}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
+    (16,9) -- (16,11) node[midway,xshift=1mm,align=center,font=\tiny,
+        text width=17mm,anchor=west]{\textsf{\shortstack{control\\registers}}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
+    (16,0) -- (16,8) node[midway,xshift=1mm,align=center,font=\tiny,
+        text width=17mm,anchor=west]{\textsf{\shortstack{general\\purpose\\registers}}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
+    (16,-2) -- (16,-1) node[midway,xshift=1mm,align=center,font=\tiny,
+        text width=17mm,anchor=west]{\textsf{\shortstack{predicate}}};
 
 \end{scope}
 \end{tikzpicture}
