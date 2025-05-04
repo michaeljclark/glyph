@@ -269,6 +269,113 @@ be \emph{conditional} or \emph{unconditional}. conditional branches are
 selectively executed based on the results of a comparison instruction.
 
 \newpage
+\subsection{load-store}
+
+a \emph{load-store} architecture is a way to characterize RISC architectures
+where most instructions have simple operands that point to values held
+in registers, plus \emph{load} and \emph{store} instructions to retrieve and
+commit values to main memory. a \emph{load-store} architecture alleviates
+the need to add complex addressing modes, plus intput-output to peripherals
+and secondary storage use \emph{MMIO}\footnote{\emph{MMIO}\,- Memory-mapped
+I/O.} to avoid needing special \emph{Input/Output} instructions.
+
+\subsection{registers}
+
+registers are temporary storage used to fill input and output
+operands for the \emph{ALU}\footnote{\emph{ALU}\,– Arithmetic logic unit.}
+before and after execution of instructions. registers are
+organized as a word-addressable store where each register number refers
+to $XLEN \in \{64, 128\}$ bits of data. \emph{XLEN} is a parameter that
+specifiess the width of registers in bits.
+\\
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+
+\foreach \x in {0,...,3}
+  \fill [black!5] (0,\x)    rectangle (8,\x+1);
+\foreach \x in {0,...,3}
+  \draw [black!95] (0,\x)    rectangle (8,\x+1);
+\foreach \x in {0,...,3} {
+  \pgfmathsetmacro{\z}{int(3-\x)}
+  \node [font=\small,anchor=base] at (4,\x+0.25)  {\textsf{register \z}};
+}
+
+\draw [black!95,dashed] (0,-1)      rectangle (8,0);
+
+\foreach \x in {0,...,3}
+  \fill [black!5] (8,\x)    rectangle (24,\x+1);
+\foreach \x in {0,...,3}
+  \draw [black!95] (8,\x)    rectangle (24,\x+1);
+\foreach \x in {0,...,3} {
+  \foreach \y in {0,...,63} {
+    \draw [black!45] (8+\y/4,\x) rectangle (8.25+\y/4,\x+1);
+  }
+  \draw [black!95] (8,\x) rectangle (24,\x+1);
+}
+\node [font=\tiny,anchor=base] at (8.25,4.2)  {\textsf{0}};
+\node [font=\tiny,anchor=base east] at (24,4.2)  {\textsf{XLEN}};
+
+\draw [black!95,dashed] (8,-1)      rectangle (24,0);
+
+\end{scope}
+\end{tikzpicture}
+\caption{organization of register storage.}
+\label{fig:register-organization}
+\end{figure}
+
+\subsection{memory}
+
+main memory is primary storage which in modern computers is most likely
+\emph{DRAM}\footnote{\emph{DRAM}\,– Dynamic random-access memory.}.
+main memory is organized as a byte-addressable store where each address
+refers to a byte which is 8-bits of data. \emph{ALEN} is a parameter that
+specifies the width of addresses in bits.
+\\
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+
+\foreach \x in {0,...,3}
+  \fill [black!5] (0,\x)    rectangle (8,\x+1);
+\foreach \x in {0,...,3}
+  \draw [black!95] (0,\x)    rectangle (8,\x+1);
+\foreach \x in {0,...,3} {
+  \pgfmathsetmacro{\z}{int((3-\x)*8)}
+  \node [font=\small,anchor=base] at (4,\x+0.25)  {\textsf{address \z}};
+}
+\node [font=\tiny,anchor=base] at (0.25,4.2)  {\textsf{0}};
+\node [font=\tiny,anchor=base east] at (8,4.2)  {\textsf{ALEN}};
+
+\draw [black!95,dashed] (0,-1)      rectangle (8,0);
+
+\foreach \x in {0,...,3}
+  \fill [black!5] (8,\x)    rectangle (24,\x+1);
+\foreach \x in {0,...,3} {
+  \foreach \y in {0,...,7} {
+    \draw [black!95] (8+\y*2,\x)    rectangle (10+\y*2,\x+1);
+  }
+}
+\foreach \x in {0,...,3} {
+  \foreach \y in {0,...,7} {
+    \pgfmathsetmacro{\z}{int(3-\x)}
+    \node [font=\small,anchor=base] at (9+\y*2,\x+0.25)  {\texttt{00}};
+  }
+}
+\node [font=\tiny,anchor=base] at (9,4.2)  {\textsf{byte-0}};
+\node [font=\tiny,anchor=base] at (23,4.2)  {\textsf{byte-7}};
+
+\draw [black!95,dashed] (8,-1)      rectangle (24,0);
+
+\end{scope}
+\end{tikzpicture}
+\caption{organization of main-memory storage.}
+\label{fig:main-memory-organization}
+\end{figure}
+
+\newpage
 \section{Overview}
 
 \par\noindent
