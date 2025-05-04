@@ -1597,7 +1597,6 @@ the following table lists glyph assembler directives:
 \begin{table}[h]
 \centering
 \footnotesize
-\renewcommand{\arraystretch}{0.85}
 \begin{tabular}{|l|l|l|}
 \hline
 \textbf{Directive} & \textbf{Arguments} & \textbf{Description} \\
@@ -1642,6 +1641,7 @@ the following table lists glyph assembler directives:
 \label{tab:assembler-directives}
 \end{table}
 
+\newpage
 \section{Pseudo-instructions}
 
 the assembler implements a number of convenience psuedo-instruction aliases
@@ -1653,7 +1653,6 @@ the following table lists glyph assembler pseudo instruction aliases:
 \begin{table}[h]
 \centering
 \footnotesize
-\renewcommand{\arraystretch}{0.85}
 \begin{tabular}{|l|l|l|}
 \hline
 \textbf{Pseudo-instruction} & \textbf{Expansion} & \textbf{Description}   \\
@@ -1748,10 +1747,10 @@ non-volatile \emph{callee-save} registers, \texttt{s1} and \texttt{s2}.
 the following table outlines the 16-bit register allocation showing
 register name alias, description, and non-volatile \emph{callee-save} or
 volatile \emph{caller-save} status.
+\\
 \begin{table}[h]
 \centering
 \footnotesize
-\renewcommand{\arraystretch}{0.85}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
 \textbf{name} & \textbf{alias} & \textbf{description} & \textbf{save} \\
