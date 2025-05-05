@@ -369,6 +369,125 @@ specifies the width of addresses in bits.
 \end{figure}
 
 \newpage
+\subsection{instructions and constants}
+
+instruction and constant memory are two sets of storage which are likely
+to be \emph{SRAM}\footnote{\emph{SRAM}\,– Static random-access memory.}.
+instruction and constant memory are organized as word-addressable stores
+similar to main-memory, although they are read-only and restricted
+to instructions and constants.
+\\
+\par\noindent
+instruction memory is addressed using \emph{pc-relative} addresses in
+instruction immediate values or indirectly via constants using
+\emph{ib-relative} addresses in register slots.
+\\
+\par\noindent
+constant memory is addressed using \emph{ib-relative} addresses in register
+slots, which are typed, scaled and aligned addresses. the following diagrams
+shows $ib8(n)$ through $ib64(n)$ \emph{ib-relative} addresses for access
+to 8-bit through to 64-bit constants respectively: \emph{note: ib-relative
+addresses alias a single constant storage space containing all types.}
+\\
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+\foreach \x in {0,...,1} {
+  \fill [black!5] (0,\x)    rectangle (8,\x+1);
+  \draw [black!95] (0,\x)    rectangle (8,\x+1);
+  \pgfmathsetmacro{\y}{int((1-\x)*8)}
+  \pgfmathsetmacro{\z}{int((1-\x)*8+7)}
+  \node [font=\small,anchor=base] at (4,\x+0.25)  {\textsf{constant \y--\z}};
+  \fill [black!5] (8,\x)    rectangle (24,\x+1);
+  \foreach \y in {0,...,7} {
+    \draw [black!95] (8+\y*2,\x)    rectangle (10+\y*2,\x+1);
+  }
+}
+\draw [black!95,dashed] (0,-1)      rectangle (8,0);
+\draw [black!95,dashed] (8,-1)      rectangle (24,0);
+\node [font=\tiny,anchor=base] at (9,2.2)  {\textsf{ib8(7)}};
+\node [font=\tiny,anchor=base] at (23,2.2)  {\textsf{ib8(0)}};
+\end{scope}
+\end{tikzpicture}
+\caption{organization of \emph{ib8} constant-memory storage.}
+\label{fig:constant-memory-ib8-organization}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+\foreach \x in {0,...,1} {
+  \fill [black!5] (0,\x)    rectangle (8,\x+1);
+  \draw [black!95] (0,\x)    rectangle (8,\x+1);
+  \pgfmathsetmacro{\y}{int((1-\x)*4)}
+  \pgfmathsetmacro{\z}{int((1-\x)*4+3)}
+  \node [font=\small,anchor=base] at (4,\x+0.25)  {\textsf{constant \y--\z}};
+  \fill [black!5] (8,\x)    rectangle (24,\x+1);
+  \foreach \y in {0,...,3} {
+    \draw [black!95] (8+\y*4,\x)    rectangle (12+\y*4,\x+1);
+  }
+}
+\draw [black!95,dashed] (0,-1)      rectangle (8,0);
+\draw [black!95,dashed] (8,-1)      rectangle (24,0);
+\node [font=\tiny,anchor=base] at (10,2.2)  {\textsf{ib16(3)}};
+\node [font=\tiny,anchor=base] at (22,2.2)  {\textsf{ib16(0)}};
+\end{scope}
+\end{tikzpicture}
+\caption{organization of \emph{ib16} constant-memory storage.}
+\label{fig:constant-memory-ib16-organization}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+\foreach \x in {0,...,1} {
+  \fill [black!5] (0,\x)    rectangle (8,\x+1);
+  \draw [black!95] (0,\x)    rectangle (8,\x+1);
+  \pgfmathsetmacro{\y}{int((1-\x)*2)}
+  \pgfmathsetmacro{\z}{int((1-\x)*2+1)}
+  \node [font=\small,anchor=base] at (4,\x+0.25)  {\textsf{constant \y--\z}};
+  \fill [black!5] (8,\x)    rectangle (24,\x+1);
+  \foreach \y in {0,...,1} {
+    \draw [black!95] (8+\y*8,\x)    rectangle (16+\y*8,\x+1);
+  }
+}
+\draw [black!95,dashed] (0,-1)      rectangle (8,0);
+\draw [black!95,dashed] (8,-1)      rectangle (24,0);
+\node [font=\tiny,anchor=base] at (12,2.2)  {\textsf{ib32(1)}};
+\node [font=\tiny,anchor=base] at (20,2.2)  {\textsf{ib32(0)}};
+\end{scope}
+\end{tikzpicture}
+\caption{organization of \emph{ib32} constant-memory storage.}
+\label{fig:constant-memory-ib32-organization}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+\foreach \x in {0,...,1} {
+  \fill [black!5] (0,\x)    rectangle (8,\x+1);
+  \draw [black!95] (0,\x)    rectangle (8,\x+1);
+  \pgfmathsetmacro{\y}{int(1-\x)}
+  \node [font=\small,anchor=base] at (4,\x+0.25)  {\textsf{constant \y}};
+  \fill [black!5] (8,\x)    rectangle (24,\x+1);
+  \foreach \y in {0,...,0} {
+    \draw [black!95] (8+\y*16,\x)    rectangle (24+\y*16,\x+1);
+  }
+}
+\draw [black!95,dashed] (0,-1)      rectangle (8,0);
+\draw [black!95,dashed] (8,-1)      rectangle (24,0);
+\node [font=\tiny,anchor=base] at (16,2.2)  {\textsf{ib64(0)}};
+\end{scope}
+\end{tikzpicture}
+\caption{organization of \emph{ib64} constant-memory storage.}
+\label{fig:constant-memory-ib64-organization}
+\end{figure}
+
+\newpage
 \section{Overview}
 
 \par\noindent
