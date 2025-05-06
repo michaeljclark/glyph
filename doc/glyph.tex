@@ -399,14 +399,16 @@ to instructions and constants.
 \par\noindent
 instruction memory is addressed using \emph{pc-relative} addresses in
 instruction immediate values or indirectly via constants using
-\emph{ib-relative} addresses in register slots.
+\emph{ib-relative} addresses within register slots.
 \\
 \par\noindent
-constant memory is addressed using \emph{ib-relative} addresses in register
-slots, which are typed, scaled and aligned addresses. the following diagrams
-shows $ib8(n)$ through $ib64(n)$ \emph{ib-relative} addresses for access
-to 8-bit through to 64-bit constants respectively: \emph{note: ib-relative
-addresses alias a single constant storage space containing all types.}
+constant memory is addressed using \emph{ib-relative} addresses within
+register slots, which are typed, scaled and aligned addresses computed
+relative to an \emph{immediate base} register, which is like a program
+counter for constants. these diagrams show $ib8(n)$ through $ib64(n)$
+\emph{ib-relative} addresses for access to 8-bit through to 64-bit constants
+respectively: \emph{note: ib-relative addresses alias a single constant
+storage space containing all types.}
 \\
 \begin{figure}[H]
 \centering
