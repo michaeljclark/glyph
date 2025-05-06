@@ -1522,9 +1522,9 @@ and the register \emph{rb} is subtracted from the \emph{immediate base}
 register, and the results are packed into an \emph{i32x2} relative address
 vector and saved to the register \emph{rc}.
 \begin{Verbatim}
-        rpc = (i32)(pc - r[ra] + 2)
-        rib = (i32)(ib - r[rb])
-      r[rc] = (i32x2){rpc,rib}
+        rpc = <i32>(pc - r[ra] + 2)
+        rib = <i32>(ib - r[rb])
+      r[rc] = <i32x2>(rpc,rib)
 \end{Verbatim}
 
 \needspace{8\baselineskip}
