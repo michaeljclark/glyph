@@ -234,7 +234,7 @@ as a list of instructions on a paper tape. each instruction has an
 \emph{operation}, plus several \emph{operands}, which are arguments
 to the instruction.
 
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+\begin{Verbatim}
     register-0 = load-from-memory at tape-address-0
     register-1 = load-from-memory at tape-address-1
     register-2 = add register-0 and register-1
@@ -1243,8 +1243,8 @@ and the \emph{program counter} is set to a trap vector address.
 the \emph{j} or \emph{jump} instruction is an unconditional branch instruction
 that adds a relative immediate address to the \emph{program counter}. the
 resulting \emph{program counter} address is \emph{$[pc + simm9 \times 2 + 2]$}.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    pc += simm9 * 2 + 2
+\begin{Verbatim}
+         pc = pc + simm9 * 2 + 2
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1256,9 +1256,9 @@ that adds a relative immediate address to the \emph{program counter}. if the
 \emph{flag} register has been set by a compare instruction, the resulting
 \emph{program counter} address is \emph{$[pc + simm9 \times 2 + 2]$},
 otherwise the \emph{program counter} is advanced normally.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    if flag:
-        pc += simm9 * 2 + 2
+\begin{Verbatim}
+         if flag:
+             pc = pc + simm9 * 2 + 2
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1268,8 +1268,8 @@ otherwise the \emph{program counter} is advanced normally.
 the \emph{ibj} or \emph{immediate-block-jump} instruction adds a
 64-bit relative address to the \emph{immediate base} register.
 the resulting \emph{immediate base} address is \emph{$[ib + simm9 \times 64]$}.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    ib += simm9 * 64
+\begin{Verbatim}
+         ib = ib + simm9 * 64
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1280,12 +1280,12 @@ the \emph{jalib} or \emph{jump-and-link-immediate-block} instruction
 loads a 64-bit constant addressed by \emph{$[ib + uimm6 \times 8]$} containing
 a \emph{i32x2} relative address vector, which it adds it to \emph{(pc,ib)},
 then saves the relative address vector in the \emph{rc} register.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    tmp = (i32x2)[ib + uimm6 * 8]
-    {rpc,rib} = (i32x2)tmp
-    pc += rpc + 2
-    ib += rib
-    r[rc] = tmp
+\begin{Verbatim}
+        tmp = m<i32x2>[ib + uimm6 * 8]
+  (rpc,rib) = tmp
+         pc = pc + rpc + 2
+         ib = ib + rib
+      r[rc] = tmp
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1297,11 +1297,11 @@ loads a 64-bit constant addressed by \emph{$[ib + uimm6 \times 8]$}
 containing a \emph{i32x2} relative address vector, then subtracts the
 \emph{i32x2} relative address vector in the \emph{rc} register from it,
 and adds the result to \emph{(pc,ib)}.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    {rpc,rib} = (i32x2)r[rc]
-    {dpc,dib} = (i32x2)[ib + uimm6 * 8]
-    pc += dpc - rpc
-    ib += dib - rib
+\begin{Verbatim}
+  (rpc,rib) = r<i32x2>[rc]
+  (dpc,dib) = m<i32x2>[ib + uimm6 * 8]
+         pc = pc + dpc - rpc
+         ib = ib + dib - rib
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1311,8 +1311,8 @@ and adds the result to \emph{(pc,ib)}.
 the \emph{movib} or \emph{move-immediate-block} instruction loads a 64-bit
 constant addressed by \emph{$[ib + uimm6 \times 8]$} then saves it to the
 \emph{rc} register.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = (i64)[ib + uimm6 * 8]
+\begin{Verbatim}
+      r[rc] = m<i64>[ib + uimm6 * 8]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1322,8 +1322,8 @@ constant addressed by \emph{$[ib + uimm6 \times 8]$} then saves it to the
 the \emph{movi} or \emph{move-immediate} instruction sign-extends the
 immediate value in \emph{simm6} then saves the result in the \emph{rc}
 register.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = simm6
+\begin{Verbatim}
+      r[rc] = simm6
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1332,8 +1332,8 @@ register.
 \\
 the \emph{addi} or \emph{add-immediate} instruction sign-extends the
 immediate value in \emph{simm6} then adds it to the \emph{rc} register.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] += simm6
+\begin{Verbatim}
+      r[rc] = r[rc] + simm6
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1343,8 +1343,8 @@ immediate value in \emph{simm6} then adds it to the \emph{rc} register.
 the \emph{srli} or \emph{shift-right-logical-immediate} instruction
 performs a logical right shift by \emph{uimm6} bits of the value in
 the \emph{rc} register. zeros are copied into the left most bits.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = (u64)r[rc] >> uimm6
+\begin{Verbatim}
+      r[rc] = r<u64>[rc] >> uimm6
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1354,8 +1354,8 @@ the \emph{rc} register. zeros are copied into the left most bits.
 the \emph{srai} or \emph{shift-right-arithmetic-immediate} instruction
 performs an arithmetic right shift by \emph{uimm6} bits of the value in
 the \emph{rc} register. the sign is copied into the left most bits.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = (i64)r[rc] >> uimm6
+\begin{Verbatim}
+      r[rc] = r<i64>[rc] >> uimm6
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1365,8 +1365,8 @@ the \emph{rc} register. the sign is copied into the left most bits.
 the \emph{slli} or \emph{shift-left-logical-immediate} instruction
 performs a logical left shift by \emph{uimm6} bits of the value in
 the \emph{rc} register. zeros are copied into the right most bits.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = r[rc] << uimm6
+\begin{Verbatim}
+      r[rc] = r[rc] << uimm6
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1376,8 +1376,8 @@ the \emph{rc} register. zeros are copied into the right most bits.
 the \emph{addib} or \emph{add-immediate-block-constant} instruction loads
 a 32-bit constant addressed by \emph{$[ib + uimm6 \times 4]$}, which it
 sign-extends to 64-bits, then adds to the \emph{rc} register.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] += (i32)[ib + uimm6 * 4]
+\begin{Verbatim}
+      r[rc] = r[rc] + m<i32>[ib + uimm6 * 4]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1388,8 +1388,8 @@ the \emph{leapc} or \emph{load-effective-address-pc} instruction
 loads a 32-bit constant addressed by \emph{$[ib + uimm6 \times 4]$},
 which it sign-extends to 64-bits, adds it to the \emph{program counter},
 and saves the result in the \emph{rc} register.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = pc + (i32)[ib + uimm6 * 4]
+\begin{Verbatim}
+      r[rc] = pc + m<i32>[ib + uimm6 * 4]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1400,8 +1400,8 @@ the \emph{loadpc} instruction loads a 32-bit constant addressed by
 \emph{$[ib + uimm6 \times 4]$} which it sign-extends to 64-bit, adds it to
 the \emph{program counter} to form an address, then loads a 64-bit value
 from memory at that address and saves the result in the \emph{rc} register.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = (i64)[pc + (i32)[ib + uimm6 * 4]]
+\begin{Verbatim}
+      r[rc] = m<i64>[pc + m<i32>[ib + uimm6 * 4]]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1412,8 +1412,8 @@ the \emph{storepc} instruction loads a 32-bit constant addressed by
 \emph{$[ib + uimm6 \times 4]$} which it sign-extends to 64-bit, adds it to the
 \emph{program counter} to form an address, then stores to memory at that
 address a 64-bit value from the \emph{rc} register.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    (i64)[pc + (i64)[ib + uimm6 * 4]] = r[rc]
+\begin{Verbatim}
+      m<i64>[pc + m<i32>[ib + uimm6 * 4]] = r[rc]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1423,8 +1423,8 @@ address a 64-bit value from the \emph{rc} register.
 the \emph{load} instruction computes the address \emph{$[rb + uimm3 \times 8]$}
 then loads a 64-bit value from memory at that address and saves the result in
 the \emph{rc} register.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = (i64)[r[rb] + uimm3 * 8]
+\begin{Verbatim}
+    r[rc] = m<i64>[r[rb] + uimm3 * 8]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1434,8 +1434,8 @@ the \emph{rc} register.
 the \emph{store} instruction computes the address \emph{$[rb + uimm3 \times 8]$}
 then stores a 64-bit value to memory at that address containing a 64-bit value
 from the \emph{rc} register.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    (i64)[r[rb] + uimm3 * 8] = r[rc]
+\begin{Verbatim}
+    m<i64>[r[rb] + uimm3 * 8] = r[rc]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1454,15 +1454,15 @@ register is set. the type of comparsion in \emph{fun3} can be one of:
 \emph{4} \textrightarrow \emph{less than (unsigned)},
 \emph{5} \textrightarrow \emph{greater or equal (unsigned)}, or
 \emph{6} \textrightarrow \emph{conditional move}.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+\begin{Verbatim}
     match fun3
-    | lt  -> flag = (i64)r[rc] <  (i64)r[rb]
-    | ge  -> flag = (i64)r[rc] >= (i64)r[rb]
-    | eq  -> flag =      r[rc] =       r[rb]
-    | ne  -> flag =      r[rc] !=      r[rb]
-    | ltu -> flag = (u64)r[rc] <  (u64)r[rb]
-    | geu -> flag = (u64)r[rc] >= (u64)r[rb]
-    | mov -> if (flag) r[rc] = r[rb]
+    | lt    -> flag = (i64)r[rc] <  (i64)r[rb]
+    | ge    -> flag = (i64)r[rc] >= (i64)r[rb]
+    | eq    -> flag =      r[rc] =       r[rb]
+    | ne    -> flag =      r[rc] !=      r[rb]
+    | ltu   -> flag = (u64)r[rc] <  (u64)r[rb]
+    | geu   -> flag = (u64)r[rc] >= (u64)r[rb]
+    | mov   -> if (flag) r[rc] = r[rb]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1480,7 +1480,7 @@ register. the type of logic operations in \emph{fun3} can be one of:
 \emph{5} \textrightarrow \emph{count leading zeros},
 \emph{6} \textrightarrow \emph{count population}, or
 \emph{7} \textrightarrow \emph{sign extend}.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
+\begin{Verbatim}
     match fun3
     | mov   -> r[rc] = r[rb]
     | not   -> r[rc] = ~r[rb]
@@ -1502,10 +1502,10 @@ the register \emph{ra} is subtracted from the \emph{program counter + 2},
 and the register \emph{rb} is subtracted from the \emph{immediate base}
 register, and the results are packed into an \emph{i32x2} relative address
 vector and saved to the register \emph{rc}.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    rpc = (i32)(pc - r[ra] + 2)
-    rib = (i32)(ib - r[rb]    )
-    r[rc] = (i32x2){rpc,rib}
+\begin{Verbatim}
+        rpc = (i32)(pc - r[ra] + 2)
+        rib = (i32)(ib - r[rb])
+      r[rc] = (i32x2){rpc,rib}
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1515,8 +1515,8 @@ vector and saved to the register \emph{rc}.
 the \emph{and} instruction performs a \emph{logical-and} of the register
 \emph{rb} and the register \emph{ra} and saves the result in the
 register \emph{rc}.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = r[rb] & r[ra]
+\begin{Verbatim}
+      r[rc] = r[rb] & r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1526,8 +1526,8 @@ register \emph{rc}.
 the \emph{or} instruction performs a \emph{logical-or} of the register
 \emph{rb} and the register \emph{ra} and saves the result in the
 register \emph{rc}.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = r[rb] | r[ra]
+\begin{Verbatim}
+      r[rc] = r[rb] | r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1537,8 +1537,8 @@ register \emph{rc}.
 the \emph{xor} instruction performs a \emph{logical-exclusive-or}
 of the register \emph{rb} and the register \emph{ra} and saves the
 result in the register \emph{rc}.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = r[rb] ^ r[ra]
+\begin{Verbatim}
+      r[rc] = r[rb] ^ r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1547,8 +1547,8 @@ result in the register \emph{rc}.
 \\
 the \emph{add} instruction adds the \emph{rb} register to
 the \emph{ra} register and saves the result in the \emph{rc} register.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = r[rb] + r[ra]
+\begin{Verbatim}
+      r[rc] = r[rb] + r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1560,8 +1560,8 @@ logical right shift of the value in the \emph{rb} register by the
 number of bits in register \emph{ra} then saves the result in the
 \emph{rc} register.
 zeros are copied into the right most bits.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = (u64)r[rb] >> r[ra]
+\begin{Verbatim}
+      r[rc] = r<u64>[rb] >> r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1572,8 +1572,8 @@ the \emph{sra} or \emph{shift-right-arithmetic} instruction performs an
 arithmetic right shift of the value in the \emph{rb} register by the
 number of bits in register \emph{ra} then saves the result in the
 \emph{rc} register. sign is copied into the right most bits.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = (i64)r[rb] >> r[ra]
+\begin{Verbatim}
+      r[rc] = r<i64>[rb] >> r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1584,8 +1584,8 @@ the \emph{sll} or \emph{shift-left-logical} instruction performs a
 logical left shift of the value in the \emph{rb} register by the
 number of bits in register \emph{ra} then saves the result in the
 \emph{rc} register.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = r[rb] << r[ra]
+\begin{Verbatim}
+      r[rc] = r[rb] << r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1594,8 +1594,8 @@ number of bits in register \emph{ra} then saves the result in the
 \\
 the \emph{sub} instruction subtracts the \emph{ra} register from
 the \emph{rb} register and saves the result in the \emph{rc} register.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = r[rb] - r[ra]
+\begin{Verbatim}
+      r[rc] = r[rb] - r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1605,8 +1605,8 @@ the \emph{rb} register and saves the result in the \emph{rc} register.
 the \emph{mul} instruction performs signed multiplication of the
 \emph{rb} register with the \emph{ra} register and saves the
 result in the \emph{rc} register.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = r[rb] * r[ra]
+\begin{Verbatim}
+      r[rc] = r[rb] * r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1617,8 +1617,8 @@ the \emph{div} instruction performs signed division of the
 \emph{rb} register by the \emph{ra} register and saves the
 result in the \emph{rc} register. division by zero causes
 a divide by zero exception.
-\begin{Verbatim}[baselinestretch=1.0,fontsize=\small]
-    r[rc] = r[rb] / r[ra]
+\begin{Verbatim}
+      r[rc] = r[rb] / r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
