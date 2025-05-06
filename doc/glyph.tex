@@ -13,17 +13,38 @@
 
 \def\verbatim@font{\linespread{1}\normalfont\ttfamily}
 
-\begin{document}
-\title{GLYPH-X}
-\subtitle{a super regular RISC architecture}
-\author{Michael Clark}
-\date{\small \today \quad DRAFT}
-\maketitle
+\makeatletter
+\def\printauthor{\@author}
+\makeatother
 
-\cleardoublepage
+\author{Michael Clark\\[1mm]{\small \texttt{michaeljclark@mac.com}}}
+
+\begin{document}
+\begin{titlepage}
+\vspace*{30mm}
+\begin{minipage}{0.43\linewidth}
+    \begin{flushright}
+        {\titlefont\Huge\textsf{GLYPH-X}} \\[3mm]
+        {\normalsize\textsf{\textbf{a super regular RISC architecture}}} \\[2mm]
+        {\footnotesize\textsf{\today \, -- DRAFT}} \\[20mm]
+        {\quad}
+    \end{flushright}
+\end{minipage}
+\hfill
+\begin{minipage}{0.02\linewidth}
+\centering\rule{1.5mm}{60mm}
+\end{minipage}
+\hfill
+\begin{minipage}{0.43\linewidth}
+    \begin{flushleft}
+        {\quad} \\[35mm]
+        {\titlefont\normalsize\printauthor}
+    \end{flushleft}
+\end{minipage}
+\end{titlepage}
+
 \dominitoc
 \tableofcontents
-\pagenumbering{arabic}
 \pagestyle{headings}
 
 \newcommand{\insnimmnine}[4]{
