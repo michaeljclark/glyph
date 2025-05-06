@@ -62,8 +62,8 @@ this list outlines instructions, opcodes, and descriptions used in the
 | nr | instruction  | form         | code  | description                                 |
 |:---|:-------------|:-------------|:------|:--------------------------------------------|
 | 00 | break        | op0r_imm9_16 | 00000 | **break** uimm9                             |
-| 01 | j            | op0r_imm9_16 | 00001 | **jump** simm9*2+2                          |
-| 02 | b            | op0r_imm9_16 | 00010 | **branch** simm9*2+2                        |
+| 01 | j            | op0r_imm9_16 | 00001 | **jump** simm9*2                            |
+| 02 | b            | op0r_imm9_16 | 00010 | **branch** simm9*2                          |
 | 03 | ibj          | op0r_imm9_16 | 00011 | **ib-jump** simm9*64                        |
 | 04 | jalib.i64    | op1r_imm6_16 | 00100 | **jump-and-link-ib** rc,ib64(uimm6*8)       |
 |    |              |              |       |   rc = ib32x2(uimm6*8);                     |
