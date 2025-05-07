@@ -921,7 +921,7 @@ successive instruction packets.
 \label{fig:glyph-instruction-template-128}
 \end{figure}
 
-\subsection{instruction size encoding}
+\subsection{instruction sizes}
 
 the variable length instruction format has a \emph{2-bit} size field in a
 fixed position in every 16-bit instruction packet, somewhat inspired by
@@ -940,20 +940,22 @@ LEB128, to reduce the complexity of variable length instruction size decoding.
 128-bit  & \texttt{\{11,11,11,11,11,11,11,11\}}   \\ 
 \hline
 \end{tabular}
-\caption{Variable-length instruction size fields}
+\caption{variable-length instruction size fields}
 \label{tab:instruction-size-fields}
 \end{table}
 
-\subsection{instruction forms --- 16-bit}
+\subsection{instruction forms}
 
-the 16-bit instructions forms are super regular in that operand and opcode
-bits do not overlap and the number and complexity of the formats is reduced
-so that vectorized instruction decoding is easier in software. the scheme
-is designed so that \emph{1-bit} of coding space in the larger packet can be
-used to extend register sizes for the 16-bit ops.
+the instructions forms are super regular in that operand and opcode
+bits do not overlap and the number and complexity of the formats is
+reduced so that vectorized instruction decoding is easier in software.
+the scheme is designed so that \emph{1-bit} of coding space in the
+larger packet can be used to extend register sizes.
 
-%\subsubsection{op0ri9 - large immediate}
+\subsubsection{16-bit instruction forms}
 
+this section details the layout of the 16-bit instruction forms:
+\\
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[scale=0.5]
@@ -980,8 +982,6 @@ used to extend register sizes for the 16-bit ops.
 \caption{16-bit large immediate.}
 \label{fig:glyph-iform-opi-16}
 \end{figure}
-
-%\subsubsection{op1ri6 - one operand with immediate}
 
 \begin{figure}[H]
 \centering
@@ -1015,8 +1015,6 @@ used to extend register sizes for the 16-bit ops.
 \caption{16-bit one operand with immediate.}
 \label{fig:glyph-iform-op1ri-16}
 \end{figure}
-
-%\subsubsection{op2ri3 - two operands with immediate}
 
 \begin{figure}[H]
 \centering
@@ -1057,8 +1055,6 @@ used to extend register sizes for the 16-bit ops.
 \label{fig:glyph-iform-op2ri-16}
 \end{figure}
 
-%\subsubsection{op3r - three operands}
-
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[scale=0.5]
@@ -1097,6 +1093,225 @@ used to extend register sizes for the 16-bit ops.
 \caption{16-bit three operand.}
 \label{fig:glyph-iform-op3r-16}
 \end{figure}
+
+\newpage
+\subsubsection{32-bit instruction forms}
+
+this section details the layout of the 32-bit instruction forms:
+\\
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{01}};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$imm_{[8:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {\textbf{11}};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (5.500000,-0.500000) [font=\scriptsize] {$imm_{[17:9]}$};
+\end{tikzpicture}
+\caption{32-bit large immediate.}
+\label{fig:glyph-iform-opi-32}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (4.500000,1.250000) [font=\scriptsize] {12};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (3.500000,1.250000) [font=\scriptsize] {13};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (4.000000,1.000000) -- (4.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{01}};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (4.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (4.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (7.000000,0.500000) [font=\scriptsize] {$imm_{[5:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {\textbf{11}};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (4.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (4.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (7.000000,-0.500000) [font=\scriptsize] {$imm_{[11:6]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\node at (2.500000,-0.500000) [font=\scriptsize] {$rc_{[5:3]}$};
+\end{tikzpicture}
+\caption{32-bit one operand with immediate.}
+\label{fig:glyph-iform-op1ri-32}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (7.500000,1.250000) [font=\scriptsize] {9};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (4.500000,1.250000) [font=\scriptsize] {12};
+\node at (6.500000,1.250000) [font=\scriptsize] {10};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (3.500000,1.250000) [font=\scriptsize] {13};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (7.000000,1.000000) -- (7.000000,1.500000);
+\draw (4.000000,1.000000) -- (4.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{01}};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (8.500000,0.500000) [font=\scriptsize] {$imm_{[2:0]}$};
+\fill [black!5]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\draw [black!90]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$rb_{[2:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {\textbf{11}};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (8.500000,-0.500000) [font=\scriptsize] {$imm_{[5:3]}$};
+\fill [black!5]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
+\draw [black!90]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
+\node at (5.500000,-0.500000) [font=\scriptsize] {$rb_{[5:3]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\node at (2.500000,-0.500000) [font=\scriptsize] {$rc_{[5:3]}$};
+\end{tikzpicture}
+\caption{32-bit two operand with immediate.}
+\label{fig:glyph-iform-op2ri-32}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (7.500000,1.250000) [font=\scriptsize] {9};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (4.500000,1.250000) [font=\scriptsize] {12};
+\node at (6.500000,1.250000) [font=\scriptsize] {10};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (3.500000,1.250000) [font=\scriptsize] {13};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (7.000000,1.000000) -- (7.000000,1.500000);
+\draw (4.000000,1.000000) -- (4.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{01}};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (8.500000,0.500000) [font=\scriptsize] {$ra_{[2:0]}$};
+\fill [black!5]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\draw [black!90]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$rb_{[2:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {\textbf{11}};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (8.500000,-0.500000) [font=\scriptsize] {$ra_{[5:3]}$};
+\fill [black!5]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
+\draw [black!90]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
+\node at (5.500000,-0.500000) [font=\scriptsize] {$rb_{[5:3]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\node at (2.500000,-0.500000) [font=\scriptsize] {$rc_{[5:3]}$};
+\end{tikzpicture}
+\caption{32-bit three operand.}
+\label{fig:glyph-iform-op3r-32}
+\end{figure}
+
+\subsection{instruction decoding}
+
+the instruction size encoding and field extension scheme has been designed
+to minimize complexity for parallel decoding in hardware and software.
+the following table shows the instruction width combinations for
+various width parallel instruction decoders.
+\\
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Packets} & \textbf{Bits} & \textbf{Bytes} & \textbf{Combinations} \\
+\hline
+1-wide  & 16-bit   & 2  & 1     \\
+2-wide  & 32-bit   & 4  & 16    \\
+4-wide  & 64-bit   & 8  & 58    \\
+8-wide  & 128-bit  & 16 & 574   \\
+16-wide & 256-bit  & 32 & 51904 \\
+\hline
+\end{tabular}
+\caption{instruction decode combinations}
+\label{tab:instruction-decode-combos}
+\end{table}
 
 \newpage
 \section{Constant stream}
