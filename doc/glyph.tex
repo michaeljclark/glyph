@@ -1058,30 +1058,34 @@ is addressed with the \emph{immediate base (ib)} register.
 \end{figure}
 
 \par\noindent
+
+
+\par\noindent
+instruction blocks are aligned memory blocks addressed by the \emph{program counter}.
+instruction memory is addressed using \emph{pc-relative} addresses in
+instruction immediate values or indirectly via constants using
+\emph{ib-relative} addresses within register slots.
+\\
+\par\noindent
 immediate blocks are aligned memory blocks addressed by the \emph{immediate
-base register}.
+base} register. constant memory is addressed using \emph{ib-relative} addresses
+within register slots, which are typed, scaled and aligned addresses computed
+relative to an \emph{immediate base} register.
 \\
 \par\noindent
-immediate blocks can be navigated by branching the constant stream
-independently using the \emph{immediate-block-jump} instruction, or together
-with the \emph{program counter} using procedure call and return instructions
-that set and restore \emph{(pc,ib)} via a link register that contains a
-packed relative address vector. the use of packed relative address vectors
-is for backward compatibility with a single link register.
+the constant stream branches independently using the
+\emph{immediate-block-jump} instruction to update the \emph{immediate base}
+register, or together with the \emph{program counter} in procedure call and
+return instructions that branch instruction and constants at the same time;
+\emph{jump-and-link-immediate-block} and \emph{jump-to-link-immediate-block}
+add and subtract address vectors to \emph{(pc,ib)}. the \emph{pack-indirect}
+instruction allows absolute \emph{(pc,ib)} addresses to be packed into an
+address vector for indirect calls.
 \\
 \par\noindent
-for procedure calls and returns, the instruction and constant streams are
-set at the same time using the call and return instructions;
-\emph{jump-and-link-immediate-block}, \emph{jump-to-link-immediate-block},
-which add and subtract relative address vectors to \emph{(pc,ib)}, the
-\emph{program counter} and the \emph{immediate base} register. the
-\emph{pack-indirect} instruction allows absolute \emph{(pc,ib)} addresses
-to be packed into a relative address vector for indirect calls.
-\\
-\par\noindent
-the instruction forms only use bonded register slots for immediate operands
-and operand bits do not overlap opcode bits. the use of immediate blocks means
-large immediate constants can all be accessed with short references encoded
+the instruction forms use bonded register slots for immediate operands and
+operand bits do not overlap opcode bits. the use of immediate blocks means
+large immediate constants can all be accessed using short references encoded
 inside of register slots for instructions that use an immediate block
 relative addressing mode.
 \\
