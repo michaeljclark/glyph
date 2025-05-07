@@ -703,10 +703,12 @@ absolute addresses such as virtual functions.
 \section{Instruction format}
 \label{sec:instruction-format}
 
-glyph has a variable length instruction format supporting 16, 32, 64,
-and 128-bit instruction packets. the instruction packet has been
-designed to use a \emph{super regular} scheme, whereby successive
-instruction packets extend the fields in the previous packet.
+instructions use a variable length format with a 16-bit packet
+that supports 16, 32, 64, and 128-bit instruction words. the
+instruction packet has been designed to use a \emph{super regular}
+scheme, whereby successive instruction packets extend the fields
+in the previous packet. instruction words can begin on any 16-bit
+aligned address.
 
 \subsection{instruction templates}
 
@@ -924,9 +926,10 @@ successive instruction packets.
 \subsection{instruction sizes}
 
 the variable length instruction format has a \emph{2-bit} size field in a
-fixed position in every 16-bit instruction packet, somewhat inspired by
-LEB128, to reduce the complexity of variable length instruction size decoding.
-
+fixed position in every 16-bit instruction packet, to reduce the complexity
+of size-decoding for variable length instructions. this table shows the
+size fields for the different instruction sizes:
+\\
 \begin{table}[h]
 \centering
 \small
@@ -948,14 +951,14 @@ LEB128, to reduce the complexity of variable length instruction size decoding.
 
 the instructions forms are super regular in that operand and opcode
 bits do not overlap and the number and complexity of the formats is
-reduced so that vectorized instruction decoding is easier in software.
-the scheme is designed so that \emph{1-bit} of coding space in the
-larger packet can be used to extend register sizes.
+reduced so that vectorized instruction decoding is simple in both
+hardware and software. the scheme is designed so that \emph{1-bit} of
+coding space in the larger packet can be used to extend register sizes.
 
 \subsubsection{16-bit instruction forms}
 
 this section details the layout of the 16-bit instruction forms:
-\\
+
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[scale=0.5]
@@ -1098,7 +1101,7 @@ this section details the layout of the 16-bit instruction forms:
 \subsubsection{32-bit instruction forms}
 
 this section details the layout of the 32-bit instruction forms:
-\\
+
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[scale=0.5]
