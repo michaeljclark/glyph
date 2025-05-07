@@ -527,7 +527,7 @@ traditional RISC architectures. glyph achieves this by packing two relative
 \emph{(pc,ib)} displacements into a relative address vector\footnote{the
 architecture defines two parameters: \emph{ALEN} and \emph{XLEN},
 which respectively to refer to width of addresses and width of general
-purpose registers in bits. when $XLEN > ALEN \times 2$ it is possible to
+purpose registers in bits. when $XLEN \ge ALEN \times 2$ it is possible to
 pack absolute addresses instead of relative addresses, as would be the case
 where \emph{ALEN=64} and \emph{XLEN=128}.}.
 \\
