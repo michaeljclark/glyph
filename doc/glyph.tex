@@ -370,12 +370,6 @@ specifies the width of addresses in bits.
     \draw [black!95] (8+\y*2,\x)    rectangle (10+\y*2,\x+1);
   }
 }
-% \foreach \x in {0,...,3} {
-%   \foreach \y in {0,...,7} {
-%     \pgfmathsetmacro{\z}{int(3-\x)}
-%     \node [font=\small,anchor=base] at (9+\y*2,\x+0.25)  {\texttt{00}};
-%   }
-% }
 \node [font=\tiny,anchor=base] at (9,4.2)  {\textsf{byte-7}};
 \node [font=\tiny,anchor=base] at (23,4.2)  {\textsf{byte-0}};
 
@@ -388,18 +382,157 @@ specifies the width of addresses in bits.
 \end{figure}
 
 \newpage
-\subsection{instructions and constants}
+\subsection{instructions}
+\label{sec:instructions}
 
-instruction and constant memory are two sets of storage which are likely
-to be \emph{SRAM}\footnote{\emph{SRAM}\,– Static random-access memory.}.
-instruction and constant memory are organized as word-addressable stores
-similar to main-memory, although they are read-only and restricted
-to instructions and constants.
+instruction memory is a memory region dedicated to instructions. it is
+organized as a word-addressable store like main-memory, but is read-only
+and restricted to instructions.
 \\
 \par\noindent
 instruction memory is addressed using \emph{pc-relative} addresses in
-instruction immediate values or indirectly via constants using
-\emph{ib-relative} addresses within register slots.
+instruction immediate values or indirectly in constants that are accessed
+using \emph{ib-relative} addresses. section~\ref{sec:constant-stream}
+provides details on \emph{ib-relative} addresses.
+\\
+\par\noindent
+instruction words contain packets of 16-bits which are composed of
+size, opcode, and operand fields. instruction packets can be appended
+together to form larger instruction words with larger opcode and
+operand fields. section~\ref{sec:instruction-format} provides details
+on the instruction template and instruction forms.
+\\
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
+\end{tikzpicture}
+\caption{16-bit instruction containing one packet.}
+\label{fig:16-bit-instruction-word}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {$sz_{[3:2]}$};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (5.500000,-0.500000) [font=\scriptsize] {$operand_{[17:9]}$};
+\end{tikzpicture}
+\caption{32-bit instruction containing two packets.}
+\label{fig:32-bit-instruction-word}
+\end{figure}
+
+\par\noindent
+instruction words are packed together into instruction blocks
+containing instruction size information that is used to fuse
+them together to compose variable-length instructions.
+instruction words can begin on any 16-bit aligned address.
+\\
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+\foreach \x in {0,...,1} {
+  \fill [black!5] (0,\x)    rectangle (8,\x+1);
+  \draw [black!95] (0,\x)    rectangle (8,\x+1);
+  \pgfmathsetmacro{\y}{int((1-\x)*4)}
+  \pgfmathsetmacro{\z}{int((1-\x)*4+3)}
+  \node [font=\small,anchor=base] at (4,\x+0.25)  {\textsf{instrucion \y--\z}};
+  \fill [black!5] (8,\x)    rectangle (24,\x+1);
+  \foreach \y in {0,...,3} {
+    \draw [black!95] (8+\y*4,\x)    rectangle (12+\y*4,\x+1);
+  }
+}
+\draw [black!95,dashed] (0,-1)      rectangle (8,0);
+\draw [black!95,dashed] (8,-1)      rectangle (24,0);
+\node [font=\tiny,anchor=base] at (10,2.2)  {\textsf{pcrel(3)}};
+\node [font=\tiny,anchor=base] at (22,2.2)  {\textsf{pcrel(0)}};
+\end{scope}
+\end{tikzpicture}
+\caption{organization of instruction-memory with 16-bit instructions.}
+\label{fig:instruction-memory-16}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+
+\fill [black!5] (0,0)    rectangle (8,1);
+\draw [black!95] (0,0)    rectangle (8,1);
+\node [font=\small,anchor=base] at (4,0.25)  {\textsf{instrucion 4--7}};
+\fill [black!5] (8,0)    rectangle (24,1);
+\draw [black!95] (8,0)    rectangle (12,1);
+\draw [black!95] (12,0)    rectangle (24,1);
+\draw [black!95] (20,0)    rectangle (24,1);
+
+\fill [black!5] (0,1)    rectangle (8,2);
+\draw [black!95] (0,1)    rectangle (8,2);
+\node [font=\small,anchor=base] at (4,1.25)  {\textsf{instrucion 0--3}};
+\fill [black!5] (8,1)    rectangle (24,2);
+\draw [black!95] (8,1)    rectangle (16,2);
+\draw [black!95] (16,1)    rectangle (24,2);
+
+\draw [black!95,dashed] (0,-1)      rectangle (8,0);
+\draw [black!95,dashed] (8,-1)      rectangle (24,0);
+\node [font=\tiny,anchor=base] at (10,2.2)  {\textsf{pcrel(3)}};
+\node [font=\tiny,anchor=base] at (22,2.2)  {\textsf{pcrel(0)}};
+\end{scope}
+\end{tikzpicture}
+\caption{organization of instruction-memory with 16-bit and 32-bit instructions.}
+\label{fig:instruction-memory-16-32}
+\end{figure}
+
+\newpage
+\subsection{constants}
+\label{sec:constants}
+
+constant memory is a memory region dedicated to constant. it is
+organized as a word-addressable store like main-memory, but is read-only
+and restricted to constants.
 \\
 \par\noindent
 constant memory is addressed using \emph{ib-relative} addresses within
@@ -568,6 +701,7 @@ absolute addresses such as virtual functions.
 
 \newpage
 \section{Instruction format}
+\label{sec:instruction-format}
 
 glyph has a variable length instruction format supporting 16, 32, 64,
 and 128-bit instruction packets. the instruction packet has been
@@ -966,6 +1100,7 @@ used to extend register sizes for the 16-bit ops.
 
 \newpage
 \section{Constant stream}
+\label{sec:constant-stream}
 
 glyph seperates the instruction stream into two streams, one with
 instructions and one with constants. the instruction stream is
@@ -1063,8 +1198,8 @@ is addressed with the \emph{immediate base (ib)} register.
 \par\noindent
 instruction blocks are aligned memory blocks addressed by the \emph{program counter}.
 instruction memory is addressed using \emph{pc-relative} addresses in
-instruction immediate values or indirectly via constants using
-\emph{ib-relative} addresses within register slots.
+instruction immediate values or indirectly in constants that are accessed
+using \emph{ib-relative} addresses within register slots.
 \\
 \par\noindent
 immediate blocks are aligned memory blocks addressed by the \emph{immediate
