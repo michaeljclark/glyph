@@ -1993,9 +1993,14 @@ result in the \emph{rc} register.
 the \emph{div} instruction performs signed division of the
 \emph{rb} register by the \emph{ra} register and saves the
 result in the \emph{rc} register. division by zero causes
-a divide by zero exception.
+the flag to be set and zero to be stored in the \emph{rc} register.
+a subsequent branch can handle the division by zero.
 \begin{Verbatim}
-      r[rc] = r[rb] / r[ra]
+      flag = r[ra] == 0
+      if flag:
+          r[rc] = 0
+      else:
+          r[rc] = r[rb] / r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}

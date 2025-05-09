@@ -408,7 +408,11 @@ def cpu_exec_op_mul_i64(cpu,inst):
     cpu.r[rc(inst)] = sux(usx(cpu.r[rb(inst)]) * usx(cpu.r[ra(inst)]));
     return 2
 def cpu_exec_op_div_i64(cpu,inst):
-    cpu.r[rc(inst)] = sux(usx(cpu.r[rb(inst)]) // usx(cpu.r[ra(inst)]));
+    cpu.flag = cpu.r[ra(inst)] == 0
+    if cpu.flag:
+        cpu.r[rc(inst)] = 0
+    else:
+        cpu.r[rc(inst)] = sux(usx(cpu.r[rb(inst)]) // usx(cpu.r[ra(inst)]));
     return 2
 def cpu_exec_op_illegal(cpu,inst):
     return -1

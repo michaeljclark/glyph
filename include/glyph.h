@@ -490,7 +490,12 @@ __glyph_func__ int cpu_exec_op_mul_i64(cpu_state *cpu, u64 inst)
 }
 __glyph_func__ int cpu_exec_op_div_i64(cpu_state *cpu, u64 inst)
 {
-    cpu->r[rc(inst)] = (u64)((i64)cpu->r[rb(inst)] / (i64)cpu->r[ra(inst)]);
+    cpu->flag = cpu->r[ra(inst)] == 0;
+    if (cpu->flag) {
+        cpu->r[rc(inst)] = 0;
+    } else {
+        cpu->r[rc(inst)] = (u64)((i64)cpu->r[rb(inst)] / (i64)cpu->r[ra(inst)]);
+    }
     return 2;
 }
 __glyph_func__ int cpu_exec_op_illegal(cpu_state *cpu, u64 inst)

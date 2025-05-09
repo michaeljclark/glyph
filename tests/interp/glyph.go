@@ -401,7 +401,12 @@ func CPU_exec_op_mul_i64(cpu *CPUState, inst uint64) int {
     return 2
 }
 func CPU_exec_op_div_i64(cpu *CPUState, inst uint64) int {
-    cpu.R[rc(inst)] = uint64(int64(cpu.R[rb(inst)]) / int64(cpu.R[ra(inst)]))
+    cpu.Flag = cpu.R[ra(inst)] == 0
+    if cpu.Flag {
+        cpu.R[rc(inst)] = 0
+    } else {
+        cpu.R[rc(inst)] = uint64(int64(cpu.R[rb(inst)]) / int64(cpu.R[ra(inst)]))
+    }
     return 2
 }
 func CPU_exec_op_illegal(cpu *CPUState, inst uint64) int {
