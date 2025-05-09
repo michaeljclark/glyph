@@ -21,7 +21,7 @@ func t() {
         CPU_encode_op_cmp_ne_i64(1,0),
         CPU_encode_op_cmov_i64(6,0),
         CPU_encode_op_cmp_eq_i64(1,0),
-        CPU_encode_op_cmov_i64(7,0),
+        CPU_encode_op_ncmov_i64(7,0),
         CPU_encode_op_break(0),
     }
     CPU_test("cmp_1", c, i);
