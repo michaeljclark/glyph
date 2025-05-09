@@ -1829,8 +1829,9 @@ register is set. the type of comparsion in \emph{fun3} can be one of:
 \emph{2} \textrightarrow \emph{equal},
 \emph{3} \textrightarrow \emph{not equal},
 \emph{4} \textrightarrow \emph{less than (unsigned)},
-\emph{5} \textrightarrow \emph{greater or equal (unsigned)}, or
-\emph{6} \textrightarrow \emph{conditional move}.
+\emph{5} \textrightarrow \emph{greater or equal (unsigned)},
+\emph{6} \textrightarrow \emph{conditional move}, or
+\emph{7} \textrightarrow \emph{negated conditional move}.
 \begin{Verbatim}
     match fun3
     | lt    -> flag = (i64)r[rc] <  (i64)r[rb]
@@ -1839,7 +1840,10 @@ register is set. the type of comparsion in \emph{fun3} can be one of:
     | ne    -> flag =      r[rc] !=      r[rb]
     | ltu   -> flag = (u64)r[rc] <  (u64)r[rb]
     | geu   -> flag = (u64)r[rc] >= (u64)r[rb]
-    | mov   -> if (flag) r[rc] = r[rb]
+    | cmov  -> if flag:
+                   r[rc] = r[rb]
+    | ncmov -> if not flag:
+                   r[rc] = r[rb]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -2186,7 +2190,9 @@ the following table lists glyph assembler pseudo instruction aliases:
 \texttt{cmp.geu.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rc, rb,}
 \texttt{geu} & compare greater or equal (unsigned) \\
 \texttt{cmov.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rc, rb,}
-\texttt{mov} & conditional move \\
+\texttt{cmov} & conditional move \\
+\texttt{ncmov.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rc, rb,}
+\texttt{ncmov} & negated conditional move \\
 \texttt{mov.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
 \texttt{mov} & copy register \\
 \texttt{not.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}

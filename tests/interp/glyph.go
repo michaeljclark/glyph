@@ -61,7 +61,8 @@ const (
     CPU_compare_ne      Fun3Compare = 0b011
     CPU_compare_ltu     Fun3Compare = 0b100
     CPU_compare_geu     Fun3Compare = 0b101
-    CPU_compare_mov     Fun3Compare = 0b110
+    CPU_compare_cmov    Fun3Compare = 0b110
+    CPU_compare_ncmov   Fun3Compare = 0b111
 )
 
 /*
@@ -317,8 +318,13 @@ func CPU_exec_op_compare_i64(cpu *CPUState, inst uint64) int {
     case CPU_compare_geu:
         cpu.Flag = cpu.R[rc(inst)] >= cpu.R[rb(inst)]
         break
-    case CPU_compare_mov:
+    case CPU_compare_cmov:
         if cpu.Flag {
+            cpu.R[rc(inst)] = cpu.R[rb(inst)]
+        }
+        break
+    case CPU_compare_ncmov:
+        if !cpu.Flag {
             cpu.R[rc(inst)] = cpu.R[rb(inst)]
         }
         break
@@ -521,7 +527,8 @@ var cpu_fun3_compare_str = [8]string{
     CPU_compare_ne:        "cmp.ne.i64",
     CPU_compare_ltu:       "cmp.ltu.i64",
     CPU_compare_geu:       "cmp.geu.i64",
-    CPU_compare_mov:       "cmov.i64",
+    CPU_compare_cmov:      "cmov.i64",
+    CPU_compare_ncmov:     "ncmov.i64",
 }
 
 var cpu_fun3_logic_str = [8]string{
@@ -712,7 +719,10 @@ func CPU_encode_op_cmp_geu_i64(rc, rb int) uint16 {
     return op2ri3_enc(CPU_op_compare_i64, rc, rb, int(CPU_compare_geu))
 }
 func CPU_encode_op_cmov_i64(rc, rb int) uint16 {
-    return op2ri3_enc(CPU_op_compare_i64, rc, rb, int(CPU_compare_mov))
+    return op2ri3_enc(CPU_op_compare_i64, rc, rb, int(CPU_compare_cmov))
+}
+func CPU_encode_op_ncmov_i64(rc, rb int) uint16 {
+    return op2ri3_enc(CPU_op_compare_i64, rc, rb, int(CPU_compare_ncmov))
 }
 func CPU_encode_op_mov_i64(rc, rb int) uint16 {
     return op2ri3_enc(CPU_op_logic_i64, rc, rb, int(CPU_logic_mov))

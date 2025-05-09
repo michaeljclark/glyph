@@ -74,7 +74,8 @@ enum
     cpu_compare_ne      = 0b011,
     cpu_compare_ltu     = 0b100,
     cpu_compare_geu     = 0b101,
-    cpu_compare_mov     = 0b110,
+    cpu_compare_cmov    = 0b110,
+    cpu_compare_ncmov   = 0b111,
 };
 
 /*
@@ -394,8 +395,13 @@ __glyph_func__ int cpu_exec_op_compare_i64(cpu_state *cpu, u64 inst)
     case cpu_compare_geu:
         cpu->flag = cpu->r[rc(inst)] >= cpu->r[rb(inst)];
         break;
-    case cpu_compare_mov:
+    case cpu_compare_cmov:
         if (cpu->flag) {
+            cpu->r[rc(inst)] = cpu->r[rb(inst)];
+        }
+        break;
+    case cpu_compare_ncmov:
+        if (!cpu->flag) {
             cpu->r[rc(inst)] = cpu->r[rb(inst)];
         }
         break;
@@ -615,7 +621,8 @@ static const char* cpu_fun3_compare_str[8] =
     [cpu_compare_ne]        = "cmp.ne.i64",
     [cpu_compare_ltu]       = "cmp.ltu.i64",
     [cpu_compare_geu]       = "cmp.geu.i64",
-    [cpu_compare_mov]       = "cmov.i64",
+    [cpu_compare_cmov]      = "cmov.i64",
+    [cpu_compare_ncmov]     = "ncmov.i64",
 };
 
 static const char* cpu_fun3_logic_str[8] =
@@ -811,7 +818,10 @@ __glyph_func__ u16 cpu_encode_op_cmp_geu_i64(int rc, int rb) {
     return op2ri3_enc(cpu_op_compare_i64, rc, rb, cpu_compare_geu);
 }
 __glyph_func__ u16 cpu_encode_op_cmov_i64(int rc, int rb) {
-    return op2ri3_enc(cpu_op_compare_i64, rc, rb, cpu_compare_mov);
+    return op2ri3_enc(cpu_op_compare_i64, rc, rb, cpu_compare_cmov);
+}
+__glyph_func__ u16 cpu_encode_op_ncmov_i64(int rc, int rb) {
+    return op2ri3_enc(cpu_op_compare_i64, rc, rb, cpu_compare_ncmov);
 }
 __glyph_func__ u16 cpu_encode_op_mov_i64(int rc, int rb) {
     return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_mov);

@@ -63,7 +63,8 @@ cpu_compare_eq      = 0b010
 cpu_compare_ne      = 0b011
 cpu_compare_ltu     = 0b100
 cpu_compare_geu     = 0b101
-cpu_compare_mov     = 0b110
+cpu_compare_cmov    = 0b110
+cpu_compare_ncmov   = 0b111
 
 #
 # logic op fun3
@@ -352,8 +353,11 @@ def cpu_exec_op_compare_i64(cpu,inst):
         cpu.flag = cpu.r[rc(inst)] < cpu.r[rb(inst)]
     elif fun == cpu_compare_geu:
         cpu.flag = cpu.r[rc(inst)] >= cpu.r[rb(inst)]
-    elif fun == cpu_compare_mov:
+    elif fun == cpu_compare_cmov:
         if cpu.flag:
+            cpu.r[rc(inst)] = cpu.r[rb(inst)]
+    elif fun == cpu_compare_ncmov:
+        if not cpu.flag:
             cpu.r[rc(inst)] = cpu.r[rb(inst)]
     return 2
 def cpu_exec_op_logic_i64(cpu,inst):
@@ -502,7 +506,8 @@ cpu_fun3_compare_str = {
     cpu_compare_ne:        "cmp.ne.i64",
     cpu_compare_ltu:       "cmp.ltu.i64",
     cpu_compare_geu:       "cmp.geu.i64",
-    cpu_compare_mov:       "cmov.i64",
+    cpu_compare_cmov:      "cmov.i64",
+    cpu_compare_ncmov:     "ncmov.i64",
 }
 
 cpu_fun3_logic_str = {
@@ -659,7 +664,9 @@ def cpu_encode_op_cmp_ltu_i64(rc, rb):
 def cpu_encode_op_cmp_geu_i64(rc, rb):
     return op2ri3_enc(cpu_op_compare_i64, rc, rb, cpu_compare_geu)
 def cpu_encode_op_cmov_i64(rc, rb):
-    return op2ri3_enc(cpu_op_compare_i64, rc, rb, cpu_compare_mov)
+    return op2ri3_enc(cpu_op_compare_i64, rc, rb, cpu_compare_cmov)
+def cpu_encode_op_ncmov_i64(rc, rb):
+    return op2ri3_enc(cpu_op_compare_i64, rc, rb, cpu_compare_ncmov)
 def cpu_encode_op_mov_i64(rc, rb):
     return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_mov)
 def cpu_encode_op_not_i64(rc, rb):
