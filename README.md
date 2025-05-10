@@ -41,7 +41,7 @@ the super regular RISC architecture:
   entry.
 - `ibj` _(immediate-block-jump)_ adds a relative address to the immediate
   base register.
-- `lib` _(load-immediate-block)_ uses unsigned displacement to access
+- `movib` _(move-immediate-block)_ uses unsigned displacement to access
   constants.
 - `jalib` _(jump-and-link-immediate-block)_ or _(call)_ links address
   vector and adds constants to (pc,ib).
