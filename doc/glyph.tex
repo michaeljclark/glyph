@@ -44,6 +44,7 @@
 \end{minipage}
 \end{titlepage}
 
+\pagenumbering{roman}
 \dominitoc
 \tableofcontents
 \pagestyle{headings}
@@ -228,7 +229,44 @@
 \end{tikzpicture}
 }
 
+\chapter*{Preface}
+\addcontentsline{toc}{chapter}{Preface}
+
+this document introduces a RISC architecture designed with simplicity
+as its dominant principle, along with several features not yet present
+in mainstream RISC architectures:
+
+\begin{itemize}[itemsep=0pt]
+  \item a compression technique for split instruction and constant streams.
+  \item a variable-length instruction format designed for vectorized decoding.
+  \item an efficient frontier between hardware synthesis and software translation.
+\end{itemize}
+
+\par\noindent
+the document begins with a general introduction to RISC architectures,
+including principal elements such as load-store operation, memory,
+registers, instructions, and constants. it then presents an overview of
+the proposed architecture, followed by chapters on constant streams, the
+variable-length instruction format, the instruction set, its assembly
+syntax, and the programming language calling convention.
+\\
+\par\noindent
+this document does not simply present an architecture that is a
+reimplementation of existing ideas; rather, it introduces a novel
+architecture with an instruction coding scheme optimized for efficient
+parallel decoding in hardware or software, combined with contemporary
+practice in instruction semantics.
+\\
+\par\noindent
+this work is intended for computer architects, systems programmers,
+students of computing machinery, and anyone interested in the evolution
+of RISC design. by the end of the document, readers should be able to
+reason about computer programs at the instruction level and understand
+the logic behind the architecture’s design choices—with enough detail
+to implement the architecture in hardware or software.
+
 \chapter{Architecture}
+\pagenumbering{arabic}
 
 \section{Introduction}
 
