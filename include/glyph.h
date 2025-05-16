@@ -414,6 +414,7 @@ __glyph_func__ int cpu_exec_op_logic_i64(cpu_state *cpu, u64 inst)
 {
     switch(uimm3(inst)) {
     case cpu_logic_mov:
+        /* moves whole register irrespective of XLEN */
         cpu->r[rc(inst)] = cpu->r[rb(inst)];
         break;
     case cpu_logic_not:
@@ -435,6 +436,7 @@ __glyph_func__ int cpu_exec_op_logic_i64(cpu_state *cpu, u64 inst)
         cpu->r[rc(inst)] = (u64)__builtin_popcountll(cpu->r[rb(inst)]);
         break;
     case cpu_logic_sext:
+        /* sign-extend is a move unless XLEN > 64 */
         cpu->r[rc(inst)] = cpu->r[rb(inst)];
         break;
     default:

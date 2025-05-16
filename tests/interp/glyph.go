@@ -336,6 +336,7 @@ func CPU_exec_op_compare_i64(cpu *CPUState, inst uint64) int {
 func CPU_exec_op_logic_i64(cpu *CPUState, inst uint64) int {
     switch(Fun3Logic(uimm3(inst))) {
     case CPU_logic_mov:
+        /* moves whole register irrespective of XLEN */
         cpu.R[rc(inst)] = cpu.R[rb(inst)]
         break
     case CPU_logic_not:
@@ -357,6 +358,7 @@ func CPU_exec_op_logic_i64(cpu *CPUState, inst uint64) int {
         cpu.R[rc(inst)] = uint64(bits.OnesCount64(cpu.R[rb(inst)]))
         break
     case CPU_logic_sext:
+        /* sign-extend is a move unless XLEN > 64 */
         cpu.R[rc(inst)] = cpu.R[rb(inst)]
         break
     default:

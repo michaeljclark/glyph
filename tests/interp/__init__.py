@@ -363,6 +363,7 @@ def cpu_exec_op_compare_i64(cpu,inst):
 def cpu_exec_op_logic_i64(cpu,inst):
     fun = uimm3(inst)
     if fun == cpu_logic_mov:
+        # moves whole register irrespective of XLEN
         cpu.r[rc(inst)] = cpu.r[rb(inst)]
     elif fun == cpu_logic_not:
         cpu.r[rc(inst)] = sux(~cpu.r[rb(inst)])
@@ -377,6 +378,7 @@ def cpu_exec_op_logic_i64(cpu,inst):
     elif fun == cpu_logic_ctpop:
         cpu.r[rc(inst)] = ctpop(64, cpu.r[rb(inst)])
     elif fun == cpu_logic_sext:
+        # sign-extend is a move unless XLEN > 64
         cpu.r[rc(inst)] = cpu.r[rb(inst)]
     return 2
 def cpu_exec_op_pin_i64(cpu,inst):
