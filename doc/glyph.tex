@@ -10,6 +10,8 @@
 \usepackage{tgheros}
 \usepackage{bm}
 \usepackage[bitstream-charter]{mathdesign}
+\usepackage[backend=biber,style=numeric-comp]{biblatex}
+\addbibresource{doc/glyph.bib}
 \usetikzlibrary{decorations.pathreplacing, arrows.meta, positioning}
 \title{Instructions}
 
@@ -308,9 +310,8 @@ general-purpose computer with the characteristic that it has a reduced
 set of instructions in contrast to a CISC\footnote{Complex Instruction
 Set Computer} machine. A RISC machine is Turing complete meaning it can
 perform any computation that a Turing machine can, given enough time and
-memory. a Turing machine\footnote{Alan M. Turing, Proceedings of the
-London Mathematical Society, Series 2, Volume 42, pp. 230–265.} is a
-theoretical model of computation.
+memory. a Turing machine~\cite{Turing1936} is a theoretical model of
+computation.
 \\
 \par\noindent
 a RISC machine has a set of instructions which comprise basic operations
@@ -538,7 +539,7 @@ on the instruction template and instruction forms.
 \par\noindent
 instruction words are packed together into instruction blocks
 containing instruction size information that is used to fuse
-them together to compose variable-length instructions.
+them together to compose variable-length instructions~\cite{US5717881A}.
 instruction words can begin on any 16-bit aligned address.
 \\
 \begin{figure}[H]
@@ -778,8 +779,8 @@ instructions use a variable length format with a 16-bit packet
 that supports 16, 32, 64, and 128-bit instruction words. the
 instruction packet has been designed to use a \emph{super regular}
 scheme, whereby successive instruction packets extend the fields
-in the previous packet. instruction words can begin on any 16-bit
-aligned address.
+in the previous packet~\cite{US6877084B1}. instruction words can
+begin on any 16-bit aligned address.
 
 \subsection{instruction templates}
 
@@ -1392,9 +1393,9 @@ various width parallel instruction decoders.
 \label{sec:constant-stream}
 
 glyph seperates the instruction stream into two streams, one with
-instructions and one with constants. the instruction stream is
-addressed with the \emph{program counter (pc)} and the constant stream
-is addressed with the \emph{immediate base (ib)} register.
+instructions and one with constants~\cite{Solomonoff1964}. the instruction
+stream is addressed with the \emph{program counter (pc)} and the constant
+stream is addressed with the \emph{immediate base (ib)} register.
 
 \begin{figure}[H]
 \centering
@@ -2474,5 +2475,7 @@ r7    & ra    & return address / (pc,ib) link vector        & caller \\
 \end{scope}
 \end{tikzpicture}
 \end{minipage}
+
+\printbibliography
 
 \end{document}
