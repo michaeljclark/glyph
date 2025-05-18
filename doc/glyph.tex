@@ -8,9 +8,12 @@
 \usepackage{enumitem}
 \usepackage{caption}
 \usepackage{tgheros}
+\usepackage{bm}
 \usepackage[bitstream-charter]{mathdesign}
 \usetikzlibrary{decorations.pathreplacing, arrows.meta, positioning}
 \title{Instructions}
+
+\newcommand{\fmtlogtwo}[1]{\fpeval{round(ln(#1)/ln(2), 2)}}
 
 \def\verbatim@font{\linespread{1}\normalfont\ttfamily}
 
@@ -1369,15 +1372,15 @@ various width parallel instruction decoders.
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|}
 \hline
-\textbf{Packets} & \textbf{Bits} & \textbf{Bytes} & \textbf{Combinations} \\
+\textbf{Packets} & \textbf{Bits} & \textbf{Bytes} & $\bm{n_{combos}}$ & $\bm{\log_2(n)}$ \\
 \hline
-1-wide  & 16-bit   & 2  & 1     \\
-2-wide  & 32-bit   & 4  & 16    \\
-4-wide  & 64-bit   & 8  & 58    \\
-8-wide  & 128-bit  & 16 & 574   \\
-16-wide & 256-bit  & 32 & 51904 \\
+1-wide  & 16-bit   & 2  & 1     & \fmtlogtwo{1} \\
+2-wide  & 32-bit   & 4  & 16    & \fmtlogtwo{16} \\
+4-wide  & 64-bit   & 8  & 58    & \fmtlogtwo{58} \\
+8-wide  & 128-bit  & 16 & 574   & \fmtlogtwo{574} \\
+16-wide & 256-bit  & 32 & 51904 & \fmtlogtwo{51904} \\
 \hline
 \end{tabular}
 \caption{instruction decode combinations}
