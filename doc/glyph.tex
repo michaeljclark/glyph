@@ -9,11 +9,14 @@
 \usepackage{caption}
 \usepackage{tgheros}
 \usepackage{bm}
+\usepackage{cleveref}
 \usepackage[bitstream-charter]{mathdesign}
 \usepackage[backend=biber,style=numeric-comp]{biblatex}
 \addbibresource{doc/glyph.bib}
 \usetikzlibrary{decorations.pathreplacing, arrows.meta, positioning}
 \title{Instructions}
+
+\AtBeginBibliography{\small}
 
 \newcommand{\fmtlogtwo}[1]{\fpeval{round(ln(#1)/ln(2), 2)}}
 
@@ -456,16 +459,13 @@ specifies the width of addresses in bits.
 \subsection{instructions}
 \label{sec:instructions}
 
-instruction memory~\cite{aiken1946marki} is a memory region dedicated to
-instructions. it is organized as a word-addressable store like main-memory,
-but is read-only and restricted to instructions.
-\\
-\par\noindent
-instruction memory is addressed with displacements from the \emph{program
-counter} called \emph{pc-relative} addresses which are stored inside
-instruction immediate values or stored indirectly inside constants
-accessed using \emph{ib-relative} addresses. section~\ref{sec:constant-stream}
-provides details on \emph{ib-relative} addresses.
+instruction memory is a memory region dedicated to program instructions.
+it is organized as a word-addressable store, similar to main memory,
+but is read-only and reserved exclusively for instructions. this
+configuration is typically referred to as a Harvard architecture%
+~\cite{aiken1946marki}, in contrast to a Von Neumann architecture%
+~\cite{vonneumann1945edvac,mauchly1946eniac}, which uses a shared
+memory region for both program instructions and data.
 \\
 \par\noindent
 instruction words contain packets of 16-bits which are composed of
@@ -542,6 +542,8 @@ instruction words are packed together into instruction blocks
 containing instruction size information that is used to fuse
 them together to compose variable-length instructions~\cite{US5717881A}.
 instruction words can begin on any 16-bit aligned address.
+instruction memory is addressed with displacements from the \emph{program
+counter} called \emph{pc-relative} addresses.
 \\
 \begin{figure}[H]
 \centering
@@ -604,12 +606,15 @@ instruction words can begin on any 16-bit aligned address.
 
 constant memory~\cite{Solomonoff1964} is a memory region dedicated to
 constants. it is organized as a word-addressable store like main-memory,
-but is read-only and restricted to constants.
+but is read-only and restricted to constants. instructions can refer to
+constants using \emph{ib-relative} addresses inside instruction operands.
+section~\ref{sec:program-streams} provides more details on the split
+instruction and constant streams.
 \\
 \par\noindent
 constant memory is addressed with displacements from the \emph{immediate
 base} register called \emph{ib-relative} addresses which are stored inside
-instruction register slots, are sized, scaled and aligned addresses computed
+instruction operand slots, are sized, scaled and aligned addresses computed
 relative to the \emph{immediate base} register, which is like a program
 counter for constants. these diagrams show $ib8(n)$ through $ib64(n)$
 \emph{ib-relative} addresses for access to 8-bit through to 64-bit constants
@@ -1390,13 +1395,14 @@ various width parallel instruction decoders.
 \end{table}
 
 \newpage
-\section{Constant stream}
-\label{sec:constant-stream}
+\section{Program streams}
+\label{sec:program-streams}
 
-glyph seperates the instruction stream into two streams, one with
-instructions and one with constants~\cite{Solomonoff1964}. the instruction
-stream is addressed with the \emph{program counter (pc)} and the constant
-stream is addressed with the \emph{immediate base (ib)} register.
+glyph seperates the stored programs into two streams, one with instructions
+and one with constants~\cite{Solomonoff1964}. the instruction stream is
+addressed with the \emph{program counter (pc)} and the constant stream is
+addressed with the \emph{immediate base (ib)} register. this could be
+referred to as split program stream Harvard architecture.
 
 \begin{figure}[H]
 \centering
@@ -1480,19 +1486,19 @@ stream is addressed with the \emph{immediate base (ib)} register.
 \end{scope}
 \end{tikzpicture}
 \caption{program counter and immediate base register.}
-\label{fig:glyph-constant-stream}
+\label{fig:glyph-program-streams}
 \end{figure}
 
 \par\noindent
 instruction blocks are aligned memory blocks addressed by the \emph{program
 counter}. instruction memory is addressed with \emph{pc-relative} addresses
 in instruction immediate values or indirectly with constants accessed using
-\emph{ib-relative} addresses stored inside instruction register slots.
+\emph{ib-relative} addresses stored inside instruction operand slots.
 \\
 \par\noindent
 immediate blocks are aligned memory blocks addressed by the \emph{immediate
 base} register. constant memory is addressed with \emph{ib-relative}
-addresses stored inside instruction register slots, which are sized, scaled,
+addresses stored inside instruction operand slots, which are sized, scaled,
 and aligned relative to the \emph{immediate base} register.
 \\
 \par\noindent
@@ -1506,10 +1512,10 @@ instruction allows absolute \emph{(pc,ib)} addresses to be packed into an
 address vector for indirect calls.
 \\
 \par\noindent
-the instruction forms use bonded register slots for immediate operands and
+the instruction forms use bonded operand slots for immediate operands and
 operand bits do not overlap opcode bits. the use of immediate blocks means
 large immediate constants can all be accessed using short references encoded
-inside of register slots for instructions that use an immediate block
+inside of operand slots for instructions that use an immediate block
 relative addressing mode.
 \\
 
