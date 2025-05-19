@@ -551,7 +551,7 @@ instruction words can begin on any 16-bit aligned address.
   \draw [black!95] (0,\x)    rectangle (8,\x+1);
   \pgfmathsetmacro{\y}{int((1-\x)*4)}
   \pgfmathsetmacro{\z}{int((1-\x)*4+3)}
-  \node [font=\small,anchor=base] at (4,\x+0.25)  {\textsf{instrucion \y--\z}};
+  \node [font=\small,anchor=base] at (4,\x+0.25)  {\textsf{instruction \y--\z}};
   \fill [black!5] (8,\x)    rectangle (24,\x+1);
   \foreach \y in {0,...,3} {
     \draw [black!95] (8+\y*4,\x)    rectangle (12+\y*4,\x+1);
@@ -574,7 +574,7 @@ instruction words can begin on any 16-bit aligned address.
 
 \fill [black!5] (0,0)    rectangle (8,1);
 \draw [black!95] (0,0)    rectangle (8,1);
-\node [font=\small,anchor=base] at (4,0.25)  {\textsf{instrucion 4--7}};
+\node [font=\small,anchor=base] at (4,0.25)  {\textsf{instruction 4--7}};
 \fill [black!5] (8,0)    rectangle (24,1);
 \draw [black!95] (8,0)    rectangle (12,1);
 \draw [black!95] (12,0)    rectangle (24,1);
@@ -582,7 +582,7 @@ instruction words can begin on any 16-bit aligned address.
 
 \fill [black!5] (0,1)    rectangle (8,2);
 \draw [black!95] (0,1)    rectangle (8,2);
-\node [font=\small,anchor=base] at (4,1.25)  {\textsf{instrucion 0--3}};
+\node [font=\small,anchor=base] at (4,1.25)  {\textsf{instruction 0--3}};
 \fill [black!5] (8,1)    rectangle (24,2);
 \draw [black!95] (8,1)    rectangle (16,2);
 \draw [black!95] (16,1)    rectangle (24,2);
