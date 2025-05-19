@@ -2166,9 +2166,11 @@ output file. the extension for linker scripts is \texttt{.ld}.
 \newpage
 \section{Directives}
 the assembler implements a number of directives that control the assembly
-of instructions into object files. these directives give the ability to
-include arbitrary data, align data, export symbols, switch sections, define
-constants and emit metadata.
+of instructions into object files. these directives are based on the
+AT\&T System V assembler~\cite{att-svr4-asm} and the GNU assembler%
+~\cite{gnu-as-manual}, with some additions. they provide the ability to
+include arbitrary data, align data, export symbols, switch sections,
+define constants, and emit metadata.
 \\
 \par\noindent
 the following table lists glyph assembler directives:
