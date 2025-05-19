@@ -353,13 +353,14 @@ selectively executed based on the results of a comparison instruction.
 \newpage
 \subsection{load-store}
 
-a \emph{load-store} architecture is a way to characterize RISC architectures
-where most instructions have simple operands that point to values held
-in registers, plus \emph{load} and \emph{store} instructions to retrieve and
-commit values to main memory. a \emph{load-store} architecture alleviates
-the need to add complex addressing modes, plus intput-output to peripherals
-and secondary storage use \emph{MMIO}\footnote{\emph{MMIO}\,- Memory-mapped
-I/O.} to avoid needing special \emph{Input/Output} instructions.
+a \emph{load-store} architecture~\cite{cocke1980risc} is a way to
+characterize RISC architectures where most instructions have simple operands
+that point to values held in registers, plus \emph{load} and \emph{store}
+instructions to retrieve and commit values to main memory. a \emph{load-store}
+architecture alleviates the need to add complex addressing modes,
+plus intput-output to peripherals and secondary storage use
+\emph{MMIO}\footnote{\emph{MMIO}\,- Memory-mapped I/O.} to avoid needing
+special \emph{Input/Output} instructions.
 
 \subsection{registers}
 
@@ -455,9 +456,9 @@ specifies the width of addresses in bits.
 \subsection{instructions}
 \label{sec:instructions}
 
-instruction memory is a memory region dedicated to instructions. it is
-organized as a word-addressable store like main-memory, but is read-only
-and restricted to instructions.
+instruction memory~\cite{aiken1946marki} is a memory region dedicated to
+instructions. it is organized as a word-addressable store like main-memory,
+but is read-only and restricted to instructions.
 \\
 \par\noindent
 instruction memory is addressed with displacements from the \emph{program
@@ -601,9 +602,9 @@ instruction words can begin on any 16-bit aligned address.
 \subsection{constants}
 \label{sec:constants}
 
-constant memory is a memory region dedicated to constants. it is
-organized as a word-addressable store like main-memory, but is read-only
-and restricted to constants.
+constant memory~\cite{Solomonoff1964} is a memory region dedicated to
+constants. it is organized as a word-addressable store like main-memory,
+but is read-only and restricted to constants.
 \\
 \par\noindent
 constant memory is addressed with displacements from the \emph{immediate
