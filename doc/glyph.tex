@@ -776,12 +776,12 @@ absolute addresses such as virtual functions.
 \section{Instruction format}
 \label{sec:instruction-format}
 
-instructions use a variable length format with a 16-bit packet
-that supports 16, 32, 64, and 128-bit instruction words. the
-instruction packet has been designed to use a \emph{super regular}
-scheme, whereby successive instruction packets extend the fields
-in the previous packet~\cite{US6877084B1}. instruction words can
-begin on any 16-bit aligned address.
+instructions use a variable length format~\cite{US5717881A} with a
+16-bit instruction packet that supports 16, 32, 64, and 128-bit
+instruction words. the instruction packet uses a \emph{super regular}
+scheme, whereby successive instruction packets extend the fields in
+the previous instruction packet~\cite{US6877084B1}. instruction words
+can begin on any 16-bit aligned address.
 
 \subsection{instruction templates}
 
