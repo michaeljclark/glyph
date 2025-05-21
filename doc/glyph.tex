@@ -290,7 +290,7 @@ in mainstream RISC architectures:
 the document begins with a general introduction to RISC architectures,
 including principal elements such as load-store operation, memory,
 registers, instructions, and constants. it then presents an overview of
-the proposed architecture, followed by sections on constant streams, the
+the proposed architecture, followed by sections on program streams, the
 variable-length instruction format, the instruction set, its assembly
 syntax, and the programming language calling convention.
 \\
@@ -729,7 +729,7 @@ storage space containing all types.}
 \end{figure}
 
 \newpage
-\section{Overview}
+\section{Core concepts}
 
 \par\noindent
 glyph is a super regular RISC architecture that encodes constants in a
@@ -785,6 +785,131 @@ register at the same time for returning from called procedures.
 relative address vector from \emph{(pc,ib)} and is used for calling
 absolute addresses such as virtual functions.
 \end{itemize}
+
+\newpage
+\section{Program streams}
+\label{sec:program-streams}
+
+glyph seperates the stored programs into two streams, one with instructions
+and one with constants~\cite{Solomonoff1964}. the instruction stream is
+addressed with the \emph{program counter (pc)} and the constant stream is
+addressed with the \emph{immediate base (ib)} register. this could be
+referred to as split program stream Harvard architecture.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.4]
+\begin{scope}[every node/.style={font=\normalsize, inner sep=0pt, right}]
+
+\node [above,scale=0.9,anchor=south] at (16,3)  {\textbf{instruction stream (pc-relative)}};
+\node [font=\small,above,scale=0.9,anchor=south] at (4,1.5)  {\textbf{instruction packet}};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (-0.75,0.3)  {\textsf{pc}};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (33.0,0.3)  {\textsf{\ldots}};
+
+\fill [black!15]                   (0.0,0.0)   rectangle (4.5,1.0);
+\draw [line width=0.2mm, black!80] (0.0,0.0)   rectangle (4.5,1.0);
+\node [font=\tiny,below,scale=0.9,anchor=base] at (0.5,0.3)  {\textsf{15}};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (4.0,0.3)  {\textsf{7}};
+
+\fill [black!10]                   (4.5,0.0)   rectangle (7.0,1.0);
+\draw [line width=0.2mm, black!80] (4.5,0.0)   rectangle (7.0,1.0);
+\node [font=\tiny,below,scale=0.9,anchor=base] at (5.0,0.3)  {\textsf{6}};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (6.5,0.3)  {\textsf{2}};
+
+\fill [black!5]                    (7.0,0.0)   rectangle (8.0,1.0);
+\draw [line width=0.2mm, black!80] (7.0,0,0)   rectangle (8.0,1.0);
+\node [font=\tiny,below,scale=0.9,anchor=base] at (7.25,0.3)  {\textsf{1}};
+\node [font=\tiny,below,scale=0.9,anchor=base] at (7.75,0.3)  {\textsf{0}};
+
+\draw [line width=0.2mm, black!80,dashed] (8,0)      rectangle (16,1);
+\draw [line width=0.2mm, black!80,dashed] (16,0)     rectangle (24,1);
+\draw [line width=0.2mm, black!80,dashed] (24,0)     rectangle (32,1);
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
+    (0,1.5) -- (4.5,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textsf{operands}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
+    (4.5,1.5) -- (7,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textsf{code}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
+    (7,1.5) -- (8,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textsf{size}};
+
+\node [above,scale=0.9,anchor=south] at (16,-4)  {\textbf{constant stream (ib-relative)}};
+\node [font=\small,above,scale=0.9,anchor=south] at (4,-5.5)  {\textbf{immediate block}};
+
+\node [font=\tiny,below,scale=0.9,anchor=base] at (33.0,-8.0)  {\textsf{\ldots}};
+
+\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-6.75)  {\textsf{ib8}};
+\foreach \x in {0,1,2,3,4,5,6,7}
+  \fill [black!5]                   (\x*4,-6)     rectangle (\x*4+4,-7);
+\foreach \x in {0,1,2,3,4,5,6,7}
+  \draw [line width=0.2mm, black!80] (\x*4,-6)     rectangle (\x*4+4,-7);
+\foreach \x in {0,1,2,3,4,5,6,7}
+  \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*4 + 2,-6.7)  {\textsf{\x}};
+
+\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-7.75)  {\textsf{ib16}};
+\foreach \x in {0,1,2,3}
+  \fill [black!10]                   (\x*8,-7)     rectangle (\x*8+8,-8);
+\foreach \x in {0,1,2,3}
+  \draw [line width=0.2mm, black!80] (\x*8,-7)     rectangle (\x*8+8,-8);
+\foreach \x in {0,1,2,3}
+  \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*8 + 4,-7.7)  {\textsf{\x}};
+
+\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-8.75)  {\textsf{ib32}};
+\foreach \x in {0,1}
+  \fill [black!15]                   (\x*16,-8)     rectangle (\x*16+16,-9);
+\foreach \x in {0,1}
+  \draw [line width=0.2mm, black!80] (\x*16,-8)     rectangle (\x*16+16,-9);
+\foreach \x in {0,1}
+  \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*16 + 8,-8.7)  {\textsf{\x}};
+
+\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-9.75)  {\textsf{ib64}};
+\foreach \x in {0}
+  \fill [black!20]                   (\x*32,-9)     rectangle (\x*32+32,-10);
+\foreach \x in {0}
+  \draw [line width=0.2mm, black!80] (\x*32,-9)     rectangle (\x*32+32,-10);
+\foreach \x in {0}
+  \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*32 + 16,-9.7)  {\textsf{\x}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
+    (0,-8.75) -- (32,-8.75) node[font=\tiny,midway,below,yshift=-2.7em]
+        {\textsf{ib-relative constants}};
+
+\end{scope}
+\end{tikzpicture}
+\caption{program counter and immediate base register.}
+\label{fig:glyph-program-streams}
+\end{figure}
+
+\par\noindent
+instruction blocks are aligned memory blocks addressed by the \emph{program
+counter}. instruction memory is addressed with \emph{pc-relative} addresses
+in instruction immediate values or indirectly with constants accessed using
+\emph{ib-relative} addresses stored inside instruction operand slots.
+\\
+\par\noindent
+immediate blocks are aligned memory blocks addressed by the \emph{immediate
+base} register. constant memory is addressed with \emph{ib-relative}
+addresses stored inside instruction operand slots, which are sized, scaled,
+and aligned relative to the \emph{immediate base} register.
+\\
+\par\noindent
+the constant stream branches independently using the
+\emph{immediate-block-jump} instruction to update the \emph{immediate base}
+register, or together with the \emph{program counter} in procedure call and
+return instructions that branch instruction and constants at the same time;
+\emph{jump-and-link-immediate-block} and \emph{jump-to-link-immediate-block}
+add and subtract address vectors to \emph{(pc,ib)}. the \emph{pack-indirect}
+instruction allows absolute \emph{(pc,ib)} addresses to be packed into an
+address vector for indirect calls.
+\\
+\par\noindent
+the instruction forms use bonded operand slots for immediate operands and
+operand bits do not overlap opcode bits. the use of immediate blocks means
+large immediate constants can all be accessed using short references encoded
+inside of operand slots for instructions that use an immediate block
+relative addressing mode.
+\\
 
 \newpage
 \section{Instruction format}
@@ -1402,131 +1527,6 @@ various width parallel instruction decoders.
 \caption{instruction decode combinations}
 \label{tab:instruction-decode-combos}
 \end{table}
-
-\newpage
-\section{Program streams}
-\label{sec:program-streams}
-
-glyph seperates the stored programs into two streams, one with instructions
-and one with constants~\cite{Solomonoff1964}. the instruction stream is
-addressed with the \emph{program counter (pc)} and the constant stream is
-addressed with the \emph{immediate base (ib)} register. this could be
-referred to as split program stream Harvard architecture.
-
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[scale=0.4]
-\begin{scope}[every node/.style={font=\normalsize, inner sep=0pt, right}]
-
-\node [above,scale=0.9,anchor=south] at (16,3)  {\textbf{instruction stream (pc-relative)}};
-\node [font=\small,above,scale=0.9,anchor=south] at (4,1.5)  {\textbf{instruction packet}};
-\node [font=\tiny,below,scale=0.9,anchor=base] at (-0.75,0.3)  {\textsf{pc}};
-\node [font=\tiny,below,scale=0.9,anchor=base] at (33.0,0.3)  {\textsf{\ldots}};
-
-\fill [black!15]                   (0.0,0.0)   rectangle (4.5,1.0);
-\draw [line width=0.2mm, black!80] (0.0,0.0)   rectangle (4.5,1.0);
-\node [font=\tiny,below,scale=0.9,anchor=base] at (0.5,0.3)  {\textsf{15}};
-\node [font=\tiny,below,scale=0.9,anchor=base] at (4.0,0.3)  {\textsf{7}};
-
-\fill [black!10]                   (4.5,0.0)   rectangle (7.0,1.0);
-\draw [line width=0.2mm, black!80] (4.5,0.0)   rectangle (7.0,1.0);
-\node [font=\tiny,below,scale=0.9,anchor=base] at (5.0,0.3)  {\textsf{6}};
-\node [font=\tiny,below,scale=0.9,anchor=base] at (6.5,0.3)  {\textsf{2}};
-
-\fill [black!5]                    (7.0,0.0)   rectangle (8.0,1.0);
-\draw [line width=0.2mm, black!80] (7.0,0,0)   rectangle (8.0,1.0);
-\node [font=\tiny,below,scale=0.9,anchor=base] at (7.25,0.3)  {\textsf{1}};
-\node [font=\tiny,below,scale=0.9,anchor=base] at (7.75,0.3)  {\textsf{0}};
-
-\draw [line width=0.2mm, black!80,dashed] (8,0)      rectangle (16,1);
-\draw [line width=0.2mm, black!80,dashed] (16,0)     rectangle (24,1);
-\draw [line width=0.2mm, black!80,dashed] (24,0)     rectangle (32,1);
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
-    (0,1.5) -- (4.5,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textsf{operands}};
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
-    (4.5,1.5) -- (7,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textsf{code}};
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
-    (7,1.5) -- (8,1.5) node[font=\tiny,midway,below,yshift=-2.7em]{\textsf{size}};
-
-\node [above,scale=0.9,anchor=south] at (16,-4)  {\textbf{constant stream (ib-relative)}};
-\node [font=\small,above,scale=0.9,anchor=south] at (4,-5.5)  {\textbf{immediate block}};
-
-\node [font=\tiny,below,scale=0.9,anchor=base] at (33.0,-8.0)  {\textsf{\ldots}};
-
-\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-6.75)  {\textsf{ib8}};
-\foreach \x in {0,1,2,3,4,5,6,7}
-  \fill [black!5]                   (\x*4,-6)     rectangle (\x*4+4,-7);
-\foreach \x in {0,1,2,3,4,5,6,7}
-  \draw [line width=0.2mm, black!80] (\x*4,-6)     rectangle (\x*4+4,-7);
-\foreach \x in {0,1,2,3,4,5,6,7}
-  \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*4 + 2,-6.7)  {\textsf{\x}};
-
-\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-7.75)  {\textsf{ib16}};
-\foreach \x in {0,1,2,3}
-  \fill [black!10]                   (\x*8,-7)     rectangle (\x*8+8,-8);
-\foreach \x in {0,1,2,3}
-  \draw [line width=0.2mm, black!80] (\x*8,-7)     rectangle (\x*8+8,-8);
-\foreach \x in {0,1,2,3}
-  \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*8 + 4,-7.7)  {\textsf{\x}};
-
-\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-8.75)  {\textsf{ib32}};
-\foreach \x in {0,1}
-  \fill [black!15]                   (\x*16,-8)     rectangle (\x*16+16,-9);
-\foreach \x in {0,1}
-  \draw [line width=0.2mm, black!80] (\x*16,-8)     rectangle (\x*16+16,-9);
-\foreach \x in {0,1}
-  \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*16 + 8,-8.7)  {\textsf{\x}};
-
-\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-9.75)  {\textsf{ib64}};
-\foreach \x in {0}
-  \fill [black!20]                   (\x*32,-9)     rectangle (\x*32+32,-10);
-\foreach \x in {0}
-  \draw [line width=0.2mm, black!80] (\x*32,-9)     rectangle (\x*32+32,-10);
-\foreach \x in {0}
-  \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*32 + 16,-9.7)  {\textsf{\x}};
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=4ex}]
-    (0,-8.75) -- (32,-8.75) node[font=\tiny,midway,below,yshift=-2.7em]
-        {\textsf{ib-relative constants}};
-
-\end{scope}
-\end{tikzpicture}
-\caption{program counter and immediate base register.}
-\label{fig:glyph-program-streams}
-\end{figure}
-
-\par\noindent
-instruction blocks are aligned memory blocks addressed by the \emph{program
-counter}. instruction memory is addressed with \emph{pc-relative} addresses
-in instruction immediate values or indirectly with constants accessed using
-\emph{ib-relative} addresses stored inside instruction operand slots.
-\\
-\par\noindent
-immediate blocks are aligned memory blocks addressed by the \emph{immediate
-base} register. constant memory is addressed with \emph{ib-relative}
-addresses stored inside instruction operand slots, which are sized, scaled,
-and aligned relative to the \emph{immediate base} register.
-\\
-\par\noindent
-the constant stream branches independently using the
-\emph{immediate-block-jump} instruction to update the \emph{immediate base}
-register, or together with the \emph{program counter} in procedure call and
-return instructions that branch instruction and constants at the same time;
-\emph{jump-and-link-immediate-block} and \emph{jump-to-link-immediate-block}
-add and subtract address vectors to \emph{(pc,ib)}. the \emph{pack-indirect}
-instruction allows absolute \emph{(pc,ib)} addresses to be packed into an
-address vector for indirect calls.
-\\
-\par\noindent
-the instruction forms use bonded operand slots for immediate operands and
-operand bits do not overlap opcode bits. the use of immediate blocks means
-large immediate constants can all be accessed using short references encoded
-inside of operand slots for instructions that use an immediate block
-relative addressing mode.
-\\
 
 \newpage
 \section{Register file}
