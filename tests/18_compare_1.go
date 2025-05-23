@@ -8,8 +8,8 @@ func t() {
         1,
     }
     i := []uint16{
-        CPU_encode_op_movib_i64(0,0),
-        CPU_encode_op_movib_i64(1,1),
+        CPU_encode_op_movw_i64(0,0),
+        CPU_encode_op_movw_i64(1,1),
         CPU_encode_op_cmp_lt_i64(0,1),
         CPU_encode_op_cmov_i64(2,0),
         CPU_encode_op_cmp_geu_i64(0,1),

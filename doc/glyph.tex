@@ -771,8 +771,8 @@ instructions.
 to function entry.
 \item \texttt{ibj} \emph{immediate-block-jump} adds a relative address to
 the \emph{immediate base} register.
-\item \texttt{movib} \emph{move-immediate-block} uses an unsigned displacement
-to access constants.
+\item \texttt{movw} \emph{move-word-immediate-block} uses an unsigned
+displacement to access constants.
 \item \texttt{jalib} \emph{jump-and-link-immediate-block} or \emph{call}
 links address vector and adds constants to \emph{(pc,ib)} and is used
 to branch the \emph{program counter} and \emph{immediate base} register
@@ -1707,7 +1707,7 @@ the \emph{j} or \emph{jump} instruction is an unconditional branch instruction
 that adds a relative immediate address to the \emph{program counter}. the
 resulting \emph{program counter} address is \emph{$[pc + simm9 \times 2 + 2]$}.
 \begin{Verbatim}
-         pc = pc + simm9 * 2 + 2
+    pc = pc + simm9 * 2 + 2
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1720,8 +1720,8 @@ that adds a relative immediate address to the \emph{program counter}. if the
 \emph{program counter} address is \emph{$[pc + simm9 \times 2 + 2]$},
 otherwise the \emph{program counter} is advanced normally.
 \begin{Verbatim}
-         if flag:
-             pc = pc + simm9 * 2 + 2
+    if flag:
+        pc = pc + simm9 * 2 + 2
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1732,50 +1732,77 @@ the \emph{ibj} or \emph{immediate-block-jump} instruction adds a
 64-bit relative address to the \emph{immediate base} register.
 the resulting \emph{immediate base} address is \emph{$[ib + simm9 \times 64]$}.
 \begin{Verbatim}
-         ib = ib + simm9 * 64
+    ib = ib + simm9 * 64
 \end{Verbatim}
 
 \needspace{8\baselineskip}
-\subsection{jalib}
-\insrcimmsix{rc}{uimm}{00100}{00}{\textbf{jalib.i64}\: rc, ib64(uimm6)}
+\subsection{link}
+\insrcimmsix{fun3}{uimm}{00100}{00}{\textbf{link.i64}\: fun3, ib64(uimm6)}
 \\
-the \emph{jalib} or \emph{jump-and-link-immediate-block} instruction
-loads a 64-bit constant addressed by \emph{$[ib + uimm6 \times 8]$} containing
-a \emph{i32x2} relative address vector, which it adds it to \emph{(pc,ib)},
-then saves the relative address vector in the \emph{rc} register.
+the \emph{link} instruction loads a 64-bit constant addressed by \emph{$[ib
++ uimm6 \times 8]$} containing a \emph{i32x2} relative address vector,
+which it adds it to \emph{(pc,ib)}, conditionally subtracts the source
+link register \emph{(r6 or r7)}, then conditionally adds the difference
+to the destination link register \emph{(r6 or r7)}, depending on the
+value of \emph{fun3}. the type of linkage in \emph{fun3} can be one of:
+\\
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|l|l|l|}
+\hline
+\textbf{value} & \textbf{mnemonic} & \textbf{description} &
+\textbf{link-type} & \textbf{dst-link} & \textbf{src-link} \\
+\hline
+0     & jib      & jump               & jump & -  & -  \\
+1     & -        & -                  & -    & -  & -  \\
+2     & jalib    & jump-and-link      & call & r6 & -  \\
+3     & jalib    & jump-and-link      & call & r7 & -  \\
+4     & jtlib    & jump-to-link       & ret  & -  & r6 \\
+5     & jtlib    & jump-to-link       & ret  & -  & r7 \\
+6     & jalaib   & jump-and-link-add  & tail & r6 & -  \\
+7     & jalaib   & jump-and-link-add  & tail & r7 & -  \\
+\hline
+\end{tabular}
+\caption{Link instruction functions}
+\label{tab:link-instruction-functions}
+\end{table}
+
 \begin{Verbatim}
-        tmp = m<i32x2>[ib + uimm6 * 8]
-  (rpc,rib) = tmp
-         pc = pc + rpc + 2
-         ib = ib + rib
-      r[rc] = tmp
+    lr = 0b110 + (rc & 1)
+
+    (cpc,cib) = m<i32x2>[ib + uimm6 * 8]
+    (lpc,lib) = fun3 == jtlib ? r<i32x2>[lr] : 0
+
+    pc = pc + cpc - lpc + 2
+    ib = ib + cib - lib
+
+    if fun3 == jalib:
+        r[lr] = (cpc,cib)
+    elif fun3 == jalaib:
+        r[lr] = r<i32x2>[lr] + (cpc,cib)
 \end{Verbatim}
 
 \needspace{8\baselineskip}
-\subsection{jtlib}
-\insrcimmsix{rc}{uimm}{00101}{00}{\textbf{jtlib.i64}\: rc, ib64(uimm6)}
+\subsection{movh}
+\insrcimmsix{rc}{uimm}{00101}{00}{\textbf{movh.i64}\: rc, ib32(uimm6)}
 \\
-the \emph{jtlib} or \emph{jump-to-link-immediate-block} instruction
-loads a 64-bit constant addressed by \emph{$[ib + uimm6 \times 8]$}
-containing a \emph{i32x2} relative address vector, then subtracts the
-\emph{i32x2} relative address vector in the \emph{rc} register from it,
-and adds the result to \emph{(pc,ib)}.
+the \emph{movh} or \emph{move-half-immediate-block} instruction loads a
+32-bit constant addressed by \emph{$[ib + uimm6 \times 4]$}, which it
+sign-extends to 64-bits, then saves to the \emph{rc} register.
 \begin{Verbatim}
-  (rpc,rib) = r<i32x2>[rc]
-  (dpc,dib) = m<i32x2>[ib + uimm6 * 8]
-         pc = pc + dpc - rpc
-         ib = ib + dib - rib
+    r[rc] = m<i32>[ib + uimm6 * 4]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
-\subsection{movib}
-\insrcimmsix{rc}{uimm}{00110}{00}{\textbf{movib.i64}\: rc, ib64(uimm6)}
+\subsection{movw}
+\insrcimmsix{rc}{uimm}{00110}{00}{\textbf{movw.i64}\: rc, ib64(uimm6)}
 \\
-the \emph{movib} or \emph{move-immediate-block} instruction loads a 64-bit
-constant addressed by \emph{$[ib + uimm6 \times 8]$} then saves it to the
-\emph{rc} register.
+the \emph{movw} or \emph{move-word-immediate-block} instruction loads a
+64-bit constant addressed by \emph{$[ib + uimm6 \times 8]$} then saves
+it to the \emph{rc} register.
 \begin{Verbatim}
-      r[rc] = m<i64>[ib + uimm6 * 8]
+    r[rc] = m<i64>[ib + uimm6 * 8]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1786,7 +1813,7 @@ the \emph{movi} or \emph{move-immediate} instruction sign-extends the
 immediate value in \emph{simm6} then saves the result in the \emph{rc}
 register.
 \begin{Verbatim}
-      r[rc] = simm6
+    r[rc] = simm6
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1796,7 +1823,7 @@ register.
 the \emph{addi} or \emph{add-immediate} instruction sign-extends the
 immediate value in \emph{simm6} then adds it to the \emph{rc} register.
 \begin{Verbatim}
-      r[rc] = r[rc] + simm6
+    r[rc] = r[rc] + simm6
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1807,7 +1834,7 @@ the \emph{srli} or \emph{shift-right-logical-immediate} instruction
 performs a logical right shift by \emph{uimm6} bits of the value in
 the \emph{rc} register. zeros are copied into the left most bits.
 \begin{Verbatim}
-      r[rc] = r<u64>[rc] >> uimm6
+    r[rc] = r<u64>[rc] >> uimm6
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1818,7 +1845,7 @@ the \emph{srai} or \emph{shift-right-arithmetic-immediate} instruction
 performs an arithmetic right shift by \emph{uimm6} bits of the value in
 the \emph{rc} register. the sign is copied into the left most bits.
 \begin{Verbatim}
-      r[rc] = r<i64>[rc] >> uimm6
+    r[rc] = r<i64>[rc] >> uimm6
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1829,18 +1856,18 @@ the \emph{slli} or \emph{shift-left-logical-immediate} instruction
 performs a logical left shift by \emph{uimm6} bits of the value in
 the \emph{rc} register. zeros are copied into the right most bits.
 \begin{Verbatim}
-      r[rc] = r[rc] << uimm6
+    r[rc] = r[rc] << uimm6
 \end{Verbatim}
 
 \needspace{8\baselineskip}
-\subsection{addib}
-\insrcimmsix{rc}{uimm}{01100}{00}{\textbf{addib.i64}\: rc, ib32(uimm6)}
+\subsection{addh}
+\insrcimmsix{rc}{uimm}{01100}{00}{\textbf{addh.i64}\: rc, ib32(uimm6)}
 \\
-the \emph{addib} or \emph{add-immediate-block-constant} instruction loads
+the \emph{addh} or \emph{add-half-immediate-block} instruction loads
 a 32-bit constant addressed by \emph{$[ib + uimm6 \times 4]$}, which it
 sign-extends to 64-bits, then adds to the \emph{rc} register.
 \begin{Verbatim}
-      r[rc] = r[rc] + m<i32>[ib + uimm6 * 4]
+    r[rc] = r[rc] + m<i32>[ib + uimm6 * 4]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1852,7 +1879,7 @@ loads a 32-bit constant addressed by \emph{$[ib + uimm6 \times 4]$},
 which it sign-extends to 64-bits, adds it to the \emph{program counter},
 and saves the result in the \emph{rc} register.
 \begin{Verbatim}
-      r[rc] = pc + m<i32>[ib + uimm6 * 4]
+    r[rc] = pc + m<i32>[ib + uimm6 * 4]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1864,7 +1891,7 @@ the \emph{loadpc} instruction loads a 32-bit constant addressed by
 the \emph{program counter} to form an address, then loads a 64-bit value
 from memory at that address and saves the result in the \emph{rc} register.
 \begin{Verbatim}
-      r[rc] = m<i64>[pc + m<i32>[ib + uimm6 * 4]]
+    r[rc] = m<i64>[pc + m<i32>[ib + uimm6 * 4]]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1876,7 +1903,7 @@ the \emph{storepc} instruction loads a 32-bit constant addressed by
 \emph{program counter} to form an address, then stores to memory at that
 address a 64-bit value from the \emph{rc} register.
 \begin{Verbatim}
-      m<i64>[pc + m<i32>[ib + uimm6 * 4]] = r[rc]
+    m<i64>[pc + m<i32>[ib + uimm6 * 4]] = r[rc]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1910,14 +1937,28 @@ the \emph{compare} instruction performs a comparison between the value in
 the \emph{compare} opcode is also used to perform conditional move whereby
 the \emph{rb} register is copied into the \emph{rc} if the \emph{flag}
 register is set. the type of comparsion in \emph{fun3} can be one of:
-\emph{0} \textrightarrow \emph{less than (signed)},
-\emph{1} \textrightarrow \emph{greather or equal (signed)},
-\emph{2} \textrightarrow \emph{equal},
-\emph{3} \textrightarrow \emph{not equal},
-\emph{4} \textrightarrow \emph{less than (unsigned)},
-\emph{5} \textrightarrow \emph{greater or equal (unsigned)},
-\emph{6} \textrightarrow \emph{conditional move}, or
-\emph{7} \textrightarrow \emph{negated conditional move}.
+\\
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{value} & \textbf{mnemonic}& \textbf{description} \\
+\hline
+0     & \emph{lt}    & \emph{less than (signed)}          \\
+1     & \emph{ge}    & \emph{greather or equal (signed)}  \\
+2     & \emph{eq}    & \emph{equal}                       \\
+3     & \emph{ne}    & \emph{not equal}                   \\
+4     & \emph{ltu}   & \emph{less than (unsigned)}        \\
+5     & \emph{geu}   & \emph{greater or equal (unsigned)} \\
+6     & \emph{cmov}  & \emph{conditional move}            \\
+7     & \emph{ncmov} & \emph{negated conditional move}    \\
+\hline
+\end{tabular}
+\caption{Compare instruction functions}
+\label{tab:compare-instruction-functions}
+\end{table}
+
 \begin{Verbatim}
     match fun3
     | lt    -> flag = (i64)r[rc] <  (i64)r[rb]
@@ -1939,14 +1980,28 @@ register is set. the type of comparsion in \emph{fun3} can be one of:
 the \emph{logic} instruction performs a logic operation on the value
 in the \emph{rb} register then stores the result in the \emph{rc}
 register. the type of logic operations in \emph{fun3} can be one of:
-\emph{0} \textrightarrow \emph{move},
-\emph{1} \textrightarrow \emph{logical not},
-\emph{2} \textrightarrow \emph{negate},
-\emph{3} \textrightarrow \emph{bswap},
-\emph{4} \textrightarrow \emph{count trailing zeros},
-\emph{5} \textrightarrow \emph{count leading zeros},
-\emph{6} \textrightarrow \emph{count population}, or
-\emph{7} \textrightarrow \emph{sign extend}.
+\\
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{value} & \textbf{mnemonic}& \textbf{description} \\
+\hline
+0     & \emph{mv}    & \emph{move}                 \\
+1     & \emph{not}   & \emph{logical not}          \\
+2     & \emph{neg}   & \emph{negate}               \\
+3     & \emph{bswap} & \emph{bswap}                \\
+4     & \emph{ctz}   & \emph{count trailing zeros} \\
+5     & \emph{clz}   & \emph{count leading zeros}  \\
+6     & \emph{ctpop} & \emph{count population}     \\
+7     & \emph{sext}  & \emph{sign extend}          \\
+\hline
+\end{tabular}
+\caption{Logic instruction functions}
+\label{tab:logic-instruction-functions}
+\end{table}
+
 \begin{Verbatim}
     match fun3
     | mov   -> r[rc] = r[rb]
@@ -1970,9 +2025,9 @@ and the register \emph{rb} is subtracted from the \emph{immediate base}
 register, and the results are packed into an \emph{i32x2} relative address
 vector and saved to the register \emph{rc}.
 \begin{Verbatim}
-        rpc = <i32>(pc - r[ra] + 2)
-        rib = <i32>(ib - r[rb])
-      r[rc] = <i32x2>(rpc,rib)
+    lpc   = <i32>(pc - r[ra] + 2)
+    lib   = <i32>(ib - r[rb])
+    r[rc] = <i32x2>(lpc,lib)
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1983,7 +2038,7 @@ the \emph{and} instruction performs a \emph{logical-and} of the register
 \emph{rb} and the register \emph{ra} and saves the result in the
 register \emph{rc}.
 \begin{Verbatim}
-      r[rc] = r[rb] & r[ra]
+    r[rc] = r[rb] & r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1994,7 +2049,7 @@ the \emph{or} instruction performs a \emph{logical-or} of the register
 \emph{rb} and the register \emph{ra} and saves the result in the
 register \emph{rc}.
 \begin{Verbatim}
-      r[rc] = r[rb] | r[ra]
+    r[rc] = r[rb] | r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -2005,7 +2060,7 @@ the \emph{xor} instruction performs a \emph{logical-exclusive-or}
 of the register \emph{rb} and the register \emph{ra} and saves the
 result in the register \emph{rc}.
 \begin{Verbatim}
-      r[rc] = r[rb] ^ r[ra]
+    r[rc] = r[rb] ^ r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -2015,7 +2070,7 @@ result in the register \emph{rc}.
 the \emph{add} instruction adds the \emph{rb} register to
 the \emph{ra} register and saves the result in the \emph{rc} register.
 \begin{Verbatim}
-      r[rc] = r[rb] + r[ra]
+    r[rc] = r[rb] + r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -2028,7 +2083,7 @@ number of bits in register \emph{ra} then saves the result in the
 \emph{rc} register.
 zeros are copied into the right most bits.
 \begin{Verbatim}
-      r[rc] = r<u64>[rb] >> r[ra]
+    r[rc] = r<u64>[rb] >> r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -2040,7 +2095,7 @@ arithmetic right shift of the value in the \emph{rb} register by the
 number of bits in register \emph{ra} then saves the result in the
 \emph{rc} register. sign is copied into the right most bits.
 \begin{Verbatim}
-      r[rc] = r<i64>[rb] >> r[ra]
+    r[rc] = r<i64>[rb] >> r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -2052,7 +2107,7 @@ logical left shift of the value in the \emph{rb} register by the
 number of bits in register \emph{ra} then saves the result in the
 \emph{rc} register.
 \begin{Verbatim}
-      r[rc] = r[rb] << r[ra]
+    r[rc] = r[rb] << r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -2062,7 +2117,7 @@ number of bits in register \emph{ra} then saves the result in the
 the \emph{sub} instruction subtracts the \emph{ra} register from
 the \emph{rb} register and saves the result in the \emph{rc} register.
 \begin{Verbatim}
-      r[rc] = r[rb] - r[ra]
+    r[rc] = r[rb] - r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -2073,7 +2128,7 @@ the \emph{mul} instruction performs signed multiplication of the
 \emph{rb} register with the \emph{ra} register and saves the
 result in the \emph{rc} register.
 \begin{Verbatim}
-      r[rc] = r[rb] * r[ra]
+    r[rc] = r[rb] * r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -2086,11 +2141,11 @@ result in the \emph{rc} register. division by zero causes
 the flag to be set and zero to be stored in the \emph{rc} register.
 a subsequent branch can handle the division by zero.
 \begin{Verbatim}
-      flag = r[ra] == 0
-      if flag:
-          r[rc] = 0
-      else:
-          r[rc] = r[rb] / r[ra]
+    flag = r[ra] == 0
+    if flag:
+        r[rc] = 0
+    else:
+        r[rc] = r[rb] / r[ra]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -2255,8 +2310,16 @@ the following table lists glyph assembler pseudo instruction aliases:
 \texttt{nop}   & \texttt{or.i64 r0,r0,r0} & no-operation                     \\
 \texttt{li} \emph{rc, expression} & (several expansions) & load immediate  \\
 \texttt{la} \emph{rc, symbol}     & (several expansions) & load address    \\
-\texttt{call} \emph{symbol}     & \texttt{jalib} \emph{ibcall-reloc(text-label,const-label)} & procedure call \\
-\texttt{ret}                    & \texttt{jtlib} \emph{ibret-reloc(block-entry-label)} & procedure return \\
+\texttt{call} \emph{symbol}     & \texttt{jalib.i64} \emph{ibcall(text-label,const-label)} & procedure call \\
+\texttt{ret}                    & \texttt{jtlib.i64} \emph{ibret(text-label,const-label)} & procedure return \\
+\texttt{jib.i64} \emph{ib64(uimm6)} & \texttt{link.i64} \emph{ib64(uimm6),} \texttt{jib}
+ & jump-immmediate-block \\
+\texttt{jalib.i64} \emph{rc, ib64(uimm6)} & \texttt{link.i64} \emph{rc, ib64(uimm6),} \texttt{jalib}
+ & jump-and-link-immmediate-block \\
+\texttt{jtlib.i64} \emph{rc, ib64(uimm6)} & \texttt{link.i64} \emph{rc, ib64(uimm6),} \texttt{jtlib}
+ & jump-to-link-immmediate-block \\
+\texttt{jalaib.i64} \emph{rc, ib64(uimm6)} & \texttt{link.i64} \emph{rc, ib64(uimm6),} \texttt{jalaib}
+ & jump-and-link-add-immmediate-block \\
 \texttt{cmp.lt.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rc, rb,}
 \texttt{lt} & compare less than (signed) \\
 \texttt{cmp.gt.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rb, rc,}
@@ -2461,15 +2524,15 @@ r7    & ra    & return address / (pc,ib) link vector        & caller \\
 \ainsnimmnine{1}{simm}{00001}{00}{\textbf{j}\: simm9 \times 2}
 \ainsnimmnine{2}{simm}{00010}{00}{\textbf{b}\: simm9 \times 2}
 \ainsnimmnine{3}{simm}{00011}{00}{\textbf{ibj}\: simm9 \times 64}
-\ainsrcimmsix{4}{rc}{uimm}{00100}{00}{\textbf{jalib.i64}\: rc, ib64(uimm6)}
-\ainsrcimmsix{5}{rc}{uimm}{00101}{00}{\textbf{jtlib.i64}\: rc, ib64(uimm6)}
-\ainsrcimmsix{6}{rc}{uimm}{00110}{00}{\textbf{movib.i64}\: rc, ib64(uimm6)}
+\ainsrcimmsix{4}{fun3}{uimm}{00100}{00}{\textbf{link.i64}\: fun3, ib64(uimm6)}
+\ainsrcimmsix{5}{rc}{uimm}{00101}{00}{\textbf{movh.i64}\: rc, ib32(uimm6)}
+\ainsrcimmsix{6}{rc}{uimm}{00110}{00}{\textbf{movw.i64}\: rc, ib64(uimm6)}
 \ainsrcimmsix{7}{rc}{simm}{00111}{00}{\textbf{movi.i64}\: rc, simm6}
 \ainsrcimmsix{8}{rc}{simm}{01000}{00}{\textbf{addi.i64}\: rc, simm6}
 \ainsrcimmsix{9}{rc}{uimm}{01001}{00}{\textbf{srli.i64}\: rc, uimm6}
 \ainsrcimmsix{10}{rc}{uimm}{01010}{00}{\textbf{srai.i64}\: rc, uimm6}
 \ainsrcimmsix{11}{rc}{uimm}{01011}{00}{\textbf{slli.i64}\: rc, uimm6}
-\ainsrcimmsix{12}{rc}{uimm}{01100}{00}{\textbf{addib.i64}\: rc, ib32(uimm6)}
+\ainsrcimmsix{12}{rc}{uimm}{01100}{00}{\textbf{addh.i64}\: rc, ib32(uimm6)}
 \ainsrcimmsix{13}{rc}{uimm}{01101}{00}{\textbf{leapc.i64}\: rc, ib32(uimm6)(pc)}
 \ainsrcimmsix{14}{rc}{uimm}{01110}{00}{\textbf{loadpc.i64}\: rc, ib32(uimm6)(pc)}
 \ainsrcimmsix{15}{rc}{uimm}{01111}{00}{\textbf{storepc.i64}\: rc, ib32(uimm6)(pc)}

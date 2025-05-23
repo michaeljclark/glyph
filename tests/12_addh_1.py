@@ -8,9 +8,9 @@ def t():
         0xfffffc00,
     ]
     i = [
-        cpu_encode_op_addib_i64(0,2),
+        cpu_encode_op_addh_i64(0,2),
         cpu_encode_op_break(0),
     ]
-    cpu_test("addib_1", c, i)
+    cpu_test("addwib_1", c, i)
 
 t()

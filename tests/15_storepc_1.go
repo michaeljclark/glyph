@@ -8,9 +8,9 @@ func t() {
         0xfffffc0e,
     }
     i := []uint16{
-        CPU_encode_op_movib_i64(0,0),
+        CPU_encode_op_movw_i64(0,0),
         CPU_encode_op_storepc_i64(0,2),
-        CPU_encode_op_movib_i64(1,2),
+        CPU_encode_op_movw_i64(1,2),
         CPU_encode_op_break(0),
     }
     CPU_test("storepc_1", c, i);
