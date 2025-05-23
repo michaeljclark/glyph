@@ -1769,7 +1769,7 @@ value of \emph{fun3}. the type of linkage in \emph{fun3} can be one of:
 \end{table}
 
 \begin{Verbatim}
-    lr = 0b110 + (rc & 1)
+    lr = 0b110 + (fun3 & 1)
 
     (cpc,cib) = m<i32x2>[ib + uimm6 * 8]
     (lpc,lib) = fun3 == jtlib ? r<i32x2>[lr] : 0
