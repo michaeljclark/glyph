@@ -774,10 +774,12 @@ the \emph{immediate base} register.
 \item \texttt{movw} \emph{move-word-immediate-block} uses an unsigned
 displacement to access constants.
 \item \texttt{jalib} \emph{jump-and-link-immediate-block} or \emph{call}
+\emph{link function}
 links address vector and adds constants to \emph{(pc,ib)} and is used
 to branch the \emph{program counter} and \emph{immediate base} register
 at the same time for calling procedures.
-\item \texttt{jtlib} \emph{jump-to-link-immediate-block} or \emph{ret}
+\item \texttt{jtlib} \emph{jump-to-link-immediate-block} or \emph{return}
+\emph{link function}
 subtracts link vector from and adds constants to \emph{(pc,ib)} and is
 used to branch the \emph{program counter} and \emph{immediate base}
 register at the same time for returning from called procedures.
@@ -785,6 +787,15 @@ register at the same time for returning from called procedures.
 relative address vector from \emph{(pc,ib)} and is used for calling
 absolute addresses such as virtual functions.
 \end{itemize}
+
+\par\noindent
+the \texttt{pin} and \texttt{link} instructions form a modular arithmetic
+chain of relative address vectors that can be signed and encrypted to
+form a verifiable chain of return addresses for control flow integrity.
+this is due to the use of relative address vectors. the return strictly
+requires a block entry delta, and \texttt{link} adds and subtracts to and
+from the link register. signed and/or encrypted relative address vectors are
+a possible extension to the \texttt{pin} and \texttt{link} instructions.
 
 \newpage
 \section{Program streams}
