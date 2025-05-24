@@ -1745,7 +1745,7 @@ the resulting \emph{immediate base} address is \emph{$[ib + simm9 \times 64]$}.
 
 \needspace{8\baselineskip}
 \subsection{link}
-\insrcimmsix{fun3}{uimm}{00100}{00}{\textbf{link.i64}\: fun3, ib64(uimm6)}
+\insrcimmsix{fun}{uimm}{00100}{00}{\textbf{link.i64}\: fun3, ib64(uimm6)}
 \\
 the \emph{link} instruction loads a 64-bit constant addressed by \emph{$[ib
 + uimm6 \times 8]$} containing a \emph{i32x2} relative address vector,
@@ -2537,7 +2537,7 @@ r7    & ra    & return address / (pc,ib) link vector        & caller \\
 \ainsnimmnine{1}{simm}{00001}{00}{\textbf{j}\: simm9 \times 2}
 \ainsnimmnine{2}{simm}{00010}{00}{\textbf{b}\: simm9 \times 2}
 \ainsnimmnine{3}{simm}{00011}{00}{\textbf{ibj}\: simm9 \times 64}
-\ainsrcimmsix{4}{fun3}{uimm}{00100}{00}{\textbf{link.i64}\: fun3, ib64(uimm6)}
+\ainsrcimmsix{4}{fun}{uimm}{00100}{00}{\textbf{link.i64}\: fun3, ib64(uimm6)}
 \ainsrcimmsix{5}{rc}{uimm}{00101}{00}{\textbf{movh.i64}\: rc, ib32(uimm6)}
 \ainsrcimmsix{6}{rc}{uimm}{00110}{00}{\textbf{movw.i64}\: rc, ib64(uimm6)}
 \ainsrcimmsix{7}{rc}{simm}{00111}{00}{\textbf{movi.i64}\: rc, simm6}
