@@ -67,7 +67,7 @@ this list outlines instructions, opcodes, and descriptions used in the
 | 03 | ibj          | op0r_imm9_16 | 00011 | **ib-jump** simm9*64                        |
 | 04 | link.i64     | op1r_imm6_16 | 00100 | **link** fun3,ib64(uimm6*8)                 |
 |    |              |              |       |   fun3[2:1]=jib,jalib,jtlib,jalalib         |
-| 05 | movh.i64     | op1r_imm6_16 | 00101 | **move-half** rc,i324(uimm6*8)              |
+| 05 | movh.i64     | op1r_imm6_16 | 00101 | **move-half** rc,ib32(uimm6*8)              |
 | 06 | movw.i64     | op1r_imm6_16 | 00110 | **move-word** rc,ib64(uimm6*8)              |
 | 07 | movi.i64     | op1r_imm6_16 | 00111 | **mov-imm6** rc,simm6                       |
 | 08 | addi.i64     | op1r_imm6_16 | 01000 | **add-imm6** rc,simm6                       |
