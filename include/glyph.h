@@ -277,6 +277,14 @@ __glyph_inline__ u64 cpu_fetch(cpu_state *cpu)
 {
     return (u64)*(i16*)(cpu->mem + cpu->pc);
 }
+__glyph_inline__ u64 auth_encrypt_i64(cpu_state *cpu, u64 val)
+{
+    return val ^ 0x5555555555555555ull;
+}
+__glyph_inline__ u64 auth_decrypt_i64(cpu_state *cpu, u64 val)
+{
+    return val ^ 0x5555555555555555ull;
+}
 
 /*
  * cpu emulation
@@ -310,28 +318,37 @@ __glyph_func__ int cpu_exec_op_link_i64(cpu_state *cpu, u64 inst)
     u64 c = cpu_const_i64(cpu, uimm6(inst));
     u64 l = 0;
 
+    i32 dpc = 0, dib = 0, lpc = 0, lib = 0;
+
     switch (fun3) {
-    case cpu_link_jtlib_r6: case cpu_link_jtlib_r7:
-        l = cpu->r[reg];
+    case cpu_link_jalaib_r6: case cpu_link_jalaib_r7:
+        l = auth_decrypt_i64(cpu, cpu->r[reg]);
+        dpc = (i32)(c      ) + (i32)(l      );
+        dib = (i32)(c >> 32) + (i32)(l >> 32);
+        break;
+    default:
+        dpc = (i32)(c      );
+        dib = (i32)(c >> 32);
         break;
     }
 
-    i32 cpc = (i32)(c      );
-    i32 cib = (i32)(c >> 32);
-    i32 lpc = (i32)(l      );
-    i32 lib = (i32)(l >> 32);
-    cpu->pc = cpu->pc + (u64)(cpc - lpc + 2);
-    cpu->ib = cpu->ib + (u64)(cib - lib);
+    switch (fun3) {
+    case cpu_link_jtlib_r6: case cpu_link_jtlib_r7:
+        l = auth_decrypt_i64(cpu, cpu->r[reg]);
+        lpc = (i32)(l      );
+        lib = (i32)(l >> 32);
+        break;
+    }
+
+    cpu->pc = cpu->pc + (u64)(dpc - lpc + 2);
+    cpu->ib = cpu->ib + (u64)(dib - lib);
 
     i32 rpc, rib;
     switch (fun3) {
     case cpu_link_jalib_r6: case cpu_link_jalib_r7:
-        cpu->r[reg] = c;
-        break;
     case cpu_link_jalaib_r6: case cpu_link_jalaib_r7:
-        rpc = (i32)(cpu->r[reg]      ) + cpc;
-        rib = (i32)(cpu->r[reg] >> 32) + cib;
-        cpu->r[reg] = (u64)(u32)rpc | ((u64)rib << 32);
+        cpu->r[reg] = auth_encrypt_i64(cpu,
+            (u64)(u32)dpc | ((u64)dib << 32));
         break;
     }
 
@@ -484,7 +501,8 @@ __glyph_func__ int cpu_exec_op_pin_i64(cpu_state *cpu, u64 inst)
 {
     i32 rpc = (i32)(cpu->pc - cpu->r[ra(inst)] + 2ull);
     i32 rib = (i32)(cpu->ib - cpu->r[rb(inst)]);
-    cpu->r[rc(inst)] = (u64)(u32)rpc | ((u64)rib << 32);
+    cpu->r[rc(inst)] = auth_encrypt_i64(cpu,
+        (u64)(u32)rpc | ((u64)rib << 32));
     return 2;
 }
 __glyph_func__ int cpu_exec_op_and_i64(cpu_state *cpu, u64 inst)

@@ -790,12 +790,9 @@ absolute addresses such as virtual functions.
 
 \par\noindent
 the \texttt{pin} and \texttt{link} instructions form a modular arithmetic
-chain of relative address vectors that can be signed and encrypted to
-form a verifiable chain of return addresses for control flow integrity.
-this is due to the use of relative address vectors. the return strictly
-requires a block entry delta, and \texttt{link} adds and subtracts to and
-from the link register. signed and/or encrypted relative address vectors are
-a possible extension to the \texttt{pin} and \texttt{link} instructions.
+ring of relative address vectors, due to their use of relative addresses.
+relative address vectors can be encrypted, decrypted, and authenticated to
+form a verifiable chain of addresses for control flow integrity.
 
 \newpage
 \section{Program streams}
@@ -1781,18 +1778,22 @@ value of \emph{fun3}. the type of linkage in \emph{fun3} can be one of:
 
 \begin{Verbatim}
     lr = 0b110 + (fun3 & 1)
-
-    (cpc,cib) = m<i32x2>[ib + uimm6 * 8]
-    (lpc,lib) = fun3 == jtlib ? r<i32x2>[lr] : 0
-
-    pc = pc + cpc - lpc + 2
-    ib = ib + cib - lib
-
-    if fun3 == jalib:
-        r[lr] = (cpc,cib)
-    elif fun3 == jalaib:
-        r[lr] = r<i32x2>[lr] + (cpc,cib)
+    cval = m<i32x2>[ib + uimm6 * 8]
+    dval = fun3 == jalaib ? cval + auth-decrypt(r<i32x2>[lr]) : cval
+    lval = fun3 == jtlib  ?        auth-decrypt(r<i32x2>[lr]) : 0
+    (dpc,dib) = dval
+    (lpc,lib) = lval
+    pc = pc + dpc - lpc + 2
+    ib = ib + dib - lib
+    if fun3 == jalib or fun3 == jalaib:
+        r[lr] = auth-encrypt(r<i32x2>(dpc,dib))
 \end{Verbatim}
+
+\par\noindent
+the \emph{auth-encrypt} and \emph{auth-decrypt} functions are placeholders
+for authenticated encryption, and decryption of relative address vectors.
+authentication failures should generate a trap for the operating system to
+dispatch to a control flow integrity trap handler.
 
 \needspace{8\baselineskip}
 \subsection{movh}
@@ -2038,7 +2039,8 @@ vector and saved to the register \emph{rc}.
 \begin{Verbatim}
     lpc   = <i32>(pc - r[ra] + 2)
     lib   = <i32>(ib - r[rb])
-    r[rc] = <i32x2>(lpc,lib)
+    lval  = (lpc,lib)
+    r[rc] = auth-encrypt(lval)
 \end{Verbatim}
 
 \needspace{8\baselineskip}

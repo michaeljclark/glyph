@@ -276,6 +276,10 @@ def cpu_const_i32(cpu, slot):
 def cpu_fetch_i16(cpu):
     o = cpu.pc
     return int.from_bytes(cpu.mem[o:o+2], byteorder='little')
+def auth_encrypt_i64(cpu, val):
+    return val ^ 0x5555555555555555;
+def auth_decrypt_i64(cpu, val):
+    return val ^ 0x5555555555555555;
 
 #
 # cpu emulation
@@ -301,22 +305,28 @@ def cpu_exec_op_link_i64(cpu,inst):
     c = cpu_const_i64(cpu, uimm6(inst))
     l = 0
 
+    dpc, dib, lpc, lib = 0, 0, 0, 0
+
+    if fun3 == cpu_link_jalaib_r6 or fun3 == cpu_link_jalaib_r7:
+        l = auth_decrypt_i64(cpu, cpu.r[reg])
+        dpc = us32(c      ) + us32(l      )
+        dib = us32(c >> 32) + us32(l >> 32)
+    else:
+        dpc = us32(c      )
+        dib = us32(c >> 32)
+
     if fun3 == cpu_link_jtlib_r6 or fun3 == cpu_link_jtlib_r7:
-        l = cpu.r[reg]
+        l = auth_decrypt_i64(cpu, cpu.r[reg])
+        lpc = us32(l      )
+        lib = us32(l >> 32)
 
-    cpc = us32(c      )
-    cib = us32(c >> 32)
-    lpc = us32(l      )
-    lib = us32(l >> 32)
-    cpu.pc = sux(cpu.pc + cpc - lpc + 2)
-    cpu.ib = sux(cpu.ib + cib - lib)
+    cpu.pc = sux(cpu.pc + dpc - lpc + 2)
+    cpu.ib = sux(cpu.ib + dib - lib)
 
-    if fun3 == cpu_link_jalib_r6 or fun3 == cpu_link_jalib_r7:
-        cpu.r[reg] = sux(c)
-    elif fun3 == cpu_link_jalaib_r6 or fun3 == cpu_link_jalaib_r7:
-        rpc = us32(cpu.r[reg]      ) + cpc;
-        rib = us32(cpu.r[reg] >> 32) + cib;
-        cpu.R[reg] = su32(rpc) | (su32(rib) << 32)
+    if fun3 == cpu_link_jalib_r6 or fun3 == cpu_link_jalib_r7 or \
+       fun3 == cpu_link_jalaib_r6 or fun3 == cpu_link_jalaib_r7:
+        cpu.r[reg] = auth_encrypt_i64(cpu, su32(dpc) | (su32(dib) << 32))
+
     return 0
 def cpu_exec_op_movh_i64(cpu,inst):
     cpu.r[rc(inst)] = sux(cpu_const_i32(cpu, uimm6(inst)))
@@ -408,7 +418,7 @@ def cpu_exec_op_logic_i64(cpu,inst):
 def cpu_exec_op_pin_i64(cpu,inst):
     rpc = cpu.pc - cpu.r[ra(inst)] + 2
     rib = cpu.ib - cpu.r[rb(inst)]
-    cpu.r[rc(inst)] = su32(rpc) | (su32(rib) << 32)
+    cpu.r[rc(inst)] = auth_encrypt_i64(cpu, su32(rpc) | (su32(rib) << 32))
     return 2
 def cpu_exec_op_and_i64(cpu,inst):
     cpu.r[rc(inst)] = sux(cpu.r[rb(inst)] & cpu.r[ra(inst)])
