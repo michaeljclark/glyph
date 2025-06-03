@@ -1713,9 +1713,9 @@ and the \emph{program counter} is set to a trap vector address.
 \\
 the \emph{j} or \emph{jump} instruction is an unconditional branch instruction
 that adds a relative immediate address to the \emph{program counter}. the
-resulting \emph{program counter} address is \emph{$[pc + simm9 \times 2 + 2]$}.
+resulting \emph{program counter} address is \emph{$[pc + simm9 \times 2]$}.
 \begin{Verbatim}
-    pc = pc + simm9 * 2 + 2
+    pc = pc + simm9 * 2
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1725,11 +1725,11 @@ resulting \emph{program counter} address is \emph{$[pc + simm9 \times 2 + 2]$}.
 the \emph{b} or \emph{branch} instruction is a conditional branch instruction
 that adds a relative immediate address to the \emph{program counter}. if the
 \emph{flag} register has been set by a compare instruction, the resulting
-\emph{program counter} address is \emph{$[pc + simm9 \times 2 + 2]$},
+\emph{program counter} address is \emph{$[pc + simm9 \times 2]$},
 otherwise the \emph{program counter} is advanced normally.
 \begin{Verbatim}
     if flag:
-        pc = pc + simm9 * 2 + 2
+        pc = pc + simm9 * 2
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -1783,7 +1783,7 @@ value of \emph{fun3}. the type of linkage in \emph{fun3} can be one of:
     lval = fun3 == jtlib  ?        auth-decrypt(reg<i32x2>[lr]) : 0
     (dpc,dib) = dval
     (lpc,lib) = lval
-    pc = pc + dpc - lpc + 2
+    pc = pc + dpc - lpc
     ib = ib + dib - lib
     if fun3 == jalib or fun3 == jalaib:
         reg[lr] = auth-encrypt(reg<i32x2>(dpc,dib))
@@ -2032,12 +2032,12 @@ register. the type of logic operations in \emph{fun3} can be one of:
 \\
 the \emph{pin} or \emph{pack-indirect} instruction packs two absolute
 addresses as an \emph{i32x2} \emph{(pc,ib)} relative address vector.
-the register \emph{ra} is subtracted from the \emph{program counter + 2},
+the register \emph{ra} is subtracted from the \emph{program counter},
 and the register \emph{rb} is subtracted from the \emph{immediate base}
 register, and the results are packed into an \emph{i32x2} relative address
 vector and saved to the register \emph{rc}.
 \begin{Verbatim}
-    lpc   = int<i32>(pc - reg[ra] + 2)
+    lpc   = int<i32>(pc - reg[ra])
     lib   = int<i32>(ib - reg[rb])
     lval  = (lpc,lib)
     reg[rc] = auth-encrypt(lval)

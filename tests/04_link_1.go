@@ -4,7 +4,7 @@ import . "glyph/tests/interp"
 
 func t() {
     c := []uint64{
-        0x0000004000000002,
+        0x0000004000000004,
         0,
         0,
         0,

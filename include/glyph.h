@@ -296,13 +296,13 @@ __glyph_func__ int cpu_exec_op_break(cpu_state *cpu, u64 inst)
 }
 __glyph_func__ int cpu_exec_op_j(cpu_state *cpu, u64 inst)
 {
-    cpu->pc = cpu->pc + (u64)(simm9(inst) << 1) + 2ull;
+    cpu->pc = cpu->pc + (u64)(simm9(inst) << 1);
     return 0;
 }
 __glyph_func__ int cpu_exec_op_b(cpu_state *cpu, u64 inst)
 {
     if (!cpu->flag) return 2;
-    cpu->pc = cpu->pc + (u64)(simm9(inst) << 1) + 2ull;
+    cpu->pc = cpu->pc + (u64)(simm9(inst) << 1);
     return 0;
 }
 __glyph_func__ int cpu_exec_op_ibj(cpu_state *cpu, u64 inst)
@@ -340,7 +340,7 @@ __glyph_func__ int cpu_exec_op_link_i64(cpu_state *cpu, u64 inst)
         break;
     }
 
-    cpu->pc = cpu->pc + (u64)(dpc - lpc + 2);
+    cpu->pc = cpu->pc + (u64)(dpc - lpc);
     cpu->ib = cpu->ib + (u64)(dib - lib);
 
     i32 rpc, rib;
@@ -499,7 +499,7 @@ __glyph_func__ int cpu_exec_op_logic_i64(cpu_state *cpu, u64 inst)
 }
 __glyph_func__ int cpu_exec_op_pin_i64(cpu_state *cpu, u64 inst)
 {
-    i32 rpc = (i32)(cpu->pc - cpu->r[ra(inst)] + 2ull);
+    i32 rpc = (i32)(cpu->pc - cpu->r[ra(inst)]);
     i32 rib = (i32)(cpu->ib - cpu->r[rb(inst)]);
     cpu->r[rc(inst)] = auth_encrypt_i64(cpu,
         (u64)(u32)rpc | ((u64)rib << 32));

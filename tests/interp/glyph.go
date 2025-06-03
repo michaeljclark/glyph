@@ -218,10 +218,10 @@ func CPU_fetch(cpu *CPUState) uint64 {
     return uint64(*(*uint16)(unsafe.Pointer(&cpu.Mem[cpu.PC])))
 }
 func auth_encrypt_i64(pu *CPUState, val uint64) uint64 {
-    return val ^ 0x5555555555555555;
+    return val ^ 0x5555555555555555
 }
 func auth_decrypt_i64(pu *CPUState, val uint64) uint64 {
-    return val ^ 0x5555555555555555;
+    return val ^ 0x5555555555555555
 }
 
 /*
@@ -232,14 +232,14 @@ func CPU_exec_op_break(cpu *CPUState, inst uint64) int {
     return -1
 }
 func CPU_exec_op_j(cpu *CPUState, inst uint64) int {
-    cpu.PC = cpu.PC + uint64((simm9(inst) << 1) + 2)
+    cpu.PC = cpu.PC + uint64((simm9(inst) << 1))
     return 0
 }
 func CPU_exec_op_b(cpu *CPUState, inst uint64) int {
     if !cpu.Flag {
         return 2
     }
-    cpu.PC = cpu.PC + uint64((simm9(inst) << 1) + 2)
+    cpu.PC = cpu.PC + uint64((simm9(inst) << 1))
     return 0
 }
 func CPU_exec_op_ibj(cpu *CPUState, inst uint64) int {
@@ -272,7 +272,7 @@ func CPU_exec_op_link_i64(cpu *CPUState, inst uint64) int {
         lib = int32(l >> 32)
     }
 
-    cpu.PC = cpu.PC + uint64(dpc - lpc + 2)
+    cpu.PC = cpu.PC + uint64(dpc - lpc)
     cpu.IB = cpu.IB + uint64(dib - lib)
 
     switch fun3 {
@@ -413,7 +413,7 @@ func CPU_exec_op_logic_i64(cpu *CPUState, inst uint64) int {
     return 2
 }
 func CPU_exec_op_pin_i64(cpu *CPUState, inst uint64) int {
-    rpc := int32(cpu.PC - cpu.R[ra(inst)] + 2)
+    rpc := int32(cpu.PC - cpu.R[ra(inst)])
     rib := int32(cpu.IB - cpu.R[rb(inst)])
     cpu.R[rc(inst)] = auth_encrypt_i64(cpu,
         uint64(uint32(rpc)) | (uint64(rib) << 32))

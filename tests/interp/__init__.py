@@ -277,9 +277,9 @@ def cpu_fetch_i16(cpu):
     o = cpu.pc
     return int.from_bytes(cpu.mem[o:o+2], byteorder='little')
 def auth_encrypt_i64(cpu, val):
-    return val ^ 0x5555555555555555;
+    return val ^ 0x5555555555555555
 def auth_decrypt_i64(cpu, val):
-    return val ^ 0x5555555555555555;
+    return val ^ 0x5555555555555555
 
 #
 # cpu emulation
@@ -288,12 +288,12 @@ def auth_decrypt_i64(cpu, val):
 def cpu_exec_op_break(cpu,inst):
     return -1
 def cpu_exec_op_j(cpu,inst):
-    cpu.pc = sux(cpu.pc + (simm9(inst) << 1) + 2)
+    cpu.pc = sux(cpu.pc + (simm9(inst) << 1))
     return 0
 def cpu_exec_op_b(cpu,inst):
     if not cpu.flag:
         return 2
-    cpu.pc = sux(cpu.pc + (simm9(inst) << 1) + 2)
+    cpu.pc = sux(cpu.pc + (simm9(inst) << 1))
     return 0
 def cpu_exec_op_ibj(cpu,inst):
     cpu.ib = sux(cpu.ib +  (simm9(inst) << 6))
@@ -320,7 +320,7 @@ def cpu_exec_op_link_i64(cpu,inst):
         lpc = us32(l      )
         lib = us32(l >> 32)
 
-    cpu.pc = sux(cpu.pc + dpc - lpc + 2)
+    cpu.pc = sux(cpu.pc + dpc - lpc)
     cpu.ib = sux(cpu.ib + dib - lib)
 
     if fun3 == cpu_link_jalib_r6 or fun3 == cpu_link_jalib_r7 or \
@@ -416,7 +416,7 @@ def cpu_exec_op_logic_i64(cpu,inst):
         cpu.r[rc(inst)] = cpu.r[rb(inst)]
     return 2
 def cpu_exec_op_pin_i64(cpu,inst):
-    rpc = cpu.pc - cpu.r[ra(inst)] + 2
+    rpc = cpu.pc - cpu.r[ra(inst)]
     rib = cpu.ib - cpu.r[rb(inst)]
     cpu.r[rc(inst)] = auth_encrypt_i64(cpu, su32(rpc) | (su32(rib) << 32))
     return 2
