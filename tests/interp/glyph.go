@@ -86,7 +86,7 @@ const (
  */
 
 const (
-    CPU_link_jib         Fun3Jump = 0b000
+    CPU_link_jib        Fun3Jump = 0b000
     CPU_link_rsrv       Fun3Jump = 0b001
     CPU_link_jalib_r6   Fun3Jump = 0b010
     CPU_link_jalib_r7   Fun3Jump = 0b011

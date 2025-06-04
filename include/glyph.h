@@ -100,7 +100,7 @@ enum
 
 enum
 {
-    cpu_link_jib         = 0b000,
+    cpu_link_jib        = 0b000,
     cpu_link_rsrv       = 0b001,
     cpu_link_jalib_r6   = 0b010,
     cpu_link_jalib_r7   = 0b011,
