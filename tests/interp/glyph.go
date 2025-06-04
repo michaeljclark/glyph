@@ -102,7 +102,7 @@ const (
 
 const (
     op_none  OpArg = iota
-    op_nm
+    op_name
     op_compare
     op_logic
     op_link
@@ -476,7 +476,7 @@ type OpOutFn func(inst uint64) string
 type OpArg byte
 type OpForm byte
 
-func op_out_nm(inst uint64) string {
+func op_out_name(inst uint64) string {
     return fmt.Sprintf("%s", cpu_opcode_str[opc(inst)])
 }
 func op_out_compare(inst uint64) string {
@@ -610,7 +610,7 @@ var cpu_fun3_link_str = [8]string{
 }
 
 var cpu_op_out = []OpOutFn{
-    op_nm:                 op_out_nm,
+    op_name:               op_out_name,
     op_compare:            op_out_compare,
     op_logic:              op_out_logic,
     op_link:               op_out_link,
@@ -634,20 +634,20 @@ var cpu_op_out = []OpOutFn{
 }
 
 var cpu_op_args = [][10]OpArg{
-    op0r_uimm9:            { op_nm, op_sp, op_ui9 },
-    op0r_simm9x2:          { op_nm, op_sp, op_si9x2 },
-    op0r_simm9x64:         { op_nm, op_sp, op_si9x64 },
+    op0r_uimm9:            { op_name, op_sp, op_ui9 },
+    op0r_simm9x2:          { op_name, op_sp, op_si9x2 },
+    op0r_simm9x64:         { op_name, op_sp, op_si9x64 },
     op1r_fun3_ib32x2_link: { op_link, op_sp, op_rcj, op_sc, op_ib6 },
-    op1r_ib32_uimm6:       { op_nm, op_sp, op_rc, op_sc, op_ib6 },
-    op1r_ib64_uimm6:       { op_nm, op_sp, op_rc, op_sc, op_ib6 },
-    op1r_simm6:            { op_nm, op_sp, op_rc, op_sc, op_si6 },
-    op1r_uimm6:            { op_nm, op_sp, op_rc, op_sc, op_ui6 },
-    op1r_mib64_uimm6:      { op_nm, op_sp, op_rc, op_sc, op_pcib6 },
-    op2r_mem64_uimm3x8:    { op_nm, op_sp, op_rc, op_sc, op_ui3x8,
+    op1r_ib32_uimm6:       { op_name, op_sp, op_rc, op_sc, op_ib6 },
+    op1r_ib64_uimm6:       { op_name, op_sp, op_rc, op_sc, op_ib6 },
+    op1r_simm6:            { op_name, op_sp, op_rc, op_sc, op_si6 },
+    op1r_uimm6:            { op_name, op_sp, op_rc, op_sc, op_ui6 },
+    op1r_mib64_uimm6:      { op_name, op_sp, op_rc, op_sc, op_pcib6 },
+    op2r_mem64_uimm3x8:    { op_name, op_sp, op_rc, op_sc, op_ui3x8,
                              op_op, op_rb, op_cp },
     op2r_fun3_compare:     { op_compare, op_sp, op_rc, op_sc, op_rb },
     op2r_fun3_logic:       { op_logic, op_sp, op_rc, op_sc, op_rb },
-    op3r:                  { op_nm, op_sp, op_rc, op_sc, op_rb,
+    op3r:                  { op_name, op_sp, op_rc, op_sc, op_rb,
                              op_sc, op_ra },
 }
 
