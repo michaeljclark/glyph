@@ -99,7 +99,7 @@ cpu_link_jalaib_r7  = 0b111
 op_nm                 = 0
 op_compare            = 1
 op_logic              = 2
-op_jump               = 3
+op_link               = 3
 op_ib3                = 4
 op_ib6                = 5
 op_pcib6              = 6
@@ -125,7 +125,7 @@ op_cp                 = 20
 op0r_uimm9            = 0
 op0r_simm9x2          = 1
 op0r_simm9x64         = 2
-op1r_fun3_ib32x2_jump = 3
+op1r_fun3_ib32x2_link = 3
 op1r_ib32_uimm6       = 4
 op1r_ib64_uimm6       = 5
 op1r_simm6            = 6
@@ -467,7 +467,7 @@ def op_out_compare(inst):
     return "%s" % cpu_fun3_compare_str[uimm3(inst)]
 def op_out_logic(inst):
     return "%s" % cpu_fun3_logic_str[uimm3(inst)]
-def op_out_jump(inst):
+def op_out_link(inst):
     return "%s" % cpu_fun3_link_str[rc(inst)]
 def op_out_ib3(inst):
     return "ib(%u)" % uimm3(inst)
@@ -577,7 +577,7 @@ cpu_op_out = {
     op_nm:                 op_out_nm,
     op_compare:            op_out_compare,
     op_logic:              op_out_logic,
-    op_jump:               op_out_jump,
+    op_link:               op_out_link,
     op_ib3:                op_out_ib3,
     op_ib6:                op_out_ib6,
     op_pcib6:              op_out_pcib6,
@@ -601,7 +601,7 @@ cpu_op_args = {
     op0r_uimm9:            [ op_nm, op_sp, op_ui9 ],
     op0r_simm9x2:          [ op_nm, op_sp, op_si9x2 ],
     op0r_simm9x64:         [ op_nm, op_sp, op_si9x64 ],
-    op1r_fun3_ib32x2_jump: [ op_jump, op_sp, op_rcj, op_sc, op_ib6 ],
+    op1r_fun3_ib32x2_link: [ op_link, op_sp, op_rcj, op_sc, op_ib6 ],
     op1r_ib32_uimm6:       [ op_nm, op_sp, op_rc, op_sc, op_ib6 ],
     op1r_ib64_uimm6:       [ op_nm, op_sp, op_rc, op_sc, op_ib6 ],
     op1r_simm6:            [ op_nm, op_sp, op_rc, op_sc, op_si6 ],
@@ -620,7 +620,7 @@ cpu_op_type = {
     cpu_op_j:              op0r_simm9x2,
     cpu_op_b:              op0r_simm9x2,
     cpu_op_ibj:            op0r_simm9x64,
-    cpu_op_link_i64:       op1r_fun3_ib32x2_jump,
+    cpu_op_link_i64:       op1r_fun3_ib32x2_link,
     cpu_op_movh_i64:       op1r_ib32_uimm6,
     cpu_op_movw_i64:       op1r_ib64_uimm6,
     cpu_op_movi_i64:       op1r_simm6,

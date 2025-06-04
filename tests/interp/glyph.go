@@ -105,7 +105,7 @@ const (
     op_nm
     op_compare
     op_logic
-    op_jump
+    op_link
     op_ib3
     op_ib6
     op_pcib6
@@ -133,7 +133,7 @@ const (
     op0r_uimm9 OpForm = iota
     op0r_simm9x2
     op0r_simm9x64
-    op1r_fun3_ib32x2_jump
+    op1r_fun3_ib32x2_link
     op1r_ib32_uimm6
     op1r_ib64_uimm6
     op1r_simm6
@@ -485,7 +485,7 @@ func op_out_compare(inst uint64) string {
 func op_out_logic(inst uint64) string {
     return fmt.Sprintf("%s", cpu_fun3_logic_str[uimm3(inst)]);
 }
-func op_out_jump(inst uint64) string {
+func op_out_link(inst uint64) string {
     return fmt.Sprintf("%s", cpu_fun3_link_str[rc(inst)]);
 }
 func op_out_ib3(inst uint64) string {
@@ -613,7 +613,7 @@ var cpu_op_out = []OpOutFn{
     op_nm:                 op_out_nm,
     op_compare:            op_out_compare,
     op_logic:              op_out_logic,
-    op_jump:               op_out_jump,
+    op_link:               op_out_link,
     op_ib3:                op_out_ib3,
     op_ib6:                op_out_ib6,
     op_pcib6:              op_out_pcib6,
@@ -637,7 +637,7 @@ var cpu_op_args = [][10]OpArg{
     op0r_uimm9:            { op_nm, op_sp, op_ui9 },
     op0r_simm9x2:          { op_nm, op_sp, op_si9x2 },
     op0r_simm9x64:         { op_nm, op_sp, op_si9x64 },
-    op1r_fun3_ib32x2_jump: { op_jump, op_sp, op_rcj, op_sc, op_ib6 },
+    op1r_fun3_ib32x2_link: { op_link, op_sp, op_rcj, op_sc, op_ib6 },
     op1r_ib32_uimm6:       { op_nm, op_sp, op_rc, op_sc, op_ib6 },
     op1r_ib64_uimm6:       { op_nm, op_sp, op_rc, op_sc, op_ib6 },
     op1r_simm6:            { op_nm, op_sp, op_rc, op_sc, op_si6 },
@@ -656,7 +656,7 @@ var cpu_op_type = [32]OpForm{
     CPU_op_j:              op0r_simm9x2,
     CPU_op_b:              op0r_simm9x2,
     CPU_op_ibj:            op0r_simm9x64,
-    CPU_op_link_i64:       op1r_fun3_ib32x2_jump,
+    CPU_op_link_i64:       op1r_fun3_ib32x2_link,
     CPU_op_movh_i64:       op1r_ib32_uimm6,
     CPU_op_movw_i64:       op1r_ib64_uimm6,
     CPU_op_movi_i64:       op1r_simm6,

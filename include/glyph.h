@@ -120,7 +120,7 @@ enum
     op_nm,
     op_compare,
     op_logic,
-    op_jump,
+    op_link,
     op_ib3,
     op_ib6,
     op_pcib6,
@@ -149,7 +149,7 @@ enum
     op0r_uimm9,
     op0r_simm9x2,
     op0r_simm9x64,
-    op1r_fun3_ib32x2_jump,
+    op1r_fun3_ib32x2_link,
     op1r_ib32_uimm6,
     op1r_ib64_uimm6,
     op1r_simm6,
@@ -585,7 +585,7 @@ __glyph_func__ int op_out_compare(char *buf, size_t len, u64 inst) {
 __glyph_func__ int op_out_logic(char *buf, size_t len, u64 inst) {
     return snprintf(buf, len, "%s", cpu_fun3_logic_str[uimm3(inst)]);
 }
-__glyph_func__ int op_out_jump(char *buf, size_t len, u64 inst) {
+__glyph_func__ int op_out_link(char *buf, size_t len, u64 inst) {
     return snprintf(buf, len, "%s", cpu_fun3_link_str[rc(inst)]);
 }
 __glyph_func__ int op_out_ib3(char *buf, size_t len, u64 inst) {
@@ -717,7 +717,7 @@ static const op_out_fn cpu_op_out[] =
     [op_nm]                 = op_out_nm,
     [op_compare]            = op_out_compare,
     [op_logic]              = op_out_logic,
-    [op_jump]               = op_out_jump,
+    [op_link]               = op_out_link,
     [op_ib3]                = op_out_ib3,
     [op_ib6]                = op_out_ib6,
     [op_pcib6]              = op_out_pcib6,
@@ -742,7 +742,7 @@ static const uchar cpu_op_args[][10] =
     [op0r_uimm9]            = { op_nm, op_sp, op_ui9 },
     [op0r_simm9x2]          = { op_nm, op_sp, op_si9x2 },
     [op0r_simm9x64]         = { op_nm, op_sp, op_si9x64 },
-    [op1r_fun3_ib32x2_jump] = { op_jump, op_sp, op_rcj, op_sc, op_ib6 },
+    [op1r_fun3_ib32x2_link] = { op_link, op_sp, op_rcj, op_sc, op_ib6 },
     [op1r_ib32_uimm6]       = { op_nm, op_sp, op_rc, op_sc, op_ib6 },
     [op1r_ib64_uimm6]       = { op_nm, op_sp, op_rc, op_sc, op_ib6 },
     [op1r_simm6]            = { op_nm, op_sp, op_rc, op_sc, op_si6 },
@@ -762,7 +762,7 @@ static const uchar cpu_op_type[32] =
     [cpu_op_j]              = op0r_simm9x2,
     [cpu_op_b]              = op0r_simm9x2,
     [cpu_op_ibj]            = op0r_simm9x64,
-    [cpu_op_link_i64]       = op1r_fun3_ib32x2_jump,
+    [cpu_op_link_i64]       = op1r_fun3_ib32x2_link,
     [cpu_op_movh_i64]       = op1r_ib32_uimm6,
     [cpu_op_movw_i64]       = op1r_ib64_uimm6,
     [cpu_op_movi_i64]       = op1r_simm6,
