@@ -2171,60 +2171,60 @@ for the operating system to dispatch to an illegal instruction handler
 and the \emph{program counter} is set to a trap vector address.
 
 
-\chapter{Assembler}
+\chapter{Assembly}
 
 \section{Introduction}
 
 this glyph assembly language reference begins with an introduction to
-assembler and linker concepts, followed by sections describing the glyph
-assembler directives, and pseudo-instruction aliases.
+assembler and linker concepts and terminology, followed by sections
+describing the glyph assembler directives, and pseudo-instruction aliases.
 section~\ref{sec:instructions} contains a complete listing of instruction.
 
 \section{Concepts}
 this section covers assembler high level concepts required to understand
 the concepts involved in assembling and linking executable code from
-source files.
+source files. the terminology used in this section is applicable to the
+PE/COFF, ELF and Mach-O file formats.
 
-\subsection{assembly file}
-an assembly file contains assembly language directives, macros and
-instructions. it can be emitted by a compiler or it can be handwritten.
-an assembly file is the input file to the assembler. the extensions for
-assembly files are \texttt{.s}.
+\subsection{assembly}
+assembly files contains assembly language directives, macros and
+instructions describing program code and data. they can be handwritten
+or emitted by a compiler. an assembly file is the input file to the
+assembler and the output from the assembler is an object file.
 
-\subsection{object file}
+\subsection{object}
 object files contain compiled relocatable object code and data emitted
 by the assembler. an object file cannot be run, rather it is used as
-input to the linker as a step towards producing an executable file.
-the extension for object files is \texttt{.o}.
+input to the linker in a program linking step which combines them to
+produce an executable file or shared library.
 
-\subsection{file header}
-an assembler file has a file header that contains magic to indicate how
-the file is formatted, the architecture of the binary, the endianness of
-the binary; \emph{little-endian} in the case of glyph, the file type
-\emph{(relocatable object, executable, shared library)}, the number of
-program headers and their offsets in the file, the number of section
-headers and their offsets in the file, plus fields indicating the file
-format version and various other details.
+\subsection{archive}
+archive files contain collections of relocatable object files and are
+typically referred to as static libraries. archive files use a simple
+format that appends together a set of object files with an index listing
+the object files contained in the archive. thin archive files just
+contain the index listing the object files without any associated data.
 
-\subsection{program header}
-program headers provide size and offsets of loadable segments within an
-executable or shared library along with protection attributes used by
-the operating system \emph{(read, write and exec)}. program headers are
-not present in relocatable object files and are primarily for use by the
-operating system to and dynamic linker to map code and data into memory.
+\subsection{executable}
+executable files contain compiled relocatable object code and data
+that has been linked together by a linker in a program linking step
+using multple object files, archive files and shared libraries as input.
+executable files can be statically or dynamically linked. dynamically
+linked executables files express dependencies on shared libraries.
 
-\subsection{section header}
-section headers provide size, offset, type, alignment and flags for
-the sections contained within the binary file. section headers are not
-required to execute a static binary but are necessary for dynamic
-linking and program linking. various section types refer to the location
-of the symbol table, relocations and dynamic symbols in the binary file.
+\subsection{shared library}
+shared library files contain compiled relocatable object code and data
+that have been linked together by a linker in a program linking step
+using multple object files, archive files and shared libraries as input.
+shared libraries
+are dynamically linked by a runtime linker, and they express dependencies
+on other shared libraries which need to be loaded at runtime.
 
-\subsection{sections}
-an object file is made up of multiple sections, with each section
-corresponding to distinct types of executable code or data. there are a
-variety of different section types. this list contains the four most
-common sections:
+\subsection{section}
+a section is a name for a region of code or data in an object file,
+executable file or shared library file. the files can be made up of
+multiple sections where each section corresponds to several types of
+executable code or data. this list contains the most common types:
 
 \begin{itemize}[itemsep=0pt]
 \item \texttt{.text} is a read-only section containing executable code
@@ -2234,17 +2234,31 @@ common sections:
 \item \texttt{.bss} is a read-write section containing uninitialized data
 \end{itemize}
 
-\subsection{program linking}
-program linking is the process of reading multiple relocatable object
-files, merging the sections from each of the source files, calculating
-the new addresses for symbols and applying relocation fixups to text or
-data that is pointed to in relocation entries.
+\subsection{segment}
+segments are loadable regions of code or data in an an executable or shared
+library. segments describe virtual addresses, file offsets and memory access
+permissions for mapped sections. in ELF, a segment can map to one or more
+sections. in PE/COFF sections are mapped directly. in Mach-O, sections are
+contained within a small set of specific segment types.
 
-\subsection{linker script}
-linker scripts are text source files that are optionally input to the
-linker containing rules for the linker to use when calculating the load
-address and alignment of the various sections when creating an executable
-output file. the extension for linker scripts is \texttt{.ld}.
+\subsection{symbol}
+symbols are metadata table entries that contains a name with a
+mapping to an address. symbols are present in object files and dynamic
+symbols are present in shared libraries and executables. they can be
+referred to in relocation entries and debugging metadata.
+
+\subsection{relocation}
+relocations are metadata table entries used to update relocatable addresses
+during linking. relocations contains a type, a file offset pointing to text
+or data, and a pointer to a symbol name whose address needs to be updated
+during the linking step. relocations can be present in object files and
+dynamic relocations are present in shared libraries and executables.
+
+\subsection{program linking}
+program linking is the process of combining multiple relocatable object
+files by merging and aligning sections, resolving symbol references across
+files, assigning final symbol addresses, applying relocation fixups using
+relocation entries, and adding debug metadata.
 
 \newpage
 \section{Directives}
