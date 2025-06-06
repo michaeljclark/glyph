@@ -365,7 +365,7 @@ selectively executed based on the results of a comparison instruction.
 \newpage
 \subsection{load-store}
 
-a \emph{load-store} architecture~\cite{cocke1980risc,cocke1990risc} is a way to
+a \emph{load-store} architecture~\cite{cocke1990risc} is a way to
 characterize RISC architectures where most instructions have simple operands
 that point to values held in registers, plus \emph{load} and \emph{store}
 instructions to retrieve and commit values to main memory. a \emph{load-store}
@@ -1174,11 +1174,13 @@ successive instruction packets.
 
 \subsection{instruction sizes}
 
-the variable length instruction format has a \emph{2-bit} size field in a
-fixed position in every 16-bit instruction packet, to reduce the complexity
-of size-decoding for variable length instructions. this table shows the
-size fields for the different instruction sizes:
-\\
+the variable length instruction format has a \emph{2-bit} size field
+inspired by LEB128~\cite{leb128} in a fixed position in every instruction
+packet, to reduce the complexity of size-decoding for variable length
+instructions\footnote{instructions are considered \emph{well-formed}
+if the size field of subsequent packets has the value \texttt{11}.}.
+this table shows the size fields for the different instruction sizes:
+
 \begin{table}[h]
 \centering
 \small
