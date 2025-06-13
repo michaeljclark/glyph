@@ -2044,7 +2044,7 @@ whether user pages can be executed by the supervisor.
 for address translation on this hardware thread. the \emph{ASID} field
 contains the address space identifier for the current thread. the
 \emph{pointer} field contains the physical address of the page table
-root structure. the page table root pointer structure:
+root structure.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -2164,8 +2164,8 @@ monitor exception} for a matching memory store address.
 \subsection{address translation}
 the section describes the page table structure for memory address
 translation pointed to by the \emph{system page table root} register.
-page tables are 4KiB pages containing 512 entries using the following
-format for recursive address translation for 4KiB pages.
+page tables are 4 levels of 4KiB pages containing 512 entries using
+the following format for recursive address translation for 4KiB pages.
 \\
 \par\noindent
 the 8-byte page table entry structure:
