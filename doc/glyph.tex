@@ -2010,19 +2010,18 @@ the section describes the privileged system registers.
 
 \subsubsection{system control (\texttt{scontrol})}
 \texttt{scontrol} is a read-write register containing control bits for
-address translation. the \texttt{S} field is read-write and controls whether
-user pages can be executed by the supervisor. the \texttt{A} field is
-read-write and controls whether the user pages and be read or written by
-the supervisor.
+address translation. the \texttt{A} field controls whether the user pages
+and be read or written by the supervisor. the \texttt{E} field controls
+whether user pages can be executed by the supervisor.
 \\
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{S}};
+\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{A}};
 \draw [black!95] (30,0)    rectangle (31,1);
 \node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
-\node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{A}};
+\node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{E}};
 \end{tikzpicture}
 
 \begin{table}[h]
@@ -2032,8 +2031,8 @@ the supervisor.
 \hline
 \textbf{no.} & \textbf{name} & \textbf{description} \\
 \hline
-\verb|1 << 1| & S   & supervisor execute user pages \\
 \verb|1 << 0| & A   & supervisor access user pages \\
+\verb|1 << 1| & E   & supervisor execute user pages \\
 \hline
 \end{tabular}
 \caption{system control fields}
