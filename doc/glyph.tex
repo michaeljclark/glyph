@@ -2069,16 +2069,16 @@ root structure. the page table root pointer structure:
 for this hardware thread.
 
 \subsubsection{system target (\texttt{starget})}
-\texttt{starget} is a read-write register containing the target system-wide
-address for a hardware thread that is the target of a virtual interrupt.
-a target address of all-zeros is the boot service processor. a target
-address of all-ones is the broadcast address for all threads.
+\texttt{starget} is a read-write register containing the system-wide
+address for a hardware thread that is the target of edge-triggered virtual
+interrupts. a target address of all-zeros is the boot service processor.
+a target address of all-ones is the broadcast address for all threads.
 
 \subsubsection{system message (\texttt{smessage})}
-\texttt{smessage} is a write-only register that triggers an inter-processor
-interrupt causing a virtual interrupt to be queued to the hardware thread
-set in \texttt{starget}. if interrupts are not enabled on the target hardware
-thread, the virtual interrupt is delivered when next enabled.
+\texttt{smessage} is a write-only register to cause an edge-triggered
+virtual interrupt to be queued to the hardware thread set in \texttt{starget}.
+if interrupts are not enabled on the target hardware thread, the virtual
+interrupt is delivered when next enabled.
 
 \subsubsection{system timer (\texttt{stimer})}
 \texttt{stimer} is a read-write register containing the deadline timer
