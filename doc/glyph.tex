@@ -1725,6 +1725,564 @@ this example omits hazard detection and forwarding logic for the sake of simplic
 \label{fig:glyph-6-stage-uarch}
 \end{figure}
 
+\chapter{System}
+
+\section{System registers}
+the architecture provides several control and status registers for
+floating-point control and status, time, trap handling, address translation,
+timers, inter-thread interrupts, and debug.
+\\
+\par\noindent
+this table gives an overview of the control and status registers.
+
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{no.} & \textbf{name} & \textbf{description} \\
+\hline
+\multicolumn{3}{|l|}{\textbf{user-level registers}} \\ \hline
+\texttt{0x00} & fpcontrol & floating-point control \\
+\texttt{0x01} & fpstatus  & floating-point status \\
+\texttt{0x02} & ctime     & clock time \\
+\texttt{0x03} & cfreq     & clock frequency \\
+\hline
+\multicolumn{3}{|l|}{\textbf{privileged trap registers}} \\ \hline
+\texttt{0x10} & tcontrol  & trap control \\
+\texttt{0x11} & tstatus   & trap status \\
+\texttt{0x12} & tscratch  & trap scratch \\
+\texttt{0x13} & tepc      & trap exception program counter  \\
+\texttt{0x14} & teib      & trap exception immediate base \\
+\texttt{0x15} & tval      & trap value \\
+\texttt{0x16} & tcause    & trap cause \\
+\texttt{0x17} & tack      & trap acknowledge \\
+\texttt{0x18} & thpc      & trap handler program counter  \\
+\texttt{0x19} & thib      & trap handler immediate base \\
+\hline
+\multicolumn{3}{|l|}{\textbf{privileged system registers}} \\ \hline
+\texttt{0x20} & scontrol  & system control \\
+\texttt{0x21} & sptr      & system page table root \\
+\texttt{0x22} & saddr     & system thread address \\
+\texttt{0x23} & starget   & system target address \\
+\texttt{0x24} & smessage  & system message interrupt \\
+\texttt{0x25} & stimer    & system deadline timer \\
+\texttt{0x26} & sie       & system interrupt enable \\
+\texttt{0x27} & sip       & system interrupt pending \\
+\hline
+\multicolumn{3}{|l|}{\textbf{privileged debug registers}} \\ \hline
+\texttt{0x30} & dstatus    & debug status \\
+\texttt{0x31} & dcycle     & debug cycle counter \\
+\texttt{0x32} & dinst      & debug instruction counter \\
+\texttt{0x33} & dstop      & debug stop instruction \\
+\texttt{0x34} & dfetch     & monitored fetch address \\
+\texttt{0x35} & dread      & monitored read address \\
+\texttt{0x36} & dwrite     & monitored write address \\
+\hline
+\end{tabular}
+\caption{system registers}
+\label{tab:system-registers}
+\end{table}
+
+\newpage
+\subsection{user-level registers}
+the section describes the user-level registers.
+
+\subsubsection{floating-point control (\texttt{fpcontrol})}
+\texttt{fpcontrol} contains control information for floating-point
+operations. the \texttt{RM} field is a read-write and contains
+the current floating-point rounding mode.
+\\
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (30,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
+\node [font=\small,anchor=base] at (31,0.25)  {\texttt{RM}};
+\end{tikzpicture}
+
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{no.} & \textbf{name} & \textbf{description} \\
+\hline
+\verb|0| & RN   & round to nearest (even) \\
+\verb|1| & RD   & round down (towards $-\infty$) \\
+\verb|2| & RU   & round up (towards $+\infty$) \\
+\verb|3| & RZ   & round towards zero (truncate) \\
+\hline
+\end{tabular}
+\caption{floating-point control round mode field}
+\label{tab:floating-point-control-round-mode-field}
+\end{table}
+
+\subsubsection{floating-point status (\texttt{fpstatus})}
+\texttt{fpstatus} contains status information for floating-point
+operations. the \texttt{I, Z, U, O,} and \texttt{P} fields are
+read-write and contain accrued floating-point exceptions.
+\\
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (31,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{I}};
+\draw [black!95] (30,0)    rectangle (31,1);
+\node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
+\node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{Z}};
+\draw [black!95] (29,0)    rectangle (30,1);
+\node [font=\tiny,anchor=base] at (29.5,1.25)  {\textsf{2}};
+\node [font=\small,anchor=base] at (29.5,0.25)  {\texttt{U}};
+\draw [black!95] (28,0)    rectangle (29,1);
+\node [font=\tiny,anchor=base] at (28.5,1.25)  {\textsf{3}};
+\node [font=\small,anchor=base] at (28.5,0.25)  {\texttt{O}};
+\draw [black!95] (27,0)    rectangle (28,1);
+\node [font=\tiny,anchor=base] at (27.5,1.25)  {\textsf{4}};
+\node [font=\small,anchor=base] at (27.5,0.25)  {\texttt{P}};
+\end{tikzpicture}
+
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{no.} & \textbf{name} & \textbf{description} \\
+\hline
+\verb|1 << 0| & I   & invalid operation \\
+\verb|1 << 1| & Z   & divide by zero \\
+\verb|1 << 2| & U   & numeric underflow \\
+\verb|1 << 3| & O   & numeric overflow \\
+\verb|1 << 4| & P   & inexact result \\
+\hline
+\end{tabular}
+\caption{floating-point status flags}
+\label{tab:floating-point-status-flags}
+\end{table}
+
+\subsubsection{clock time (\texttt{ctime})}
+\texttt{ctime} is a read-only register containing the wall-clock
+tick counter since power on in clock tick units denoted by \texttt{cfreq}.
+
+\subsubsection{clock frequency (\texttt{cfreq})}
+\texttt{cfreq} is a read-only register containing the wall-clock
+tick interval in picoseconds; \(\frac{10^{12}}{f} \) where \( f \)
+is the frequency in Hertz (Hz).
+
+\newpage
+\subsection{privileged trap registers}
+the section describes the privileged trap registers.
+
+\subsubsection{trap control (\texttt{tcontrol})}
+\texttt{tcontrol} is a read-write register containing control bits. the
+\texttt{I} field is read-write and controls whether system interrupts
+are enabled for this hardware thread.
+\\
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (31,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{I}};
+\end{tikzpicture}
+
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{no.} & \textbf{name} & \textbf{description} \\
+\hline
+\verb|1 << 0| & I   & system interrupt enable \\
+\hline
+\end{tabular}
+\caption{trap control fields}
+\label{tab:trap-control-fields}
+\end{table}
+
+\subsubsection{trap status (\texttt{tstatus})}
+\texttt{tstatus} contains status bits for the current trap. the \texttt{T}
+field is read-only and indicates whether a timer interrupt is pending.
+the \texttt{V} field is read-only and indicates whether a virtual
+interrupt is pending.
+\\
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (31,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{T}};
+\draw [black!95] (30,0)    rectangle (31,1);
+\node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
+\node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{V}};
+\end{tikzpicture}
+
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{no.} & \textbf{name} & \textbf{description} \\
+\hline
+\verb|1 << 0| & T   & timer interrupt pending \\
+\verb|1 << 1| & V   & virtual interrupt pending \\
+\hline
+\end{tabular}
+\caption{trap status fields}
+\label{tab:trap-status-fields}
+\end{table}
+
+\subsubsection{trap scratch (\texttt{tscratch})}
+\texttt{tscratch} is a read-write save register for use during trap handling.
+
+\subsubsection{trap exception program counter (\texttt{tepc})}
+\texttt{tepc} is a read-only register which contains the \emph{program
+counter} address before the trap.
+
+\subsubsection{trap exception immedidate base (\texttt{teib})}
+\texttt{teib} is a read-only register which contains the \emph{immediate
+base} address before the trap.
+
+\newpage
+\subsubsection{trap value (\texttt{tval})}
+\texttt{tval} is a read-only register with a word indicating the identity
+of the trap, and may contain:
+
+\begin{itemize}[itemsep=0pt]
+\item the faulting instruction word for \emph{break} and \emph{illegal instruction exceptions}.
+\item the faulting address for \emph{access} and \emph{page faults}.
+\item the message value for \emph{virtual interrupts}.
+\item the system clock time for \emph{timer interrupts}.
+\end{itemize}
+
+\subsubsection{trap cause (\texttt{tcause})}
+\texttt{tcause} is a read-only register that contains the cause of the
+current trap, and may contain:
+
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{no.} & \textbf{name} & \textbf{description} \\
+\hline
+\multicolumn{3}{|l|}{\textbf{system exceptions}} \\ \hline
+\verb|1| & break-instruction   & break instruction exception \\
+\verb|2| & illegal-instruction & illegal instruction exception \\
+\verb|3| & debug-monitor       & debug monitor exception \\
+\verb|4| & misaligned-fetch    & fetch misaligned \\
+\verb|5| & misaligned-load     & load misaligned \\
+\verb|6| & misaligned-store    & store misaligned \\
+\verb|7| & access-fault-fetch  & fetch access fault \\
+\verb|8| & access-fault-load   & load access fault \\
+\verb|9| & access-fault-store  & store access fault \\
+\verb|10| & page-fault-fetch   & fetch page fault \\
+\verb|11| & page-fault-load    & load page fault \\
+\verb|12| & page-fault-store   & store page fault \\
+\hline
+\multicolumn{3}{|l|}{\textbf{system interrupts}} \\ \hline
+\verb|30| & timer-interrupt     & timer interrupt \\
+\verb|31| & virtual-interrupt   & virtual interrupt \\
+\hline
+\verb|32| & interrupt-0         & interrupt pin 0 \\
+\ldots & \ldots & \ldots \\
+\verb|63| & interrupt-31        & interrupt pin 31 \\
+\hline
+\end{tabular}
+\caption{trap causes}
+\label{tab:trap-causes}
+\end{table}
+
+\subsubsection{trap acknowledge (\texttt{tack})}
+\texttt{tack} is a write-only register where the trap cause is written
+to acknowledge the trap so that interrupts are not delivered
+while state is being saved, and for double-faults to be detected.
+
+\subsubsection{trap handler program counter (\texttt{thpc})}
+\texttt{thpc} is a read-write register containing the address of the
+system trap handler routine.
+
+\subsubsection{trap handler immediate base (\texttt{thib})}
+\texttt{thib} is a read-write register containing the address of the
+system trap handler constants.
+
+\newpage
+\subsection{privileged system registers}
+the section describes the privileged system registers.
+
+\subsubsection{system control (\texttt{scontrol})}
+\texttt{scontrol} is a read-write register containing control bits for
+address translation. the \texttt{S} field is read-write and controls whether
+user pages can be executed by the supervisor. the \texttt{A} field is
+read-write and controls whether the user pages and be read or written by
+the supervisor.
+\\
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (31,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{S}};
+\draw [black!95] (30,0)    rectangle (31,1);
+\node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
+\node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{A}};
+\end{tikzpicture}
+
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{no.} & \textbf{name} & \textbf{description} \\
+\hline
+\verb|1 << 1| & S   & supervisor execute user pages \\
+\verb|1 << 0| & A   & supervisor access user pages \\
+\hline
+\end{tabular}
+\caption{system control fields}
+\label{tab:system-control-fields}
+\end{table}
+
+\subsubsection{system page table root (\texttt{sptr})}
+\texttt{sptr} is a read-write register containing the page table root
+for address translation on this hardware thread. the \emph{ASID} field
+contains the address space identifier for the current thread. the
+\emph{pointer} field contains the physical address of the page table
+root structure. the page table root pointer structure:
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (26,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{11}};
+\node [font=\small,anchor=base] at (29,0.25)  {\emph{ASID}};
+\draw [black!95] (4,0)    rectangle (26,1);
+\node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{12}};
+\node [font=\tiny,anchor=base] at (4.5,1.25)  {\textsf{55}};
+\node [font=\small,anchor=base] at (15,0.25)  {\emph{pointer}};
+\draw [black!95] (0.0,0)   rectangle (4,1);
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\tiny,anchor=base] at (3.5,1.25)  {\textsf{56}};
+\node [font=\small,anchor=base] at (2.0,0.25)  {\emph{zeroes}};
+\end{tikzpicture}
+
+\subsubsection{system address (\texttt{saddr})}
+\texttt{saddr} is a read-only register containing the system-wide address
+for this hardware thread.
+
+\subsubsection{system target (\texttt{starget})}
+\texttt{starget} is a read-write register containing the target system-wide
+address for a hardware thread that is the target of a virtual interrupt.
+a target address of all-zeros is the boot service processor. a target
+address of all-ones is the broadcast address for all threads.
+
+\subsubsection{system message (\texttt{smessage})}
+\texttt{smessage} is a write-only register that triggers an inter-processor
+interrupt causing a virtual interrupt to be queued to the hardware thread
+set in \texttt{starget}. if interrupts are not enabled on the target hardware
+thread, the virtual interrupt is delivered when next enabled.
+
+\subsubsection{system timer (\texttt{stimer})}
+\texttt{stimer} is a read-write register containing the deadline timer
+for this hardware thread. when the system clock reaches the value in the
+register, a \emph{timer interrupt} is triggered. if interrupts are not
+enabled on this hardware thread, the timer interrupt is delivered when
+next enabled.
+
+\subsubsection{system interrupt enable (\texttt{sie})}
+\texttt{sie} is a read-write register that contains interrupt enable flags
+for 32 wired interrupt pins.
+
+\subsubsection{system interrupt pending (\texttt{sip})}
+\texttt{sip} is a read-only register that contains interrupt pending flags
+for 32 wired interrupt pins.
+
+\subsection{privileged debug registers}
+the section describes the privileged debug registers.
+
+\subsubsection{debug status (\texttt{dstatus})}
+\texttt{dstatus} is a read-only register containing status bits for debug
+monitor execeptions.
+\\
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (31,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{S}};
+\draw [black!95] (30,0)    rectangle (31,1);
+\node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
+\node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{F}};
+\draw [black!95] (29,0)    rectangle (30,1);
+\node [font=\tiny,anchor=base] at (29.5,1.25)  {\textsf{2}};
+\node [font=\small,anchor=base] at (29.5,0.25)  {\texttt{R}};
+\draw [black!95] (28,0)    rectangle (29,1);
+\node [font=\tiny,anchor=base] at (28.5,1.25)  {\textsf{3}};
+\node [font=\small,anchor=base] at (28.5,0.25)  {\texttt{W}};
+\end{tikzpicture}
+
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{no.} & \textbf{name} & \textbf{description} \\
+\hline
+\verb|1 << 0| & S   & stopping instruction \\
+\verb|1 << 1| & F   & fetch monitor address \\
+\verb|1 << 2| & R   & load monitor address \\
+\verb|1 << 3| & W   & store monitor address \\
+\hline
+\end{tabular}
+\caption{debug status fields}
+\label{tab:debug-status-fields}
+\end{table}
+
+\subsubsection{debug cycle counter (\texttt{dcycle})}
+\texttt{dcycle} is a read-only register containing the number of cycles
+retired since power on.
+
+\subsubsection{debug instruction counter (\texttt{dinst})}
+\texttt{dinst} is a read-only register containing the number of instructions
+retired since power on.
+
+\subsubsection{debug stop instruction (\texttt{dstop})}
+\texttt{dstop} is a read-write register containing an instruction number
+to halt execution on and raise a \emph{debug monitor exception}.
+
+\subsubsection{debug monitor fetch (\texttt{dfetch})}
+\texttt{dfetch} is a read-write register containing a memory fetch address
+to monitor for and halt execution on and raise a \emph{debug monitor
+exception} for a matching memory fetch address.
+
+\subsubsection{debug monitor read (\texttt{dread})}
+\texttt{dread} is a read-write register containing the memory load
+address to monitor for and halt execution on and raise a \emph{debug
+monitor exception} for a matching memory load address.
+
+\subsubsection{debug monitor write (\texttt{dwrite})}
+\texttt{dwrite} is a read-write register containing the memory store
+address to monitor for and halt execution on and raise a \emph{debug
+monitor exception} for a matching memory store address.
+
+\subsection{address translation}
+the section describes the page table structure for memory address
+translation pointed to by the \emph{system page table root} register.
+page tables are 4KiB pages containing 512 entries using the following
+format for recursive address translation for 4KiB pages.
+\\
+\par\noindent
+the 8-byte page table entry structure:
+\\
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (31.5,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.75,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (31.75,0.3)  {\texttt{V}};
+\draw [black!95] (31.0,0)    rectangle (31.5,1);
+\node [font=\tiny,anchor=base] at (31.25,1.25)  {\textsf{1}};
+\node [font=\tiny,anchor=base] at (31.25,0.3)  {\texttt{R}};
+\draw [black!95] (30.5,0)    rectangle (31.0,1);
+\node [font=\tiny,anchor=base] at (30.75,1.25)  {\textsf{2}};
+\node [font=\tiny,anchor=base] at (30.75,0.3)  {\texttt{W}};
+\draw [black!95] (30.0,0)    rectangle (30.5,1);
+\node [font=\tiny,anchor=base] at (30.25,1.25)  {\textsf{3}};
+\node [font=\tiny,anchor=base] at (30.25,0.3)  {\texttt{X}};
+\draw [black!95] (29.5,0)    rectangle (30.0,1);
+\node [font=\tiny,anchor=base] at (29.75,1.25)  {\textsf{4}};
+\node [font=\tiny,anchor=base] at (29.75,0.3)  {\texttt{U}};
+\draw [black!95] (29.0,0)    rectangle (29.5,1);
+\node [font=\tiny,anchor=base] at (29.25,1.25)  {\textsf{5}};
+\node [font=\tiny,anchor=base] at (29.25,0.3)  {\texttt{G}};
+\draw [black!95] (28.5,0)    rectangle (29.0,1);
+\node [font=\tiny,anchor=base] at (28.75,1.25)  {\textsf{6}};
+\node [font=\tiny,anchor=base] at (28.75,0.3)  {\texttt{A}};
+\draw [black!95] (28.0,0)    rectangle (28.5,1);
+\node [font=\tiny,anchor=base] at (28.25,1.25)  {\textsf{7}};
+\node [font=\tiny,anchor=base] at (28.25,0.3)  {\texttt{D}};
+\draw [black!95] (27.0,0)    rectangle (28.0,1);
+\node [font=\tiny,anchor=base] at (27.75,1.25)  {\textsf{8}};
+\node [font=\tiny,anchor=base] at (27.25,1.25)  {\textsf{9}};
+\node [font=\tiny,anchor=base] at (27.5,0.3)  {\texttt{SW}};
+\draw [black!95] (4,0)    rectangle (27.0,1);
+\node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{10}};
+\node [font=\tiny,anchor=base] at (4.5,1.25)  {\textsf{55}};
+\node [font=\small,anchor=base] at (15,0.25)  {\emph{physical address of next page table level}};
+\draw [black!95] (0.0,0)   rectangle (4,1);
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\tiny,anchor=base] at (3.5,1.25)  {\textsf{56}};
+\node [font=\small,anchor=base] at (2.0,0.25)  {\emph{zeroes}};
+\end{tikzpicture}
+\\
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{no.} & \textbf{name} & \textbf{description} \\
+\hline
+\verb|1 << 0| & V   & valid \\
+\verb|1 << 1| & R   & read \\
+\verb|1 << 2| & W   & write \\
+\verb|1 << 3| & X   & execute \\
+\verb|1 << 4| & U   & user \\
+\verb|1 << 5| & G   & global \\
+\verb|1 << 6| & A   & accessed \\
+\verb|1 << 7| & D   & dirty \\
+\verb|3 << 8| & SW   & software \\
+\hline
+\end{tabular}
+\caption{page table entry fields}
+\label{tab:page-table-entry-fields}
+\end{table}
+\\
+\par\noindent
+the 64-bit lookup virtual address structure:
+\\
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (26,0)   rectangle (32,1);
+\node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{11}};
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\small,anchor=base] at (29,0.25)  {\emph{page offset}};
+\draw [black!95] (21.5,0)   rectangle (26,1);
+\node [font=\tiny,anchor=base] at (22.0,1.25)  {\textsf{20}};
+\node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{12}};
+\node [font=\small,anchor=base] at (23.75,0.25)  {\emph{vpn[3]}};
+\draw [black!95] (17.0,0)   rectangle (21.5,1);
+\node [font=\tiny,anchor=base] at (17.5,1.25)  {\textsf{29}};
+\node [font=\tiny,anchor=base] at (21.0,1.25)  {\textsf{21}};
+\node [font=\small,anchor=base] at (19.25,0.25)  {\emph{vpn[2]}};
+\draw [black!95] (12.5,0)   rectangle (17.0,1);
+\node [font=\tiny,anchor=base] at (13.0,1.25)  {\textsf{38}};
+\node [font=\tiny,anchor=base] at (16.5,1.25)  {\textsf{30}};
+\node [font=\small,anchor=base] at (14.75,0.25)  {\emph{vpn[1]}};
+\draw [black!95] (8.0,0)   rectangle (12.5,1);
+\node [font=\tiny,anchor=base] at (8.5,1.25)  {\textsf{47}};
+\node [font=\tiny,anchor=base] at (12.0,1.25)  {\textsf{39}};
+\node [font=\small,anchor=base] at (10.25,0.25)  {\emph{vpn[0]}};
+\draw [black!95] (0.0,0)   rectangle (8.0,1);
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\tiny,anchor=base] at (7.5,1.25)  {\textsf{48}};
+\node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
+\end{tikzpicture}
+\\
+\par\noindent
+the 64-bit translated physical address structure:
+\\
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (26,0)   rectangle (32,1);
+\node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{11}};
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\small,anchor=base] at (29,0.25)  {\emph{page offset}};
+\draw [black!95] (4.0,0)   rectangle (26,1);
+\node [font=\tiny,anchor=base] at (4.5,1.25)  {\textsf{55}};
+\node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{12}};
+\node [font=\small,anchor=base] at (15.0,0.25)  {\emph{physical page number}};
+\draw [black!95] (0.0,0)   rectangle (4,1);
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\tiny,anchor=base] at (3.5,1.25)  {\textsf{56}};
+\node [font=\small,anchor=base] at (2.0,0.25)  {\emph{zeroes}};
+\end{tikzpicture}
+
 \chapter{Instructions} \label{sec:instructions}
 
 \section{Instruction listing --- 16-bit}
