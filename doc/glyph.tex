@@ -2165,10 +2165,12 @@ monitor exception} for a matching memory load address.
 address to monitor for and halt execution on and raise a \emph{debug
 monitor exception} for a matching memory store address.
 
+\section{Address translation}
+
 \subsection{page table structure}
 the section describes the page table structure and dimensions for memory
 address translation pointed to by the \emph{system page table root} register.
-\\
+
 \begin{table}[h]
 \centering
 \footnotesize
@@ -2257,7 +2259,7 @@ address translation pointed to by the \emph{system page table root} register.
 the page table walker performs page table lookups to translate 64-bit
 virtual addresses to 64-bit physical addresses. there are 48 active bits
 in virtual addresses and the remaining bits are sign-extended. physical
-addresses have 56-bits and the upper 8-bits are ignored.
+addresses have 56-bits and the upper 8-bits are zeroes.
 
 \begin{figure}[H]
 \centering
