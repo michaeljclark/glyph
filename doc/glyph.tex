@@ -2218,12 +2218,14 @@ address translation pointed to by the \emph{system page table root} register.
 \footnotesize
 \begin{tabular}{|l|l|l|l|l|l|l|l|}
 \hline
-\textbf{Levels} & \textbf{PN\tablefootnote{Page Number} bits} &
+\textbf{Levels} &
+\textbf{PN\tablefootnote{Page Number} bits} &
 \textbf{PO\tablefootnote{Page Offset} bits} &
-\textbf{Virt bits} & \textbf{Phys bits} & \textbf{Entry bits} &
+\textbf{VA\tablefootnote{Virtual Address} bits} &
+\textbf{PA\tablefootnote{Physical Address} bits} &
 \textbf{Entries} & \textbf{Page sizes} \\
 \hline
-4 & 9 & 12 & 48 & 56 & 64 & 512 & 4KiB, 2Mib, 1GiB \\
+4 & 9 & 12 & 48 & 56 & 512 & 4KiB, 2Mib, 1GiB \\
 \hline
 \end{tabular}
 \caption{64-bit page table dimensions}
@@ -2284,7 +2286,7 @@ page number extracted from the virtual address.
 page table entry bits indicate the type and permission of a page in
 the \emph{trie-based} page table. entries with the \emph{read, write}
 and \emph{exec} bits clear are \emph{internal nodes}, referred to as
-\emph{pointer nodes} within the context \emph{trie-based} page tables.
+\emph{pointer nodes}.
 \\
 \begin{table}[h]
 \centering
@@ -2391,7 +2393,7 @@ the page table address translation process and rules are as follows:
       \State $\mathit{vpn} \gets (\mathit{va} >> \mathit{shift}) \land
         ((1 << \mathit{pn\_bits}) - 1)$
       \State $\mathit{pte} \gets \Call{load}{(\mathit{ppn}
-        << \mathit{po\_bits}) + \mathit{vpn} \times \mathit{pte\_size}}$
+        << \mathit{po\_bits}) + \mathit{vpn} \times \mathit{sizeof(PTE)}}$
       \If {$(\lnot\mathit{pte.V}) \lor (\mathit{pte.W} \land \lnot\mathit{pte.R})$}
         \Comment{check valid and write must have read}
         \State \textbf{raise} \textbf{fault}
