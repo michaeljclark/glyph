@@ -10,6 +10,10 @@
 \usepackage{tgheros}
 \usepackage{bm}
 \usepackage{cleveref}
+\usepackage{tabularx}
+\usepackage{tablefootnote}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 \usepackage[bitstream-charter]{mathdesign}
 \usepackage[backend=biber,style=numeric-comp]{biblatex}
 \addbibresource{doc/glyph.bib}
@@ -2043,7 +2047,7 @@ whether user pages can be executed by the supervisor.
 \texttt{sptr} is a read-write register containing the page table root
 for address translation on this hardware thread. the \emph{ASID} field
 contains the address space identifier for the current thread. the
-\emph{pointer} field contains the physical address of the page table
+\emph{root} field contains the physical address of the page table
 root structure.
 \\
 \par\noindent
@@ -2056,7 +2060,7 @@ root structure.
 \draw [black!95] (4,0)    rectangle (26,1);
 \node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{12}};
 \node [font=\tiny,anchor=base] at (4.5,1.25)  {\textsf{55}};
-\node [font=\small,anchor=base] at (15,0.25)  {\emph{pointer}};
+\node [font=\small,anchor=base] at (15,0.25)  {\emph{root}};
 \draw [black!95] (0.0,0)   rectangle (4,1);
 \node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
 \node [font=\tiny,anchor=base] at (3.5,1.25)  {\textsf{56}};
@@ -2161,15 +2165,28 @@ monitor exception} for a matching memory load address.
 address to monitor for and halt execution on and raise a \emph{debug
 monitor exception} for a matching memory store address.
 
-\subsection{address translation}
-the section describes the page table structure for memory address
-translation pointed to by the \emph{system page table root} register.
-page tables are 4 levels of 4KiB pages containing 512 entries using
-the following format for recursive address translation for 4KiB pages.
+\subsection{page table structure}
+the section describes the page table structure and dimensions for memory
+address translation pointed to by the \emph{system page table root} register.
 \\
-\par\noindent
-the 8-byte page table entry structure:
-\\
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+\hline
+\textbf{Levels} & \textbf{VPN\tablefootnote{Virtual Page Number} bits} &
+\textbf{Page bits} & \textbf{Virt bits} & \textbf{Phys bits} & \textbf{Entry bits} &
+\textbf{Entries} & \textbf{Page sizes} \\
+\hline
+4 & 9 & 12 & 48 & 56 & 64 & 512 & 4KiB, 2Mib, 1GiB \\
+\hline
+\end{tabular}
+\caption{64-bit page table dimensions}
+\label{tab:64-bit-page-table-dimensions}
+\end{table}
+
+\begin{figure}[H]
+\centering
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31.5,0)    rectangle (32,1);
@@ -2209,7 +2226,10 @@ the 8-byte page table entry structure:
 \node [font=\tiny,anchor=base] at (3.5,1.25)  {\textsf{56}};
 \node [font=\small,anchor=base] at (2.0,0.25)  {\emph{zeroes}};
 \end{tikzpicture}
-\\
+\caption{64-bit page table entry structure.}
+\label{fig:8-byte-pte-structure}
+\end{figure}
+
 \begin{table}[h]
 \centering
 \footnotesize
@@ -2231,10 +2251,16 @@ the 8-byte page table entry structure:
 \caption{page table entry fields}
 \label{tab:page-table-entry-fields}
 \end{table}
-\\
-\par\noindent
-the 64-bit lookup virtual address structure:
-\\
+
+\newpage
+\subsection{page table walker}
+the page table walker performs page table lookups to translate 64-bit
+virtual addresses to 64-bit physical addresses. there are 48 active bits
+in virtual addresses and the remaining bits are sign-extended. physical
+addresses have 56-bits and the upper 8-bits are ignored.
+
+\begin{figure}[H]
+\centering
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (26,0)   rectangle (32,1);
@@ -2262,10 +2288,12 @@ the 64-bit lookup virtual address structure:
 \node [font=\tiny,anchor=base] at (7.5,1.25)  {\textsf{48}};
 \node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
 \end{tikzpicture}
-\\
-\par\noindent
-the 64-bit translated physical address structure:
-\\
+\caption{64-bit lookup virtual address structure.}
+\label{fig:64-bit-lookup-virtual-address-structure}
+\end{figure}
+
+\begin{figure}[H]
+\centering
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (26,0)   rectangle (32,1);
@@ -2281,6 +2309,67 @@ the 64-bit translated physical address structure:
 \node [font=\tiny,anchor=base] at (3.5,1.25)  {\textsf{56}};
 \node [font=\small,anchor=base] at (2.0,0.25)  {\emph{zeroes}};
 \end{tikzpicture}
+\caption{64-bit translated physical address structure.}
+\label{fig:64-bit-translated-physical-address-structure}
+\end{figure}
+
+\par\noindent
+the page table address translation process is as follows:
+
+\begin{algorithm}
+\caption{translate virtual address to physical address}
+\small
+\begin{algorithmic}[1]
+
+ \Function{translate}{$va$}
+  \If {$\lnot\Call{check\_canonical}{\mathit{va}, \mathit{va\_bits}}$}
+    \Comment{check address is sign-extended}
+    \State \textbf{raise} \textbf{fault}
+  \EndIf
+  \State $\mathit{ppn} = \mathit{sptr.root} << \mathit{page\_bits}$
+  \Comment{fetch the page table root pointer}
+  \For{$\mathit{level} = 1$ to $\mathit{num\_levels}$}
+      \State $\mathit{shift} = (\mathit{num\_levels} - \mathit{level}) \times
+        \mathit{vpn\_bits} + \mathit{page\_bits}$
+      \Comment{calculate virtual page number}
+      \State $\mathit{vpn} = (\mathit{va} >> \mathit{shift}) \land
+        ((1 << \mathit{vpn\_bits}) - 1)$
+      \State $\mathit{pte} = \Call{load\_64}{\mathit{ppn} +
+        \mathit{vpn} * \mathit{pte\_size}}$
+      \Comment{load PTE}
+      \If {$\lnot\mathit{pte.V}$}
+        \Comment{check valid}
+        \State \textbf{raise} \textbf{fault}
+      \ElsIf {$\lnot(\mathit{pte.R} \lor \mathit{pte.W} \lor \mathit{pte.X})$}
+      \Comment{no read, write or exec is a pointer}
+        \State $\mathit{ppn} = \mathit{pte.ppn}$
+        \State \textbf{continue}
+      \ElsIf{$\mathit{pte.W} \land \lnot\mathit{pte.R}$}
+        \Comment{check write must have read}
+        \State \textbf{raise} \textbf{fault}
+      \ElsIf {$(\mathit{pte.R} \land \lnot\mathit{pte.A}) \lor
+          (\mathit{pte.W} \land \lnot\mathit{pte.D})$}
+        \Comment{check accessed or dirty}
+        \State \textbf{raise} \textbf{fault}
+      \ElsIf {$\mathit{mode} = S \land \lnot\mathit{scontrol.E} \land
+          \mathit{pte.U} \land (\mathit{pte.X})$}
+        \Comment{check execute user page}
+        \State \textbf{raise} \textbf{fault}
+      \ElsIf {$\mathit{mode} = S \land \lnot\mathit{scontrol.A} \land
+          \mathit{pte.U} \land (\mathit{pte.R} \lor \mathit{pte.W})$}
+        \Comment{check access user page}
+        \State \textbf{raise} \textbf{fault}
+      \ElsIf {$\mathit{pte.ppn} \land ((1 << (\mathit{shift} - \mathit{page\_bits})) - 1)$}
+        \Comment{check superpage is aligned}
+        \State \textbf{raise} \textbf{fault}
+      \EndIf
+      \State \Return $(\mathit{ppn} << \mathit{page\_bits}) + (\mathit{va} \land
+      ((1 << (\mathit{page\_bits} + \mathit{level} \times \mathit{vpn\_bits})) - 1))$
+  \EndFor
+ \EndFunction
+
+\end{algorithmic}
+\end{algorithm}
 
 \chapter{Instructions} \label{sec:instructions}
 
