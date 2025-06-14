@@ -2328,23 +2328,23 @@ the page table address translation process is as follows:
     \Comment{check address is sign-extended}
     \State \textbf{raise} \textbf{fault}
   \EndIf
-  \State $\mathit{ppn} = \mathit{sptr.root} << \mathit{page\_bits}$
+  \State $\mathit{ppn} \gets \mathit{sptr.root}$
   \Comment{fetch the page table root pointer}
-  \For{$\mathit{level} = 1$ to $\mathit{num\_levels}$}
-      \State $\mathit{shift} = (\mathit{num\_levels} - \mathit{level}) \times
+  \For{$\mathit{level} \gets 1$ to $\mathit{num\_levels}$}
+      \State $\mathit{shift} \gets (\mathit{num\_levels} - \mathit{level}) \times
         \mathit{vpn\_bits} + \mathit{page\_bits}$
       \Comment{calculate virtual page number}
-      \State $\mathit{vpn} = (\mathit{va} >> \mathit{shift}) \land
+      \State $\mathit{vpn} \gets (\mathit{va} >> \mathit{shift}) \land
         ((1 << \mathit{vpn\_bits}) - 1)$
-      \State $\mathit{pte} = \Call{load\_64}{\mathit{ppn} +
-        \mathit{vpn} * \mathit{pte\_size}}$
+      \State $\mathit{pte} \gets \Call{load\_64}{(\mathit{ppn}
+        << \mathit{page\_bits}) + \mathit{vpn} \times \mathit{pte\_size}}$
       \Comment{load PTE}
       \If {$\lnot\mathit{pte.V}$}
         \Comment{check valid}
         \State \textbf{raise} \textbf{fault}
       \ElsIf {$\lnot(\mathit{pte.R} \lor \mathit{pte.W} \lor \mathit{pte.X})$}
       \Comment{no read, write or exec is a pointer}
-        \State $\mathit{ppn} = \mathit{pte.ppn}$
+        \State $\mathit{ppn} \gets \mathit{pte.ppn}$
         \State \textbf{continue}
       \ElsIf{$\mathit{pte.W} \land \lnot\mathit{pte.R}$}
         \Comment{check write must have read}
