@@ -20,7 +20,7 @@
 \usetikzlibrary{decorations.pathreplacing, arrows.meta, positioning}
 \title{Instructions}
 
-\AtBeginBibliography{\small}
+%\AtBeginBibliography{\small}
 
 \newcommand{\fmtlogtwo}[1]{\fpeval{round(ln(#1)/ln(2), 2)}}
 
@@ -483,8 +483,8 @@ it is organized as a word-addressable store, similar to main memory,
 but is read-only and reserved exclusively for instructions. this
 configuration is typically referred to as a Harvard architecture%
 ~\cite{aiken1946marki}, in contrast to a Von Neumann architecture%
-~\cite{vonneumann1945edvac,mauchly1946eniac}, which uses a shared
-memory region for both program instructions and data.
+~\cite{vonneumann1945edvac}, which uses a shared memory region for
+both program instructions and data.
 \\
 \par\noindent
 instruction words contain packets of 16-bits which are composed of
