@@ -2385,25 +2385,28 @@ the page table address translation process and rules are as follows:
     \State \textbf{raise} \textbf{fault}
   \EndIf
   \State $\mathit{ppn} \gets \mathit{sptr.ppn}$
-  \Comment{fetch the page table root pointer}
+  \Comment{fetch system page table root pointer}
   \For{$\mathit{level} \gets 1$ to $\mathit{num\_levels}$}
       \State $\mathit{shift} \gets (\mathit{num\_levels} - \mathit{level}) \times
         \mathit{pn\_bits} + \mathit{po\_bits}$
-      \Comment{calculate virtual page number}
+      \Comment{calculate page number shift}
       \State $\mathit{vpn} \gets (\mathit{va} >> \mathit{shift}) \land
         ((1 << \mathit{pn\_bits}) - 1)$
+      \Comment{calculate virtual page number}
       \State $\mathit{pte} \gets \Call{load}{(\mathit{ppn}
         << \mathit{po\_bits}) + \mathit{vpn} \times \mathit{sizeof(PTE)}}$
+      \Comment{load page table entry}
       \If {$(\lnot\mathit{pte.V}) \lor (\mathit{pte.W} \land \lnot\mathit{pte.R})$}
         \Comment{check valid and write must have read}
         \State \textbf{raise} \textbf{fault}
       \ElsIf {$\lnot(\mathit{pte.R} \lor \mathit{pte.W} \lor \mathit{pte.X})$}
       \Comment{no read, write or exec is a pointer}
         \State $\mathit{ppn} \gets \mathit{pte.ppn}$
+        \Comment{set pointer to next level}
         \State \textbf{continue}
       \ElsIf{$(\mathit{op.R} \land \lnot\mathit{pte.R}) \lor (\mathit{op.W} \land
         \lnot\mathit{pte.W}) \lor (\mathit{op.X} \land \lnot\mathit{pte.X})$}
-        \Comment{check access perms}
+        \Comment{check permissions}
         \State \textbf{raise} \textbf{fault}
       \ElsIf {$(\mathit{op.R} \land \lnot\mathit{pte.A}) \lor
           (\mathit{op.W} \land \lnot\mathit{pte.D})$}
@@ -2422,7 +2425,7 @@ the page table address translation process and rules are as follows:
         \Comment{check superpage is aligned}
         \State \textbf{raise} \textbf{fault}
       \EndIf
-      \State \Return $(\mathit{ppn} << \mathit{po\_bits}) + (\mathit{va} \land
+      \State \Return $(\mathit{pte.ppn} << \mathit{po\_bits}) + (\mathit{va} \land
       ((1 << (\mathit{level} \times \mathit{pn\_bits} + \mathit{po\_bits})) - 1))$
   \EndFor
  \EndFunction
