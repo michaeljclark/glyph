@@ -24,6 +24,6 @@ def t():
         cpu_encode_op_ncmov_i64(7,0),
         cpu_encode_op_break(0),
     ]
-    cpu_test("cmp_1", c, i)
+    cpu_test("compare_1", c, i)
 
 t()

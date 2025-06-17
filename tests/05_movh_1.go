@@ -20,7 +20,7 @@ func t() {
         CPU_encode_op_movh_i64(7,7),
         CPU_encode_op_break(0),
     }
-    CPU_test("movhib_1", c, i);
+    CPU_test("movh_1", c, i);
 }
 
 func main() {

@@ -24,6 +24,6 @@ def t():
         cpu_encode_op_movw_i64(7,7),
         cpu_encode_op_break(0),
     ]
-    cpu_test("movwib_1", c, i)
+    cpu_test("movw_1", c, i)
 
 t()

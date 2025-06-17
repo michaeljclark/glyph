@@ -22,6 +22,6 @@ def t():
         cpu_encode_op_or_i64(0,0,0),
         cpu_encode_op_jtlib_i64(7,0),
     ]
-    cpu_test("jlr_1", c, i)
+    cpu_test("link_1", c, i)
 
 t()

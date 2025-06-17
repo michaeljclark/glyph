@@ -20,6 +20,6 @@ def t():
         cpu_encode_op_movh_i64(7,7),
         cpu_encode_op_break(0),
     ]
-    cpu_test("movhib_1", c, i)
+    cpu_test("movh_1", c, i)
 
 t()

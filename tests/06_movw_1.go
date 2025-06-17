@@ -24,7 +24,7 @@ func t() {
         CPU_encode_op_movw_i64(7,7),
         CPU_encode_op_break(0),
     }
-    CPU_test("movwib_1", c, i);
+    CPU_test("movw_1", c, i);
 }
 
 func main() {

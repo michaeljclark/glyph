@@ -16,6 +16,6 @@ def t():
         cpu_encode_op_movi_i64(7,-7),
         cpu_encode_op_break(0),
     ]
-    cpu_test("li_1", c, i)
+    cpu_test("movi_1", c, i)
 
 t()

@@ -16,7 +16,7 @@ func t() {
         CPU_encode_op_movi_i64(7,-7),
         CPU_encode_op_break(0),
     }
-    CPU_test("li_1", c, i);
+    CPU_test("movi_1", c, i);
 }
 
 func main() {

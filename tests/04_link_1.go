@@ -22,7 +22,7 @@ func t() {
         CPU_encode_op_or_i64(0,0,0),
         CPU_encode_op_jtlib_i64(7,0),
     }
-    CPU_test("jlr_1", c, i);
+    CPU_test("link_1", c, i);
 }
 
 func main() {
