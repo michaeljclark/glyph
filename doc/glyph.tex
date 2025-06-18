@@ -2210,9 +2210,10 @@ structure from the root pointer to leaf entries to translate virtual
 addresses into physical addresses.
 
 \subsection{page table structure}
-the section describes the page table structure and dimensions for memory
-address translation pointed to by the \emph{system page table root} register.
-\\
+the section describes the dimensions for memory address translation
+and the \emph{trie-based} page table structure pointed to by the
+\emph{system page table root} register.
+
 \begin{table}[h]
 \centering
 \footnotesize
@@ -2225,7 +2226,7 @@ address translation pointed to by the \emph{system page table root} register.
 \textbf{PA\tablefootnote{Physical Address} bits} &
 \textbf{Entries} & \textbf{Page sizes} \\
 \hline
-4 & 9 & 12 & 48 & 56 & 512 & 4KiB, 2Mib, 1GiB \\
+4 & 9 & 12 & 48 & 64 & 512 & 4KiB, 2Mib, 1GiB \\
 \hline
 \end{tabular}
 \caption{64-bit page table dimensions}
@@ -2233,10 +2234,13 @@ address translation pointed to by the \emph{system page table root} register.
 \end{table}
 
 \par\noindent
-page table entry structures are grouped together into arrays stored
-within index pages, where each entry in the index maps to a
-page number extracted from the virtual address.
-\\
+page table entries are grouped into arrays within index pages and are
+selected by an index derived from a portion of the virtual address. each
+entry contains a physical address along with several permission and
+metadata bits. the physical address either points to the next page table
+level for \emph{pointer} entries or the translated physical address for
+\emph{leaf} entries.
+
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[scale=0.45]
@@ -2265,29 +2269,26 @@ page number extracted from the virtual address.
 \draw [black!95] (28.0,0)    rectangle (28.5,1);
 \node [font=\tiny,anchor=base] at (28.25,1.25)  {\textsf{7}};
 \node [font=\tiny,anchor=base] at (28.25,0.3)  {\texttt{D}};
-\draw [black!95] (27.0,0)    rectangle (28.0,1);
-\node [font=\tiny,anchor=base] at (27.75,1.25)  {\textsf{8}};
-\node [font=\tiny,anchor=base] at (27.25,1.25)  {\textsf{9}};
-\node [font=\tiny,anchor=base] at (27.5,0.3)  {\texttt{SW}};
-\draw [black!95] (4,0)    rectangle (27.0,1);
-\node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{10}};
-\node [font=\tiny,anchor=base] at (4.5,1.25)  {\textsf{55}};
-\node [font=\small,anchor=base] at (15,0.25)  {\emph{physical address of next page table level}};
-\draw [black!95] (0.0,0)   rectangle (4,1);
+\node [font=\small,anchor=base] at (13,0.25)  {\emph{physical page number}};
+\draw [black!95] (0.0,0)   rectangle (26,1);
+\node [font=\tiny,anchor=base] at (27.5,1.25)  {\textsf{8}};
+\node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{11}};
+\node [font=\small,anchor=base] at (27,0.25)  {\emph{color}};
+\node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{12}};
 \node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
-\node [font=\tiny,anchor=base] at (3.5,1.25)  {\textsf{56}};
-\node [font=\small,anchor=base] at (2.0,0.25)  {\emph{zeroes}};
 \end{tikzpicture}
 \caption{64-bit page table entry structure.}
 \label{fig:64-bit-pte-structure}
 \end{figure}
 
 \par\noindent
-page table entry bits indicate the type and permission of a page in
-the \emph{trie-based} page table. entries with the \emph{read, write}
-and \emph{exec} bits clear are \emph{internal nodes}, referred to as
-\emph{pointer nodes}.
-\\
+page table entries with the \emph{read, write} and \emph{exec} permission
+bits clear are interpreted as \emph{pointer} entries and contain a pointer
+to the next-level index page, otherwise they are \emph{leaf} entries with
+a final translation. entries with the \emph{write} bit set must have the
+\emph{read} bit set. the \emph{color} field is reserved for system software
+but may be interpreted by a future capabilities system.
+
 \begin{table}[h]
 \centering
 \footnotesize
@@ -2303,7 +2304,6 @@ and \emph{exec} bits clear are \emph{internal nodes}, referred to as
 \verb|1 << 5| & G   & global \\
 \verb|1 << 6| & A   & accessed \\
 \verb|1 << 7| & D   & dirty \\
-\verb|3 << 8| & SW   & software \\
 \hline
 \end{tabular}
 \caption{64-bit page table entry fields}
@@ -2358,14 +2358,10 @@ to find a leaf entry containing a physical page address.
 \node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{11}};
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\small,anchor=base] at (29,0.25)  {\emph{page offset}};
-\draw [black!95] (4.0,0)   rectangle (26,1);
-\node [font=\tiny,anchor=base] at (4.5,1.25)  {\textsf{55}};
+\draw [black!95] (0.0,0)   rectangle (26,1);
 \node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{12}};
-\node [font=\small,anchor=base] at (15.0,0.25)  {\emph{physical page number}};
-\draw [black!95] (0.0,0)   rectangle (4,1);
 \node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
-\node [font=\tiny,anchor=base] at (3.5,1.25)  {\textsf{56}};
-\node [font=\small,anchor=base] at (2.0,0.25)  {\emph{zeroes}};
+\node [font=\small,anchor=base] at (13.0,0.25)  {\emph{physical page number}};
 \end{tikzpicture}
 \caption{64-bit translated physical address structure.}
 \label{fig:64-bit-translated-physical-address-structure}
