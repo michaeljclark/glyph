@@ -2488,8 +2488,8 @@ are as follows:
     \State $(\mathit{sm},\mathit{level}) \gets \Call{find\_page}{%
       \mathit{physical},\mathit{num\_levels}-1,\mathit{sptr.ppn},\mathit{pa}}$
     \Comment{load self mapping}
-    \If {$(\mathit{pte.ppn} \ne \mathit{sm.ppn}) \lor (\lnot\mathit{leaf}
-        \land \lnot\mathit{sm.T})$}
+    \If {$(\mathit{leaf} \land \mathit{pte.ppn} \ne \mathit{sm.ppn}) \lor
+      (\lnot\mathit{leaf} \land \lnot\mathit{sm.T})$}
       \State \textbf{raise} \textbf{fault}
       \Comment{invalid self mapping}
     \EndIf
