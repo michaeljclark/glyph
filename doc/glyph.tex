@@ -1764,13 +1764,14 @@ timers, inter-thread interrupts, and debug.
 \multicolumn{3}{|l|}{\textbf{privileged system registers}} \\ \hline
 \texttt{0x20} & scontrol  & system control \\
 \texttt{0x21} & sstatus   & system status \\
-\texttt{0x22} & sptr      & system page table root \\
-\texttt{0x23} & saddr     & system thread address \\
-\texttt{0x24} & starget   & system target address \\
-\texttt{0x25} & smessage  & system message interrupt \\
-\texttt{0x26} & stimer    & system deadline timer \\
-\texttt{0x27} & sie       & system interrupt enable \\
-\texttt{0x28} & sip       & system interrupt pending \\
+\texttt{0x22} & sfeature  & system feature \\
+\texttt{0x23} & sptr      & system page table root \\
+\texttt{0x24} & saddr     & system thread address \\
+\texttt{0x25} & starget   & system target address \\
+\texttt{0x26} & smessage  & system message interrupt \\
+\texttt{0x27} & stimer    & system deadline timer \\
+\texttt{0x28} & sie       & system interrupt enable \\
+\texttt{0x29} & sip       & system interrupt pending \\
 \hline
 \multicolumn{3}{|l|}{\textbf{privileged debug registers}} \\ \hline
 \texttt{0x31} & dstatus    & debug status \\
@@ -2014,7 +2015,11 @@ the section describes the privileged system registers.
 \texttt{scontrol} is a read-write register containing system control
 information. the \texttt{A} field controls whether the user pages can
 be read or written by the supervisor. the \texttt{E} field controls
-whether user pages can be executed by the supervisor.
+whether user pages can be executed by the supervisor. the \texttt{P}
+field controls whether page table pages need physical maps and
+translate permissions. if enabled, then physical addresses must be
+self-mapped with the \texttt{T} permission set on entries for pages
+that contain page tables.
 \\
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
@@ -2024,6 +2029,9 @@ whether user pages can be executed by the supervisor.
 \draw [black!95] (30,0)    rectangle (31,1);
 \node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
 \node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{E}};
+\draw [black!95] (29,0)    rectangle (30,1);
+\node [font=\tiny,anchor=base] at (29.5,1.25)  {\textsf{2}};
+\node [font=\small,anchor=base] at (29.5,0.25)  {\texttt{P}};
 \end{tikzpicture}
 
 \begin{table}[h]
@@ -2033,8 +2041,9 @@ whether user pages can be executed by the supervisor.
 \hline
 \textbf{no.} & \textbf{name} & \textbf{description} \\
 \hline
-\verb|1 << 0| & A   & supervisor access user pages \\
-\verb|1 << 1| & E   & supervisor execute user pages \\
+\verb|1 << 0| & A   & supervisor access to user pages disabled \\
+\verb|1 << 1| & E   & supervisor execute of user pages disabled \\
+\verb|1 << 2| & P   & physical permissions feature enabled \\
 \hline
 \end{tabular}
 \caption{system control fields}
@@ -2067,6 +2076,37 @@ this register cannot be read in user-mode so it will return zero.
 \label{tab:system-status-fields}
 \end{table}
 
+\subsubsection{system feature (\texttt{sfeature})}
+\texttt{sfeature} is a read-only register containing system features.
+the \texttt{C} field indicates the capabilities feature is present.
+the \texttt{P} field indicates the physical permissions feature is present.
+\\
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (31,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{C}};
+\draw [black!95] (30,0)    rectangle (31,1);
+\node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
+\node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{P}};
+\end{tikzpicture}
+
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{no.} & \textbf{name} & \textbf{description} \\
+\hline
+\verb|1 << 0| & C   & capabilities check feature \\
+\verb|1 << 0| & P   & physical permissions feature \\
+\hline
+\end{tabular}
+\caption{system feature fields}
+\label{tab:system-feature-fields}
+\end{table}
+
+\newpage
 \subsubsection{system page table root (\texttt{sptr})}
 \texttt{sptr} is a read-write register containing the page table root
 for address translation on this hardware thread. the \emph{ASID} field
@@ -2091,7 +2131,6 @@ root structure.
 \node [font=\small,anchor=base] at (2.0,0.25)  {\emph{zeroes}};
 \end{tikzpicture}
 
-\newpage
 \subsubsection{system address (\texttt{saddr})}
 \texttt{saddr} is a read-only register containing the unique system-wide
 address for this hardware thread. the system-wide address is used as the
@@ -2207,39 +2246,43 @@ the architecture provides for page-based virtual to physical address
 translation using a page table \emph{trie structure} composed of index
 pages containing arrays of page table entries. a page walker reads the
 structure from the root pointer to leaf entries to translate virtual
-addresses into physical addresses.
+addresses into physical addresses. the architecture introduces the
+concept of a \emph{translation address} which is an address boxed with
+an \emph{address space prefix} (\texttt{AS}) designed to provide a
+canonical address form for user and supervisor virtual addresses as
+well as physical addresses.
 
 \subsection{page table structure}
 the section describes the dimensions for memory address translation
 and the \emph{trie-based} page table structure pointed to by the
-\emph{system page table root} register.
+\emph{system page table root} (\texttt{sptr}) register.
 
 \begin{table}[h]
 \centering
 \footnotesize
-\begin{tabular}{|l|l|l|l|l|l|l|l|}
+\begin{tabular}{|l|l|l|l|l|l|l|}
 \hline
-\textbf{Levels} &
-\textbf{PN\tablefootnote{Page Number} bits} &
-\textbf{PO\tablefootnote{Page Offset} bits} &
-\textbf{VA\tablefootnote{Virtual Address} bits} &
-\textbf{PA\tablefootnote{Physical Address} bits} &
-\textbf{Entries} & \textbf{Page sizes} \\
+\textbf{Page} & \textbf{Page} & \textbf{Page} & \textbf{Virtual} &
+\textbf{Page} & \\
+\textbf{Table} & \textbf{Number} & \textbf{Offset} & \textbf{Address} &
+\textbf{Index} & \textbf{Page} \\
+\textbf{Levels} & \textbf{Bits} & \textbf{Bits} & \textbf{Bits} &
+\textbf{Entries} & \textbf{Sizes} \\
 \hline
-4 & 9 & 12 & 48 & 64 & 512 & 4KiB, 2Mib, 1GiB \\
+4 & 9 & 12 & 44 --- 48 & 512 & 4KiB, 2Mib, 1GiB \\
 \hline
 \end{tabular}
 \caption{64-bit page table dimensions}
 \label{tab:64-bit-page-table-dimensions}
 \end{table}
 
-\par\noindent
-page table entries are grouped into arrays within index pages and are
+\subsection{page table entries}
+page table entries are grouped into arrays within index pages which are
 selected by an index derived from a portion of the virtual address. each
-entry contains a physical address along with several permission and
-metadata bits. the physical address either points to the next page table
-level for \emph{pointer} entries or the translated physical address for
-\emph{leaf} entries.
+entry contains a physical page number along with several permission and
+metadata bits. the physical page number either points to the next page
+table level for \emph{pointer} entries or the translated physical address
+for \emph{leaf} entries.
 
 \begin{figure}[H]
 \centering
@@ -2259,7 +2302,7 @@ level for \emph{pointer} entries or the translated physical address for
 \node [font=\tiny,anchor=base] at (30.25,0.3)  {\texttt{X}};
 \draw [black!95] (29.5,0)    rectangle (30.0,1);
 \node [font=\tiny,anchor=base] at (29.75,1.25)  {\textsf{4}};
-\node [font=\tiny,anchor=base] at (29.75,0.3)  {\texttt{U}};
+\node [font=\tiny,anchor=base] at (29.75,0.3)  {\texttt{P}};
 \draw [black!95] (29.0,0)    rectangle (29.5,1);
 \node [font=\tiny,anchor=base] at (29.25,1.25)  {\textsf{5}};
 \node [font=\tiny,anchor=base] at (29.25,0.3)  {\texttt{G}};
@@ -2281,14 +2324,6 @@ level for \emph{pointer} entries or the translated physical address for
 \label{fig:64-bit-pte-structure}
 \end{figure}
 
-\par\noindent
-page table entries with the \emph{read, write} and \emph{exec} permission
-bits clear are interpreted as \emph{pointer} entries and contain a pointer
-to the next-level index page, otherwise they are \emph{leaf} entries with
-a final translation. entries with the \emph{write} bit set must have the
-\emph{read} bit set. the \emph{color} field is reserved for system software
-but may be interpreted by a future capabilities system.
-
 \begin{table}[h]
 \centering
 \footnotesize
@@ -2300,7 +2335,7 @@ but may be interpreted by a future capabilities system.
 \verb|1 << 1| & R   & read \\
 \verb|1 << 2| & W   & write \\
 \verb|1 << 3| & X   & execute \\
-\verb|1 << 4| & U   & user \\
+\verb|1 << 4| & T   & translate \\
 \verb|1 << 5| & G   & global \\
 \verb|1 << 6| & A   & accessed \\
 \verb|1 << 7| & D   & dirty \\
@@ -2311,11 +2346,58 @@ but may be interpreted by a future capabilities system.
 \end{table}
 
 \newpage
-\subsection{page table walker}
-the page table walker performs page table lookups to translate virtual
-addresses into physical addresses. the page table walker reads the page
-table root pointer then walks the \emph{trie-based} page table structure
-to find a leaf entry containing a physical page address.
+\subsection{page table addresses}
+the page table translation system has three types of addresses:
+translation addresses, virtual addresses and physical addresses.
+page table translation addresses have a 1 --- 4 bit address space
+prefix to allow them to contain user and supervisor virtual addresses
+as well as physical addresses. the page table translation and lookup
+virtual address structure is as follows:
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (26,0)   rectangle (32,1);
+\node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{11}};
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\small,anchor=base] at (29,0.25)  {\emph{page offset}};
+\draw [black!95] (8.0,0)   rectangle (26,1);
+\node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{12}};
+\node [font=\tiny,anchor=base] at (10.5,1.25)  {\textsf{43}};
+\node [font=\small,anchor=base] at (18.0,0.25)  {\emph{page number}};
+\draw [black!25,dashed] (8.0,0)      rectangle (8.5,1);
+\draw [black!25,dashed] (8.5,0)      rectangle (9.0,1);
+\draw [black!25,dashed] (9.0,0)      rectangle (9.5,1);
+\draw [black!25,dashed] (9.5,0)      rectangle (10.0,1);
+\draw [black!95] (8.0,0)   rectangle (10.0,1);
+\node [font=\tiny,anchor=base] at (9.5,1.25)  {\textsf{44}};
+\node [font=\tiny,anchor=base] at (8.5,1.25)  {\textsf{47}};
+\node [font=\small,anchor=base] at (9.0,0.25)  {\texttt{AS}};
+\draw [black!95] (0.0,0)   rectangle (8.0,1);
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\tiny,anchor=base] at (7.5,1.25)  {\textsf{48}};
+\node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
+\end{tikzpicture}
+\caption{64-bit translation address structure.}
+\label{fig:64-bit-translation-address-structure}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|}
+\hline
+\textbf{no.} & \textbf{name} \\
+\hline
+\texttt{0b0.} & user       \\
+\texttt{0b10.} & physical   \\
+\texttt{0b110.} & supervisor \\
+\hline
+\end{tabular}
+\caption{1---4 bit translation address space prefixes.}
+\label{tab:1-4-bit-translation-address-space-prefixes}
+\end{table}
 
 \begin{figure}[H]
 \centering
@@ -2350,84 +2432,343 @@ to find a leaf entry containing a physical page address.
 \label{fig:64-bit-lookup-virtual-address-structure}
 \end{figure}
 
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[scale=0.45]
-\draw [black!95] (0,0)    rectangle (32,1);
-\draw [black!95] (26,0)   rectangle (32,1);
-\node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{11}};
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (29,0.25)  {\emph{page offset}};
-\draw [black!95] (0.0,0)   rectangle (26,1);
-\node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{12}};
-\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
-\node [font=\small,anchor=base] at (13.0,0.25)  {\emph{physical page number}};
-\end{tikzpicture}
-\caption{64-bit translated physical address structure.}
-\label{fig:64-bit-translated-physical-address-structure}
-\end{figure}
-
+\subsection{page table translation}
+the page table walker performs page table lookups to translate virtual
+addresses into physical addresses. the page table walker reads the page
+table root pointer then walks the \emph{trie-based} page table structure
+to find a leaf entry containing a physical page address.
+\\
 \par\noindent
-the page table address translation process and rules are as follows:
+page table entries with the \emph{read, write} and \emph{exec} permission
+bits clear are interpreted as \emph{pointer} entries and contain a pointer
+to the next-level index page, otherwise they are interpreted as \emph{leaf}
+entries with a final translation. entries with the \emph{write} bit set
+must have the \emph{read} bit set. entries without the \emph{accessed} bit
+set will fault on read accesses. entries without the \emph{dirty} bit set
+will fault on write accesses. the \emph{global} bit prevents \emph{sptr.ASID}
+from being associated with TLB entries. the \emph{color} field is reserved
+for use by system software and the capabilities extension.
+\\
+\par\noindent
+if the physical permissions feature \emph{sfeature.P} is present and
+\emph{scontrol.P} is enabled, then physical pages must be present in the
+page table with a self-mapping of their physical address prefixed with
+$(\mathit{AS} = \mathit{physical})$ leading to a leaf page table entry
+containing its own address. this is to allow physical page permissions
+to be checked. in addition to this, the physical self-mappings for physical
+pages containing page table pages must have the \emph{translate} bit set.
+\\
+\par\noindent
+the page table lookup and virtual to physical address translation process
+are as follows:
 
-\begin{algorithm}
-\caption{translate virtual address to physical address}
-\small
+\begin{algorithm}[H]
+\footnotesize
+\caption{find page table entry for translation address}
 \begin{algorithmic}[1]
+\Function{find\_page}{$\mathit{type},\mathit{level},\mathit{ppn},\mathit{ta}$}
+  \State $\mathit{shift} \gets \mathit{level} \times
+    \mathit{pn\_bits} + \mathit{po\_bits}$
+  \Comment{calculate page number shift}
+  \State $\mathit{tpn} \gets (\mathit{ta} >> \mathit{shift}) \land
+    ((1 << \mathit{pn\_bits}) - 1)$
+  \Comment{calculate translation page number}
+  \State $\mathit{pte} \gets \Call{load}{(\mathit{ppn}
+    << \mathit{po\_bits}) + \mathit{tpn} \times \mathit{sizeof(PTE)}}$
+  \Comment{load page table entry}
+  \State $\mathit{leaf} \gets
+    \mathit{pte.R} \lor \mathit{pte.W} \lor \mathit{pte.X}$
+  \Comment{page table entry node type}
+  \State $\mathit{sm} \gets
+    \mathit{PTE\_R} \lor \mathit{PTE\_W} \lor \mathit{PTE\_X}$
+  \Comment{default self map page table entry}
+  \If {$\mathit{sfeature.P} \land \mathit{scontrol.P} \land \mathit{type} =
+      \mathit{virtual}$}
+    \State $\mathit{pa} \gets \mathit{pte.ppn} << \mathit{po\_shift}$
+    \State $(\mathit{sm},\mathit{level}) \gets \Call{find\_page}{%
+      \mathit{physical},\mathit{num\_levels}-1,\mathit{sptr.ppn},\mathit{pa}}$
+    \Comment{load self mapping}
+    \If {$(\mathit{pte.ppn} \ne \mathit{sm.ppn}) \lor (\lnot\mathit{leaf}
+        \land \lnot\mathit{sm.T})$}
+      \State \textbf{raise} \textbf{fault}
+      \Comment{invalid self mapping}
+    \EndIf
+  \EndIf
+  \If {$\lnot\mathit{leaf} \land \mathit{level} > 0$}
+    \State \Return $\Call{find\_page}{\mathit{type},\mathit{level}-1,%
+      \mathit{pte.ppn},\mathit{ta}}$
+    \Comment{follow pointer entry}
+  \ElsIf {$\lnot\mathit{leaf}$}
+    \State \textbf{raise} \textbf{fault}
+    \Comment{leaf entry not found}
+  \EndIf
+  \State \Return $(\mathit{pte}, \mathit{sm}, \mathit{level})$
+  \Comment{return page table entry}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
 
- \Function{translate}{$op,va$}
+\begin{algorithm}[H]
+\footnotesize
+\caption{translate virtual address to physical address}
+\begin{algorithmic}[1]
+\Function{translate}{$\mathit{op}, \mathit{va}$}
   \If {$\lnot\Call{check\_canonical}{\mathit{va}, \mathit{va\_bits}}$}
     \Comment{check address is sign-extended}
     \State \textbf{raise} \textbf{fault}
   \EndIf
-  \State $\mathit{ppn} \gets \mathit{sptr.ppn}$
-  \Comment{fetch system page table root pointer}
-  \For{$\mathit{level} \gets 1$ to $\mathit{num\_levels}$}
-      \State $\mathit{shift} \gets (\mathit{num\_levels} - \mathit{level}) \times
-        \mathit{pn\_bits} + \mathit{po\_bits}$
-      \Comment{calculate page number shift}
-      \State $\mathit{vpn} \gets (\mathit{va} >> \mathit{shift}) \land
-        ((1 << \mathit{pn\_bits}) - 1)$
-      \Comment{calculate virtual page number}
-      \State $\mathit{pte} \gets \Call{load}{(\mathit{ppn}
-        << \mathit{po\_bits}) + \mathit{vpn} \times \mathit{sizeof(PTE)}}$
-      \Comment{load page table entry}
-      \If {$(\lnot\mathit{pte.V}) \lor (\mathit{pte.W} \land \lnot\mathit{pte.R})$}
-        \Comment{check valid and write must have read}
-        \State \textbf{raise} \textbf{fault}
-      \ElsIf {$\lnot(\mathit{pte.R} \lor \mathit{pte.W} \lor \mathit{pte.X})$}
-      \Comment{no read, write or exec is a pointer}
-        \State $\mathit{ppn} \gets \mathit{pte.ppn}$
-        \Comment{set pointer to next level}
-        \State \textbf{continue}
-      \ElsIf{$(\mathit{op.R} \land \lnot\mathit{pte.R}) \lor (\mathit{op.W} \land
-        \lnot\mathit{pte.W}) \lor (\mathit{op.X} \land \lnot\mathit{pte.X})$}
-        \Comment{check permissions}
-        \State \textbf{raise} \textbf{fault}
-      \ElsIf {$(\mathit{op.R} \land \lnot\mathit{pte.A}) \lor
-          (\mathit{op.W} \land \lnot\mathit{pte.D})$}
-        \Comment{check accessed or dirty}
-        \State \textbf{raise} \textbf{fault}
-      \ElsIf {$\lnot\mathit{sstatus.U} \land \lnot\mathit{scontrol.E} \land
-          \mathit{pte.U} \land \mathit{op.X}$}
-        \Comment{check execute user page}
-        \State \textbf{raise} \textbf{fault}
-      \ElsIf {$\lnot\mathit{sstatus.U} \land \lnot\mathit{scontrol.A} \land
-          \mathit{pte.U} \land (\mathit{op.R} \lor \mathit{op.W})$}
-        \Comment{check access user page}
-        \State \textbf{raise} \textbf{fault}
-      \ElsIf {$\mathit{pte.ppn} \land ((1 << (\mathit{shift} -
-          \mathit{po\_bits})) - 1) \ne 0$}
-        \Comment{check superpage is aligned}
-        \State \textbf{raise} \textbf{fault}
-      \EndIf
-      \State \Return $(\mathit{pte.ppn} << \mathit{po\_bits}) + (\mathit{va} \land
-      ((1 << (\mathit{level} \times \mathit{pn\_bits} + \mathit{po\_bits})) - 1))$
-  \EndFor
- \EndFunction
-
+  \State $(\mathit{pte}, \mathit{sm}, \mathit{level}) \gets \Call{find\_page}{
+    \mathit{virtual},\mathit{num\_levels}-1,\mathit{sptr.ppn},\mathit{va}}$
+  \Comment{find page table entry}
+  \State $\mathit{mask} \gets
+    ((1 << (\mathit{level} \times \mathit{pn\_bits} + \mathit{po\_bits})) - 1)$
+  \State $\mathit{caps} \gets \mathit{colorperms[pte.color]}$
+  \State $\mathit{user} \gets
+    \lnot((\mathit{va} >> (\mathit{va\_bits} - 1)) \land 1)$
+  \If {$(\lnot\mathit{pte.V}) \lor (\mathit{pte.W} \land \lnot\mathit{pte.R})$}
+    \State \textbf{raise} \textbf{fault}
+    \Comment{invalid write must have read}
+  \ElsIf{$(\mathit{op.R} \land \lnot\mathit{pte.R}) \lor (\mathit{op.W} \land
+    \lnot\mathit{pte.W}) \lor (\mathit{op.X} \land \lnot\mathit{pte.X})$}
+    \State \textbf{raise} \textbf{fault}
+    \Comment{invalid permissions}
+  \ElsIf{$(\mathit{sm.R} \land \lnot\mathit{pte.R}) \lor (\mathit{sm.W} \land
+    \lnot\mathit{pte.W}) \lor (\mathit{sm.X} \land \lnot\mathit{pte.X})$}
+    \State \textbf{raise} \textbf{fault}
+    \Comment{invalid self map}
+  \ElsIf{$(\mathit{cap.R} \land \mathit{pte.R}) \lor (\mathit{cap.W} \land
+    \mathit{pte.W}) \lor (\mathit{cap.X} \land \mathit{pte.X})$}
+    \State \textbf{raise} \textbf{fault}
+    \Comment{invalid capabilities}
+  \ElsIf {$(\mathit{op.R} \land \lnot\mathit{pte.A}) \lor
+      (\mathit{op.W} \land \lnot\mathit{pte.D})$}
+    \State \textbf{raise} \textbf{fault}
+    \Comment{invalid accessed or dirty}
+  \ElsIf {$\lnot\mathit{sstatus.U} \land \lnot\mathit{scontrol.E} \land
+      \mathit{user} \land \mathit{op.X}$}
+    \State \textbf{raise} \textbf{fault}
+    \Comment{invalid user page execute}
+  \ElsIf {$\lnot\mathit{sstatus.U} \land \lnot\mathit{scontrol.A} \land
+      \mathit{user} \land \mathit{op.(R \lor W})$}
+    \State \textbf{raise} \textbf{fault}
+    \Comment{invalid user page access}
+  \ElsIf {($\mathit{pte.ppn} << \mathit{po\_bits}) \land \mathit{mask} \ne 0$}
+    \State \textbf{raise} \textbf{fault}
+    \Comment{invalid superpage alignment}
+  \EndIf
+  \State \Return $(\mathit{pte.ppn} << \mathit{po\_bits}) +
+    (\mathit{va} \land \mathit{mask})$
+\EndFunction
 \end{algorithmic}
 \end{algorithm}
+
+\newpage
+\section{Capabilities}
+
+the architecture provides an optional capabilities extension that
+includes several control and status registers for permissions and
+capabilities enabled by \emph{color} bits in page table entries.
+
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{no.} & \textbf{name} & \textbf{description} \\
+\hline
+\multicolumn{3}{|l|}{\textbf{capability registers}} \\ \hline
+\texttt{0x40} & colorperms     & color permissions \\
+\texttt{0x41} & colorcaps      & color capabilities \\
+\multicolumn{3}{|l|}{\textbf{capability matrix}} \\ \hline
+\texttt{0x50} & colormatrix0   & color matrix for color 0 \\
+\dots & \dots & \dots \\
+\texttt{0x5f} & colormatrix15  & color matrix for color 15 \\
+\hline
+\end{tabular}
+\caption{capability registers}
+\label{tab:capability-registers}
+\end{table}
+
+\subsubsection{color permissions (\texttt{colorperms})}
+\texttt{colorperms} is a read-write register containing an array
+of 16 elements holding 4 page table permission mask bits (negated).
+when set these bits mask page table permission bits based on the
+page table entry \emph{color} field. setting bits masks permissions.
+the default of zero as unmasked is to provide full access by
+default for non capability aware system software.
+
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\foreach \x in {1,...,15} {
+\draw [black!95] (30-\x*2.0,0)    rectangle (32-\x*2,1);
+}
+\node [font=\tiny,anchor=base] at (1,0.3)  {\emph{perm15}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\tiny,anchor=base] at (1.5,1.25)  {\textsf{60}};
+\node [font=\tiny,anchor=base] at (31,0.3)  {\emph{perm0}};
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{3}};
+\end{tikzpicture}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\draw [black!95] (0,0)    rectangle (2,1);
+\draw [black!95] (1.5,0)    rectangle (2,1);
+\node [font=\tiny,anchor=base] at (1.75,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (1.75,0.3)  {\texttt{R}};
+\draw [black!95] (1.0,0)    rectangle (1.5,1);
+\node [font=\tiny,anchor=base] at (1.25,1.25)  {\textsf{1}};
+\node [font=\tiny,anchor=base] at (1.25,0.3)  {\texttt{W}};
+\draw [black!95] (0.5,0)    rectangle (1.0,1);
+\node [font=\tiny,anchor=base] at (0.75,1.25)  {\textsf{2}};
+\node [font=\tiny,anchor=base] at (0.75,0.3)  {\texttt{X}};
+\draw [black!95] (0.0,0)    rectangle (0.5,1);
+\node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{3}};
+\node [font=\tiny,anchor=base] at (0.25,0.3)  {\texttt{T}};
+\end{tikzpicture}
+\caption{color permission structure.}
+\label{fig:color-permission-structure}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{no.} & \textbf{mnem} & \textbf{name} & \textbf{description} \\
+\hline
+\verb|1 << 0| & R   & \textasciitilde read       & read permission for \emph{color-x} \\
+\verb|1 << 1| & W   & \textasciitilde write      & write permission for \emph{color-x} \\
+\verb|1 << 2| & X   & \textasciitilde execute    & execute permission for \emph{color-x} \\
+\verb|1 << 3| & P   & \textasciitilde physical   & physical permission for \emph{color-x} \\
+\hline
+\end{tabular}
+\caption{color permission descriptions.}
+\label{tab:color-permission-descriptions}
+\end{table}
+
+\newpage
+\subsubsection{color capabilities (\texttt{colorcaps})}
+\texttt{colorcaps} is a read-write register containing an array of 16
+elements holding 4 capability bits (negated). when set these bits mask
+access to the \emph{debug, system, capabilites,} and \emph{hypervisor}
+sets of registers and instructions from program text pages based on
+the page table entry \emph{color} field. setting bits masks capabilities.
+the default of zero as unmasked is to provide full access by default for
+non capability aware system software.
+
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\foreach \x in {1,...,15} {
+\draw [black!95] (30-\x*2.0,0)    rectangle (32-\x*2,1);
+}
+\node [font=\tiny,anchor=base] at (1,0.3)  {\emph{set15}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\tiny,anchor=base] at (1.5,1.25)  {\textsf{60}};
+\node [font=\tiny,anchor=base] at (31,0.3)  {\emph{set0}};
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{3}};
+\end{tikzpicture}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\draw [black!95] (0,0)    rectangle (2,1);
+\draw [black!95] (1.5,0)    rectangle (2,1);
+\node [font=\tiny,anchor=base] at (1.75,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (1.75,0.3)  {\texttt{D}};
+\draw [black!95] (1.0,0)    rectangle (1.5,1);
+\node [font=\tiny,anchor=base] at (1.25,1.25)  {\textsf{1}};
+\node [font=\tiny,anchor=base] at (1.25,0.3)  {\texttt{S}};
+\draw [black!95] (0.5,0)    rectangle (1.0,1);
+\node [font=\tiny,anchor=base] at (0.75,1.25)  {\textsf{2}};
+\node [font=\tiny,anchor=base] at (0.75,0.3)  {\texttt{C}};
+\draw [black!95] (0.0,0)    rectangle (0.5,1);
+\node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{3}};
+\node [font=\tiny,anchor=base] at (0.25,0.3)  {\texttt{H}};
+\end{tikzpicture}
+\caption{color capabilities structure.}
+\label{fig:color-capabilities-structure}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{no.} & \textbf{mnem} & \textbf{name} & \textbf{description} \\
+\hline
+\verb|1 << 0| & D   & \textasciitilde debug      & debug access from \emph{color-x} \\
+\verb|1 << 1| & S   & \textasciitilde system     & system access from \emph{color-x} \\
+\verb|1 << 2| & C   & \textasciitilde capability & capability access from \emph{color-x} \\
+\verb|1 << 3| & H   & \textasciitilde hypervisor & hypervisor access from \emph{color-x} \\
+\hline
+\end{tabular}
+\caption{color permission descriptions.}
+\label{tab:color-permission-descriptions}
+\end{table}
+
+\subsubsection{color matrix (\texttt{colormatrix0\dots colormatrix15})}
+\texttt{colormatrix0\dots colormatrix15} are read-write registers
+containing arrays of 16 elements holding 4 (negated) permission bits.
+when set these bits mask page table permission bits or branch execute
+permissions from executable pages based on the source page table entry
+\emph{color-x}, with source color in the register name, for memory
+access or branch to target pages with page table entry \emph{color-y},
+with target color in the array index within each register.
+
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\foreach \x in {1,...,15} {
+\draw [black!95] (30-\x*2.0,0)    rectangle (32-\x*2,1);
+}
+\node [font=\tiny,anchor=base] at (1,0.3)  {\emph{perm15}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\tiny,anchor=base] at (1.5,1.25)  {\textsf{60}};
+\node [font=\tiny,anchor=base] at (31,0.3)  {\emph{perm0}};
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{3}};
+\end{tikzpicture}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\draw [black!95] (0,0)    rectangle (2,1);
+\draw [black!95] (1.5,0)    rectangle (2,1);
+\node [font=\tiny,anchor=base] at (1.75,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (1.75,0.3)  {\texttt{R}};
+\draw [black!95] (1.0,0)    rectangle (1.5,1);
+\node [font=\tiny,anchor=base] at (1.25,1.25)  {\textsf{1}};
+\node [font=\tiny,anchor=base] at (1.25,0.3)  {\texttt{W}};
+\draw [black!95] (0.5,0)    rectangle (1.0,1);
+\node [font=\tiny,anchor=base] at (0.75,1.25)  {\textsf{2}};
+\node [font=\tiny,anchor=base] at (0.75,0.3)  {\texttt{X}};
+\draw [black!95] (0.0,0)    rectangle (0.5,1);
+\node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{3}};
+\end{tikzpicture}
+\caption{color matrix structure.}
+\label{fig:color-matrix-structure}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{no.} & \textbf{mnem} & \textbf{name} & \textbf{description} \\
+\hline
+\verb|1 << 0| & R   & \textasciitilde read   &
+load permission from \emph{color-x} to \emph{color-y} \\
+\verb|1 << 1| & W   & \textasciitilde write  &
+store permission from \emph{color-x} to \emph{color-y} \\
+\verb|1 << 2| & X   & \textasciitilde execute &
+branch permission from \emph{color-x} to \emph{color-y} \\
+\hline
+\end{tabular}
+\caption{color matrix desciptions.}
+\label{tab:color-matrix-desciptions}
+\end{table}
 
 \chapter{Instructions} \label{sec:instructions}
 
