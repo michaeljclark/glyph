@@ -9,6 +9,7 @@
 \usepackage{caption}
 \usepackage{tgheros}
 \usepackage{bm}
+\usepackage{enumitem}
 \usepackage{cleveref}
 \usepackage{tabularx}
 \usepackage{tablefootnote}
@@ -1731,39 +1732,16 @@ this example omits hazard detection and forwarding logic for the sake of simplic
 
 \chapter{System}
 
-\section{System registers}
-the architecture provides several status and control registers for
-floating-point status and control, time, trap handling, address translation,
-timers, inter-thread interrupts, and debug.
+\section{User-level registers}
+the architecture provides several user-legel status and control registers
+for floating-point status and control, clock time, clock frequency,
+thread address and thread domain.
 \\
 \par\noindent
-user-level and privileged system status and control registers can be read
-and written using the \texttt{sysread}, \texttt{syswrite}, \texttt{sysset},
-and \texttt{sysclear} instructions. user-level and privileged trap status
-and contol registers, system status and control registers and debug registers
-are available in contexts where their capability set is enabled.
-\\
-\par\noindent
-the architectural status and control registers are divided into
-four categories:
-\\
-\par\noindent
-\begin{table}[H]
-\centering
-\footnotesize
-\begin{tabularx}{120mm}{|l|X|}
-\hline
-\textbf{name} & \textbf{description} \\
-\hline
-user   & floating-point control, status, clock time and frequency. \\
-trap   & trap control, status, context, handlers and vectors. \\
-system & system control, status, address translation and interrupts. \\
-debug  & preformance counters and debug monitoring. \\
-\hline
-\end{tabularx}
-\caption{system register categories}
-\label{tab:system-register-categories}
-\end{table}
+user-level status and control registers can be read and written using the
+\texttt{sysread}, \texttt{syswrite}, \texttt{sysset}, and \texttt{sysclear}
+instructions. user-level status and control registers are available in
+contexts where their associated bit is enabled in \texttt{scontrol}.
 
 \subsubsection{user-level registers}
 the following table lists the user-level registers:
@@ -1788,90 +1766,16 @@ the following table lists the user-level registers:
 \end{table}
 
 \newpage
-\subsubsection{privileged trap registers}
-the following table lists the privileged trap registers:
-
-\begin{table}[H]
-\centering
-\footnotesize
-\begin{tabularx}{120mm}{|l|l|X|}
-\hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
-\hline
-\texttt{0x10} & tstatus   & trap status \\
-\texttt{0x11} & tcontrol  & trap control \\
-\texttt{0x12} & tscratch  & trap scratch \\
-\texttt{0x13} & tvalue    & trap value \\
-\texttt{0x14} & tcause    & trap cause \\
-\texttt{0x15} & tack      & trap acknowledge \\
-\texttt{0x16} & tepc      & trap exception program counter  \\
-\texttt{0x17} & teib      & trap exception immediate base \\
-\texttt{0x18} & thpc      & trap handler program counter  \\
-\texttt{0x19} & thib      & trap handler immediate base \\
-\hline
-\end{tabularx}
-\caption{privileged trap registers}
-\label{tab:privileged-trap-registers}
-\end{table}
-
-\subsubsection{privileged system registers}
-the following table lists the privileged system registers:
-
-\begin{table}[H]
-\centering
-\footnotesize
-\begin{tabularx}{120mm}{|l|l|X|}
-\hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
-\hline
-\texttt{0x21} & scontrol  & system control \\
-\texttt{0x22} & sfeature  & system feature \\
-\texttt{0x23} & sptr      & system page table root \\
-\texttt{0x24} & saddr     & system thread address \\
-\texttt{0x25} & sdomain   & system domain address \\
-\texttt{0x26} & starget   & system target address \\
-\texttt{0x27} & smessage  & system message interrupt \\
-\texttt{0x28} & stimer    & system deadline timer \\
-\texttt{0x29} & sie       & system interrupt enable \\
-\texttt{0x2a} & sip       & system interrupt pending \\
-\hline
-\end{tabularx}
-\caption{privileged system registers}
-\label{tab:privileged-system-registers}
-\end{table}
-
-\subsubsection{privileged debug registers}
-the following table lists the privileged debug registers:
-
-\begin{table}[H]
-\centering
-\footnotesize
-\begin{tabularx}{120mm}{|l|l|X|}
-\hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
-\hline
-\texttt{0x30} & dstatus    & debug status \\
-\texttt{0x32} & dcycle     & debug cycle counter \\
-\texttt{0x33} & dinst      & debug instruction counter \\
-\texttt{0x34} & dstop      & debug stop instruction \\
-\texttt{0x35} & dfetch     & debug monitor fetch address \\
-\texttt{0x36} & dread      & debug monitor read address \\
-\texttt{0x37} & dwrite     & debug monitor write address \\
-\hline
-\end{tabularx}
-\caption{privileged debug registers}
-\label{tab:privileged-debug-registers}
-\end{table}
-
-\newpage
-\subsection{user-level registers}
-the section describes the user-level registers.
+\subsection{floating-point math registers}
+the section describes the user-level floating-point math registers.
 
 \subsubsection{floating-point status (\texttt{fpstatus})}
-\texttt{fpstatus} contains status information for floating-point
-operations. the \texttt{I, Z, U, O,} and \texttt{P} fields are
-read-write and contain accrued floating-point exceptions.
+\texttt{fpstatus} is a read-only register containing status
+information for floating-point operations. the \texttt{I, Z, U, O,}
+and \texttt{P} fields contain accrued floating-point exceptions.
+this register is visible if \texttt{syscontrol.F} is enabled.
 \\
+\par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
@@ -1910,10 +1814,12 @@ read-write and contain accrued floating-point exceptions.
 \end{table}
 
 \subsubsection{floating-point control (\texttt{fpcontrol})}
-\texttt{fpcontrol} contains control information for floating-point
-operations. the \texttt{RM} field is a read-write and contains
-the current floating-point rounding mode.
+\texttt{fpcontrol} is a read-write register containing control
+information for floating-point operations. the \texttt{RM} field
+contains the current floating-point rounding mode.
+this register is visible if \texttt{syscontrol.F} is enabled.
 \\
+\par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (30,0)    rectangle (32,1);
@@ -1939,14 +1845,118 @@ the current floating-point rounding mode.
 \label{tab:floating-point-control-round-mode-field}
 \end{table}
 
+\newpage
+\subsection{clock and frequency registers}
+the section describes the user-level clock and frequency registers.
+
 \subsubsection{clock time (\texttt{ctime})}
 \texttt{ctime} is a read-only register containing the wall-clock
 tick counter since power on in clock tick units denoted by \texttt{cfreq}.
+this register is visible if \texttt{syscontrol.T} is enabled.
 
 \subsubsection{clock frequency (\texttt{cfreq})}
 \texttt{cfreq} is a read-only register containing the wall-clock
 tick interval in picoseconds; \(\frac{10^{12}}{f} \) where \( f \)
 is the frequency in Hertz (Hz).
+this register is visible if \texttt{syscontrol.T} is enabled.
+
+\subsection{address and domain registers}
+the section describes the user-level address and domain registers.
+
+\subsubsection{thread address (\texttt{addr})}
+\texttt{addr} is a read-only register containing an alias of the unique
+system-wide topological address for this thread from \texttt{saddr}.
+this register is visible if \texttt{syscontrol.D} is enabled.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (0.5,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (1.0,1.25)  {\textsf{62}};
+\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{topological address}};
+\node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{0}};
+\end{tikzpicture}
+
+\subsubsection{domain address (\texttt{domain})}
+\texttt{domain} is a read-only register containing an alias of the
+system-wide domain address for this thread from \texttt{sdomain}.
+this register is visible if \texttt{syscontrol.D} is enabled.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (0.5,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (1.0,1.25)  {\textsf{62}};
+\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{domain address}};
+\node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{1}};
+\end{tikzpicture}
+
+\newpage
+\section{System registers}
+the architecture provides several privileged status and control
+registers for trap handling, system configuration, address translation,
+timers, interrupts, and debugging.
+\\
+\par\noindent
+privileged system status and control registers can be read and written
+using the \texttt{sysread}, \texttt{syswrite}, \texttt{sysset}, and
+\texttt{sysclear} instructions. privileged system registers are accessible
+from executable pages with a supervisor or physical address spaces.
+
+\subsubsection{privileged registers}
+the following table lists the privileged trap, system and debug registers:
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabularx}{120mm}{|l|l|X|}
+\hline
+\textbf{no.} & \textbf{name} & \textbf{description} \\
+\hline
+\multicolumn{3}{|l|}{\textbf{privileged trap registers}} \\
+\hline
+\texttt{0x10} & tstatus   & trap status \\
+\texttt{0x11} & tcontrol  & trap control \\
+\texttt{0x12} & tscratch  & trap scratch \\
+\texttt{0x13} & tvalue    & trap value \\
+\texttt{0x14} & tcause    & trap cause \\
+\texttt{0x15} & tack      & trap acknowledge \\
+\texttt{0x16} & tepc      & trap exception program counter  \\
+\texttt{0x17} & teib      & trap exception immediate base \\
+\texttt{0x18} & thpc      & trap handler program counter  \\
+\texttt{0x19} & thib      & trap handler immediate base \\
+\hline
+\multicolumn{3}{|l|}{\textbf{privileged system registers}} \\
+\hline
+\texttt{0x21} & scontrol  & system control \\
+\texttt{0x22} & sfeature  & system feature \\
+\texttt{0x23} & sptr      & system page table root \\
+\texttt{0x24} & saddr     & system thread address \\
+\texttt{0x25} & sdomain   & system domain address \\
+\texttt{0x26} & starget   & system target address \\
+\texttt{0x27} & smessage  & system message interrupt \\
+\texttt{0x28} & stimer    & system deadline timer \\
+\texttt{0x29} & sie       & system interrupt enable \\
+\texttt{0x2a} & sip       & system interrupt pending \\
+\hline
+\multicolumn{3}{|l|}{\textbf{privileged debug registers}} \\
+\hline
+\texttt{0x30} & dstatus    & debug status \\
+\texttt{0x32} & dcycle     & debug cycle counter \\
+\texttt{0x33} & dinst      & debug instruction counter \\
+\texttt{0x34} & dstop      & debug stop instruction \\
+\texttt{0x35} & dfetch     & debug monitor fetch address \\
+\texttt{0x36} & dread      & debug monitor read address \\
+\texttt{0x37} & dwrite     & debug monitor write address \\
+\hline
+\end{tabularx}
+\caption{privileged registers}
+\label{tab:privileged-registers}
+\end{table}
 
 \newpage
 \subsection{privileged trap registers}
@@ -1957,6 +1967,7 @@ the section describes the privileged trap registers.
 the \texttt{T} field indicates whether a timer interrupt is pending.
 the \texttt{V} field indicates whether a virtual interrupt is pending.
 \\
+\par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
@@ -1987,6 +1998,7 @@ the \texttt{V} field indicates whether a virtual interrupt is pending.
 \texttt{I} field is read-write and controls whether system interrupts
 are enabled for this hardware thread.
 \\
+\par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
@@ -2022,10 +2034,9 @@ and may contain:
 \item the system clock time for \emph{timer interrupts}.
 \end{itemize}
 
-\newpage
 \subsubsection{trap cause (\texttt{tcause})}
 \texttt{tcause} is a read-only register that contains the cause of the
-current trap, and may contain:
+current trap.
 
 \begin{table}[h]
 \centering
@@ -2086,26 +2097,30 @@ the section describes the privileged system registers.
 
 \subsubsection{system control (\texttt{scontrol})}
 \texttt{scontrol} is a read-write register containing system control bits.
-the \texttt{A} field indicates the user address space access disable feature is enabled.
-the \texttt{E} field indicates the user address space execute disable feature is enabled.
-the \texttt{P} field indicates the physical permissions feature is enabled.
-the \texttt{C} field indicates the capabilities check feature is enabled.
-\\
-\par\noindent
+
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{A}};
+\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{F}};
 \draw [black!95] (30,0)    rectangle (31,1);
 \node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
-\node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{E}};
+\node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{T}};
 \draw [black!95] (29,0)    rectangle (30,1);
 \node [font=\tiny,anchor=base] at (29.5,1.25)  {\textsf{2}};
-\node [font=\small,anchor=base] at (29.5,0.25)  {\texttt{P}};
+\node [font=\small,anchor=base] at (29.5,0.25)  {\texttt{D}};
 \draw [black!95] (28,0)    rectangle (29,1);
 \node [font=\tiny,anchor=base] at (28.5,1.25)  {\textsf{3}};
-\node [font=\small,anchor=base] at (28.5,0.25)  {\texttt{C}};
+\node [font=\small,anchor=base] at (28.5,0.25)  {\texttt{A}};
+\draw [black!95] (27,0)    rectangle (28,1);
+\node [font=\tiny,anchor=base] at (27.5,1.25)  {\textsf{4}};
+\node [font=\small,anchor=base] at (27.5,0.25)  {\texttt{E}};
+\draw [black!95] (26,0)    rectangle (27,1);
+\node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{5}};
+\node [font=\small,anchor=base] at (26.5,0.25)  {\texttt{P}};
+\draw [black!95] (25,0)    rectangle (26,1);
+\node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{6}};
+\node [font=\small,anchor=base] at (25.5,0.25)  {\texttt{C}};
 \end{tikzpicture}
 
 \begin{table}[h]
@@ -2115,10 +2130,13 @@ the \texttt{C} field indicates the capabilities check feature is enabled.
 \hline
 \textbf{no.} & \textbf{name} & \textbf{description} \\
 \hline
-\verb|1 << 0| & A   & user address space access disable feature enabled \\
-\verb|1 << 1| & E   & user address space execute disable feature enabled \\
-\verb|1 << 2| & P   & physical permissions feature enabled \\
-\verb|1 << 3| & C   & capabilities check feature enabled \\
+\verb|1 << 0| & F   & floating-point math enabled \\
+\verb|1 << 1| & T   & user clock and frequency enabled \\
+\verb|1 << 2| & D   & user address and domain enabled \\
+\verb|1 << 3| & A   & user address space access disable enabled \\
+\verb|1 << 4| & E   & user address space execute disable enabled \\
+\verb|1 << 5| & P   & physical permissions check enabled \\
+\verb|1 << 6| & C   & capabilities check enabled \\
 \hline
 \end{tabular}
 \caption{system control fields}
@@ -2127,26 +2145,30 @@ the \texttt{C} field indicates the capabilities check feature is enabled.
 
 \subsubsection{system feature (\texttt{sfeature})}
 \texttt{sfeature} is a read-only register containing system feature bits.
-the \texttt{A} field indicates the user address space access disable feature is present.
-the \texttt{E} field indicates the user address space execute disable feature is present.
-the \texttt{P} field indicates the physical permissions feature is present.
-the \texttt{C} field indicates the capabilities check feature is present.
-\\
-\par\noindent
+
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{A}};
+\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{F}};
 \draw [black!95] (30,0)    rectangle (31,1);
 \node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
-\node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{E}};
+\node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{T}};
 \draw [black!95] (29,0)    rectangle (30,1);
 \node [font=\tiny,anchor=base] at (29.5,1.25)  {\textsf{2}};
-\node [font=\small,anchor=base] at (29.5,0.25)  {\texttt{P}};
+\node [font=\small,anchor=base] at (29.5,0.25)  {\texttt{D}};
 \draw [black!95] (28,0)    rectangle (29,1);
 \node [font=\tiny,anchor=base] at (28.5,1.25)  {\textsf{3}};
-\node [font=\small,anchor=base] at (28.5,0.25)  {\texttt{C}};
+\node [font=\small,anchor=base] at (28.5,0.25)  {\texttt{A}};
+\draw [black!95] (27,0)    rectangle (28,1);
+\node [font=\tiny,anchor=base] at (27.5,1.25)  {\textsf{4}};
+\node [font=\small,anchor=base] at (27.5,0.25)  {\texttt{E}};
+\draw [black!95] (26,0)    rectangle (27,1);
+\node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{5}};
+\node [font=\small,anchor=base] at (26.5,0.25)  {\texttt{P}};
+\draw [black!95] (25,0)    rectangle (26,1);
+\node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{6}};
+\node [font=\small,anchor=base] at (25.5,0.25)  {\texttt{C}};
 \end{tikzpicture}
 
 \begin{table}[h]
@@ -2156,10 +2178,13 @@ the \texttt{C} field indicates the capabilities check feature is present.
 \hline
 \textbf{no.} & \textbf{name} & \textbf{description} \\
 \hline
-\verb|1 << 0| & A   & user address space access disable feature \\
-\verb|1 << 1| & E   & user address space execute disable feature \\
-\verb|1 << 2| & P   & physical permissions feature \\
-\verb|1 << 3| & C   & capabilities check feature \\
+\verb|1 << 0| & F   & floating-point math feature \\
+\verb|1 << 1| & T   & user clock and frequency feature \\
+\verb|1 << 2| & D   & user address and domain feature \\
+\verb|1 << 3| & A   & user address space access disable feature \\
+\verb|1 << 4| & E   & user address space execute disable feature \\
+\verb|1 << 5| & P   & physical permissions check feature \\
+\verb|1 << 6| & C   & capabilities check feature \\
 \hline
 \end{tabular}
 \caption{system feature fields}
@@ -2200,7 +2225,7 @@ address is uniquely assigned during system initialization.
 \draw [black!95] (0.5,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\tiny,anchor=base] at (1.0,1.25)  {\textsf{62}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{system topological address}};
+\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{topological address}};
 \node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{63}};
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{0}};
 \end{tikzpicture}
@@ -2217,7 +2242,7 @@ can alias. this address is assigned during context switching.
 \draw [black!95] (0.5,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\tiny,anchor=base] at (1.0,1.25)  {\textsf{62}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{system domain address}};
+\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{domain address}};
 \node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{63}};
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{1}};
 \end{tikzpicture}
@@ -2236,7 +2261,7 @@ one in the \emph{A} field is a \emph{domain address}.
 \draw [black!95] (0.5,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\tiny,anchor=base] at (1.0,1.25)  {\textsf{62}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{system target address}};
+\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{target address}};
 \node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{63}};
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{A}};
 \end{tikzpicture}
@@ -2329,6 +2354,241 @@ monitor exception} for a matching memory load address.
 \texttt{dwrite} is a read-write register containing the memory store
 address to monitor for and halt execution on and raise a \emph{debug
 monitor exception} for a matching memory store address.
+
+\newpage
+\section{Capability registers}
+
+the architecture provides an optional capabilities extension that
+includes privileged registers for permissions and capabilities
+enabled by \emph{page table color} bits in page table entries.
+\\
+\par\noindent
+capability registers can be read and written using the \texttt{sysread},
+\texttt{syswrite}, \texttt{sysset}, and \texttt{sysclear} instructions.
+privileged capability registers are available when \texttt{scontrol.C}
+is enabled and the associated executable page table colors are configured
+in \emph{colorcap}.
+\\
+\par\noindent
+the following tables list the privileged capability system parameters:
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabularx}{90mm}{|l|X|}
+\hline
+\textbf{name} & \textbf{description} \\
+\hline
+\textbf{\emph{ncol}}      & the number of architectural colors \\
+\hline
+\end{tabularx}
+\caption{capability parameters}
+\label{tab:capability-parameters}
+\end{table}
+
+\subsubsection{capability registers}
+the following tables list the privileged capability system registers:
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabularx}{120mm}{|l|l|X|}
+\hline
+\textbf{no.} & \textbf{name} & \textbf{description} \\
+\hline
+\texttt{0x40} & colorread      & color read permissions \\
+\texttt{0x41} & colorwrite     & color write permissions \\
+\texttt{0x42} & colorexec      & color exec permissions \\
+\texttt{0x43} & colorsys       & color system capabilities \\
+\texttt{0x44} & colordom       & color domain capabilities \\
+\texttt{0x45} & colorcap       & color capability capabilities \\
+\texttt{0x50...0x5f} & colormatread$[n]$   & color matrix read permissions \\
+\texttt{0x60...0x6f} & colormatwrite$[n]$   & color matrix write permissions \\
+\texttt{0x70...0x7f} & colormatexec$[n]$   & color matrix exec permissions \\
+\hline
+\end{tabularx}
+\caption{capability registers}
+\label{tab:capability-registers}
+\end{table}
+
+\newpage
+\subsection{color permission registers}
+
+this section describes the \emph{color permission registers}.
+the \emph{color permission registers} are capability registers that
+protect access to memory based on \emph{page table colors}. when the
+capabilities extension is enabled the \emph{color permission registers}
+are combined with page table permissions to limit maximum \emph{read},
+\emph{write}, or \emph{execute} permission based on page table colors.
+
+\subsubsection{color read permissions (\texttt{colorread})}
+\texttt{colorread} is a read-write register containing an array
+of \textbf{\emph{ncol}} bits containing read permissions for \emph{color-x}
+that are used to check loads from pages that have page table entries with
+matching page table colors.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (24,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
+\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{read perms}};
+\end{tikzpicture}
+
+\subsubsection{color write permissions (\texttt{colorwrite})}
+\texttt{colorwrite} is a read-write register containing an array
+of \textbf{\emph{ncol}} bits containing write permissions for \emph{color-x}
+that are used to check stores to pages that have page table entries with
+matching page table colors.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (24,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
+\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{write perms}};
+\end{tikzpicture}
+
+\subsubsection{color exec permissions (\texttt{colorexec})}
+\texttt{colorexec} is a read-write register containing an array
+of \textbf{\emph{ncol}} bits containing execute permissions for \emph{color-x}
+that are used to check execution in pages that have page table entries with
+matching page table colors.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (24,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
+\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{exec perms}};
+\end{tikzpicture}
+
+\newpage
+\subsection{color capability registers}
+
+this section describes the \emph{color capability registers}.
+the \emph{color capability registers} are capability registers that
+describe access to privileged system registers and instructions
+based on \emph{page table colors} and register or instruction category.
+when the capabilities extension is enabled the \emph{color capability
+registers} limit access to privileged system registers and instructions
+based on the system register categories: \emph{system}, \emph{domain},
+and \emph{capability}.
+
+\subsubsection{color system capabilities (\texttt{colorsys})}
+\texttt{colorsys} is a read-write register containing an array
+of \textbf{\emph{ncol}} bits containing system capabilities for \emph{color-x}
+that are used to check access to privileged trap registers,
+privileged system registers and privileged debug registers
+from executable pages that have page table entries with a matching
+page table color.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (24,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
+\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{system caps}};
+\end{tikzpicture}
+
+\subsubsection{color domain capabilities (\texttt{colordom})}
+\texttt{colordom} is a read-write register containing an array
+of \textbf{\emph{ncol}} bits containing domain capabilities for \emph{color-x}
+that are used to check access to privileged domain registers from
+executable pages that have page table entries with a matching
+page table color.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (24,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
+\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{dom caps}};
+\end{tikzpicture}
+
+\subsubsection{color capability capabilities (\texttt{colorcap})}
+\texttt{colorcap} is a read-write register containing an array
+of \textbf{\emph{ncol}} bits containing capability capabilities for \emph{color-x}
+that are used to check access to privileged capability registers from
+executable pages that have page table entries with a matching
+page table color.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (24,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
+\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{cap caps}};
+\end{tikzpicture}
+
+\newpage
+\subsection{color matrix registers}
+
+this section describes the color matrix registers. the \emph{color
+matrix registers} are permission registers that protect access to
+memory based on a combination of \emph{source} and \emph{destination}
+page table colors. when the capabilities extension is enabled the color
+matrix registers limit \emph{read}, \emph{write}, or \emph{execute}
+permission based on executable pages that have page table entries with
+source \emph{page table color} in memory accesses or branches to memory
+addresses in pages with matching \emph{page table color} index.
+
+\subsubsection{color matrix read permissions (\texttt{colormatread}$[\mathit{ncols}]$)}
+\texttt{colormatread}$[\mathit{ncols}]$ are \textbf{\emph{ncol}} read-write
+registers containing an array of \textbf{\emph{ncol}} bits with read
+permissions that are used to check loads from executable pages that have
+page table entries with a matching register number \emph{page table color}
+to memory addresses in memory pages that have page table entries with a
+matching \emph{page table color} array index.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (24,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
+\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{read perms}};
+\end{tikzpicture}
+
+\subsubsection{color matrix write permissions (\texttt{colormatwrite}$[\mathit{ncols}]$)}
+\texttt{colormatwrite}$[\mathit{ncols}]$ are \textbf{\emph{ncol}} read-write
+registers containing an array of \textbf{\emph{ncol}} bits with write
+permissions that are used to check stores from executable pages that have
+page table entries with a matching register number \emph{page table color}
+to memory addresses in memory pages that have page table entries with a
+matching \emph{page table color} array index.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (24,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
+\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{write perms}};
+\end{tikzpicture}
+
+\subsubsection{color matrix exec permissions (\texttt{colormatexec}$[\mathit{ncols}]$)}
+\texttt{colormatexec}$[\mathit{ncols}]$ are \textbf{\emph{ncol}} read-write
+registers containing an array of \textbf{\emph{ncol}} bits with exec
+permissions that are used to check branches from executable pages that have
+page table entries with a matching register number \emph{page table color}
+to branch addresses in executable pages that have page table entries with a
+matching \emph{page table color} array index.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (24,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
+\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{exec perms}};
+\end{tikzpicture}
 
 \newpage
 \section{Address translation}
@@ -2655,165 +2915,6 @@ are as follows:
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
-
-\newpage
-\section{Capabilities}
-
-the architecture provides an optional capabilities extension that
-includes several control registers for permissions and capabilities
-enabled by \emph{color} bits in page table entries.
-\\
-\par\noindent
-the following tables list the capability system parameters and registers:
-
-\begin{table}[H]
-\centering
-\footnotesize
-\begin{tabularx}{90mm}{|l|X|}
-\hline
-\textbf{name} & \textbf{description} \\
-\hline
-\textbf{\emph{ncol}}      & the number of architectural colors \\
-\hline
-\end{tabularx}
-\caption{capability parameters}
-\label{tab:capability-parameters}
-\end{table}
-
-\begin{table}[H]
-\centering
-\footnotesize
-\begin{tabularx}{120mm}{|l|l|X|}
-\hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
-\hline
-\texttt{0x40} & colorread      & color read permissions \\
-\texttt{0x41} & colorwrite     & color write permissions \\
-\texttt{0x42} & colorexec      & color exec permissions \\
-\texttt{0x43} & colorsys       & color system capabilities \\
-\texttt{0x44} & colorcap       & color capability capabilities \\
-\texttt{0x50...0x5f} & colormatread$[n]$   & color matrix read permissions \\
-\texttt{0x60...0x6f} & colormatwrite$[n]$   & color matrix write permissions \\
-\texttt{0x70...0x7f} & colormatexec$[n]$   & color matrix exec permissions \\
-\hline
-\end{tabularx}
-\caption{capability registers}
-\label{tab:capability-registers}
-\end{table}
-
-\subsubsection{color read permissions (\texttt{colorread})}
-\texttt{colorread} is a read-write register containing an array
-of \textbf{\emph{ncol}} bits containing read permissions for \emph{color-x}
-that are used to check loads from pages with a matching color.
-\\
-\begin{tikzpicture}[scale=0.45]
-\draw [black!95] (0,0)    rectangle (32,1);
-\draw [black!95] (24,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{read perms}};
-\end{tikzpicture}
-
-\subsubsection{color write permissions (\texttt{colorwrite})}
-\texttt{colorwrite} is a read-write register containing an array
-of \textbf{\emph{ncol}} bits containing write permissions for \emph{color-x}
-that are used to check stores to pages with a matching color.
-\\
-\begin{tikzpicture}[scale=0.45]
-\draw [black!95] (0,0)    rectangle (32,1);
-\draw [black!95] (24,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{write perms}};
-\end{tikzpicture}
-
-\subsubsection{color exec permissions (\texttt{colorexec})}
-\texttt{colorexec} is a read-write register containing an array
-of \textbf{\emph{ncol}} bits containing exec permissions for \emph{color-x}
-that are used to check execution of pages with a matching color.
-\\
-\begin{tikzpicture}[scale=0.45]
-\draw [black!95] (0,0)    rectangle (32,1);
-\draw [black!95] (24,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{exec perms}};
-\end{tikzpicture}
-
-\newpage
-\subsubsection{color system capabilities (\texttt{colorsys})}
-\texttt{colorsys} is a read-write register containing an array
-of \textbf{\emph{ncol}} bits containing system capabilities for \emph{color-x}
-that are used to check access to privileged trap registers,
-privileged system registers and privileged debug registers
-from executable pages with a matching color.
-\\
-\begin{tikzpicture}[scale=0.45]
-\draw [black!95] (0,0)    rectangle (32,1);
-\draw [black!95] (24,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{system caps}};
-\end{tikzpicture}
-
-\subsubsection{color capability capabilities (\texttt{colorcap})}
-\texttt{colorcap} is a read-write register containing an array
-of \textbf{\emph{ncol}} bits containing capability capabilities for \emph{color-x}
-that are used to check access to privileged capability registers from
-executable pages with a matching color.
-\\
-\begin{tikzpicture}[scale=0.45]
-\draw [black!95] (0,0)    rectangle (32,1);
-\draw [black!95] (24,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{cap caps}};
-\end{tikzpicture}
-
-\subsubsection{color matrix read permissions (\texttt{colormatread}$[\mathit{ncols}]$)}
-\texttt{colormatread}$[\mathit{ncols}]$ are \textbf{\emph{ncol}} read-write
-registers containing an array of \textbf{\emph{ncol}} bits with read
-permissions that are used to check loads from executable pages with matching
-register source \emph{color-x} from addresses in pages with matching
-index target \emph{color-y}.
-\\
-\begin{tikzpicture}[scale=0.45]
-\draw [black!95] (0,0)    rectangle (32,1);
-\draw [black!95] (24,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{read perms}};
-\end{tikzpicture}
-
-\subsubsection{color matrix write permissions (\texttt{colormatwrite}$[\mathit{ncols}]$)}
-\texttt{colormatwrite}$[\mathit{ncols}]$ are \textbf{\emph{ncol}} read-write
-registers containing an array of \textbf{\emph{ncol}} bits with write
-permissions that are used to check stores from executable pages with matching
-register number \emph{color-x} to addresses in pages with matching
-index target \emph{color-y}.
-\\
-\begin{tikzpicture}[scale=0.45]
-\draw [black!95] (0,0)    rectangle (32,1);
-\draw [black!95] (24,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{write perms}};
-\end{tikzpicture}
-
-\subsubsection{color matrix exec permissions (\texttt{colormatexec}$[\mathit{ncols}]$)}
-\texttt{colormatexec}$[\mathit{ncols}]$ are \textbf{\emph{ncol}} read-write
-registers containing an array of \textbf{\emph{ncol}} bits with exec
-permissions that are used to check branches from executable pages with
-matching register source \emph{color-x} to executable pages with
-matching index target \emph{color-y}.
-\\
-\begin{tikzpicture}[scale=0.45]
-\draw [black!95] (0,0)    rectangle (32,1);
-\draw [black!95] (24,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{exec perms}};
-\end{tikzpicture}
 
 \chapter{Instructions} \label{sec:instructions}
 
