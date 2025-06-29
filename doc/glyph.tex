@@ -1733,7 +1733,7 @@ this example omits hazard detection and forwarding logic for the sake of simplic
 \chapter{System}
 
 \section{User-level registers}
-the architecture provides several user-legel status and control registers
+the architecture provides several user-level status and control registers
 for floating-point status and control, clock time, clock frequency,
 thread address and thread domain.
 \\
@@ -1910,10 +1910,10 @@ registers for trap handling, system configuration, address translation,
 timers, interrupts, and debugging.
 \\
 \par\noindent
-privileged system status and control registers can be read and written
+privileged system-level status and control registers can be read and written
 using the \texttt{sysread}, \texttt{syswrite}, \texttt{sysset}, and
 \texttt{sysclear} instructions. privileged system registers are accessible
-from executable pages with a supervisor or physical address spaces.
+from executable pages with a system or physical address spaces.
 
 \subsubsection{privileged registers}
 the following table lists the privileged trap, system and debug registers:
@@ -2666,7 +2666,7 @@ the following tables list the privileged domain system registers:
 \hline
 \multicolumn{3}{|l|}{\textbf{domain routing registers}} \\
 \hline
-\texttt{0x1000...0x100f} & domsuper$[n]$  & domain supervisor default domain \\
+\texttt{0x1000...0x100f} & domsys$[n]$    & domain system default domain \\
 \texttt{0x2000...0x200f} & domdom$[n]$    & domain domain default domain \\
 \texttt{0x3000...0x300f} & domcap$[n]$    & domain capability default domain \\
 \hline
@@ -2691,7 +2691,7 @@ this section describes the \emph{domain status registers}.
 \texttt{dom} is a read-write register containing the number of the
 currently running domain. it is initialized to zero. when the domain
 extension feature is present and enabled in \texttt{scontrol.V} this
-register is visible to the supervisor.
+register is visible to the system.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -2705,12 +2705,12 @@ register is visible to the supervisor.
 \subsection{domain routing registers}
 
 this section describes the \emph{domain routing registers} that control routing
-for context switching of supervisor traps, domain traps and capability traps.
+for context switching of system traps, domain traps and capability traps.
 
-\subsubsection{domain supervisor default domain vector (\texttt{domsuper}$[\mathit{ndom}]$)}
-\texttt{domsuper}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
-registers containing the domain number of the domain that supervisor traps
-are routed to. supervisor faults for the active domain will context switch
+\subsubsection{domain system default domain vector (\texttt{domsys}$[\mathit{ndom}]$)}
+\texttt{domsys}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
+registers containing the domain number of the domain that system traps
+are routed to. system faults for the active domain will context switch
 to the domain in this register when the domain extension is enabled in
 \texttt{scontrol.V}.
 \\
@@ -2720,7 +2720,7 @@ to the domain in this register when the domain extension is enabled in
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ndom}};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{supervisor domain}};
+\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{system domain}};
 \end{tikzpicture}
 
 \subsubsection{domain domain default domain vector (\texttt{domdom}$[\mathit{ndom}]$)}
@@ -2834,7 +2834,7 @@ structure from the root pointer to leaf entries to translate virtual
 addresses into physical addresses. the architecture introduces the
 concept of a \emph{translation address} which is an address boxed with
 an \emph{address space prefix} (\texttt{AS}) designed to provide a
-canonical address form for user and supervisor virtual addresses as
+canonical address form for user and system virtual addresses as
 well as physical addresses.
 
 \subsection{page table structure}
@@ -2935,7 +2935,7 @@ for \emph{leaf} entries.
 the page table translation system has three types of addresses:
 translation addresses, virtual addresses and physical addresses.
 page table translation addresses have a 1 --- 4 bit address space
-prefix to allow them to contain user and supervisor virtual addresses
+prefix to allow them to contain user and system virtual addresses
 as well as physical addresses. the page table translation and lookup
 virtual address structure is as follows:
 
@@ -2976,7 +2976,7 @@ virtual address structure is as follows:
 \textbf{no.} & \textbf{name} \\
 \hline
 \texttt{0b0.} & user \\
-\texttt{0b10.} & supervisor \\
+\texttt{0b10.} & system \\
 \texttt{0b110.} & physical \\
 \hline
 \end{tabular}
