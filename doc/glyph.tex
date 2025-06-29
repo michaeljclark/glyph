@@ -21,7 +21,7 @@
 \usetikzlibrary{decorations.pathreplacing, arrows.meta, positioning}
 \title{Instructions}
 
-%\AtBeginBibliography{\small}
+\AtBeginBibliography{\small}
 
 \newcommand{\fmtlogtwo}[1]{\fpeval{round(ln(#1)/ln(2), 2)}}
 
@@ -2621,11 +2621,11 @@ matching \emph{page table color} array index.
 \newpage
 \section{Domain extension}
 
-the architecture provides an optional virtual domain extension that
-includes registers for domain address translation, domain routing and
-context switching for system traps, domain traps, and capability
-traps. capability trap routing requires both the virtual domains and
-capabities extensions to be present and enabled.
+the architecture provides an optional virtual domain~\cite{barham2003xen}
+extension that includes registers for domain address translation, domain
+routing and context switching for system traps, domain traps, and
+capability traps. capability trap routing requires both the virtual
+domains and capabities extensions to be present and enabled.
 \\
 \par\noindent
 domain registers can be read and written using the \texttt{sysread},
