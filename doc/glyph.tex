@@ -2213,8 +2213,8 @@ the section describes the privileged system registers.
 
 \subsubsection{system page table root (\texttt{sptr})}
 \texttt{sptr} is a read-write register containing the page table root
-for address translation on this thread. the \emph{ASID} field
-contains the address space identifier for this thread.
+physical address for address translation on this thread. the \emph{ASID}
+field contains the address space identifier for this thread.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -2223,14 +2223,14 @@ contains the address space identifier for this thread.
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{11}};
 \node [font=\small,anchor=base] at (29,0.25)  {\emph{ASID}};
-\draw [black!95] (4,0)    rectangle (26,1);
+\draw [black!95] (8.0,0)   rectangle (26,1);
 \node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{12}};
-\node [font=\tiny,anchor=base] at (4.5,1.25)  {\textsf{55}};
-\node [font=\small,anchor=base] at (15,0.25)  {\emph{PPN}};
-\draw [black!95] (0.0,0)   rectangle (4,1);
+\node [font=\tiny,anchor=base] at (8.5,1.25)  {\textsf{47}};
+\node [font=\small,anchor=base] at (17.0,0.25)  {\emph{physical page number}};
+\draw [black!95] (0.0,0)   rectangle (8.0,1);
 \node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
-\node [font=\tiny,anchor=base] at (3.5,1.25)  {\textsf{56}};
-\node [font=\small,anchor=base] at (2.0,0.25)  {\emph{zeroes}};
+\node [font=\tiny,anchor=base] at (7.5,1.25)  {\textsf{48}};
+\node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
 \end{tikzpicture}
 
 \subsubsection{system thread address (\texttt{saddr})}
@@ -2768,7 +2768,7 @@ registers containing an array of the domain addresses associated with
 each domain. when the domain feature is present and enabled in
 \texttt{scontrol.V} then domain fault context switches will cause the
 system to copy the value for the selected default domain into \texttt{sdomain}
-for virtual interrupt delivery to the domain.
+for virtual interrupt delivery.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -2783,11 +2783,11 @@ for virtual interrupt delivery to the domain.
 
 \subsubsection{domain page table root vector (\texttt{domptr}$[\mathit{ndom}]$)}
 \texttt{domptr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
-registers containing an array of the page table root for address translation
-in each domain. when the domain feature is present and is enabled in
-\texttt{scontrol.V} then domain fault context switches will cause the
-system to copy the value for the selected default domain into \texttt{sptr}
-for address translation in the domain.
+registers containing an array of the page table root physical addresses
+for address translation in each domain. when the domain feature is present
+and is enabled in \texttt{scontrol.V} then domain fault context switches
+will cause the system to copy the value for the selected default domain
+into \texttt{sptr} for address translation.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -2796,14 +2796,14 @@ for address translation in the domain.
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{11}};
 \node [font=\small,anchor=base] at (29,0.25)  {\emph{ASID}};
-\draw [black!95] (4,0)    rectangle (26,1);
+\draw [black!95] (8.0,0)   rectangle (26,1);
 \node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{12}};
-\node [font=\tiny,anchor=base] at (4.5,1.25)  {\textsf{55}};
-\node [font=\small,anchor=base] at (15,0.25)  {\emph{PPN}};
-\draw [black!95] (0.0,0)   rectangle (4,1);
+\node [font=\tiny,anchor=base] at (8.5,1.25)  {\textsf{47}};
+\node [font=\small,anchor=base] at (17.0,0.25)  {\emph{physical page number}};
+\draw [black!95] (0.0,0)   rectangle (8.0,1);
 \node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
-\node [font=\tiny,anchor=base] at (3.5,1.25)  {\textsf{56}};
-\node [font=\small,anchor=base] at (2.0,0.25)  {\emph{zeroes}};
+\node [font=\tiny,anchor=base] at (7.5,1.25)  {\textsf{48}};
+\node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
 \end{tikzpicture}
 
 \subsubsection{domain trap handler program counter vector (\texttt{domthpc}$[\mathit{ndom}]$)}
