@@ -1753,10 +1753,18 @@ the following table lists the user-level registers:
 \hline
 \textbf{no.} & \textbf{name} & \textbf{description} \\
 \hline
+\multicolumn{3}{|l|}{\textbf{floating-point math registers}} \\
+\hline
 \texttt{0x00} & fpstatus  & floating-point status \\
 \texttt{0x01} & fpcontrol & floating-point control \\
+\hline
+\multicolumn{3}{|l|}{\textbf{clock and frequency registers}} \\
+\hline
 \texttt{0x02} & ctime     & clock time \\
 \texttt{0x03} & cfreq     & clock frequency \\
+\hline
+\multicolumn{3}{|l|}{\textbf{address and domain registers}} \\
+\hline
 \texttt{0x04} & addr      & user thread address \\
 \texttt{0x05} & domain    & user domain address \\
 \hline
@@ -2032,6 +2040,8 @@ and may contain:
 \item the faulting address for \emph{access} and \emph{page faults}.
 \item the message value for \emph{virtual interrupts}.
 \item the system clock time for \emph{timer interrupts}.
+\item the domain number for \emph{domain faults} when the domain extension
+is enabled and \emph{capability faults} when both capabilities and domain extensions are enabled.
 \end{itemize}
 
 \subsubsection{trap cause (\texttt{tcause})}
@@ -2058,6 +2068,8 @@ current trap.
 \verb|10| & page-fault-fetch   & fetch page fault \\
 \verb|11| & page-fault-load    & load page fault \\
 \verb|12| & page-fault-store   & store page fault \\
+\verb|13| & capability-fault   & capability fault \\
+\verb|14| & domain-fault       & domain fault \\
 \hline
 \multicolumn{3}{|l|}{\textbf{system interrupts}} \\ \hline
 \verb|30| & timer-interrupt     & timer interrupt \\
@@ -2121,6 +2133,9 @@ the section describes the privileged system registers.
 \draw [black!95] (25,0)    rectangle (26,1);
 \node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{6}};
 \node [font=\small,anchor=base] at (25.5,0.25)  {\texttt{C}};
+\draw [black!95] (24,0)    rectangle (25,1);
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{7}};
+\node [font=\small,anchor=base] at (24.5,0.25)  {\texttt{V}};
 \end{tikzpicture}
 
 \begin{table}[h]
@@ -2137,6 +2152,7 @@ the section describes the privileged system registers.
 \verb|1 << 4| & E   & user address space execute disable enabled \\
 \verb|1 << 5| & P   & physical permissions check enabled \\
 \verb|1 << 6| & C   & capabilities check enabled \\
+\verb|1 << 7| & V   & virtual domains enabled \\
 \hline
 \end{tabular}
 \caption{system control fields}
@@ -2169,6 +2185,9 @@ the section describes the privileged system registers.
 \draw [black!95] (25,0)    rectangle (26,1);
 \node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{6}};
 \node [font=\small,anchor=base] at (25.5,0.25)  {\texttt{C}};
+\draw [black!95] (24,0)    rectangle (25,1);
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{7}};
+\node [font=\small,anchor=base] at (24.5,0.25)  {\texttt{V}};
 \end{tikzpicture}
 
 \begin{table}[h]
@@ -2185,6 +2204,7 @@ the section describes the privileged system registers.
 \verb|1 << 4| & E   & user address space execute disable feature \\
 \verb|1 << 5| & P   & physical permissions check feature \\
 \verb|1 << 6| & C   & capabilities check feature \\
+\verb|1 << 7| & V   & virtual domains feature \\
 \hline
 \end{tabular}
 \caption{system feature fields}
@@ -2356,18 +2376,18 @@ address to monitor for and halt execution on and raise a \emph{debug
 monitor exception} for a matching memory store address.
 
 \newpage
-\section{Capability registers}
+\section{Capability extension}
 
 the architecture provides an optional capabilities extension that
-includes privileged registers for permissions and capabilities
+includes capability registers controlling permissions and capabilities
 enabled by \emph{page table color} bits in page table entries.
 \\
 \par\noindent
 capability registers can be read and written using the \texttt{sysread},
 \texttt{syswrite}, \texttt{sysset}, and \texttt{sysclear} instructions.
-privileged capability registers are available when \texttt{scontrol.C}
-is enabled and the associated executable page table colors are configured
-in \emph{colorcap}.
+the presence of capability registers is indicated by \texttt{sfeature.C}
+and they are available when \texttt{scontrol.C} is enabled and the
+associated executable page table colors are configured in \emph{colorcap}.
 \\
 \par\noindent
 the following tables list the privileged capability system parameters:
@@ -2396,15 +2416,23 @@ the following tables list the privileged capability system registers:
 \hline
 \textbf{no.} & \textbf{name} & \textbf{description} \\
 \hline
+\multicolumn{3}{|l|}{\textbf{color permission registers}} \\
+\hline
 \texttt{0x40} & colorread      & color read permissions \\
 \texttt{0x41} & colorwrite     & color write permissions \\
 \texttt{0x42} & colorexec      & color exec permissions \\
+\hline
+\multicolumn{3}{|l|}{\textbf{color capability registers}} \\
+\hline
 \texttt{0x43} & colorsys       & color system capabilities \\
 \texttt{0x44} & colordom       & color domain capabilities \\
 \texttt{0x45} & colorcap       & color capability capabilities \\
-\texttt{0x50...0x5f} & colormatread$[n]$   & color matrix read permissions \\
-\texttt{0x60...0x6f} & colormatwrite$[n]$   & color matrix write permissions \\
-\texttt{0x70...0x7f} & colormatexec$[n]$   & color matrix exec permissions \\
+\hline
+\multicolumn{3}{|l|}{\textbf{color matrix registers}} \\
+\hline
+\texttt{0x100...0x10f} & colormatread$[n]$   & color matrix read permissions \\
+\texttt{0x200...0x20f} & colormatwrite$[n]$   & color matrix write permissions \\
+\texttt{0x300...0x30f} & colormatexec$[n]$   & color matrix exec permissions \\
 \hline
 \end{tabularx}
 \caption{capability registers}
@@ -2539,8 +2567,8 @@ permission based on executable pages that have page table entries with
 source \emph{page table color} in memory accesses or branches to memory
 addresses in pages with matching \emph{page table color} index.
 
-\subsubsection{color matrix read permissions (\texttt{colormatread}$[\mathit{ncols}]$)}
-\texttt{colormatread}$[\mathit{ncols}]$ are \textbf{\emph{ncol}} read-write
+\subsubsection{color matrix read permissions (\texttt{colormatread}$[\mathit{ncol}]$)}
+\texttt{colormatread}$[\mathit{ncol}]$ are \textbf{\emph{ncol}} read-write
 registers containing an array of \textbf{\emph{ncol}} bits with read
 permissions that are used to check loads from executable pages that have
 page table entries with a matching register number \emph{page table color}
@@ -2556,8 +2584,8 @@ matching \emph{page table color} array index.
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{read perms}};
 \end{tikzpicture}
 
-\subsubsection{color matrix write permissions (\texttt{colormatwrite}$[\mathit{ncols}]$)}
-\texttt{colormatwrite}$[\mathit{ncols}]$ are \textbf{\emph{ncol}} read-write
+\subsubsection{color matrix write permissions (\texttt{colormatwrite}$[\mathit{ncol}]$)}
+\texttt{colormatwrite}$[\mathit{ncol}]$ are \textbf{\emph{ncol}} read-write
 registers containing an array of \textbf{\emph{ncol}} bits with write
 permissions that are used to check stores from executable pages that have
 page table entries with a matching register number \emph{page table color}
@@ -2573,8 +2601,8 @@ matching \emph{page table color} array index.
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{write perms}};
 \end{tikzpicture}
 
-\subsubsection{color matrix exec permissions (\texttt{colormatexec}$[\mathit{ncols}]$)}
-\texttt{colormatexec}$[\mathit{ncols}]$ are \textbf{\emph{ncol}} read-write
+\subsubsection{color matrix exec permissions (\texttt{colormatexec}$[\mathit{ncol}]$)}
+\texttt{colormatexec}$[\mathit{ncol}]$ are \textbf{\emph{ncol}} read-write
 registers containing an array of \textbf{\emph{ncol}} bits with exec
 permissions that are used to check branches from executable pages that have
 page table entries with a matching register number \emph{page table color}
@@ -2589,6 +2617,212 @@ matching \emph{page table color} array index.
 \node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{exec perms}};
 \end{tikzpicture}
+
+\newpage
+\section{Domain extension}
+
+the architecture provides an optional virtual domain extension that
+includes registers for domain address translation, domain routing and
+context switching for system traps, domain traps, and capability
+traps. capability trap routing requires both the virtual domains and
+capabities extensions to be present and enabled.
+\\
+\par\noindent
+domain registers can be read and written using the \texttt{sysread},
+\texttt{syswrite}, \texttt{sysset}, and \texttt{sysclear} instructions.
+the presence of domain registers is indicated by \texttt{sfeature.V}
+and they are available when \texttt{scontrol.V} is enabled.
+\\
+\par\noindent
+the following tables list the privileged domain system parameters:
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabularx}{90mm}{|l|X|}
+\hline
+\textbf{name} & \textbf{description} \\
+\hline
+\textbf{\emph{ndom}}      & the number of architectural domains \\
+\hline
+\end{tabularx}
+\caption{domain parameters}
+\label{tab:domain-parameters}
+\end{table}
+
+\subsubsection{domain registers}
+the following tables list the privileged domain system registers:
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabularx}{120mm}{|l|l|X|}
+\hline
+\textbf{no.} & \textbf{name} & \textbf{description} \\
+\hline
+\multicolumn{3}{|l|}{\textbf{domain status registers}} \\
+\hline
+\texttt{0x50} & dom      & domain number \\
+\hline
+\multicolumn{3}{|l|}{\textbf{domain routing registers}} \\
+\hline
+\texttt{0x1000...0x100f} & domsuper$[n]$  & domain supervisor default domain \\
+\texttt{0x2000...0x200f} & domdom$[n]$    & domain domain default domain \\
+\texttt{0x3000...0x300f} & domcap$[n]$    & domain capability default domain \\
+\hline
+\multicolumn{3}{|l|}{\textbf{domain context registers}} \\
+\hline
+\texttt{0x4000...0x400f} & domaddr$[n]$   & domain address vector \\
+\texttt{0x5000...0x500f} & domptr$[n]$    & domain page table root vector \\
+\texttt{0x6000...0x600f} & domthpc$[n]$   & domain trap handler program counter  \\
+\texttt{0x7000...0x700f} & domthib$[n]$   & domain trap handler immediate base \\
+\hline
+\end{tabularx}
+\caption{domain registers}
+\label{tab:domain-registers}
+\end{table}
+
+\newpage
+\subsection{domain status registers}
+
+this section describes the \emph{domain status registers}.
+
+\subsubsection{domain number (\texttt{dom})}
+\texttt{dom} is a read-write register containing the number of the
+currently running domain. it is initialized to zero. when the domain
+extension feature is present and enabled in \texttt{scontrol.V} this
+register is visible to the supervisor.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (24,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ndom}};
+\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{domain number}};
+\end{tikzpicture}
+
+\subsection{domain routing registers}
+
+this section describes the \emph{domain routing registers} that control routing
+for context switching of supervisor traps, domain traps and capability traps.
+
+\subsubsection{domain supervisor default domain vector (\texttt{domsuper}$[\mathit{ndom}]$)}
+\texttt{domsuper}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
+registers containing the domain number of the domain that supervisor traps
+are routed to. supervisor faults for the active domain will context switch
+to the domain in this register when the domain extension is enabled in
+\texttt{scontrol.V}.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (24,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ndom}};
+\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{supervisor domain}};
+\end{tikzpicture}
+
+\subsubsection{domain domain default domain vector (\texttt{domdom}$[\mathit{ndom}]$)}
+\texttt{domdom}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
+registers containing the domain number of the domain that domain traps
+are routed to. access to domain registers or instructions for the active
+domain will context switch to the domain in this register when the domain
+extension is enabled in \texttt{scontrol.V}.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (24,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ndom}};
+\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{domain domain}};
+\end{tikzpicture}
+
+\subsubsection{domain capability default domain vector (\texttt{domcap}$[\mathit{ndom}]$)}
+\texttt{domcap}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
+registers containing the domain number of the domain that capability traps
+are routed to. access to capability registers for the active domain will
+context switch to the domain in this register when the domain and
+capabilities extensions are both enabled in \texttt{scontrol.V} and
+\texttt{scontrol.C}.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (24,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ndom}};
+\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{capability domain}};
+\end{tikzpicture}
+
+\newpage
+\subsection{domain context registers}
+
+this section describes the \emph{domain context registers} that control
+page translation and trap entry functions for domain context switching.
+
+\subsubsection{domain address vector (\texttt{domaddr}$[\mathit{ndom}]$)}
+\texttt{domaddr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
+registers containing an array of the domain addresses associated with
+each domain. when the domain feature is present and enabled in
+\texttt{scontrol.V} then domain fault context switches will cause the
+system to copy the value for the selected default domain into \texttt{sdomain}
+for virtual interrupt delivery to the domain.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (0.5,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (1.0,1.25)  {\textsf{62}};
+\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{domain address}};
+\node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{1}};
+\end{tikzpicture}
+
+\subsubsection{domain page table root vector (\texttt{domptr}$[\mathit{ndom}]$)}
+\texttt{domptr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
+registers containing an array of the page table root for address translation
+in each domain. when the domain feature is present and is enabled in
+\texttt{scontrol.V} then domain fault context switches will cause the
+system to copy the value for the selected default domain into \texttt{sptr}
+for address translation in the domain.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (26,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{11}};
+\node [font=\small,anchor=base] at (29,0.25)  {\emph{ASID}};
+\draw [black!95] (4,0)    rectangle (26,1);
+\node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{12}};
+\node [font=\tiny,anchor=base] at (4.5,1.25)  {\textsf{55}};
+\node [font=\small,anchor=base] at (15,0.25)  {\emph{PPN}};
+\draw [black!95] (0.0,0)   rectangle (4,1);
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\tiny,anchor=base] at (3.5,1.25)  {\textsf{56}};
+\node [font=\small,anchor=base] at (2.0,0.25)  {\emph{zeroes}};
+\end{tikzpicture}
+
+\subsubsection{domain trap handler program counter vector (\texttt{domthpc}$[\mathit{ndom}]$)}
+\texttt{domthpc}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
+registers containing an array of the addresses for the domain trap handler
+routines in each domain. the address is a virtual address interpreted in
+relation to the page table root for the domain. when the domain feature is
+present and is enabled in \texttt{scontrol.V} then domain fault context
+switches will cause the system to copy the value for the selected default
+domain into \texttt{thpc} and set the \emph{program counter} register.
+
+\subsubsection{domain trap handler immediate base vector (\texttt{domthib}$[\mathit{ndom}]$)}
+\texttt{domthib}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
+registers containing an array of the addresses for the domain trap handler
+constants in each domain. the address is a virtual address interpreted in
+relation to the page table root for the domain. when the domain feature is
+present and is enabled in \texttt{scontrol.V} then domain fault context
+switches will cause the system to copy the value for the selected default
+domain into \texttt{thib} and set the \emph{immediate base} register.
 
 \newpage
 \section{Address translation}
