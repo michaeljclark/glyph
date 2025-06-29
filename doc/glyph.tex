@@ -2379,15 +2379,16 @@ monitor exception} for a matching memory store address.
 \section{Capability extension}
 
 the architecture provides an optional capabilities extension that
-includes capability registers controlling permissions and capabilities
-enabled by \emph{page table color} bits in page table entries.
+includes capability registers controlling color permissions enabled
+by \emph{page table color} bits in page table entries and capabilities
+that restrict access to system, domain, and capabilities registers
+and instructions.
 \\
 \par\noindent
 capability registers can be read and written using the \texttt{sysread},
 \texttt{syswrite}, \texttt{sysset}, and \texttt{sysclear} instructions.
 the presence of capability registers is indicated by \texttt{sfeature.C}
-and they are available when \texttt{scontrol.C} is enabled and the
-associated executable page table colors are configured in \emph{colorcap}.
+and they are available when \texttt{scontrol.C} is enabled.
 \\
 \par\noindent
 the following tables list the privileged capability system parameters:
