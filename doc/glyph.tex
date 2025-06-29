@@ -1735,7 +1735,7 @@ this example omits hazard detection and forwarding logic for the sake of simplic
 \section{User-level registers}
 the architecture provides several user-level status and control registers
 for floating-point status and control, clock time, clock frequency,
-thread address and thread domain.
+thread address and domain.
 \\
 \par\noindent
 user-level status and control registers can be read and written using the
@@ -2004,7 +2004,7 @@ the \texttt{V} field indicates whether a virtual interrupt is pending.
 \subsubsection{trap control (\texttt{tcontrol})}
 \texttt{tcontrol} is a read-write register containing control bits. the
 \texttt{I} field is read-write and controls whether system interrupts
-are enabled for this hardware thread.
+are enabled.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -2213,7 +2213,7 @@ the section describes the privileged system registers.
 
 \subsubsection{system page table root (\texttt{sptr})}
 \texttt{sptr} is a read-write register containing the page table root
-for address translation on this hardware thread. the \emph{ASID} field
+for address translation on this thread. the \emph{ASID} field
 contains the address space identifier for this thread.
 \\
 \par\noindent
