@@ -2744,7 +2744,7 @@ the architecture provides an optional virtual domain~\cite{barham2003xen}
 extension that includes registers for domain address translation, domain
 routing and context switching for system traps, domain traps, and
 capability traps. capability trap routing requires both the virtual
-domains and capabities features to be present and enabled.
+domains and capabilities features to be present and enabled.
 \\
 \par\noindent
 domain registers can be read and written using the \texttt{sysread},
@@ -2807,8 +2807,9 @@ the following tables list the privileged domain system registers:
 \newpage
 \subsection{domain control registers}
 
-this section describes the \emph{domain control registers} which provide
-access to last and currnt domain number and control the next domain.
+this section describes the \emph{domain control registers} which
+provide access to last and current domain number and control the
+next domain number.
 
 \subsubsection{domain number -- last (\texttt{domlast})}
 \texttt{domlast} is a read-only register containing the domain number
@@ -2851,8 +2852,8 @@ of the next domain.
 
 \subsubsection{domain matrix (\texttt{dommatrix}$[\mathit{ndom}]$)}
 \texttt{dommatrix}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
-registers containing a matrix of the domains that each domain is allowed
-to transition to as the next domain.
+registers containing a matrix of the domains that the current domain is
+allowed to transition to as the next domain.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
