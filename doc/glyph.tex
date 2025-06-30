@@ -1964,7 +1964,8 @@ registers:
 \hline
 \multicolumn{3}{|l|}{\textbf{privileged machine registers}} \\
 \hline
-\texttt{0x42} & mtlbent   & machine translation lookaside buffer entry \\
+\texttt{0x42} & mtlbkey   & machine translation lookaside buffer key \\
+\texttt{0x43} & mtlbent   & machine translation lookaside buffer entry \\
 \hline
 \end{tabularx}
 \caption{privileged registers}
@@ -2389,15 +2390,44 @@ trap handler to perform address translation by walking the page table
 structures and populating the TLB\footnote{Translation Lookaside Buffer}
 as part of a software-defined MMU\footnote{Memory Management Unit}.
 
+\subsubsection{machine translation lookaside buffer key (\texttt{mtlbkey})}
+\texttt{mtlbkey} is a read-only register containing the translation
+virtual address for the current page translation miss fault.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (26,0)   rectangle (32,1);
+\node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{11}};
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\small,anchor=base] at (29,0.25)  {\emph{page offset}};
+\draw [black!95] (8.0,0)   rectangle (26,1);
+\node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{12}};
+\node [font=\tiny,anchor=base] at (10.5,1.25)  {\textsf{43}};
+\node [font=\small,anchor=base] at (18.0,0.25)  {\emph{page number}};
+\draw [black!25,dashed] (8.0,0)      rectangle (8.5,1);
+\draw [black!25,dashed] (8.5,0)      rectangle (9.0,1);
+\draw [black!25,dashed] (9.0,0)      rectangle (9.5,1);
+\draw [black!25,dashed] (9.5,0)      rectangle (10.0,1);
+\draw [black!95] (8.0,0)   rectangle (10.0,1);
+\node [font=\tiny,anchor=base] at (9.5,1.25)  {\textsf{44}};
+\node [font=\tiny,anchor=base] at (8.5,1.25)  {\textsf{47}};
+\node [font=\small,anchor=base] at (9.0,0.25)  {\texttt{AS}};
+\draw [black!95] (0.0,0)   rectangle (8.0,1);
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\tiny,anchor=base] at (7.5,1.25)  {\textsf{48}};
+\node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
+\end{tikzpicture}
+
 \subsubsection{machine translation lookaside buffer entry (\texttt{mtlbent})}
 \texttt{mtlbent} is a read-write register containing the machine translation
-lookaside buffer entry for the current page translation miss fault.
-the machine translation lookaside buffer entry register contains \emph{ASID},
-a physical page number, a page color, plus several permission and metadata
-bits in the same format as the metadata bits defined for page table entries,
-with the exception that the accessed and dirty bits are replaced with the
-page size. table~\ref{tab:64-bit-page-table-entry-fields} in the address
-translation section describes the metadata bits.
+lookaside buffer entry for the current page translation miss fault. this
+register is populated by the page translation miss fault handler with
+\emph{ASID}, a physical page number, a page color, plus several permission
+and metadata bits in the same format as the metadata bits defined for page
+table entries, with the exception that the accessed and dirty bits are
+replaced with the page size. table~\ref{tab:64-bit-page-table-entry-fields}
+in the address translation section describes the metadata bits.
 \\
 \par\noindent
 \emph{ASID 0} is a valid address space for tagged caches. the \emph{G}
@@ -2406,8 +2436,6 @@ the physical page number points to the translated physical page. it is
 illegal for the \emph{read, write} and \emph{exec} permissions to all be
 zero and it is illegal for \emph{write} to be set without \emph{read}.
 this register is initialized to zero on address translation misses.
-the \texttt{tvalue} register contains the translation address for the
-current page translation miss fault.
 
 \begin{figure}[H]
 \centering
