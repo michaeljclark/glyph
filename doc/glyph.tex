@@ -1916,7 +1916,8 @@ using the \texttt{sysread}, \texttt{syswrite}, \texttt{sysset}, and
 from executable pages with a system or physical address spaces.
 
 \subsubsection{privileged registers}
-the following table lists the privileged trap, system and debug registers:
+the following table lists the privileged trap, system, debug and machine
+registers:
 
 \begin{table}[H]
 \centering
@@ -1960,6 +1961,10 @@ the following table lists the privileged trap, system and debug registers:
 \texttt{0x35} & dfetch     & debug monitor fetch address \\
 \texttt{0x36} & dread      & debug monitor read address \\
 \texttt{0x37} & dwrite     & debug monitor write address \\
+\hline
+\multicolumn{3}{|l|}{\textbf{privileged machine registers}} \\
+\hline
+\texttt{0x42} & mtlbent   & machine translation lookaside buffer entry \\
 \hline
 \end{tabularx}
 \caption{privileged registers}
@@ -2068,8 +2073,9 @@ current trap.
 \verb|10| & page-fault-fetch   & fetch page fault \\
 \verb|11| & page-fault-load    & load page fault \\
 \verb|12| & page-fault-store   & store page fault \\
-\verb|13| & capability-fault   & capability fault \\
-\verb|14| & domain-fault       & domain fault \\
+\verb|13| & page-fault-miss    & page translation miss \\
+\verb|14| & capability-fault   & capability fault \\
+\verb|15| & domain-fault       & domain fault \\
 \hline
 \multicolumn{3}{|l|}{\textbf{system interrupts}} \\ \hline
 \verb|30| & timer-interrupt     & timer interrupt \\
@@ -2376,6 +2382,91 @@ address to monitor for and halt execution on and raise a \emph{debug
 monitor exception} for a matching memory store address.
 
 \newpage
+\subsection{privileged machine registers}
+the section describes the privileged machine registers for address
+translation. the registers in this section enable a \emph{page-fault-miss}
+trap handler to perform address translation by walking the page table
+structures and populating the TLB\footnote{Translation Lookaside Buffer}
+as part of a software-defined MMU\footnote{Memory Management Unit}.
+
+\subsubsection{machine translation lookaside buffer entry (\texttt{mtlbent})}
+\texttt{mtlbent} is a read-write register containing the machine translation
+lookaside buffer entry for the current page translation miss fault.
+the machine translation lookaside buffer entry register contains \emph{ASID},
+a physical page number, a page color, plus several permission and metadata
+bits in the same format as the metadata bits defined for page table entries,
+with the exception that the accessed and dirty bits are replaced with the
+page size. table~\ref{tab:64-bit-page-table-entry-fields} in the address
+translation section describes the metadata bits.
+\\
+\par\noindent
+\emph{ASID 0} is a valid address space for tagged caches. the \emph{G}
+bit is used to indicate that the \emph{ASID} field is to be ignored.
+the physical page number points to the translated physical page. it is
+illegal for the \emph{read, write} and \emph{exec} permissions to all be
+zero and it is illegal for \emph{write} to be set without \emph{read}.
+this register is initialized to zero on address translation misses.
+the \texttt{tvalue} register contains the translation address for the
+current page translation miss fault.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (31.5,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.75,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (31.75,0.3)  {\texttt{V}};
+\draw [black!95] (31.0,0)    rectangle (31.5,1);
+\node [font=\tiny,anchor=base] at (31.25,1.25)  {\textsf{1}};
+\node [font=\tiny,anchor=base] at (31.25,0.3)  {\texttt{R}};
+\draw [black!95] (30.5,0)    rectangle (31.0,1);
+\node [font=\tiny,anchor=base] at (30.75,1.25)  {\textsf{2}};
+\node [font=\tiny,anchor=base] at (30.75,0.3)  {\texttt{W}};
+\draw [black!95] (30.0,0)    rectangle (30.5,1);
+\node [font=\tiny,anchor=base] at (30.25,1.25)  {\textsf{3}};
+\node [font=\tiny,anchor=base] at (30.25,0.3)  {\texttt{X}};
+\draw [black!95] (29.5,0)    rectangle (30.0,1);
+\node [font=\tiny,anchor=base] at (29.75,1.25)  {\textsf{4}};
+\node [font=\tiny,anchor=base] at (29.75,0.3)  {\texttt{T}};
+\draw [black!95] (29.0,0)    rectangle (29.5,1);
+\node [font=\tiny,anchor=base] at (29.25,1.25)  {\textsf{5}};
+\node [font=\tiny,anchor=base] at (29.25,0.3)  {\texttt{G}};
+\draw [black!95] (28.0,0)    rectangle (29.0,1);
+\node [font=\tiny,anchor=base] at (28.75,1.25)  {\textsf{6}};
+\node [font=\tiny,anchor=base] at (28.25,1.25)  {\textsf{7}};
+\node [font=\small,anchor=base] at (28.5,0.25)  {\emph{sz}};
+\node [font=\small,anchor=base] at (17,0.25)  {\emph{physical page number}};
+\draw [black!95] (0.0,0)   rectangle (26,1);
+\node [font=\tiny,anchor=base] at (27.5,1.25)  {\textsf{8}};
+\node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{11}};
+\node [font=\small,anchor=base] at (27,0.25)  {\emph{color}};
+\node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{12}};
+\draw [black!95] (0.0,0)   rectangle (8.0,1);
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\tiny,anchor=base] at (7.5,1.25)  {\textsf{48}};
+\node [font=\small,anchor=base] at (4.0,0.25)  {\emph{ASID}};
+\end{tikzpicture}
+\caption{64-bit machine translation lookaside buffer entry structure.}
+\label{fig:64-machine-translation-lookaside-buffer-entry-structure}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{no.} & \textbf{size}& \textbf{description} \\
+\hline
+\verb|0| & $2^{12}$ & 4KiB page \\
+\verb|1| & $2^{21}$ & 2MiB page \\
+\verb|2| & $2^{30}$ & 1GiB page \\
+\hline
+\end{tabular}
+\caption{64-bit machine translation lookaside buffer entry size field}
+\label{tab:64-bit-machine-translation-lookaside-buffer-entry-size-field}
+\end{table}
+
+\newpage
 \section{Capability extension}
 
 the architecture provides an optional capabilities extension that
@@ -2419,15 +2510,15 @@ the following tables list the privileged capability system registers:
 \hline
 \multicolumn{3}{|l|}{\textbf{color permission registers}} \\
 \hline
-\texttt{0x40} & colorread      & color read permissions \\
-\texttt{0x41} & colorwrite     & color write permissions \\
-\texttt{0x42} & colorexec      & color exec permissions \\
+\texttt{0x50} & colorread      & color read permissions \\
+\texttt{0x51} & colorwrite     & color write permissions \\
+\texttt{0x52} & colorexec      & color exec permissions \\
 \hline
 \multicolumn{3}{|l|}{\textbf{color capability registers}} \\
 \hline
-\texttt{0x43} & colorsys       & color system capabilities \\
-\texttt{0x44} & colordom       & color domain capabilities \\
-\texttt{0x45} & colorcap       & color capability capabilities \\
+\texttt{0x53} & colorsys       & color system capabilities \\
+\texttt{0x54} & colordom       & color domain capabilities \\
+\texttt{0x55} & colorcap       & color capability capabilities \\
 \hline
 \multicolumn{3}{|l|}{\textbf{color matrix registers}} \\
 \hline
@@ -2865,8 +2956,8 @@ and the \emph{trie-based} page table structure pointed to by the
 \subsection{page table entries}
 page table entries are grouped into arrays within index pages which are
 selected by an index derived from a portion of the virtual address. each
-entry contains a physical page number along with several permission and
-metadata bits. the physical page number either points to the next page
+entry contains a physical page number, a page color, plus several permission
+and metadata bits. the physical page number either points to the next page
 table level for \emph{pointer} entries or the translated physical address
 for \emph{leaf} entries.
 
@@ -2898,13 +2989,16 @@ for \emph{leaf} entries.
 \draw [black!95] (28.0,0)    rectangle (28.5,1);
 \node [font=\tiny,anchor=base] at (28.25,1.25)  {\textsf{7}};
 \node [font=\tiny,anchor=base] at (28.25,0.3)  {\texttt{D}};
-\node [font=\small,anchor=base] at (13,0.25)  {\emph{physical page number}};
+\node [font=\small,anchor=base] at (17,0.25)  {\emph{physical page number}};
 \draw [black!95] (0.0,0)   rectangle (26,1);
 \node [font=\tiny,anchor=base] at (27.5,1.25)  {\textsf{8}};
 \node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{11}};
 \node [font=\small,anchor=base] at (27,0.25)  {\emph{color}};
 \node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{12}};
+\draw [black!95] (0.0,0)   rectangle (8.0,1);
 \node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\tiny,anchor=base] at (7.5,1.25)  {\textsf{48}};
+\node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
 \end{tikzpicture}
 \caption{64-bit page table entry structure.}
 \label{fig:64-bit-pte-structure}
@@ -2933,6 +3027,7 @@ for \emph{leaf} entries.
 
 \newpage
 \subsection{page table addresses}
+\label{sec:page-table-addresses}
 the page table translation system has three types of addresses:
 translation addresses, virtual addresses and physical addresses.
 page table translation addresses have a 1 --- 4 bit address space
