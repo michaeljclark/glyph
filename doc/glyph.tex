@@ -2781,9 +2781,9 @@ the following tables list the privileged domain system registers:
 \hline
 \multicolumn{3}{|l|}{\textbf{domain control registers}} \\
 \hline
-\texttt{0x50} & domlast  & domain number -- last \\
-\texttt{0x51} & domcurr  & domain number -- current \\
-\texttt{0x52} & domnext  & domain number -- next \\
+\texttt{0x50} & domlast  & domain number last \\
+\texttt{0x51} & domcurr  & domain number current \\
+\texttt{0x52} & domnext  & domain number next \\
 \texttt{0x1000...0x100f} & dommatrix$[n]$ & domain matrix \\
 \hline
 \multicolumn{3}{|l|}{\textbf{domain routing registers}} \\
@@ -2811,7 +2811,7 @@ this section describes the \emph{domain control registers} which
 provide access to last and current domain number and control the
 next domain number.
 
-\subsubsection{domain number -- last (\texttt{domlast})}
+\subsubsection{domain number last (\texttt{domlast})}
 \texttt{domlast} is a read-only register containing the domain number
 of the last domain.
 \\
@@ -2824,7 +2824,7 @@ of the last domain.
 \node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
 \end{tikzpicture}
 
-\subsubsection{domain number -- current (\texttt{domcurr})}
+\subsubsection{domain number current (\texttt{domcurr})}
 \texttt{domcurr} is a read-only register containing the domain number
 of the current domain.
 \\
@@ -2837,7 +2837,7 @@ of the current domain.
 \node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
 \end{tikzpicture}
 
-\subsubsection{domain number -- next (\texttt{domnext})}
+\subsubsection{domain number next (\texttt{domnext})}
 \texttt{domnext} is a read-write register containing the domain number
 of the next domain.
 \\
