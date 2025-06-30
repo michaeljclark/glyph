@@ -2788,16 +2788,16 @@ the following tables list the privileged domain system registers:
 \hline
 \multicolumn{3}{|l|}{\textbf{domain routing registers}} \\
 \hline
-\texttt{0x2000...0x200f} & domsys$[n]$    & domain system default domain vector \\
-\texttt{0x3000...0x300f} & domdom$[n]$    & domain domain default domain vector \\
-\texttt{0x4000...0x400f} & domcap$[n]$    & domain capability default domain vector \\
+\texttt{0x2000...0x200f} & domsys$[n]$    & domain system default domain \\
+\texttt{0x3000...0x300f} & domdom$[n]$    & domain domain default domain \\
+\texttt{0x4000...0x400f} & domcap$[n]$    & domain capability default domain \\
 \hline
 \multicolumn{3}{|l|}{\textbf{domain context registers}} \\
 \hline
-\texttt{0x5000...0x500f} & domaddr$[n]$   & domain address vector \\
-\texttt{0x6000...0x600f} & domptr$[n]$    & domain page table root vector \\
-\texttt{0x7000...0x700f} & domthpc$[n]$   & domain trap handler program counter vector  \\
-\texttt{0x8000...0x800f} & domthib$[n]$   & domain trap handler immediate base vector \\
+\texttt{0x5000...0x500f} & domaddr$[n]$   & domain address \\
+\texttt{0x6000...0x600f} & domptr$[n]$    & domain page table root \\
+\texttt{0x7000...0x700f} & domthpc$[n]$   & domain trap handler program counter  \\
+\texttt{0x8000...0x800f} & domthib$[n]$   & domain trap handler immediate base \\
 \hline
 \end{tabularx}
 \caption{domain registers}
@@ -2869,7 +2869,7 @@ to transition to as the next domain.
 this section describes the \emph{domain routing registers} that control routing
 for context switching of system traps, domain traps and capability traps.
 
-\subsubsection{domain system default domain vector (\texttt{domsys}$[\mathit{ndom}]$)}
+\subsubsection{domain system default domain (\texttt{domsys}$[\mathit{ndom}]$)}
 \texttt{domsys}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing the domain number of the domain that system traps
 are routed to. system faults for the active domain will context switch
@@ -2885,7 +2885,7 @@ to the domain in this register when the domain extension is enabled in
 \node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
 \end{tikzpicture}
 
-\subsubsection{domain domain default domain vector (\texttt{domdom}$[\mathit{ndom}]$)}
+\subsubsection{domain domain default domain (\texttt{domdom}$[\mathit{ndom}]$)}
 \texttt{domdom}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing the domain number of the domain that domain traps
 are routed to. access to domain registers or instructions for the active
@@ -2901,7 +2901,7 @@ extension is enabled in \texttt{scontrol.V}.
 \node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
 \end{tikzpicture}
 
-\subsubsection{domain capability default domain vector (\texttt{domcap}$[\mathit{ndom}]$)}
+\subsubsection{domain capability default domain (\texttt{domcap}$[\mathit{ndom}]$)}
 \texttt{domcap}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing the domain number of the domain that capability traps
 are routed to. access to capability registers for the active domain will
@@ -2925,7 +2925,7 @@ capabilites features are present.
 this section describes the \emph{domain context registers} that control
 page translation and trap entry functions for domain context switching.
 
-\subsubsection{domain address vector (\texttt{domaddr}$[\mathit{ndom}]$)}
+\subsubsection{domain address (\texttt{domaddr}$[\mathit{ndom}]$)}
 \texttt{domaddr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the domain addresses associated with
 each domain. when the domain feature is present and enabled in
@@ -2944,7 +2944,7 @@ for virtual interrupt delivery.
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{1}};
 \end{tikzpicture}
 
-\subsubsection{domain page table root vector (\texttt{domptr}$[\mathit{ndom}]$)}
+\subsubsection{domain page table root (\texttt{domptr}$[\mathit{ndom}]$)}
 \texttt{domptr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the page table root physical addresses
 for address translation in each domain. when the domain feature is present
@@ -2969,7 +2969,7 @@ into \texttt{sptr} for address translation.
 \node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
 \end{tikzpicture}
 
-\subsubsection{domain trap handler program counter vector (\texttt{domthpc}$[\mathit{ndom}]$)}
+\subsubsection{domain trap handler program counter (\texttt{domthpc}$[\mathit{ndom}]$)}
 \texttt{domthpc}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the addresses for the domain trap handler
 routines in each domain. the address is a virtual address interpreted in
@@ -2978,7 +2978,7 @@ present and is enabled in \texttt{scontrol.V} then domain fault context
 switches will cause the system to copy the value for the selected default
 domain into \texttt{thpc} and set the \emph{program counter} register.
 
-\subsubsection{domain trap handler immediate base vector (\texttt{domthib}$[\mathit{ndom}]$)}
+\subsubsection{domain trap handler immediate base (\texttt{domthib}$[\mathit{ndom}]$)}
 \texttt{domthib}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the addresses for the domain trap handler
 constants in each domain. the address is a virtual address interpreted in
