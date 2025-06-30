@@ -2786,16 +2786,16 @@ the following tables list the privileged domain system registers:
 \hline
 \multicolumn{3}{|l|}{\textbf{domain routing registers}} \\
 \hline
-\texttt{0x1000...0x100f} & domsys$[n]$    & domain system default domain \\
-\texttt{0x2000...0x200f} & domdom$[n]$    & domain domain default domain \\
-\texttt{0x3000...0x300f} & domcap$[n]$    & domain capability default domain \\
+\texttt{0x1000...0x100f} & domsys$[n]$    & domain system default domain vector \\
+\texttt{0x2000...0x200f} & domdom$[n]$    & domain domain default domain vector \\
+\texttt{0x3000...0x300f} & domcap$[n]$    & domain capability default domain vector \\
 \hline
 \multicolumn{3}{|l|}{\textbf{domain context registers}} \\
 \hline
 \texttt{0x4000...0x400f} & domaddr$[n]$   & domain address vector \\
 \texttt{0x5000...0x500f} & domptr$[n]$    & domain page table root vector \\
-\texttt{0x6000...0x600f} & domthpc$[n]$   & domain trap handler program counter  \\
-\texttt{0x7000...0x700f} & domthib$[n]$   & domain trap handler immediate base \\
+\texttt{0x6000...0x600f} & domthpc$[n]$   & domain trap handler program counter vector  \\
+\texttt{0x7000...0x700f} & domthib$[n]$   & domain trap handler immediate base vector \\
 \hline
 \end{tabularx}
 \caption{domain registers}
