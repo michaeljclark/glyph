@@ -2046,8 +2046,6 @@ and may contain:
 \item the faulting address for \emph{access} and \emph{page faults}.
 \item the message value for \emph{virtual interrupts}.
 \item the system clock time for \emph{timer interrupts}.
-\item the domain number for \emph{domain faults} when the domain extension
-is enabled and \emph{capability faults} when both capabilities and domain extensions are enabled.
 \end{itemize}
 
 \subsubsection{trap cause (\texttt{tcause})}
@@ -2519,7 +2517,7 @@ the following tables list the privileged capability system parameters:
 \hline
 \textbf{name} & \textbf{description} \\
 \hline
-\textbf{\emph{ncol}}      & the number of architectural colors \\
+$\mathit{ncol}$      & the number of architectural colors \\
 \hline
 \end{tabularx}
 \caption{capability parameters}
@@ -2580,7 +2578,7 @@ matching page table colors.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ncol}$};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{read perms}};
 \end{tikzpicture}
 
@@ -2595,7 +2593,7 @@ matching page table colors.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ncol}$};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{write perms}};
 \end{tikzpicture}
 
@@ -2610,7 +2608,7 @@ matching page table colors.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ncol}$};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{exec perms}};
 \end{tikzpicture}
 
@@ -2639,7 +2637,7 @@ page table color.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ncol}$};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{system caps}};
 \end{tikzpicture}
 
@@ -2648,14 +2646,15 @@ page table color.
 of \textbf{\emph{ncol}} bits containing domain capabilities for \emph{color-x}
 that are used to check access to privileged domain registers from
 executable pages that have page table entries with a matching
-page table color.
+page table color. this register is present if both the domains and
+capabilites features are present.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ncol}$};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{dom caps}};
 \end{tikzpicture}
 
@@ -2671,7 +2670,7 @@ page table color.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ncol}$};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{cap caps}};
 \end{tikzpicture}
 
@@ -2700,7 +2699,7 @@ matching \emph{page table color} array index.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ncol}$};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{read perms}};
 \end{tikzpicture}
 
@@ -2717,7 +2716,7 @@ matching \emph{page table color} array index.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ncol}$};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{write perms}};
 \end{tikzpicture}
 
@@ -2734,7 +2733,7 @@ matching \emph{page table color} array index.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ncol}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ncol}$};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{exec perms}};
 \end{tikzpicture}
 
@@ -2745,7 +2744,7 @@ the architecture provides an optional virtual domain~\cite{barham2003xen}
 extension that includes registers for domain address translation, domain
 routing and context switching for system traps, domain traps, and
 capability traps. capability trap routing requires both the virtual
-domains and capabities extensions to be present and enabled.
+domains and capabities features to be present and enabled.
 \\
 \par\noindent
 domain registers can be read and written using the \texttt{sysread},
@@ -2763,7 +2762,7 @@ the following tables list the privileged domain system parameters:
 \hline
 \textbf{name} & \textbf{description} \\
 \hline
-\textbf{\emph{ndom}}      & the number of architectural domains \\
+$\mathit{ndom}$      & the number of architectural domains \\
 \hline
 \end{tabularx}
 \caption{domain parameters}
@@ -2780,22 +2779,25 @@ the following tables list the privileged domain system registers:
 \hline
 \textbf{no.} & \textbf{name} & \textbf{description} \\
 \hline
-\multicolumn{3}{|l|}{\textbf{domain status registers}} \\
+\multicolumn{3}{|l|}{\textbf{domain control registers}} \\
 \hline
-\texttt{0x50} & dom      & domain number \\
+\texttt{0x50} & domlast  & domain number -- last \\
+\texttt{0x51} & domcurr  & domain number -- current \\
+\texttt{0x52} & domnext  & domain number -- next \\
+\texttt{0x1000...0x100f} & dommatrix$[n]$ & domain matrix \\
 \hline
 \multicolumn{3}{|l|}{\textbf{domain routing registers}} \\
 \hline
-\texttt{0x1000...0x100f} & domsys$[n]$    & domain system default domain vector \\
-\texttt{0x2000...0x200f} & domdom$[n]$    & domain domain default domain vector \\
-\texttt{0x3000...0x300f} & domcap$[n]$    & domain capability default domain vector \\
+\texttt{0x2000...0x200f} & domsys$[n]$    & domain system default domain vector \\
+\texttt{0x3000...0x300f} & domdom$[n]$    & domain domain default domain vector \\
+\texttt{0x4000...0x400f} & domcap$[n]$    & domain capability default domain vector \\
 \hline
 \multicolumn{3}{|l|}{\textbf{domain context registers}} \\
 \hline
-\texttt{0x4000...0x400f} & domaddr$[n]$   & domain address vector \\
-\texttt{0x5000...0x500f} & domptr$[n]$    & domain page table root vector \\
-\texttt{0x6000...0x600f} & domthpc$[n]$   & domain trap handler program counter vector  \\
-\texttt{0x7000...0x700f} & domthib$[n]$   & domain trap handler immediate base vector \\
+\texttt{0x5000...0x500f} & domaddr$[n]$   & domain address vector \\
+\texttt{0x6000...0x600f} & domptr$[n]$    & domain page table root vector \\
+\texttt{0x7000...0x700f} & domthpc$[n]$   & domain trap handler program counter vector  \\
+\texttt{0x8000...0x800f} & domthib$[n]$   & domain trap handler immediate base vector \\
 \hline
 \end{tabularx}
 \caption{domain registers}
@@ -2803,25 +2805,65 @@ the following tables list the privileged domain system registers:
 \end{table}
 
 \newpage
-\subsection{domain status registers}
+\subsection{domain control registers}
 
-this section describes the \emph{domain status registers}.
+this section describes the \emph{domain control registers} which provide
+access to last and currnt domain number and control the next domain.
 
-\subsubsection{domain number (\texttt{dom})}
-\texttt{dom} is a read-write register containing the number of the
-currently running domain. it is initialized to zero. when the domain
-extension feature is present and enabled in \texttt{scontrol.V} this
-register is visible to the system.
+\subsubsection{domain number -- last (\texttt{domlast})}
+\texttt{domlast} is a read-only register containing the domain number
+of the last domain.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (28,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (28.5,1.25)  {$log_2(\mathit{ndom})$};
+\node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
+\end{tikzpicture}
+
+\subsubsection{domain number -- current (\texttt{domcurr})}
+\texttt{domcurr} is a read-only register containing the domain number
+of the current domain.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (28,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (28.5,1.25)  {$log_2(\mathit{ndom})$};
+\node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
+\end{tikzpicture}
+
+\subsubsection{domain number -- next (\texttt{domnext})}
+\texttt{domnext} is a read-write register containing the domain number
+of the next domain.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (28,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (28.5,1.25)  {$log_2(\mathit{ndom})$};
+\node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
+\end{tikzpicture}
+
+\subsubsection{domain matrix (\texttt{dommatrix}$[\mathit{ndom}]$)}
+\texttt{dommatrix}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
+registers containing a matrix of the domains that each domain is allowed
+to transition to as the next domain.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ndom}};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{domain number}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ndom}$};
+\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{allowed domains}};
 \end{tikzpicture}
 
+\newpage
 \subsection{domain routing registers}
 
 this section describes the \emph{domain routing registers} that control routing
@@ -2837,10 +2879,10 @@ to the domain in this register when the domain extension is enabled in
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
-\draw [black!95] (24,0)    rectangle (32,1);
+\draw [black!95] (28,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ndom}};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{system domain}};
+\node [font=\tiny,anchor=base] at (28.5,1.25)  {$log_2(\mathit{ndom})$};
+\node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
 \end{tikzpicture}
 
 \subsubsection{domain domain default domain vector (\texttt{domdom}$[\mathit{ndom}]$)}
@@ -2853,10 +2895,10 @@ extension is enabled in \texttt{scontrol.V}.
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
-\draw [black!95] (24,0)    rectangle (32,1);
+\draw [black!95] (28,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ndom}};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{domain domain}};
+\node [font=\tiny,anchor=base] at (28.5,1.25)  {$log_2(\mathit{ndom})$};
+\node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
 \end{tikzpicture}
 
 \subsubsection{domain capability default domain vector (\texttt{domcap}$[\mathit{ndom}]$)}
@@ -2864,16 +2906,17 @@ extension is enabled in \texttt{scontrol.V}.
 registers containing the domain number of the domain that capability traps
 are routed to. access to capability registers for the active domain will
 context switch to the domain in this register when the domain and
-capabilities extensions are both enabled in \texttt{scontrol.V} and
-\texttt{scontrol.C}.
+capabilities features are both enabled in \texttt{scontrol.V} and
+\texttt{scontrol.C}. this register is present if both the domains and
+capabilites features are present.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
-\draw [black!95] (24,0)    rectangle (32,1);
+\draw [black!95] (28,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{ndom}};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{capability domain}};
+\node [font=\tiny,anchor=base] at (28.5,1.25)  {$log_2(\mathit{ndom})$};
+\node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
 \end{tikzpicture}
 
 \newpage
