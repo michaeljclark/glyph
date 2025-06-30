@@ -2072,7 +2072,7 @@ current trap.
 \verb|10| & page-fault-fetch   & fetch page fault \\
 \verb|11| & page-fault-load    & load page fault \\
 \verb|12| & page-fault-store   & store page fault \\
-\verb|13| & page-fault-miss    & page translation miss \\
+\verb|13| & tlb-miss-fault     & TLB miss fault \\
 \verb|14| & capability-fault   & capability fault \\
 \verb|15| & domain-fault       & domain fault \\
 \hline
@@ -2383,7 +2383,7 @@ monitor exception} for a matching memory store address.
 \newpage
 \subsection{privileged machine registers}
 the section describes the privileged machine registers for address
-translation. the registers in this section enable a \emph{page-fault-miss}
+translation. the registers in this section enable a \emph{tlb-miss-fault}
 trap handler to perform address translation by walking the page table
 structures and populating the TLB\footnote{Translation Lookaside Buffer}
 as part of a software-defined MMU\footnote{Memory Management Unit}.
