@@ -2787,8 +2787,8 @@ machine traps.
 \texttt{domsys}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing the domain number of the domain that system traps
 are routed to. system faults for the active domain will context switch
-to the domain in this register when the domain feature is enabled in
-\texttt{scontrol.V}.
+to the domain in this register when the domain extension is enabled in
+\texttt{domcontrol.V}.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -2804,7 +2804,7 @@ to the domain in this register when the domain feature is enabled in
 registers containing the domain number of the domain that domain traps
 are routed to. access to domain registers or instructions for the active
 domain will context switch to the domain in this register when the domain
-feature is enabled in \texttt{scontrol.V}.
+extension is enabled in \texttt{domcontrol.V}.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -2820,9 +2820,9 @@ feature is enabled in \texttt{scontrol.V}.
 registers containing the domain number of the domain that capability traps
 are routed to. access to capability registers for the active domain will
 context switch to the domain in this register when the domain and
-capabilities features are both enabled in \texttt{scontrol.V} and
-\texttt{scontrol.C}. this register is present if both the domain and
-capability features are present.
+capability extension are both enabled in \texttt{domcontrol.V} and
+\texttt{ccontrol.C}. this register is present if both the domain and
+capability extensions are present.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -2838,9 +2838,9 @@ capability features are present.
 registers containing the domain number of the domain that machine traps
 are routed to. access to machine registers for the active domain will
 context switch to the domain in this register when the domain and
-machine features are both enabled in \texttt{scontrol.V} and
+machine extensions are both enabled in \texttt{domcontrol.V} and
 \texttt{scontrol.M}. this register is present if both the domain and
-machine features are present.
+machine extensions are present.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -2860,8 +2860,8 @@ page translation and trap entry functions for domain context switching.
 \subsubsection{domain address (\texttt{domaddr}$[\mathit{ndom}]$)}
 \texttt{domaddr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the domain addresses associated with
-each domain. when the domain feature is present and enabled in
-\texttt{scontrol.V} then domain fault context switches will cause the
+each domain. when the domain extension is present and enabled in
+\texttt{domcontrol.V} then domain fault context switches will cause the
 system to copy the value for the selected default domain into \texttt{sdomain}
 for virtual interrupt delivery.
 \\
@@ -2879,8 +2879,8 @@ for virtual interrupt delivery.
 \subsubsection{domain page table root (\texttt{domptr}$[\mathit{ndom}]$)}
 \texttt{domptr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the page table root physical addresses
-for address translation in each domain. when the domain feature is present
-and is enabled in \texttt{scontrol.V} then domain fault context switches
+for address translation in each domain. when the domain extension is present
+and is enabled in \texttt{domcontrol.V} then domain fault context switches
 will cause the system to copy the value for the selected default domain
 into \texttt{sptr} for address translation.
 \\
@@ -2905,8 +2905,8 @@ into \texttt{sptr} for address translation.
 \texttt{domthpc}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the addresses for the domain trap handler
 routines in each domain. the address is a virtual address interpreted in
-relation to the page table root for the domain. when the domain feature is
-present and is enabled in \texttt{scontrol.V} then domain fault context
+relation to the page table root for the domain. when the domain extension is
+present and is enabled in \texttt{domcontrol.V} then domain fault context
 switches will cause the system to copy the value for the selected default
 domain into \texttt{thpc} and set the \emph{program counter} register.
 
@@ -2914,8 +2914,8 @@ domain into \texttt{thpc} and set the \emph{program counter} register.
 \texttt{domthib}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the addresses for the domain trap handler
 constants in each domain. the address is a virtual address interpreted in
-relation to the page table root for the domain. when the domain feature is
-present and is enabled in \texttt{scontrol.V} then domain fault context
+relation to the page table root for the domain. when the domain extension is
+present and is enabled in \texttt{domcontrol.V} then domain fault context
 switches will cause the system to copy the value for the selected default
 domain into \texttt{thib} and set the \emph{immediate base} register.
 
@@ -2955,7 +2955,7 @@ the following tables list the privileged machine registers:
 \newpage
 \subsection{machine control registers}
 the section describes the privileged machine registers for machine
-control and feature.
+control and machine features.
 
 \subsubsection{machine control (\texttt{mcontrol})}
 \texttt{mcontrol} is a read-write register containing machine control bits.
