@@ -2786,9 +2786,7 @@ machine traps.
 \subsubsection{domain system default domain (\texttt{domsys}$[\mathit{ndom}]$)}
 \texttt{domsys}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing the domain number of the domain that system traps
-are routed to. system faults for the active domain will context switch
-to the domain in this register when the domain extension is enabled in
-\texttt{domcontrol.V}.
+are routed to.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -2802,9 +2800,7 @@ to the domain in this register when the domain extension is enabled in
 \subsubsection{domain domain default domain (\texttt{domdom}$[\mathit{ndom}]$)}
 \texttt{domdom}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing the domain number of the domain that domain traps
-are routed to. access to domain registers or instructions for the active
-domain will context switch to the domain in this register when the domain
-extension is enabled in \texttt{domcontrol.V}.
+are routed to.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -2818,11 +2814,7 @@ extension is enabled in \texttt{domcontrol.V}.
 \subsubsection{domain capability default domain (\texttt{domcap}$[\mathit{ndom}]$)}
 \texttt{domcap}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing the domain number of the domain that capability traps
-are routed to. access to capability registers for the active domain will
-context switch to the domain in this register when the domain and
-capability extension are both enabled in \texttt{domcontrol.V} and
-\texttt{ccontrol.C}. this register is present if both the domain and
-capability extensions are present.
+are routed to.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -2836,11 +2828,7 @@ capability extensions are present.
 \subsubsection{domain machine default domain (\texttt{dommac}$[\mathit{ndom}]$)}
 \texttt{dommac}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing the domain number of the domain that machine traps
-are routed to. access to machine registers for the active domain will
-context switch to the domain in this register when the domain and
-machine extensions are both enabled in \texttt{domcontrol.V} and
-\texttt{scontrol.M}. this register is present if both the domain and
-machine extensions are present.
+are routed to.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -2855,15 +2843,14 @@ machine extensions are present.
 \subsection{domain context registers}
 
 this section describes the \emph{domain context registers} that control
-page translation and trap entry functions for domain context switching.
+virtual interrupt routing, page translation and trap entry functions for
+domain context switching.
 
 \subsubsection{domain address (\texttt{domaddr}$[\mathit{ndom}]$)}
 \texttt{domaddr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
-registers containing an array of the domain addresses associated with
-each domain. when the domain extension is present and enabled in
-\texttt{domcontrol.V} then domain fault context switches will cause the
-system to copy the value for the selected default domain into \texttt{sdomain}
-for virtual interrupt delivery.
+registers containing an array of the domain addresses associated with each
+domain. domain context switches copy the value for the target domain into
+\texttt{sdomain} to enable virtual interrupt delivery.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -2878,11 +2865,9 @@ for virtual interrupt delivery.
 
 \subsubsection{domain page table root (\texttt{domptr}$[\mathit{ndom}]$)}
 \texttt{domptr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
-registers containing an array of the page table root physical addresses
-for address translation in each domain. when the domain extension is present
-and is enabled in \texttt{domcontrol.V} then domain fault context switches
-will cause the system to copy the value for the selected default domain
-into \texttt{sptr} for address translation.
+registers containing an array of the page table root physical addresses for
+address translation in each domain. domain context switches copy the value
+for the target domain into \texttt{sptr} to enable address translation.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -2905,19 +2890,17 @@ into \texttt{sptr} for address translation.
 \texttt{domthpc}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the addresses for the domain trap handler
 routines in each domain. the address is a virtual address interpreted in
-relation to the page table root for the domain. when the domain extension is
-present and is enabled in \texttt{domcontrol.V} then domain fault context
-switches will cause the system to copy the value for the selected default
-domain into \texttt{thpc} and set the \emph{program counter} register.
+relation to the page table root for the domain. domain context switches
+copy the value for the target domain into \texttt{thpc} and set the
+\emph{program counter} register.
 
 \subsubsection{domain trap handler immediate base (\texttt{domthib}$[\mathit{ndom}]$)}
 \texttt{domthib}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the addresses for the domain trap handler
 constants in each domain. the address is a virtual address interpreted in
-relation to the page table root for the domain. when the domain extension is
-present and is enabled in \texttt{domcontrol.V} then domain fault context
-switches will cause the system to copy the value for the selected default
-domain into \texttt{thib} and set the \emph{immediate base} register.
+relation to the page table root for the domain. domain context switches
+copy the value for the target domain into \texttt{thib} and set the
+\emph{immediate base} register.
 
 \newpage
 \section{Machine extension}
