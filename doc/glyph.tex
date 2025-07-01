@@ -2451,7 +2451,7 @@ the capability extension.
 
 this section describes the \emph{capability permission registers} which
 define \emph{page table color} permission masks for page table entries.
-when \texttt{control.C} is set, the \emph{capability permission registers}
+when \texttt{ccontrol.C} is set, the \emph{capability permission registers}
 are combined with page table permissions to limit maximum \emph{read},
 \emph{write}, or \emph{execute} permission based on page table color.
 
@@ -2503,7 +2503,7 @@ used to check execution in pages with a matching page table color.
 this section describes the \emph{capability role registers}.
 the \emph{capability role registers} describe access to privileged
 system registers and instructions based on \emph{page table color}.
-when \texttt{control.C} is set, privileged system registers and
+when \texttt{ccontrol.C} is set, privileged system registers and
 instructions and will cause capability traps for illegal accesses.
 system registers and instructions are restricted based on the
 following roles: \emph{system}, \emph{domain}, \emph{capability}
@@ -2577,7 +2577,7 @@ this section describes the color matrix registers. the \emph{capability
 matrix registers} are permission registers that protect access to
 memory based on a combination of \emph{source} and \emph{destination}
 page table color and \emph{read}, \emph{write}, or \emph{execute}
-permissions. when \texttt{control.C} is set, memory accesses and
+permissions. when \texttt{ccontrol.C} is set, memory accesses and
 branches to memory addresses in pages with matching \emph{source} and
 \emph{destination} page table colors, and wider permissions, will cause
 capability traps.
