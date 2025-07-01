@@ -3017,8 +3017,8 @@ control and feature.
 \subsection{machine memory registers}
 the section describes the privileged machine registers for address
 translation. the registers in this section enable a \emph{machine-fault}
-trap handler to perform address translation by walking the page tabl
-estructures and populating the TLB\footnote{Translation Lookaside Buffer}
+trap handler to perform address translation by walking the page table
+structures and populating the TLB\footnote{Translation Lookaside Buffer}
 as part of a software-defined MMU\footnote{Memory Management Unit}.
 
 \subsubsection{machine translation lookaside buffer key (\texttt{mtlbkey})}
@@ -3086,12 +3086,12 @@ translation miss fault.
 
 \subsubsection{machine translation lookaside buffer entry (\texttt{mtlbent})}
 \texttt{mtlbent} is a read-write register containing the machine fault
-translation lookaside buffer entry for the current page translation miss.
-this register is populated by the page translation miss fault handler with
-a physical page number, a page color, plus several permission and metadata
-bits in the same format as the metadata bits defined for page table entries.
-table~\ref{tab:64-bit-page-table-entry-fields} in the address translation
-section describes the metadata bits.
+translation lookaside buffer entry for the current page translation miss
+fault. this register is populated by the page translation miss fault
+handler with a physical page number, a page color, plus several permission
+and metadata bits in the same format as the metadata bits defined for page
+table entries. table~\ref{tab:64-bit-page-table-entry-fields} in the address
+translation section describes the metadata bits.
 
 \begin{figure}[H]
 \centering
