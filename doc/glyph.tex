@@ -2955,7 +2955,7 @@ the following tables list the privileged machine registers:
 \newpage
 \subsection{machine control registers}
 the section describes the privileged machine registers for machine
-control and machine features.
+control and features.
 
 \subsubsection{machine control (\texttt{mcontrol})}
 \texttt{mcontrol} is a read-write register containing machine control bits.
@@ -2978,7 +2978,7 @@ control and machine features.
 \textbf{no.} & \textbf{name} & \textbf{description} \\
 \hline
 \verb|1 << 0| & P   & physical permissions check enable \\
-\verb|1 << 1| & T   & translation lookaside function enable \\
+\verb|1 << 1| & S   & software page translation enable \\
 \hline
 \end{tabular}
 \caption{machine control fields}
@@ -3006,7 +3006,7 @@ control and machine features.
 \textbf{no.} & \textbf{name} & \textbf{description} \\
 \hline
 \verb|1 << 0| & P   & physical permissions check feature \\
-\verb|1 << 1| & T   & translation lookaside function feature \\
+\verb|1 << 1| & S   & software page translation feature \\
 \hline
 \end{tabular}
 \caption{machine feature fields}
