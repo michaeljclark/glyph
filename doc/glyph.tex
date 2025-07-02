@@ -2674,17 +2674,18 @@ the following tables list the privileged domain system registers:
 \hline
 \multicolumn{4}{|l|}{\textbf{domain routing registers}} \\
 \hline
-\texttt{0x500...0x50f} & domsys$[n]$    & domain system default domain & \\
-\texttt{0x600...0x60f} & domdom$[n]$    & domain domain default domain & \\
-\texttt{0x700...0x70f} & domcap$[n]$    & domain capability default domain & capability \\
-\texttt{0x800...0x80f} & dommac$[n]$    & domain machine default domain & machine \\
+\texttt{0x500...0x50f} & dommatrix$[n]$ & domain matrix & \\
+\texttt{0x600...0x60f} & domsys$[n]$    & domain system default domain & \\
+\texttt{0x700...0x70f} & domdom$[n]$    & domain domain default domain & \\
+\texttt{0x800...0x80f} & domcap$[n]$    & domain capability default domain & capability \\
+\texttt{0x900...0x90f} & dommac$[n]$    & domain machine default domain & machine \\
 \hline
 \multicolumn{4}{|l|}{\textbf{domain context registers}} \\
 \hline
-\texttt{0x900...0x90f} & domaddr$[n]$   & domain address & \\
-\texttt{0xa00...0xa0f} & domptr$[n]$    & domain page table root & \\
-\texttt{0xb00...0xb0f} & domthpc$[n]$   & domain trap handler program counter & \\
-\texttt{0xc00...0xc0f} & domthib$[n]$   & domain trap handler immediate base & \\
+\texttt{0xa00...0xa0f} & domaddr$[n]$   & domain address & \\
+\texttt{0xb00...0xb0f} & domptr$[n]$    & domain page table root & \\
+\texttt{0xc00...0xc0f} & domthpc$[n]$   & domain trap handler program counter & \\
+\texttt{0xd00...0xd0f} & domthib$[n]$   & domain trap handler immediate base & \\
 \hline
 \end{tabularx}
 \caption{domain registers}
@@ -2695,9 +2696,8 @@ the following tables list the privileged domain system registers:
 \subsection{domain control registers}
 
 this section describes the \emph{domain control registers} which
-enable the domain extension, control valid domain transitions, and
-provide access to last and current domain number and control the
-next domain number.
+enable the domain extension and provide access to last and current
+domain number and control the next domain number.
 
 \subsubsection{domain control (\texttt{domcontrol})}
 \texttt{domcontrol} is a read-write register containing domain control bits.
@@ -2722,20 +2722,6 @@ next domain number.
 \caption{domain control fields}
 \label{tab:domain-control-fields}
 \end{table}
-
-\subsubsection{domain matrix (\texttt{dommatrix}$[\mathit{ndom}]$)}
-\texttt{dommatrix}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
-registers containing a matrix of the domains that the current domain is
-allowed to transition to as the next domain.
-\\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black!95] (0,0)    rectangle (32,1);
-\draw [black!95] (24,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ndom}$};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{allowed domains}};
-\end{tikzpicture}
 
 \subsubsection{domain number last (\texttt{domlast})}
 \texttt{domlast} is a read-only register containing the domain number
@@ -2779,9 +2765,23 @@ of the next domain.
 \newpage
 \subsection{domain routing registers}
 
-this section describes the \emph{domain routing registers} that control routing
-for context switching of system traps, domain traps, capability traps and
-machine traps.
+this section describes the \emph{domain routing registers} that control
+valid domain transitions and routing for context switching of system,
+domain, capability and machine traps.
+
+\subsubsection{domain matrix (\texttt{dommatrix}$[\mathit{ndom}]$)}
+\texttt{dommatrix}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
+registers containing a matrix of the domains that the current domain is
+allowed to transition to as the next domain.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (24,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ndom}$};
+\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{allowed domains}};
+\end{tikzpicture}
 
 \subsubsection{domain system default domain (\texttt{domsys}$[\mathit{ndom}]$)}
 \texttt{domsys}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
