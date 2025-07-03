@@ -1763,10 +1763,10 @@ the following table lists the user-level registers:
 \texttt{0x02} & ctime     & clock time \\
 \texttt{0x03} & cfreq     & clock frequency \\
 \hline
-\multicolumn{3}{|l|}{\textbf{address and domain registers}} \\
+\multicolumn{3}{|l|}{\textbf{thread address registers}} \\
 \hline
 \texttt{0x04} & addr      & user thread address \\
-\texttt{0x05} & domain    & user domain address \\
+\texttt{0x05} & domain    & user thread domain \\
 \hline
 \end{tabularx}
 \caption{user-level registers}
@@ -1892,13 +1892,13 @@ tick interval in picoseconds; \(\frac{10^{12}}{f} \) where \( f \)
 is the frequency in Hertz (Hz).
 this register is visible if \texttt{scontrol.T} is enabled.
 
-\subsection{address and domain registers}
-the section describes the user-level address and domain registers.
+\subsection{thread address registers}
+the section describes the user-level thread address registers.
 
 \subsubsection{thread address (\texttt{addr})}
 \texttt{addr} is a read-only register containing an alias of the unique
 system-wide topological address for this thread from \texttt{saddr}.
-this register is visible if \texttt{syscontrol.D} is enabled.
+this register is visible if \texttt{scontrol.D} is enabled.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -1906,15 +1906,15 @@ this register is visible if \texttt{syscontrol.D} is enabled.
 \draw [black!95] (0.5,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\tiny,anchor=base] at (1.0,1.25)  {\textsf{62}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{topological address}};
+\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread address}};
 \node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{63}};
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{0}};
 \end{tikzpicture}
 
-\subsubsection{domain address (\texttt{domain})}
+\subsubsection{thread domain (\texttt{domain})}
 \texttt{domain} is a read-only register containing an alias of the
 system-wide domain address for this thread from \texttt{sdomain}.
-this register is visible if \texttt{syscontrol.D} is enabled.
+this register is visible if \texttt{scontrol.D} is enabled.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -1922,7 +1922,7 @@ this register is visible if \texttt{syscontrol.D} is enabled.
 \draw [black!95] (0.5,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\tiny,anchor=base] at (1.0,1.25)  {\textsf{62}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{domain address}};
+\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread domain}};
 \node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{63}};
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{1}};
 \end{tikzpicture}
@@ -1969,7 +1969,7 @@ registers:
 \texttt{0x22} & sfeature  & system feature \\
 \texttt{0x23} & sptr      & system page table root \\
 \texttt{0x24} & saddr     & system thread address \\
-\texttt{0x25} & sdomain   & system domain address \\
+\texttt{0x25} & sdomain   & system thread domain \\
 \texttt{0x26} & starget   & system target address \\
 \texttt{0x27} & smessage  & system message interrupt \\
 \texttt{0x28} & stimer    & system deadline timer \\
@@ -2246,12 +2246,12 @@ address is uniquely assigned during system initialization.
 \draw [black!95] (0.5,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\tiny,anchor=base] at (1.0,1.25)  {\textsf{62}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{topological address}};
+\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread address}};
 \node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{63}};
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{0}};
 \end{tikzpicture}
 
-\subsubsection{system domain address (\texttt{sdomain})}
+\subsubsection{system thread domain (\texttt{sdomain})}
 \texttt{sdomain} is a read-only register containing the system-wide
 domain address for this thread. the system-wide domain address
 is used as a target for inter-thread virtual interrupts. this address
@@ -2263,7 +2263,7 @@ can alias. this address is assigned during context switching.
 \draw [black!95] (0.5,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\tiny,anchor=base] at (1.0,1.25)  {\textsf{62}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{domain address}};
+\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread domain}};
 \node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{63}};
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{1}};
 \end{tikzpicture}
