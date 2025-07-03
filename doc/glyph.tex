@@ -1735,7 +1735,7 @@ this example omits hazard detection and forwarding logic for the sake of simplic
 \section{User-level registers}
 the architecture provides several user-level status and control registers
 for floating-point status and control, clock time, clock frequency,
-thread number, address and domain.
+thread address and domain.
 \\
 \par\noindent
 user-level status and control registers can be read and written using the
@@ -1763,11 +1763,10 @@ the following table lists the user-level registers:
 \texttt{0x02} & ctime     & clock time \\
 \texttt{0x03} & cfreq     & clock frequency \\
 \hline
-\multicolumn{3}{|l|}{\textbf{thread number and address registers}} \\
+\multicolumn{3}{|l|}{\textbf{address and domain registers}} \\
 \hline
-\texttt{0x05} & num       & user thread number \\
-\texttt{0x06} & addr      & user thread address \\
-\texttt{0x07} & domain    & user thread domain \\
+\texttt{0x04} & addr      & user thread address \\
+\texttt{0x05} & domain    & user domain address \\
 \hline
 \end{tabularx}
 \caption{user-level registers}
@@ -1893,26 +1892,13 @@ tick interval in picoseconds; \(\frac{10^{12}}{f} \) where \( f \)
 is the frequency in Hertz (Hz).
 this register is visible if \texttt{scontrol.T} is enabled.
 
-\subsection{thread number and address registers}
-the section describes the user-level thread number and address registers.
-
-\subsubsection{thread number (\texttt{num})}
-\texttt{num} is a read-only register containing an alias of the
-thread number for this thread from \texttt{snum}.
-this register is visible if \texttt{scontrol.N} is enabled.
-\\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black!95] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread number}};
-\node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{63}};
-\end{tikzpicture}
+\subsection{address and domain registers}
+the section describes the user-level address and domain registers.
 
 \subsubsection{thread address (\texttt{addr})}
 \texttt{addr} is a read-only register containing an alias of the unique
 system-wide topological address for this thread from \texttt{saddr}.
-this register is visible if \texttt{scontrol.N} is enabled.
+this register is visible if \texttt{syscontrol.D} is enabled.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -1920,7 +1906,7 @@ this register is visible if \texttt{scontrol.N} is enabled.
 \draw [black!95] (0.5,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\tiny,anchor=base] at (1.0,1.25)  {\textsf{62}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread address}};
+\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{topological address}};
 \node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{63}};
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{0}};
 \end{tikzpicture}
@@ -1928,7 +1914,7 @@ this register is visible if \texttt{scontrol.N} is enabled.
 \subsubsection{domain address (\texttt{domain})}
 \texttt{domain} is a read-only register containing an alias of the
 system-wide domain address for this thread from \texttt{sdomain}.
-this register is visible if \texttt{scontrol.N} is enabled.
+this register is visible if \texttt{syscontrol.D} is enabled.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -1936,7 +1922,7 @@ this register is visible if \texttt{scontrol.N} is enabled.
 \draw [black!95] (0.5,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\tiny,anchor=base] at (1.0,1.25)  {\textsf{62}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread domain}};
+\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{domain address}};
 \node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{63}};
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{1}};
 \end{tikzpicture}
@@ -1982,15 +1968,13 @@ registers:
 \texttt{0x21} & scontrol  & system control \\
 \texttt{0x22} & sfeature  & system feature \\
 \texttt{0x23} & sptr      & system page table root \\
-\texttt{0x24} & sidx      & system thread index \\
-\texttt{0x25} & snum      & system thread number \\
-\texttt{0x26} & saddr     & system thread address \\
-\texttt{0x27} & sdomain   & system thread domain \\
-\texttt{0x28} & starget   & system target address \\
-\texttt{0x29} & smessage  & system message interrupt \\
-\texttt{0x2a} & stimer    & system deadline timer \\
-\texttt{0x2b} & sie       & system interrupt enable \\
-\texttt{0x2c} & sip       & system interrupt pending \\
+\texttt{0x24} & saddr     & system thread address \\
+\texttt{0x25} & sdomain   & system domain address \\
+\texttt{0x26} & starget   & system target address \\
+\texttt{0x27} & smessage  & system message interrupt \\
+\texttt{0x28} & stimer    & system deadline timer \\
+\texttt{0x29} & sie       & system interrupt enable \\
+\texttt{0x2a} & sip       & system interrupt pending \\
 \hline
 \multicolumn{3}{|l|}{\textbf{privileged debug registers}} \\
 \hline
@@ -2160,7 +2144,7 @@ the section describes the privileged system registers.
 \node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{T}};
 \draw [black!95] (29,0)    rectangle (30,1);
 \node [font=\tiny,anchor=base] at (29.5,1.25)  {\textsf{2}};
-\node [font=\small,anchor=base] at (29.5,0.25)  {\texttt{N}};
+\node [font=\small,anchor=base] at (29.5,0.25)  {\texttt{D}};
 \draw [black!95] (28,0)    rectangle (29,1);
 \node [font=\tiny,anchor=base] at (28.5,1.25)  {\textsf{3}};
 \node [font=\small,anchor=base] at (28.5,0.25)  {\texttt{A}};
@@ -2178,7 +2162,7 @@ the section describes the privileged system registers.
 \hline
 \verb|1 << 0| & F   & floating-point unit enabled \\
 \verb|1 << 1| & T   & user clock and frequency enabled \\
-\verb|1 << 2| & N   & user thread number and address enabled \\
+\verb|1 << 2| & D   & user address and domain enabled \\
 \verb|1 << 3| & A   & user address space access disable enabled \\
 \verb|1 << 4| & E   & user address space execute disable enabled \\
 \hline
@@ -2200,7 +2184,7 @@ the section describes the privileged system registers.
 \node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{T}};
 \draw [black!95] (29,0)    rectangle (30,1);
 \node [font=\tiny,anchor=base] at (29.5,1.25)  {\textsf{2}};
-\node [font=\small,anchor=base] at (29.5,0.25)  {\texttt{N}};
+\node [font=\small,anchor=base] at (29.5,0.25)  {\texttt{D}};
 \draw [black!95] (28,0)    rectangle (29,1);
 \node [font=\tiny,anchor=base] at (28.5,1.25)  {\textsf{3}};
 \node [font=\small,anchor=base] at (28.5,0.25)  {\texttt{A}};
@@ -2218,7 +2202,7 @@ the section describes the privileged system registers.
 \hline
 \verb|1 << 0| & F   & floating-point unit feature \\
 \verb|1 << 1| & T   & user clock and frequency feature \\
-\verb|1 << 2| & N   & user thread number and address feature \\
+\verb|1 << 2| & D   & user address and domain feature \\
 \verb|1 << 3| & A   & user address space access disable feature \\
 \verb|1 << 4| & E   & user address space execute disable feature \\
 \hline
@@ -2250,34 +2234,6 @@ field contains the address space identifier for this thread.
 \end{tikzpicture}
 
 \newpage
-\subsubsection{system thread index (\texttt{sidx})}
-\texttt{sidx} is a read-write register containing the thread index for
-this thread. the thread index is a system-wide monotonically increasing
-number used for indexing of threads by the operating system. this number
-is uniquely assigned during system initialization.
-\\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black!95] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread index}};
-\node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{63}};
-\end{tikzpicture}
-
-\subsubsection{system thread number (\texttt{snum})}
-\texttt{snum} is a read-write register containing the thread number for
-this thread. the thread number is used for user-level thread indexing
-and is assigned by the operating system. it is up to the operating system
-to ensure it does not alias within user-level processes.
-\\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black!95] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread number}};
-\node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{63}};
-\end{tikzpicture}
-
 \subsubsection{system thread address (\texttt{saddr})}
 \texttt{saddr} is a read-only register containing the unique system-wide
 topological address for this thread. the system-wide topological
@@ -2290,12 +2246,12 @@ address is uniquely assigned during system initialization.
 \draw [black!95] (0.5,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\tiny,anchor=base] at (1.0,1.25)  {\textsf{62}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread address}};
+\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{topological address}};
 \node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{63}};
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{0}};
 \end{tikzpicture}
 
-\subsubsection{system thread domain (\texttt{sdomain})}
+\subsubsection{system domain address (\texttt{sdomain})}
 \texttt{sdomain} is a read-only register containing the system-wide
 domain address for this thread. the system-wide domain address
 is used as a target for inter-thread virtual interrupts. this address
@@ -2307,7 +2263,7 @@ can alias. this address is assigned during context switching.
 \draw [black!95] (0.5,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\tiny,anchor=base] at (1.0,1.25)  {\textsf{62}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread domain}};
+\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{domain address}};
 \node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{63}};
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{1}};
 \end{tikzpicture}
@@ -2317,7 +2273,7 @@ can alias. this address is assigned during context switching.
 target address of a thread to send a virtual interrupt.
 all-zeros is the \emph{boot service processor}.
 all-ones is the \emph{broadcast address}.
-zero in the \emph{A} field is a \emph{thread address}.
+zero in the \emph{A} field is a \emph{topological address}.
 one in the \emph{A} field is a \emph{domain address}.
 \\
 \par\noindent
@@ -2915,7 +2871,7 @@ this section describes the \emph{domain context registers} that control
 virtual interrupt routing, page translation and trap entry functions for
 domain context switching.
 
-\subsubsection{thread domain (\texttt{domaddr}$[\mathit{ndom}]$)}
+\subsubsection{domain address (\texttt{domaddr}$[\mathit{ndom}]$)}
 \texttt{domaddr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the domain addresses associated with each
 domain. domain context switches copy the value for the target domain into
@@ -2927,7 +2883,7 @@ domain. domain context switches copy the value for the target domain into
 \draw [black!95] (0.5,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\tiny,anchor=base] at (1.0,1.25)  {\textsf{62}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread domain}};
+\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{domain address}};
 \node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{63}};
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{1}};
 \end{tikzpicture}
