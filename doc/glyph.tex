@@ -1782,7 +1782,7 @@ the section describes the user-level floating-point unit registers.
 \texttt{fpstatus} is a read-only register containing status
 information for floating-point operations. the \texttt{Z, O, U, X,}
 and \texttt{I} fields contain accrued floating-point exceptions.
-this register is visible if \texttt{syscontrol.F} is enabled.
+this register is visible if \texttt{scontrol.F} is enabled.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -1829,7 +1829,7 @@ contains the current floating-point rounding mode. the \texttt{Z}
 field enables \emph{flush-to-zero} and \emph{denormals-are-zero}.
 the \texttt{N} field enables \emph{not-strict-ieee754}, allowing
 \emph{fused-multiply-add} and other optimizations that may affect
-precision. this register is visible if \texttt{syscontrol.F} is enabled.
+precision. this register is visible if \texttt{scontrol.F} is enabled.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -1885,13 +1885,13 @@ the section describes the user-level clock and frequency registers.
 \subsubsection{clock time (\texttt{ctime})}
 \texttt{ctime} is a read-only register containing the wall-clock
 tick counter since power on in clock tick units denoted by \texttt{cfreq}.
-this register is visible if \texttt{syscontrol.T} is enabled.
+this register is visible if \texttt{scontrol.T} is enabled.
 
 \subsubsection{clock frequency (\texttt{cfreq})}
 \texttt{cfreq} is a read-only register containing the wall-clock
 tick interval in picoseconds; \(\frac{10^{12}}{f} \) where \( f \)
 is the frequency in Hertz (Hz).
-this register is visible if \texttt{syscontrol.T} is enabled.
+this register is visible if \texttt{scontrol.T} is enabled.
 
 \subsection{thread number and address registers}
 the section describes the user-level thread number and address registers.
