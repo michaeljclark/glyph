@@ -3153,6 +3153,71 @@ translation section describes the metadata bits.
 \end{figure}
 
 \newpage
+\section{Environment extension}
+
+the architecture provides an optional environment extension that includes
+machine-level registers for diagnostics, warm reset, cold reset, and power-off.
+
+\subsubsection{environment registers}
+the following tables list the privileged environment registers:
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabularx}{125mm}{|l|l|X|}
+\hline
+\textbf{no.} & \textbf{name} & \textbf{description} \\
+\hline
+\multicolumn{3}{|l|}{\textbf{environment control registers}} \\
+\hline
+\texttt{0x71} & econtrol  & environment control \\
+\hline
+\end{tabularx}
+\caption{environment registers}
+\label{tab:environment-registers}
+\end{table}
+
+\newpage
+\subsection{environment control registers}
+the section describes the privileged registers for environment control.
+
+\subsubsection{environment control (\texttt{econtrol})}
+\texttt{econtrol} is a read-write register used to issue machine-level
+environment control commands. the \texttt{OP} field contains an opcode
+with values for: \emph{diagnostic}, \emph{warm reset}, \emph{cold reset}
+and \emph{power off}. the \emph{cause code} field is recorded in an
+environment log.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (0,0)    rectangle (4,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\tiny,anchor=base] at (3.5,1.25)  {\textsf{56}};
+\node [font=\tiny,anchor=base] at (4.5,1.25)  {\textsf{55}};
+\node [font=\small,anchor=base] at (2,0.25)  {\texttt{OP}};
+\node [font=\small,anchor=base] at (16.5,0.25)  {\emph{cause code}};
+\end{tikzpicture}
+
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{no.} & \textbf{description} \\
+\hline
+\verb|0| & diagnostic \\
+\verb|1| & warm reset \\
+\verb|2| & cold reset \\
+\verb|3| & power-off  \\
+\hline
+\end{tabular}
+\caption{environment control opcode field}
+\label{tab:environment-control-opcode-field}
+\end{table}
+
+\newpage
 \section{Address translation}
 
 the architecture provides for page-based virtual to physical address
