@@ -98,7 +98,7 @@ Mexico.\\ \emph{Image courtesy of Wikipedia. Public domain.}}
 \tableofcontents
 \pagestyle{headings}
 
-\newcommand{\insnimmnine}[4]{
+\newcommand{\insnimmnine}[3]{
 \begin{minipage}[c]{\textwidth}
 \begin{tikzpicture}[scale=0.5]
 \begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
@@ -106,26 +106,70 @@ Mexico.\\ \emph{Image courtesy of Wikipedia. Public domain.}}
 \fill [black!10] (0,0)    rectangle (9,1);
 \draw [line width=0.2mm, black!80] (0,0)    rectangle (9,1);
 \draw [line width=0.2mm, black!80] (0,-1)   rectangle (9,0);
-\node [font=\tiny,anchor=base] at (0.5,1.2)  {$\textbf{15}$};
-\node [font=\tiny,anchor=base] at (8.5,1.2)  {$\textbf{7}$};
-\node [font=\small,anchor=base] at (4.5,0.25)  {$imm9$};
+\node [font=\tiny,anchor=base] at (0.5,1.2)  {\textbf{15}};
+\node [font=\tiny,anchor=base] at (8.5,1.2)  {\textbf{7}};
+\node [font=\small,anchor=base] at (4.5,0.25)  {$\mathit{imm}$};
 \node [font=\small,anchor=base] at (4.5,-0.8)  {\textbf{#1}};
 
 \fill [black!10] (9,0)     rectangle (14,1);
 \draw [line width=0.2mm, black!80] (9,0)     rectangle (14,1);
 \draw [line width=0.2mm, black!80] (9,-1)    rectangle (14,0);
-\node [font=\tiny,anchor=base] at (9.5,1.2)  {$\textbf{6}$};
-\node [font=\tiny,anchor=base] at (13.5,1.2)  {$\textbf{2}$};
-\node [font=\small,anchor=base] at (11.5,0.25)  {$opcode$};
+\node [font=\tiny,anchor=base] at (9.5,1.2)  {\textbf{6}};
+\node [font=\tiny,anchor=base] at (13.5,1.2)  {\textbf{2}};
+\node [font=\small,anchor=base] at (11.5,0.25)  {$\mathit{opcode}$};
 \node [font=\small,anchor=base] at (11.5,-0.8)  {\textbf{#2}};
 
 \fill [black!10] (14,0)     rectangle (16,1);
 \draw [line width=0.2mm, black!80] (14,0)     rectangle (16,1);
 \draw [line width=0.2mm, black!80] (14,-1)    rectangle (16,0);
-\node [font=\tiny,anchor=base] at (14.5,1.2)  {$\textbf{1}$};
-\node [font=\tiny,anchor=base] at (15.5,1.2)  {$\textbf{0}$};
-\node [font=\small,anchor=base] at (15.0,0.25)  {$size$};
-\node [font=\small,anchor=base] at (15.0,-0.8)  {\textbf{#3}};
+\node [font=\tiny,anchor=base] at (14.5,1.2)  {\textbf{1}};
+\node [font=\tiny,anchor=base] at (15.5,1.2)  {\textbf{0}};
+\node [font=\small,anchor=base] at (15.0,0.25)  {$\mathit{size}$};
+\node [font=\small,anchor=base] at (15.0,-0.8)  {\textbf{00}};
+
+\node [font=\small,anchor=base west] at (17.0,-0.8)  {$#3$};
+
+\end{scope}
+\end{tikzpicture}
+\end{minipage}
+}
+
+\newcommand{\insrcimmsix}[4]{
+\begin{minipage}[c]{\textwidth}
+\begin{tikzpicture}[scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+
+\fill [black!10] (0,0)    rectangle (3,1);
+\draw [line width=0.2mm, black!80] (0,0)    rectangle (3,1);
+\draw [line width=0.2mm, black!80] (0,-1)   rectangle (3,0);
+\node [font=\tiny,anchor=base] at (0.5,1.2)  {\textbf{15}};
+\node [font=\tiny,anchor=base] at (2.5,1.2)  {\textbf{13}};
+\node [font=\small,anchor=base] at (1.5,0.25)  {$\mathit{rc}$};
+\node [font=\small,anchor=base] at (1.5,-0.8)  {\textbf{#1}};
+
+\fill [black!10] (3,0)    rectangle (9,1);
+\draw [line width=0.2mm, black!80] (3,0)    rectangle (9,1);
+\draw [line width=0.2mm, black!80] (3,-1)   rectangle (9,0);
+\node [font=\tiny,anchor=base] at (3.5,1.2)  {\textbf{12}};
+\node [font=\tiny,anchor=base] at (8.5,1.2)  {\textbf{7}};
+\node [font=\small,anchor=base] at (6.0,0.25)  {$\mathit{imm}$};
+\node [font=\small,anchor=base] at (6.0,-0.8)  {\textbf{#2}};
+
+\fill [black!10] (9,0)     rectangle (14,1);
+\draw [line width=0.2mm, black!80] (9,0)     rectangle (14,1);
+\draw [line width=0.2mm, black!80] (9,-1)    rectangle (14,0);
+\node [font=\tiny,anchor=base] at (9.5,1.2)  {\textbf{6}};
+\node [font=\tiny,anchor=base] at (13.5,1.2)  {\textbf{2}};
+\node [font=\small,anchor=base] at (11.5,0.25)  {$\mathit{opcode}$};
+\node [font=\small,anchor=base] at (11.5,-0.8)  {\textbf{#3}};
+
+\fill [black!10] (14,0)     rectangle (16,1);
+\draw [line width=0.2mm, black!80] (14,0)     rectangle (16,1);
+\draw [line width=0.2mm, black!80] (14,-1)    rectangle (16,0);
+\node [font=\tiny,anchor=base] at (14.5,1.2)  {\textbf{1}};
+\node [font=\tiny,anchor=base] at (15.5,1.2)  {\textbf{0}};
+\node [font=\small,anchor=base] at (15.0,0.25)  {$\mathit{size}$};
+\node [font=\small,anchor=base] at (15.0,-0.8)  {\textbf{00}};
 
 \node [font=\small,anchor=base west] at (17.0,-0.8)  {$#4$};
 
@@ -134,8 +178,7 @@ Mexico.\\ \emph{Image courtesy of Wikipedia. Public domain.}}
 \end{minipage}
 }
 
-\newcommand{\insrcimmsix}[5]{
-\begin{minipage}[c]{\textwidth}
+\newcommand{\insrcrbimmthree}[5]{
 \begin{tikzpicture}[scale=0.5]
 \begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
 
@@ -144,41 +187,48 @@ Mexico.\\ \emph{Image courtesy of Wikipedia. Public domain.}}
 \draw [line width=0.2mm, black!80] (0,-1)   rectangle (3,0);
 \node [font=\tiny,anchor=base] at (0.5,1.2)  {\textbf{15}};
 \node [font=\tiny,anchor=base] at (2.5,1.2)  {\textbf{13}};
-\node [font=\small,anchor=base] at (1.5,0.25)  {\emph{rc}};
-\node [font=\small,anchor=base] at (1.5,-0.8)  {\textbf{#1}};
+\node [font=\small,anchor=base] at (1.5,0.25)  {$\mathit{rc}$};
+\node [font=\small,anchor=south,] at (1.5,-0.8)  {\textbf{#1}};
 
-\fill [black!10] (3,0)    rectangle (9,1);
-\draw [line width=0.2mm, black!80] (3,0)    rectangle (9,1);
-\draw [line width=0.2mm, black!80] (3,-1)   rectangle (9,0);
+\fill [black!10] (3,0)    rectangle (6,1);
+\draw [line width=0.2mm, black!80] (3,0)    rectangle (6,1);
+\draw [line width=0.2mm, black!80] (3,-1)   rectangle (6,0);
 \node [font=\tiny,anchor=base] at (3.5,1.2)  {\textbf{12}};
+\node [font=\tiny,anchor=base] at (5.5,1.2)  {\textbf{10}};
+\node [font=\small,anchor=base] at (4.5,0.25)  {$\mathit{rb}$};
+\node [font=\small,anchor=base] at (4.5,-0.8)  {\textbf{#2}};
+
+\fill [black!10] (6,0)    rectangle (9,1);
+\draw [line width=0.2mm, black!80] (6,0)    rectangle (9,1);
+\draw [line width=0.2mm, black!80] (6,-1)   rectangle (9,0);
+\node [font=\tiny,anchor=base] at (6.5,1.2)  {\textbf{9}};
 \node [font=\tiny,anchor=base] at (8.5,1.2)  {\textbf{7}};
-\node [font=\small,anchor=base] at (6.0,0.25)  {\emph{imm6}};
-\node [font=\small,anchor=base] at (6.0,-0.8)  {\textbf{#2}};
+\node [font=\small,anchor=base] at (7.5,0.25)  {$\mathit{imm}$};
+\node [font=\small,anchor=base] at (7.5,-0.8)  {\textbf{#3}};
 
 \fill [black!10] (9,0)     rectangle (14,1);
 \draw [line width=0.2mm, black!80] (9,0)     rectangle (14,1);
 \draw [line width=0.2mm, black!80] (9,-1)    rectangle (14,0);
 \node [font=\tiny,anchor=base] at (9.5,1.2)  {\textbf{6}};
 \node [font=\tiny,anchor=base] at (13.5,1.2)  {\textbf{2}};
-\node [font=\small,anchor=base] at (11.5,0.25)  {\emph{opcode}};
-\node [font=\small,anchor=base] at (11.5,-0.8)  {\textbf{#3}};
+\node [font=\small,anchor=base] at (11.5,0.25)  {$\mathit{opcode}$};
+\node [font=\small,anchor=base] at (11.5,-0.8)  {\textbf{#4}};
 
 \fill [black!10] (14,0)     rectangle (16,1);
 \draw [line width=0.2mm, black!80] (14,0)     rectangle (16,1);
 \draw [line width=0.2mm, black!80] (14,-1)    rectangle (16,0);
 \node [font=\tiny,anchor=base] at (14.5,1.2)  {\textbf{1}};
 \node [font=\tiny,anchor=base] at (15.5,1.2)  {\textbf{0}};
-\node [font=\small,anchor=base] at (15.0,0.25)  {\emph{size}};
-\node [font=\small,anchor=base] at (15.0,-0.8)  {\textbf{#4}};
+\node [font=\small,anchor=base] at (15.0,0.25)  {$\mathit{size}$};
+\node [font=\small,anchor=base] at (15.0,-0.8)  {\textbf{00}};
 
 \node [font=\small,anchor=base west] at (17.0,-0.8)  {$#5$};
 
 \end{scope}
 \end{tikzpicture}
-\end{minipage}
 }
 
-\newcommand{\insrcrbimmthree}[6]{
+\newcommand{\insrcrbrc}[5]{
 \begin{tikzpicture}[scale=0.5]
 \begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
 
@@ -187,7 +237,7 @@ Mexico.\\ \emph{Image courtesy of Wikipedia. Public domain.}}
 \draw [line width=0.2mm, black!80] (0,-1)   rectangle (3,0);
 \node [font=\tiny,anchor=base] at (0.5,1.2)  {\textbf{15}};
 \node [font=\tiny,anchor=base] at (2.5,1.2)  {\textbf{13}};
-\node [font=\small,anchor=base] at (1.5,0.25)  {\emph{rc}};
+\node [font=\small,anchor=base] at (1.5,0.25)  {$\mathit{rc}$};
 \node [font=\small,anchor=south,] at (1.5,-0.8)  {\textbf{#1}};
 
 \fill [black!10] (3,0)    rectangle (6,1);
@@ -195,7 +245,7 @@ Mexico.\\ \emph{Image courtesy of Wikipedia. Public domain.}}
 \draw [line width=0.2mm, black!80] (3,-1)   rectangle (6,0);
 \node [font=\tiny,anchor=base] at (3.5,1.2)  {\textbf{12}};
 \node [font=\tiny,anchor=base] at (5.5,1.2)  {\textbf{10}};
-\node [font=\small,anchor=base] at (4.5,0.25)  {\emph{rb}};
+\node [font=\small,anchor=base] at (4.5,0.25)  {$\mathit{rb}$};
 \node [font=\small,anchor=base] at (4.5,-0.8)  {\textbf{#2}};
 
 \fill [black!10] (6,0)    rectangle (9,1);
@@ -203,7 +253,7 @@ Mexico.\\ \emph{Image courtesy of Wikipedia. Public domain.}}
 \draw [line width=0.2mm, black!80] (6,-1)   rectangle (9,0);
 \node [font=\tiny,anchor=base] at (6.5,1.2)  {\textbf{9}};
 \node [font=\tiny,anchor=base] at (8.5,1.2)  {\textbf{7}};
-\node [font=\small,anchor=base] at (7.5,0.25)  {\emph{imm3}};
+\node [font=\small,anchor=base] at (7.5,0.25)  {$\mathit{ra}$};
 \node [font=\small,anchor=base] at (7.5,-0.8)  {\textbf{#3}};
 
 \fill [black!10] (9,0)     rectangle (14,1);
@@ -211,7 +261,7 @@ Mexico.\\ \emph{Image courtesy of Wikipedia. Public domain.}}
 \draw [line width=0.2mm, black!80] (9,-1)    rectangle (14,0);
 \node [font=\tiny,anchor=base] at (9.5,1.2)  {\textbf{6}};
 \node [font=\tiny,anchor=base] at (13.5,1.2)  {\textbf{2}};
-\node [font=\small,anchor=base] at (11.5,0.25)  {\emph{opcode}};
+\node [font=\small,anchor=base] at (11.5,0.25)  {$\mathit{opcode}$};
 \node [font=\small,anchor=base] at (11.5,-0.8)  {\textbf{#4}};
 
 \fill [black!10] (14,0)     rectangle (16,1);
@@ -219,60 +269,10 @@ Mexico.\\ \emph{Image courtesy of Wikipedia. Public domain.}}
 \draw [line width=0.2mm, black!80] (14,-1)    rectangle (16,0);
 \node [font=\tiny,anchor=base] at (14.5,1.2)  {\textbf{1}};
 \node [font=\tiny,anchor=base] at (15.5,1.2)  {\textbf{0}};
-\node [font=\small,anchor=base] at (15.0,0.25)  {\emph{size}};
-\node [font=\small,anchor=base] at (15.0,-0.8)  {\textbf{#5}};
+\node [font=\small,anchor=base] at (15.0,0.25)  {$\mathit{size}$};
+\node [font=\small,anchor=base] at (15.0,-0.8)  {\textbf{00}};
 
-\node [font=\small,anchor=base west] at (17.0,-0.8)  {$#6$};
-
-\end{scope}
-\end{tikzpicture}
-}
-
-\newcommand{\insrcrbrc}[6]{
-\begin{tikzpicture}[scale=0.5]
-\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
-
-\fill [black!10] (0,0)    rectangle (3,1);
-\draw [line width=0.2mm, black!80] (0,0)    rectangle (3,1);
-\draw [line width=0.2mm, black!80] (0,-1)   rectangle (3,0);
-\node [font=\tiny,anchor=base] at (0.5,1.2)  {\textbf{15}};
-\node [font=\tiny,anchor=base] at (2.5,1.2)  {\textbf{13}};
-\node [font=\small,anchor=base] at (1.5,0.25)  {\emph{rc}};
-\node [font=\small,anchor=south,] at (1.5,-0.8)  {\textbf{#1}};
-
-\fill [black!10] (3,0)    rectangle (6,1);
-\draw [line width=0.2mm, black!80] (3,0)    rectangle (6,1);
-\draw [line width=0.2mm, black!80] (3,-1)   rectangle (6,0);
-\node [font=\tiny,anchor=base] at (3.5,1.2)  {\textbf{12}};
-\node [font=\tiny,anchor=base] at (5.5,1.2)  {\textbf{10}};
-\node [font=\small,anchor=base] at (4.5,0.25)  {\emph{rb}};
-\node [font=\small,anchor=base] at (4.5,-0.8)  {\textbf{#2}};
-
-\fill [black!10] (6,0)    rectangle (9,1);
-\draw [line width=0.2mm, black!80] (6,0)    rectangle (9,1);
-\draw [line width=0.2mm, black!80] (6,-1)   rectangle (9,0);
-\node [font=\tiny,anchor=base] at (6.5,1.2)  {\textbf{9}};
-\node [font=\tiny,anchor=base] at (8.5,1.2)  {\textbf{7}};
-\node [font=\small,anchor=base] at (7.5,0.25)  {\emph{ra}};
-\node [font=\small,anchor=base] at (7.5,-0.8)  {\textbf{#3}};
-
-\fill [black!10] (9,0)     rectangle (14,1);
-\draw [line width=0.2mm, black!80] (9,0)     rectangle (14,1);
-\draw [line width=0.2mm, black!80] (9,-1)    rectangle (14,0);
-\node [font=\tiny,anchor=base] at (9.5,1.2)  {\textbf{6}};
-\node [font=\tiny,anchor=base] at (13.5,1.2)  {\textbf{2}};
-\node [font=\small,anchor=base] at (11.5,0.25)  {\emph{opcode}};
-\node [font=\small,anchor=base] at (11.5,-0.8)  {\textbf{#4}};
-
-\fill [black!10] (14,0)     rectangle (16,1);
-\draw [line width=0.2mm, black!80] (14,0)     rectangle (16,1);
-\draw [line width=0.2mm, black!80] (14,-1)    rectangle (16,0);
-\node [font=\tiny,anchor=base] at (14.5,1.2)  {\textbf{1}};
-\node [font=\tiny,anchor=base] at (15.5,1.2)  {\textbf{0}};
-\node [font=\small,anchor=base] at (15.0,0.25)  {\emph{size}};
-\node [font=\small,anchor=base] at (15.0,-0.8)  {\textbf{#5}};
-
-\node [font=\small,anchor=base west] at (17.0,-0.8)  {$#6$};
+\node [font=\small,anchor=base west] at (17.0,-0.8)  {$#5$};
 
 \end{scope}
 \end{tikzpicture}
@@ -3561,7 +3561,7 @@ are as follows:
 
 \needspace{8\baselineskip}
 \subsection{break}
-\insnimmnine{uimm}{00000}{00}{\textbf{break}\: uimm9}
+\insnimmnine{uimm}{00000}{\textbf{break}\: uimm9}
 \\
 the \emph{break} instruction causes a debugger trap.
 \emph{program counter} and trap cause are saved to privileged
@@ -3570,7 +3570,7 @@ and the \emph{program counter} is set to a trap vector address.
 
 \needspace{8\baselineskip}
 \subsection{j}
-\insnimmnine{simm}{00001}{00}{\textbf{j}\: simm9 \times 2}
+\insnimmnine{simm}{00001}{\textbf{j}\: simm9 \times 2}
 \\
 the \emph{j} or \emph{jump} instruction is an unconditional branch instruction
 that adds a relative immediate address to the \emph{program counter}. the
@@ -3581,7 +3581,7 @@ resulting \emph{program counter} address is \emph{$[pc + simm9 \times 2]$}.
 
 \needspace{8\baselineskip}
 \subsection{b}
-\insnimmnine{simm}{00010}{00}{\textbf{b}\: simm9 \times 2}
+\insnimmnine{simm}{00010}{\textbf{b}\: simm9 \times 2}
 \\
 the \emph{b} or \emph{branch} instruction is a conditional branch instruction
 that adds a relative immediate address to the \emph{program counter}. if the
@@ -3595,7 +3595,7 @@ otherwise the \emph{program counter} is advanced normally.
 
 \needspace{8\baselineskip}
 \subsection{ibj}
-\insnimmnine{simm}{00011}{00}{\textbf{ibj}\: simm9 \times 64}
+\insnimmnine{simm}{00011}{\textbf{ibj}\: simm9 \times 64}
 \\
 the \emph{ibj} or \emph{immediate-block-jump} instruction adds a
 64-bit relative address to the \emph{immediate base} register.
@@ -3606,7 +3606,7 @@ the resulting \emph{immediate base} address is \emph{$[ib + simm9 \times 64]$}.
 
 \needspace{8\baselineskip}
 \subsection{link}
-\insrcimmsix{fun}{uimm}{00100}{00}{\textbf{link.i64}\: fun3, ib64(uimm6)}
+\insrcimmsix{fun}{uimm}{00100}{\textbf{link.i64}\: fun3, ib64(uimm6)}
 \\
 the \emph{link} instruction loads a 64-bit constant addressed by \emph{$[ib
 + uimm6 \times 8]$} containing a \emph{i32x2} relative address vector,
@@ -3658,7 +3658,7 @@ dispatch to a control flow integrity trap handler.
 
 \needspace{8\baselineskip}
 \subsection{movh}
-\insrcimmsix{rc}{uimm}{00101}{00}{\textbf{movh.i64}\: rc, ib32(uimm6)}
+\insrcimmsix{rc}{uimm}{00101}{\textbf{movh.i64}\: rc, ib32(uimm6)}
 \\
 the \emph{movh} or \emph{move-half-immediate-block} instruction loads a
 32-bit constant addressed by \emph{$[ib + uimm6 \times 4]$}, which it
@@ -3669,7 +3669,7 @@ sign-extends to 64-bits, then saves to the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{movw}
-\insrcimmsix{rc}{uimm}{00110}{00}{\textbf{movw.i64}\: rc, ib64(uimm6)}
+\insrcimmsix{rc}{uimm}{00110}{\textbf{movw.i64}\: rc, ib64(uimm6)}
 \\
 the \emph{movw} or \emph{move-word-immediate-block} instruction loads a
 64-bit constant addressed by \emph{$[ib + uimm6 \times 8]$} then saves
@@ -3680,7 +3680,7 @@ it to the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{movi}
-\insrcimmsix{rc}{simm}{00111}{00}{\textbf{movi.i64}\: rc, simm6}
+\insrcimmsix{rc}{simm}{00111}{\textbf{movi.i64}\: rc, simm6}
 \\
 the \emph{movi} or \emph{move-immediate} instruction sign-extends the
 immediate value in \emph{simm6} then saves the result in the \emph{rc}
@@ -3691,7 +3691,7 @@ register.
 
 \needspace{8\baselineskip}
 \subsection{addi}
-\insrcimmsix{rc}{simm}{01000}{00}{\textbf{addi.i64}\: rc, simm6}
+\insrcimmsix{rc}{simm}{01000}{\textbf{addi.i64}\: rc, simm6}
 \\
 the \emph{addi} or \emph{add-immediate} instruction sign-extends the
 immediate value in \emph{simm6} then adds it to the \emph{rc} register.
@@ -3701,7 +3701,7 @@ immediate value in \emph{simm6} then adds it to the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{srli}
-\insrcimmsix{rc}{uimm}{01001}{00}{\textbf{srli.i64}\: rc, uimm6}
+\insrcimmsix{rc}{uimm}{01001}{\textbf{srli.i64}\: rc, uimm6}
 \\
 the \emph{srli} or \emph{shift-right-logical-immediate} instruction
 performs a logical right shift by \emph{uimm6} bits of the value in
@@ -3712,7 +3712,7 @@ the \emph{rc} register. zeros are copied into the left most bits.
 
 \needspace{8\baselineskip}
 \subsection{srai}
-\insrcimmsix{rc}{uimm}{01010}{00}{\textbf{srai.i64}\: rc, uimm6}
+\insrcimmsix{rc}{uimm}{01010}{\textbf{srai.i64}\: rc, uimm6}
 \\
 the \emph{srai} or \emph{shift-right-arithmetic-immediate} instruction
 performs an arithmetic right shift by \emph{uimm6} bits of the value in
@@ -3723,7 +3723,7 @@ the \emph{rc} register. the sign is copied into the left most bits.
 
 \needspace{8\baselineskip}
 \subsection{slli}
-\insrcimmsix{rc}{uimm}{01011}{00}{\textbf{slli.i64}\: rc, uimm6}
+\insrcimmsix{rc}{uimm}{01011}{\textbf{slli.i64}\: rc, uimm6}
 \\
 the \emph{slli} or \emph{shift-left-logical-immediate} instruction
 performs a logical left shift by \emph{uimm6} bits of the value in
@@ -3734,7 +3734,7 @@ the \emph{rc} register. zeros are copied into the right most bits.
 
 \needspace{8\baselineskip}
 \subsection{addh}
-\insrcimmsix{rc}{uimm}{01100}{00}{\textbf{addh.i64}\: rc, ib32(uimm6)}
+\insrcimmsix{rc}{uimm}{01100}{\textbf{addh.i64}\: rc, ib32(uimm6)}
 \\
 the \emph{addh} or \emph{add-half-immediate-block} instruction loads
 a 32-bit constant addressed by \emph{$[ib + uimm6 \times 4]$}, which it
@@ -3745,7 +3745,7 @@ sign-extends to 64-bits, then adds to the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{leapc}
-\insrcimmsix{rc}{uimm}{01101}{00}{\textbf{leapc.i64}\: rc, ib32(uimm6)(pc)}
+\insrcimmsix{rc}{uimm}{01101}{\textbf{leapc.i64}\: rc, ib32(uimm6)(pc)}
 \\
 the \emph{leapc} or \emph{load-effective-address-pc} instruction
 loads a 32-bit constant addressed by \emph{$[ib + uimm6 \times 4]$},
@@ -3757,7 +3757,7 @@ and saves the result in the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{loadpc}
-\insrcimmsix{rc}{uimm}{01110}{00}{\textbf{loadpc.i64}\: rc, ib32(uimm6)(pc)}
+\insrcimmsix{rc}{uimm}{01110}{\textbf{loadpc.i64}\: rc, ib32(uimm6)(pc)}
 \\
 the \emph{loadpc} instruction loads a 32-bit constant addressed by
 \emph{$[ib + uimm6 \times 4]$} which it sign-extends to 64-bit, adds it to
@@ -3769,7 +3769,7 @@ from memory at that address and saves the result in the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{storepc}
-\insrcimmsix{rc}{uimm}{01111}{00}{\textbf{storepc.i64}\: rc, ib32(uimm6)(pc)}
+\insrcimmsix{rc}{uimm}{01111}{\textbf{storepc.i64}\: rc, ib32(uimm6)(pc)}
 \\
 the \emph{storepc} instruction loads a 32-bit constant addressed by
 \emph{$[ib + uimm6 \times 4]$} which it sign-extends to 64-bit, adds it to the
@@ -3781,7 +3781,7 @@ address a 64-bit value from the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{load}
-\insrcrbimmthree{rc}{rb}{uimm}{10000}{00}{\textbf{load.i64}\: rc, (uimm3 \times 8)(rb)}
+\insrcrbimmthree{rc}{rb}{uimm}{10000}{\textbf{load.i64}\: rc, (uimm3 \times 8)(rb)}
 \\
 the \emph{load} instruction computes the address \emph{$[rb + uimm3 \times 8]$}
 then loads a 64-bit value from memory at that address and saves the result in
@@ -3792,7 +3792,7 @@ the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{store}
-\insrcrbimmthree{rc}{rb}{uimm}{10001}{00}{\textbf{store.i64}\: rc, (uimm3 \times 8)(rb)}
+\insrcrbimmthree{rc}{rb}{uimm}{10001}{\textbf{store.i64}\: rc, (uimm3 \times 8)(rb)}
 \\
 the \emph{store} instruction computes the address \emph{$[rb + uimm3 \times 8]$}
 then stores a 64-bit value to memory at that address containing a 64-bit value
@@ -3803,7 +3803,7 @@ from the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{compare}
-\insrcrbimmthree{rc}{rb}{fun}{10010}{00}{\textbf{cmp.i64}\: rc, rb, fun3}
+\insrcrbimmthree{rc}{rb}{fun}{10010}{\textbf{cmp.i64}\: rc, rb, fun3}
 \\
 the \emph{compare} instruction performs a comparison between the value in
 \emph{rb} and \emph{rc} then saves the result in the \emph{flag} register.
@@ -3848,7 +3848,7 @@ register is set. the type of comparsion in \emph{fun3} can be one of:
 
 \needspace{8\baselineskip}
 \subsection{logic}
-\insrcrbimmthree{rc}{rb}{fun}{10011}{00}{\textbf{logic.i64}\: rc, rb, fun3}
+\insrcrbimmthree{rc}{rb}{fun}{10011}{\textbf{logic.i64}\: rc, rb, fun3}
 \\
 the \emph{logic} instruction performs a logic operation on the value
 in the \emph{rb} register then stores the result in the \emph{rc}
@@ -3889,7 +3889,7 @@ register. the type of logic operations in \emph{fun3} can be one of:
 
 \needspace{8\baselineskip}
 \subsection{pin}
-\insrcrbrc{rc}{rb}{ra}{10100}{00}{\textbf{pin.i64}\: rc, rb, ra}
+\insrcrbrc{rc}{rb}{ra}{10100}{\textbf{pin.i64}\: rc, rb, ra}
 \\
 the \emph{pin} or \emph{pack-indirect} instruction packs two absolute
 addresses as an \emph{i32x2} \emph{(pc,ib)} relative address vector.
@@ -3906,7 +3906,7 @@ vector and saved to the register \emph{rc}.
 
 \needspace{8\baselineskip}
 \subsection{and}
-\insrcrbrc{rc}{rb}{ra}{10101}{00}{\textbf{and.i64}\: rc, rb, ra}
+\insrcrbrc{rc}{rb}{ra}{10101}{\textbf{and.i64}\: rc, rb, ra}
 \\
 the \emph{and} instruction performs a \emph{logical-and} of the register
 \emph{rb} and the register \emph{ra} and saves the result in the
@@ -3917,7 +3917,7 @@ register \emph{rc}.
 
 \needspace{8\baselineskip}
 \subsection{or}
-\insrcrbrc{rc}{rb}{ra}{10110}{00}{\textbf{or.i64}\: rc, rb, ra}
+\insrcrbrc{rc}{rb}{ra}{10110}{\textbf{or.i64}\: rc, rb, ra}
 \\
 the \emph{or} instruction performs a \emph{logical-or} of the register
 \emph{rb} and the register \emph{ra} and saves the result in the
@@ -3928,7 +3928,7 @@ register \emph{rc}.
 
 \needspace{8\baselineskip}
 \subsection{xor}
-\insrcrbrc{rc}{rb}{ra}{10111}{00}{\textbf{xor.i64}\: rc, rb, ra}
+\insrcrbrc{rc}{rb}{ra}{10111}{\textbf{xor.i64}\: rc, rb, ra}
 \\
 the \emph{xor} instruction performs a \emph{logical-exclusive-or}
 of the register \emph{rb} and the register \emph{ra} and saves the
@@ -3939,7 +3939,7 @@ result in the register \emph{rc}.
 
 \needspace{8\baselineskip}
 \subsection{add}
-\insrcrbrc{rc}{rb}{ra}{11000}{00}{\textbf{add.i64}\: rc, rb, ra}
+\insrcrbrc{rc}{rb}{ra}{11000}{\textbf{add.i64}\: rc, rb, ra}
 \\
 the \emph{add} instruction adds the \emph{rb} register to
 the \emph{ra} register and saves the result in the \emph{rc} register.
@@ -3949,7 +3949,7 @@ the \emph{ra} register and saves the result in the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{srl}
-\insrcrbrc{rc}{rb}{ra}{11001}{00}{\textbf{srl.i64}\: rc, rb, ra}
+\insrcrbrc{rc}{rb}{ra}{11001}{\textbf{srl.i64}\: rc, rb, ra}
 \\
 the \emph{srl} or \emph{shift-right-logical} instruction performs a
 logical right shift of the value in the \emph{rb} register by the
@@ -3962,7 +3962,7 @@ zeros are copied into the right most bits.
 
 \needspace{8\baselineskip}
 \subsection{sra}
-\insrcrbrc{rc}{rb}{ra}{11010}{00}{\textbf{sra.i64}\: rc, rb, ra}
+\insrcrbrc{rc}{rb}{ra}{11010}{\textbf{sra.i64}\: rc, rb, ra}
 \\
 the \emph{sra} or \emph{shift-right-arithmetic} instruction performs an
 arithmetic right shift of the value in the \emph{rb} register by the
@@ -3974,7 +3974,7 @@ number of bits in register \emph{ra} then saves the result in the
 
 \needspace{8\baselineskip}
 \subsection{sll}
-\insrcrbrc{rc}{rb}{ra}{11011}{00}{\textbf{sll.i64}\: rc, rb, ra}
+\insrcrbrc{rc}{rb}{ra}{11011}{\textbf{sll.i64}\: rc, rb, ra}
 \\
 the \emph{sll} or \emph{shift-left-logical} instruction performs a
 logical left shift of the value in the \emph{rb} register by the
@@ -3986,7 +3986,7 @@ number of bits in register \emph{ra} then saves the result in the
 
 \needspace{8\baselineskip}
 \subsection{sub}
-\insrcrbrc{rc}{rb}{ra}{11100}{00}{\textbf{sub.i64}\: rc, rb, ra}
+\insrcrbrc{rc}{rb}{ra}{11100}{\textbf{sub.i64}\: rc, rb, ra}
 \\
 the \emph{sub} instruction subtracts the \emph{ra} register from
 the \emph{rb} register and saves the result in the \emph{rc} register.
@@ -3996,7 +3996,7 @@ the \emph{rb} register and saves the result in the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{mul}
-\insrcrbrc{rc}{rb}{ra}{11101}{00}{\textbf{mul.i64}\: rc, rb, ra}
+\insrcrbrc{rc}{rb}{ra}{11101}{\textbf{mul.i64}\: rc, rb, ra}
 \\
 the \emph{mul} instruction performs signed multiplication of the
 \emph{rb} register with the \emph{ra} register and saves the
@@ -4007,7 +4007,7 @@ result in the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{div}
-\insrcrbrc{rc}{rb}{ra}{11110}{00}{\textbf{div.i64}\: rc, rb, ra}
+\insrcrbrc{rc}{rb}{ra}{11110}{\textbf{div.i64}\: rc, rb, ra}
 \\
 the \emph{div} instruction performs signed division of the
 \emph{rb} register by the \emph{ra} register and saves the
@@ -4024,13 +4024,12 @@ a subsequent branch can handle the division by zero.
 
 \needspace{8\baselineskip}
 \subsection{illegal}
-\insnimmnine{uimm}{11111}{00}{\textbf{illegal}\: uimm9}
+\insnimmnine{uimm}{11111}{\textbf{illegal}\: uimm9}
 \\
 the \emph{illegal} instruction causes an illegal instruction trap.
 \emph{program counter} and trap cause are saved to privileged registers
 for the operating system to dispatch to an illegal instruction handler
 and the \emph{program counter} is set to a trap vector address.
-
 
 \chapter{Assembly}
 
@@ -4326,7 +4325,7 @@ r7    & ra    & return address / (pc,ib) link vector        & caller \\
 
 \section{Opcode summary --- 16-bit}
 
-\newcommand{\ainsnimmnine}[5]{
+\newcommand{\ainsnimmnine}[4]{
 \draw [line width=0.2mm, black!80] (0,0-#1)    rectangle (9,1-#1);
 \node [font=\small,anchor=base] at (4.5,0.25-#1)  {\textbf{#2}};
 
@@ -4334,12 +4333,12 @@ r7    & ra    & return address / (pc,ib) link vector        & caller \\
 \node [font=\small,anchor=base] at (11.5,0.25-#1)  {\textbf{#3}};
 
 \draw [line width=0.2mm, black!80] (14,0-#1)     rectangle (16,1-#1);
-\node [font=\small,anchor=base] at (15.0,0.25-#1)  {\textbf{#4}};
+\node [font=\small,anchor=base] at (15.0,0.25-#1)  {\textbf{00}};
 
-\node [font=\small,anchor=base west] at (17.0,0.25-#1)  {$#5$};
+\node [font=\small,anchor=base west] at (17.0,0.25-#1)  {$#4$};
 }
 
-\newcommand{\ainsrcimmsix}[6]{
+\newcommand{\ainsrcimmsix}[5]{
 \draw [line width=0.2mm, black!80] (0,0-#1)    rectangle (3,1-#1);
 \node [font=\small,anchor=base] at (1.5,0.25-#1)  {\textbf{#2}};
 
@@ -4350,12 +4349,31 @@ r7    & ra    & return address / (pc,ib) link vector        & caller \\
 \node [font=\small,anchor=base] at (11.5,0.25-#1)  {\textbf{#4}};
 
 \draw [line width=0.2mm, black!80] (14,0-#1)     rectangle (16,1-#1);
-\node [font=\small,anchor=base] at (15.0,0.25-#1)  {\textbf{#5}};
+\node [font=\small,anchor=base] at (15.0,0.25-#1)  {\textbf{00}};
+
+\node [font=\small,anchor=base west] at (17.0,0.25-#1)  {$#5$};
+}
+
+\newcommand{\ainsrcrbimmthree}[6]{
+\draw [line width=0.2mm, black!80] (0,0-#1)    rectangle (3,1-#1);
+\node [font=\small,anchor=base] at (1.5,0.25-#1)  {\textbf{#2}};
+
+\draw [line width=0.2mm, black!80] (3,0-#1)    rectangle (6,1-#1);
+\node [font=\small,anchor=base] at (4.5,0.25-#1)  {\textbf{#3}};
+
+\draw [line width=0.2mm, black!80] (6,0-#1)    rectangle (9,1-#1);
+\node [font=\small,anchor=base] at (7.5,0.25-#1)  {\textbf{#4}};
+
+\draw [line width=0.2mm, black!80] (9,0-#1)     rectangle (14,1-#1);
+\node [font=\small,anchor=base] at (11.5,0.25-#1)  {\textbf{#5}};
+
+\draw [line width=0.2mm, black!80] (14,0-#1)     rectangle (16,1-#1);
+\node [font=\small,anchor=base] at (15.0,0.25-#1)  {\textbf{00}};
 
 \node [font=\small,anchor=base west] at (17.0,0.25-#1)  {$#6$};
 }
 
-\newcommand{\ainsrcrbimmthree}[7]{
+\newcommand{\ainsrcrbrc}[6]{
 \draw [line width=0.2mm, black!80] (0,0-#1)    rectangle (3,1-#1);
 \node [font=\small,anchor=base] at (1.5,0.25-#1)  {\textbf{#2}};
 
@@ -4369,28 +4387,9 @@ r7    & ra    & return address / (pc,ib) link vector        & caller \\
 \node [font=\small,anchor=base] at (11.5,0.25-#1)  {\textbf{#5}};
 
 \draw [line width=0.2mm, black!80] (14,0-#1)     rectangle (16,1-#1);
-\node [font=\small,anchor=base] at (15.0,0.25-#1)  {\textbf{#6}};
+\node [font=\small,anchor=base] at (15.0,0.25-#1)  {\textbf{00}};
 
-\node [font=\small,anchor=base west] at (17.0,0.25-#1)  {$#7$};
-}
-
-\newcommand{\ainsrcrbrc}[7]{
-\draw [line width=0.2mm, black!80] (0,0-#1)    rectangle (3,1-#1);
-\node [font=\small,anchor=base] at (1.5,0.25-#1)  {\textbf{#2}};
-
-\draw [line width=0.2mm, black!80] (3,0-#1)    rectangle (6,1-#1);
-\node [font=\small,anchor=base] at (4.5,0.25-#1)  {\textbf{#3}};
-
-\draw [line width=0.2mm, black!80] (6,0-#1)    rectangle (9,1-#1);
-\node [font=\small,anchor=base] at (7.5,0.25-#1)  {\textbf{#4}};
-
-\draw [line width=0.2mm, black!80] (9,0-#1)     rectangle (14,1-#1);
-\node [font=\small,anchor=base] at (11.5,0.25-#1)  {\textbf{#5}};
-
-\draw [line width=0.2mm, black!80] (14,0-#1)     rectangle (16,1-#1);
-\node [font=\small,anchor=base] at (15.0,0.25-#1)  {\textbf{#6}};
-
-\node [font=\small,anchor=base west] at (17.0,0.25-#1)  {$#7$};
+\node [font=\small,anchor=base west] at (17.0,0.25-#1)  {$#6$};
 }
 
 \newcommand{\ainshdr}[5]{
@@ -4422,38 +4421,38 @@ r7    & ra    & return address / (pc,ib) link vector        & caller \\
 \node [font=\tiny,anchor=base] at (14.5,2.2)  {\textbf{1}};
 \node [font=\tiny,anchor=base] at (15.5,2.2)  {\textbf{0}};
 
-\ainsnimmnine{0}{uimm}{00000}{00}{\textbf{break}\: uimm9}
-\ainsnimmnine{1}{simm}{00001}{00}{\textbf{j}\: simm9 \times 2}
-\ainsnimmnine{2}{simm}{00010}{00}{\textbf{b}\: simm9 \times 2}
-\ainsnimmnine{3}{simm}{00011}{00}{\textbf{ibj}\: simm9 \times 64}
-\ainsrcimmsix{4}{fun}{uimm}{00100}{00}{\textbf{link.i64}\: fun3, ib64(uimm6)}
-\ainsrcimmsix{5}{rc}{uimm}{00101}{00}{\textbf{movh.i64}\: rc, ib32(uimm6)}
-\ainsrcimmsix{6}{rc}{uimm}{00110}{00}{\textbf{movw.i64}\: rc, ib64(uimm6)}
-\ainsrcimmsix{7}{rc}{simm}{00111}{00}{\textbf{movi.i64}\: rc, simm6}
-\ainsrcimmsix{8}{rc}{simm}{01000}{00}{\textbf{addi.i64}\: rc, simm6}
-\ainsrcimmsix{9}{rc}{uimm}{01001}{00}{\textbf{srli.i64}\: rc, uimm6}
-\ainsrcimmsix{10}{rc}{uimm}{01010}{00}{\textbf{srai.i64}\: rc, uimm6}
-\ainsrcimmsix{11}{rc}{uimm}{01011}{00}{\textbf{slli.i64}\: rc, uimm6}
-\ainsrcimmsix{12}{rc}{uimm}{01100}{00}{\textbf{addh.i64}\: rc, ib32(uimm6)}
-\ainsrcimmsix{13}{rc}{uimm}{01101}{00}{\textbf{leapc.i64}\: rc, ib32(uimm6)(pc)}
-\ainsrcimmsix{14}{rc}{uimm}{01110}{00}{\textbf{loadpc.i64}\: rc, ib32(uimm6)(pc)}
-\ainsrcimmsix{15}{rc}{uimm}{01111}{00}{\textbf{storepc.i64}\: rc, ib32(uimm6)(pc)}
-\ainsrcrbimmthree{16}{rc}{rb}{uimm}{10000}{00}{\textbf{load.i64}\: rc, (uimm3 \times 8)(rb)}
-\ainsrcrbimmthree{17}{rc}{rb}{uimm}{10001}{00}{\textbf{store.i64}\: rc, (uimm3 \times 8)(rb)}
-\ainsrcrbimmthree{18}{rc}{rb}{fun}{10010}{00}{\textbf{compare.i64}\: rc, rb, fun3}
-\ainsrcrbimmthree{19}{rc}{rb}{fun}{10011}{00}{\textbf{logic.i64}\: rc, rb, fun3}
-\ainsrcrbrc{20}{rc}{rb}{ra}{10100}{00}{\textbf{pin.i64}\: rc, rb, ra}
-\ainsrcrbrc{21}{rc}{rb}{ra}{10101}{00}{\textbf{and.i64}\: rc, rb, ra}
-\ainsrcrbrc{22}{rc}{rb}{ra}{10110}{00}{\textbf{or.i64}\: rc, rb, ra}
-\ainsrcrbrc{23}{rc}{rb}{ra}{10111}{00}{\textbf{xor.i64}\: rc, rb, ra}
-\ainsrcrbrc{24}{rc}{rb}{ra}{11000}{00}{\textbf{add.i64}\: rc, rb, ra}
-\ainsrcrbrc{25}{rc}{rb}{ra}{11001}{00}{\textbf{srl.i64}\: rc, rb, ra}
-\ainsrcrbrc{26}{rc}{rb}{ra}{11010}{00}{\textbf{sra.i64}\: rc, rb, ra}
-\ainsrcrbrc{27}{rc}{rb}{ra}{11011}{00}{\textbf{sll.i64}\: rc, rb, ra}
-\ainsrcrbrc{28}{rc}{rb}{ra}{11100}{00}{\textbf{sub.i64}\: rc, rb, ra}
-\ainsrcrbrc{29}{rc}{rb}{ra}{11101}{00}{\textbf{mul.i64}\: rc, rb, ra}
-\ainsrcrbrc{30}{rc}{rb}{ra}{11110}{00}{\textbf{div.i64}\: rc, rb, ra}
-\ainsnimmnine{31}{uimm}{11111}{00}{\textbf{illegal}\: uimm9}
+\ainsnimmnine{0}{uimm}{00000}{\textbf{break}\: uimm9}
+\ainsnimmnine{1}{simm}{00001}{\textbf{j}\: simm9 \times 2}
+\ainsnimmnine{2}{simm}{00010}{\textbf{b}\: simm9 \times 2}
+\ainsnimmnine{3}{simm}{00011}{\textbf{ibj}\: simm9 \times 64}
+\ainsrcimmsix{4}{fun}{uimm}{00100}{\textbf{link.i64}\: fun3, ib64(uimm6)}
+\ainsrcimmsix{5}{rc}{uimm}{00101}{\textbf{movh.i64}\: rc, ib32(uimm6)}
+\ainsrcimmsix{6}{rc}{uimm}{00110}{\textbf{movw.i64}\: rc, ib64(uimm6)}
+\ainsrcimmsix{7}{rc}{simm}{00111}{\textbf{movi.i64}\: rc, simm6}
+\ainsrcimmsix{8}{rc}{simm}{01000}{\textbf{addi.i64}\: rc, simm6}
+\ainsrcimmsix{9}{rc}{uimm}{01001}{\textbf{srli.i64}\: rc, uimm6}
+\ainsrcimmsix{10}{rc}{uimm}{01010}{\textbf{srai.i64}\: rc, uimm6}
+\ainsrcimmsix{11}{rc}{uimm}{01011}{\textbf{slli.i64}\: rc, uimm6}
+\ainsrcimmsix{12}{rc}{uimm}{01100}{\textbf{addh.i64}\: rc, ib32(uimm6)}
+\ainsrcimmsix{13}{rc}{uimm}{01101}{\textbf{leapc.i64}\: rc, ib32(uimm6)(pc)}
+\ainsrcimmsix{14}{rc}{uimm}{01110}{\textbf{loadpc.i64}\: rc, ib32(uimm6)(pc)}
+\ainsrcimmsix{15}{rc}{uimm}{01111}{\textbf{storepc.i64}\: rc, ib32(uimm6)(pc)}
+\ainsrcrbimmthree{16}{rc}{rb}{uimm}{10000}{\textbf{load.i64}\: rc, (uimm3 \times 8)(rb)}
+\ainsrcrbimmthree{17}{rc}{rb}{uimm}{10001}{\textbf{store.i64}\: rc, (uimm3 \times 8)(rb)}
+\ainsrcrbimmthree{18}{rc}{rb}{fun}{10010}{\textbf{compare.i64}\: rc, rb, fun3}
+\ainsrcrbimmthree{19}{rc}{rb}{fun}{10011}{\textbf{logic.i64}\: rc, rb, fun3}
+\ainsrcrbrc{20}{rc}{rb}{ra}{10100}{\textbf{pin.i64}\: rc, rb, ra}
+\ainsrcrbrc{21}{rc}{rb}{ra}{10101}{\textbf{and.i64}\: rc, rb, ra}
+\ainsrcrbrc{22}{rc}{rb}{ra}{10110}{\textbf{or.i64}\: rc, rb, ra}
+\ainsrcrbrc{23}{rc}{rb}{ra}{10111}{\textbf{xor.i64}\: rc, rb, ra}
+\ainsrcrbrc{24}{rc}{rb}{ra}{11000}{\textbf{add.i64}\: rc, rb, ra}
+\ainsrcrbrc{25}{rc}{rb}{ra}{11001}{\textbf{srl.i64}\: rc, rb, ra}
+\ainsrcrbrc{26}{rc}{rb}{ra}{11010}{\textbf{sra.i64}\: rc, rb, ra}
+\ainsrcrbrc{27}{rc}{rb}{ra}{11011}{\textbf{sll.i64}\: rc, rb, ra}
+\ainsrcrbrc{28}{rc}{rb}{ra}{11100}{\textbf{sub.i64}\: rc, rb, ra}
+\ainsrcrbrc{29}{rc}{rb}{ra}{11101}{\textbf{mul.i64}\: rc, rb, ra}
+\ainsrcrbrc{30}{rc}{rb}{ra}{11110}{\textbf{div.i64}\: rc, rb, ra}
+\ainsnimmnine{31}{uimm}{11111}{\textbf{illegal}\: uimm9}
 \ainshdr{-1}{operand}{opcode}{size}
 
 \end{scope}
