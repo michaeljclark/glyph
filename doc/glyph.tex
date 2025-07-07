@@ -815,13 +815,13 @@ to function entry.
 the \emph{immediate base} register.
 \item \texttt{movw} \emph{move-word-immediate-block} uses an unsigned
 displacement to access constants.
-\item \texttt{jalib} \emph{jump-and-link-immediate-block} or \emph{call}
-\emph{link function}
+\item \texttt{jalib} \emph{jump-and-link-immediate-block} or
+\emph{link function call}
 links address vector and adds constants to \emph{(pc,ib)} and is used
 to branch the \emph{program counter} and \emph{immediate base} register
 at the same time for calling procedures.
-\item \texttt{jtlib} \emph{jump-to-link-immediate-block} or \emph{return}
-\emph{link function}
+\item \texttt{jtlib} \emph{jump-to-link-immediate-block} or
+\emph{link function return}
 subtracts link vector from and adds constants to \emph{(pc,ib)} and is
 used to branch the \emph{program counter} and \emph{immediate base}
 register at the same time for returning from called procedures.
