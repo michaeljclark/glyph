@@ -1979,7 +1979,7 @@ registers:
 \texttt{0x24} & saddr     & system thread address \\
 \texttt{0x25} & sdomain   & system thread domain \\
 \texttt{0x26} & starget   & system target address \\
-\texttt{0x27} & smessage  & system message interrupt \\
+\texttt{0x27} & smessage  & system target message \\
 \texttt{0x28} & stimer    & system deadline timer \\
 \texttt{0x29} & sie       & system interrupt enable \\
 \texttt{0x2a} & sip       & system interrupt pending \\
@@ -2295,13 +2295,13 @@ one in the \emph{A} field is a \emph{domain address}.
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{A}};
 \end{tikzpicture}
 
-\subsubsection{system message (\texttt{smessage})}
+\subsubsection{system target message (\texttt{smessage})}
 \texttt{smessage} is a write-only register that causes an edge-triggered
 virtual interrupt to be queued to the thread set in \texttt{starget}.
 virtual interrupts are marked pending in the \texttt{V} field of the
 \texttt{tstatus} register for the target thread.
 
-\subsubsection{system timer (\texttt{stimer})}
+\subsubsection{system deadline timer (\texttt{stimer})}
 \texttt{stimer} is a read-write register containing the deadline timer
 for this thread. when the system clock reaches the value in the
 register, a \emph{timer interrupt} is triggered.
