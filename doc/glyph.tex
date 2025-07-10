@@ -1893,12 +1893,28 @@ the section describes the user-level clock and frequency registers.
 \texttt{ctime} is a read-only register containing the wall-clock
 tick counter since power on in clock tick units denoted by \texttt{cfreq}.
 this register is visible if \texttt{scontrol.T} is enabled.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{clock time}};
+\end{tikzpicture}
 
 \subsubsection{clock frequency (\texttt{cfreq})}
 \texttt{cfreq} is a read-only register containing the wall-clock
 tick interval in picoseconds; \(\frac{10^{12}}{f} \) where \( f \)
 is the frequency in Hertz (Hz).
 this register is visible if \texttt{scontrol.T} is enabled.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{clock frequency}};
+\end{tikzpicture}
 
 \subsection{thread address registers}
 the section describes the user-level thread address registers.
@@ -1975,14 +1991,15 @@ registers:
 \hline
 \texttt{0x21} & scontrol  & system control \\
 \texttt{0x22} & sfeature  & system feature \\
-\texttt{0x23} & sptr      & system page table root \\
-\texttt{0x24} & saddr     & system thread address \\
-\texttt{0x25} & sdomain   & system thread domain \\
-\texttt{0x26} & starget   & system target address \\
-\texttt{0x27} & smessage  & system target message \\
-\texttt{0x28} & stimer    & system deadline timer \\
-\texttt{0x29} & sie       & system interrupt enable \\
-\texttt{0x2a} & sip       & system interrupt pending \\
+\texttt{0x23} & sversion  & system version \\
+\texttt{0x24} & sptr      & system page table root \\
+\texttt{0x25} & saddr     & system thread address \\
+\texttt{0x26} & sdomain   & system thread domain \\
+\texttt{0x27} & starget   & system target address \\
+\texttt{0x28} & smessage  & system target message \\
+\texttt{0x29} & stimer    & system deadline timer \\
+\texttt{0x2a} & sie       & system interrupt enable \\
+\texttt{0x2b} & sip       & system interrupt pending \\
 \hline
 \multicolumn{3}{|l|}{\textbf{privileged debug registers}} \\
 \hline
@@ -2063,21 +2080,47 @@ are enabled.
 
 \subsubsection{trap scratch (\texttt{tscratch})}
 \texttt{tscratch} is a read-write save register for use during trap handling.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{scratch value}};
+\end{tikzpicture}
 
+\newpage
 \subsubsection{trap value (\texttt{tvalue})}
-\texttt{tvalue} is a read-only register containing the identity of the trap,
+\texttt{tvalue} is a read-only register containing the identity of the trap
 and may contain:
 
 \begin{itemize}[itemsep=0pt]
 \item the faulting instruction word for \emph{break} and \emph{illegal instruction exceptions}.
-\item the faulting address for \emph{access} and \emph{page faults}.
+\item the faulting address for \emph{misaligned}, \emph{access} and \emph{page faults}.
 \item the message value for \emph{virtual interrupts}.
 \item the system clock time for \emph{timer interrupts}.
 \end{itemize}
 
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{trap value}};
+\end{tikzpicture}
+
 \subsubsection{trap cause (\texttt{tcause})}
 \texttt{tcause} is a read-only register that contains the cause of the
 current trap.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (29,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (29.5,1.25)  {\textsf{5}};
+\node [font=\small,anchor=base] at (30.5,0.25)  {\emph{cause}};
+\end{tikzpicture}
 
 \begin{table}[h]
 \centering
@@ -2114,26 +2157,68 @@ current trap.
 \label{tab:trap-causes}
 \end{table}
 
+\newpage
 \subsubsection{trap acknowledge (\texttt{tack})}
 \texttt{tack} is a write-only register where the trap cause is written
 to acknowledge the trap so that interrupts are not delivered
 while state is being saved, and for double-faults to be detected.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (29,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (29.5,1.25)  {\textsf{5}};
+\node [font=\small,anchor=base] at (30.5,0.25)  {\emph{cause}};
+\end{tikzpicture}
 
 \subsubsection{trap exception program counter (\texttt{tepc})}
 \texttt{tepc} is a read-only register which contains the \emph{program
 counter} address before the trap.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{program counter}};
+\end{tikzpicture}
 
 \subsubsection{trap exception immedidate base (\texttt{teib})}
 \texttt{teib} is a read-only register which contains the \emph{immediate
 base} address before the trap.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{immedidate base}};
+\end{tikzpicture}
 
 \subsubsection{trap handler program counter (\texttt{thpc})}
 \texttt{thpc} is a read-write register containing the address of the
 system trap handler routine.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{program counter}};
+\end{tikzpicture}
 
 \subsubsection{trap handler immediate base (\texttt{thib})}
 \texttt{thib} is a read-write register containing the address of the
 system trap handler constants.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{immediate base}};
+\end{tikzpicture}
 
 \newpage
 \subsection{privileged system registers}
@@ -2141,7 +2226,8 @@ the section describes the privileged system registers.
 
 \subsubsection{system control (\texttt{scontrol})}
 \texttt{scontrol} is a read-write register containing system control bits.
-
+\\
+\par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
@@ -2181,7 +2267,8 @@ the section describes the privileged system registers.
 
 \subsubsection{system feature (\texttt{sfeature})}
 \texttt{sfeature} is a read-only register containing system feature bits.
-
+\\
+\par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
@@ -2219,6 +2306,28 @@ the section describes the privileged system registers.
 \label{tab:system-feature-fields}
 \end{table}
 
+\subsubsection{system version (\texttt{sversion})}
+\texttt{sversion} is a read-only register containing the system version
+number described by the \emph{major}, \emph{minor}, and \emph{patch} fields.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (28,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (28.5,1.25)  {\textsf{7}};
+\node [font=\small,anchor=base] at (30,0.25)  {\emph{patch}};
+\draw [black!95] (24.0,0)   rectangle (28,1);
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{8}};
+\node [font=\tiny,anchor=base] at (27.5,1.25)  {\textsf{15}};
+\node [font=\small,anchor=base] at (26.0,0.25)  {\emph{minor}};
+\draw [black!95] (20.0,0)   rectangle (24.0,1);
+\node [font=\tiny,anchor=base] at (20.5,1.25)  {\textsf{16}};
+\node [font=\tiny,anchor=base] at (23.5,1.25)  {\textsf{23}};
+\node [font=\small,anchor=base] at (22.0,0.25)  {\emph{major}};
+\end{tikzpicture}
+
+\newpage
 \subsubsection{system page table root (\texttt{sptr})}
 \texttt{sptr} is a read-write register containing the page table root
 physical address for address translation on this thread. the \emph{ASID}
@@ -2241,7 +2350,6 @@ field contains the address space identifier for this thread.
 \node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
 \end{tikzpicture}
 
-\newpage
 \subsubsection{system thread address (\texttt{saddr})}
 \texttt{saddr} is a read-only register containing the unique system-wide
 topological address for this thread. the system-wide topological
@@ -2300,21 +2408,56 @@ one in the \emph{A} field is a \emph{domain address}.
 virtual interrupt to be queued to the thread set in \texttt{starget}.
 virtual interrupts are marked pending in the \texttt{V} field of the
 \texttt{tstatus} register for the target thread.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{message value}};
+\end{tikzpicture}
 
+\newpage
 \subsubsection{system deadline timer (\texttt{stimer})}
 \texttt{stimer} is a read-write register containing the deadline timer
 for this thread. when the system clock reaches the value in the
 register, a \emph{timer interrupt} is triggered.
 timer interrupts are marked pending in the \texttt{T} field of the
 \texttt{tstatus} register.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{clock time}};
+\end{tikzpicture}
 
 \subsubsection{system interrupt enable (\texttt{sie})}
 \texttt{sie} is a read-write register that contains interrupt enable flags
 for 32 wired interrupt pins.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (16,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (16.5,1.25)  {\textsf{31}};
+\node [font=\small,anchor=base] at (24,0.25)  {\emph{interrupt enable 0-31}};
+\end{tikzpicture}
 
 \subsubsection{system interrupt pending (\texttt{sip})}
 \texttt{sip} is a read-only register that contains interrupt pending flags
 for 32 wired interrupt pins.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (16,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (16.5,1.25)  {\textsf{31}};
+\node [font=\small,anchor=base] at (24,0.25)  {\emph{interrupt pending 0-31}};
+\end{tikzpicture}
 
 \newpage
 \subsection{privileged debug registers}
@@ -2360,29 +2503,78 @@ monitor execeptions.
 \subsubsection{debug cycle counter (\texttt{dcycle})}
 \texttt{dcycle} is a read-only register containing the number of cycles
 retired since power on.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{cycle counter}};
+\end{tikzpicture}
 
 \subsubsection{debug instruction counter (\texttt{dinst})}
 \texttt{dinst} is a read-only register containing the number of instructions
 retired since power on.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{instruction counter}};
+\end{tikzpicture}
 
 \subsubsection{debug stop instruction (\texttt{dstop})}
 \texttt{dstop} is a read-write register containing an instruction number
 to halt execution on and raise a \emph{debug monitor exception}.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{stopping instruction}};
+\end{tikzpicture}
 
+\newpage
 \subsubsection{debug monitor fetch address (\texttt{dfetch})}
 \texttt{dfetch} is a read-write register containing a memory fetch address
 to monitor for and halt execution on and raise a \emph{debug monitor
 exception} for a matching memory fetch address.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{fetch address}};
+\end{tikzpicture}
 
 \subsubsection{debug monitor read address (\texttt{dread})}
 \texttt{dread} is a read-write register containing the memory load
 address to monitor for and halt execution on and raise a \emph{debug
 monitor exception} for a matching memory load address.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{read address}};
+\end{tikzpicture}
 
 \subsubsection{debug monitor write address (\texttt{dwrite})}
 \texttt{dwrite} is a read-write register containing the memory store
 address to monitor for and halt execution on and raise a \emph{debug
 monitor exception} for a matching memory store address.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{write address}};
+\end{tikzpicture}
 
 \newpage
 \section{Capability extension}
@@ -2457,7 +2649,8 @@ the capability extension.
 
 \subsubsection{capability control (\texttt{ccontrol})}
 \texttt{ccontrol} is a read-write register containing capability control bits.
-
+\\
+\par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
@@ -2926,6 +3119,14 @@ routines in each domain. the address is a virtual address interpreted in
 relation to the page table root for the domain. domain context switches
 copy the value for the target domain into \texttt{thpc} and set the
 \emph{program counter} register.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{program counter}};
+\end{tikzpicture}
 
 \subsubsection{domain trap handler immediate base (\texttt{domthib}$[\mathit{ndom}]$)}
 \texttt{domthib}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
@@ -2934,6 +3135,14 @@ constants in each domain. the address is a virtual address interpreted in
 relation to the page table root for the domain. domain context switches
 copy the value for the target domain into \texttt{thib} and set the
 \emph{immediate base} register.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{immediate base}};
+\end{tikzpicture}
 
 \newpage
 \section{Machine extension}
@@ -2975,7 +3184,8 @@ control and features.
 
 \subsubsection{machine control (\texttt{mcontrol})}
 \texttt{mcontrol} is a read-write register containing machine control bits.
-
+\\
+\par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
@@ -3007,7 +3217,8 @@ control and features.
 
 \subsubsection{machine feature (\texttt{mfeature})}
 \texttt{mfeature} is a read-only register containing machine feature bits.
-
+\\
+\par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
