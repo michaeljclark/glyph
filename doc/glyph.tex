@@ -2306,9 +2306,11 @@ the section describes the privileged system registers.
 \label{tab:system-feature-fields}
 \end{table}
 
+\newpage
 \subsubsection{system version (\texttt{sversion})}
-\texttt{sversion} is a read-only register containing the system version
-number described by the \emph{major}, \emph{minor}, and \emph{patch} fields.
+\texttt{sversion} is a read-only register containing a specification
+version number described by its \emph{major}, \emph{minor}, and \emph{patch}
+fields. the allowable values are specified in the following table.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -2318,16 +2320,29 @@ number described by the \emph{major}, \emph{minor}, and \emph{patch} fields.
 \node [font=\tiny,anchor=base] at (28.5,1.25)  {\textsf{7}};
 \node [font=\small,anchor=base] at (30,0.25)  {\emph{patch}};
 \draw [black!95] (24.0,0)   rectangle (28,1);
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{8}};
-\node [font=\tiny,anchor=base] at (27.5,1.25)  {\textsf{15}};
+\node [font=\tiny,anchor=base] at (27.5,1.25)  {\textsf{8}};
+\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{15}};
 \node [font=\small,anchor=base] at (26.0,0.25)  {\emph{minor}};
 \draw [black!95] (20.0,0)   rectangle (24.0,1);
-\node [font=\tiny,anchor=base] at (20.5,1.25)  {\textsf{16}};
-\node [font=\tiny,anchor=base] at (23.5,1.25)  {\textsf{23}};
+\node [font=\tiny,anchor=base] at (23.5,1.25)  {\textsf{16}};
+\node [font=\tiny,anchor=base] at (20.5,1.25)  {\textsf{23}};
 \node [font=\small,anchor=base] at (22.0,0.25)  {\emph{major}};
 \end{tikzpicture}
 
-\newpage
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{major} & \textbf{minor} & \textbf{patch} & \textbf{description} \\
+\hline
+\verb|0| & \verb|6| & \verb|0| & pre-release current \\
+\hline
+\end{tabular}
+\caption{system version values}
+\label{tab:system-version-values}
+\end{table}
+
 \subsubsection{system page table root (\texttt{sptr})}
 \texttt{sptr} is a read-write register containing the page table root
 physical address for address translation on this thread. the \emph{ASID}
@@ -2384,6 +2399,7 @@ can alias. this address is assigned during context switching.
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{1}};
 \end{tikzpicture}
 
+\newpage
 \subsubsection{system target address (\texttt{starget})}
 \texttt{starget} is a read-write register containing the system-wide
 target address of a thread to send a virtual interrupt.
@@ -2417,7 +2433,6 @@ virtual interrupts are marked pending in the \texttt{V} field of the
 \node [font=\small,anchor=base] at (16,0.25)  {\emph{message value}};
 \end{tikzpicture}
 
-\newpage
 \subsubsection{system deadline timer (\texttt{stimer})}
 \texttt{stimer} is a read-write register containing the deadline timer
 for this thread. when the system clock reaches the value in the
