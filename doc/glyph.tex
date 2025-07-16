@@ -811,21 +811,21 @@ instructions.
 \emph{immediate base} register address vector.
 \item link register contains a packed relative \emph{(pc,ib)} address vector
 to function entry.
-\item \texttt{ibj} \emph{immediate-block-jump} adds a relative address to
-the \emph{immediate base} register.
-\item \texttt{movw} \emph{move-word-immediate-block} uses an unsigned
-displacement to access constants.
-\item \texttt{jalib} \emph{jump-and-link-immediate-block} or
-\emph{link function call}
-links address vector and adds constants to \emph{(pc,ib)} and is used
-to branch the \emph{program counter} and \emph{immediate base} register
-at the same time for calling procedures.
-\item \texttt{jtlib} \emph{jump-to-link-immediate-block} or
-\emph{link function return}
-subtracts link vector from and adds constants to \emph{(pc,ib)} and is
-used to branch the \emph{program counter} and \emph{immediate base}
-register at the same time for returning from called procedures.
-\item \texttt{pin} \emph{pack-indirect} packs two absolute addresses as
+\item \texttt{ibj} --- \emph{immediate-block-jump} adds a relative address
+to the \emph{immediate base} register.
+\item \texttt{movw} --- \emph{move-word-immediate-block} uses a displacement
+to access a constant.
+\item \texttt{jalib} --- \emph{jump-and-link-immediate-block} or
+\emph{link-function-call} copies the address vector into the link register
+and adds constants to \emph{(pc,ib)}. it is used to branch the \emph{program
+counter} and \emph{immediate base} register at the same time for calling
+procedures.
+\item \texttt{jtlib} --- \emph{jump-to-link-immediate-block} or
+\emph{link-function-return} subtracts link vector from and adds constants
+to \emph{(pc,ib)}. it is used to branch the \emph{program counter} and the
+\emph{immediate base} register at the same time for returning from called
+procedures.
+\item \texttt{pin} --- \emph{pack-indirect} packs two absolute addresses as
 relative address vector from \emph{(pc,ib)} and is used for calling
 absolute addresses such as virtual functions.
 \end{itemize}
