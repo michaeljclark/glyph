@@ -3787,7 +3787,7 @@ are as follows:
 
 \needspace{8\baselineskip}
 \subsection{break}
-\insnimmnine{uimm}{00000}{\textbf{break}\: uimm9}
+\insnimmnine{uimm}{00000}{\textbf{break}\: \mathit{uimm9}}
 \\
 the \emph{break} instruction causes a debugger trap.
 \emph{program counter} and trap cause are saved to privileged
@@ -3796,7 +3796,7 @@ and the \emph{program counter} is set to a trap vector address.
 
 \needspace{8\baselineskip}
 \subsection{j}
-\insnimmnine{simm}{00001}{\textbf{j}\: simm9 \times 2}
+\insnimmnine{simm}{00001}{\textbf{j}\: \mathit{simm9} \times 2}
 \\
 the \emph{j} or \emph{jump} instruction is an unconditional branch instruction
 that adds a relative immediate address to the \emph{program counter}. the
@@ -3807,7 +3807,7 @@ resulting \emph{program counter} address is \emph{$[pc + simm9 \times 2]$}.
 
 \needspace{8\baselineskip}
 \subsection{b}
-\insnimmnine{simm}{00010}{\textbf{b}\: simm9 \times 2}
+\insnimmnine{simm}{00010}{\textbf{b}\: \mathit{simm9} \times 2}
 \\
 the \emph{b} or \emph{branch} instruction is a conditional branch instruction
 that adds a relative immediate address to the \emph{program counter}. if the
@@ -3821,7 +3821,7 @@ otherwise the \emph{program counter} is advanced normally.
 
 \needspace{8\baselineskip}
 \subsection{ibj}
-\insnimmnine{simm}{00011}{\textbf{ibj}\: simm9 \times 64}
+\insnimmnine{simm}{00011}{\textbf{ibj}\: \mathit{simm9} \times 64}
 \\
 the \emph{ibj} or \emph{immediate-block-jump} instruction adds a
 64-bit relative address to the \emph{immediate base} register.
@@ -3832,7 +3832,7 @@ the resulting \emph{immediate base} address is \emph{$[ib + simm9 \times 64]$}.
 
 \needspace{8\baselineskip}
 \subsection{link}
-\insrcimmsix{fun}{uimm}{00100}{\textbf{link.i64}\: fun3, ib64(uimm6)}
+\insrcimmsix{fun}{uimm}{00100}{\textbf{link.i64}\: \mathit{fun3}, \mathit{ib64}(\mathit{uimm6})}
 \\
 the \emph{link} instruction loads a 64-bit constant addressed by \emph{$[ib
 + uimm6 \times 8]$} containing a \emph{i32x2} relative address vector,
@@ -3884,7 +3884,7 @@ dispatch to a control flow integrity trap handler.
 
 \needspace{8\baselineskip}
 \subsection{movh}
-\insrcimmsix{rc}{uimm}{00101}{\textbf{movh.i64}\: rc, ib32(uimm6)}
+\insrcimmsix{rc}{uimm}{00101}{\textbf{movh.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})}
 \\
 the \emph{movh} or \emph{move-half-immediate-block} instruction loads a
 32-bit constant addressed by \emph{$[ib + uimm6 \times 4]$}, which it
@@ -3895,7 +3895,7 @@ sign-extends to 64-bits, then saves to the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{movw}
-\insrcimmsix{rc}{uimm}{00110}{\textbf{movw.i64}\: rc, ib64(uimm6)}
+\insrcimmsix{rc}{uimm}{00110}{\textbf{movw.i64}\: \mathit{rc}, \mathit{ib64}(\mathit{uimm6})}
 \\
 the \emph{movw} or \emph{move-word-immediate-block} instruction loads a
 64-bit constant addressed by \emph{$[ib + uimm6 \times 8]$} then saves
@@ -3906,7 +3906,7 @@ it to the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{movi}
-\insrcimmsix{rc}{simm}{00111}{\textbf{movi.i64}\: rc, simm6}
+\insrcimmsix{rc}{simm}{00111}{\textbf{movi.i64}\: \mathit{rc}, \mathit{simm6}}
 \\
 the \emph{movi} or \emph{move-immediate} instruction sign-extends the
 immediate value in \emph{simm6} then saves the result in the \emph{rc}
@@ -3917,7 +3917,7 @@ register.
 
 \needspace{8\baselineskip}
 \subsection{addi}
-\insrcimmsix{rc}{simm}{01000}{\textbf{addi.i64}\: rc, simm6; \mathit{flag}}
+\insrcimmsix{rc}{simm}{01000}{\textbf{addi.i64}\: \mathit{rc}, \mathit{simm6}; \mathit{flag}}
 \\
 the \emph{addi} or \emph{add-immediate} instruction sign-extends the
 immediate value in \emph{simm6} then adds it to the \emph{rc} register,
@@ -3929,7 +3929,7 @@ and carry is saved to the \emph{flag} register.
 
 \needspace{8\baselineskip}
 \subsection{srli}
-\insrcimmsix{rc}{uimm}{01001}{\textbf{srli.i64}\: rc, uimm6}
+\insrcimmsix{rc}{uimm}{01001}{\textbf{srli.i64}\: \mathit{rc}, \mathit{uimm6}}
 \\
 the \emph{srli} or \emph{shift-right-logical-immediate} instruction
 performs a logical right shift by \emph{uimm6} bits of the value in
@@ -3940,7 +3940,7 @@ the \emph{rc} register. zeros are copied into the left most bits.
 
 \needspace{8\baselineskip}
 \subsection{srai}
-\insrcimmsix{rc}{uimm}{01010}{\textbf{srai.i64}\: rc, uimm6}
+\insrcimmsix{rc}{uimm}{01010}{\textbf{srai.i64}\: \mathit{rc}, \mathit{uimm6}}
 \\
 the \emph{srai} or \emph{shift-right-arithmetic-immediate} instruction
 performs an arithmetic right shift by \emph{uimm6} bits of the value in
@@ -3951,7 +3951,7 @@ the \emph{rc} register. the sign is copied into the left most bits.
 
 \needspace{8\baselineskip}
 \subsection{slli}
-\insrcimmsix{rc}{uimm}{01011}{\textbf{slli.i64}\: rc, uimm6}
+\insrcimmsix{rc}{uimm}{01011}{\textbf{slli.i64}\: \mathit{rc}, \mathit{uimm6}}
 \\
 the \emph{slli} or \emph{shift-left-logical-immediate} instruction
 performs a logical left shift by \emph{uimm6} bits of the value in
@@ -3962,7 +3962,7 @@ the \emph{rc} register. zeros are copied into the right most bits.
 
 \needspace{8\baselineskip}
 \subsection{addh}
-\insrcimmsix{rc}{uimm}{01100}{\textbf{addh.i64}\: rc, ib32(uimm6); \mathit{flag}}
+\insrcimmsix{rc}{uimm}{01100}{\textbf{addh.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6}); \mathit{flag}}
 \\
 the \emph{addh} or \emph{add-half-immediate-block} instruction loads
 a 32-bit constant addressed by \emph{$[ib + uimm6 \times 4]$}, which it
@@ -3975,7 +3975,7 @@ and carry is saved to the \emph{flag} register.
 
 \needspace{8\baselineskip}
 \subsection{leapc}
-\insrcimmsix{rc}{uimm}{01101}{\textbf{leapc.i64}\: rc, ib32(uimm6)(pc)}
+\insrcimmsix{rc}{uimm}{01101}{\textbf{leapc.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}
 \\
 the \emph{leapc} or \emph{load-effective-address-pc} instruction
 loads a 32-bit constant addressed by \emph{$[ib + uimm6 \times 4]$},
@@ -3987,7 +3987,7 @@ and saves the result in the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{loadpc}
-\insrcimmsix{rc}{uimm}{01110}{\textbf{loadpc.i64}\: rc, ib32(uimm6)(pc)}
+\insrcimmsix{rc}{uimm}{01110}{\textbf{loadpc.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}
 \\
 the \emph{loadpc} instruction loads a 32-bit constant addressed by
 \emph{$[ib + uimm6 \times 4]$} which it sign-extends to 64-bit, adds it to
@@ -3999,7 +3999,7 @@ from memory at that address and saves the result in the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{storepc}
-\insrcimmsix{rc}{uimm}{01111}{\textbf{storepc.i64}\: rc, ib32(uimm6)(pc)}
+\insrcimmsix{rc}{uimm}{01111}{\textbf{storepc.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}
 \\
 the \emph{storepc} instruction loads a 32-bit constant addressed by
 \emph{$[ib + uimm6 \times 4]$} which it sign-extends to 64-bit, adds it to the
@@ -4011,7 +4011,7 @@ address a 64-bit value from the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{load}
-\insrcrbimmthree{rc}{rb}{uimm}{10000}{\textbf{load.i64}\: rc, (uimm3 \times 8)(rb)}
+\insrcrbimmthree{rc}{rb}{uimm}{10000}{\textbf{load.i64}\: \mathit{rc}, (\mathit{uimm3} \times 8)(\mathit{rb})}
 \\
 the \emph{load} instruction computes the address \emph{$[rb + uimm3 \times 8]$}
 then loads a 64-bit value from memory at that address and saves the result in
@@ -4022,7 +4022,7 @@ the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{store}
-\insrcrbimmthree{rc}{rb}{uimm}{10001}{\textbf{store.i64}\: rc, (uimm3 \times 8)(rb)}
+\insrcrbimmthree{rc}{rb}{uimm}{10001}{\textbf{store.i64}\: \mathit{rc}, (\mathit{uimm3} \times 8)(\mathit{rb})}
 \\
 the \emph{store} instruction computes the address \emph{$[rb + uimm3 \times 8]$}
 then stores a 64-bit value to memory at that address containing a 64-bit value
@@ -4033,7 +4033,7 @@ from the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{compare}
-\insrcrbimmthree{rc}{rb}{fun}{10010}{\textbf{cmp.i64}\: rc, rb, fun3}
+\insrcrbimmthree{rc}{rb}{fun}{10010}{\textbf{cmp.i64}\: \mathit{rc}, \mathit{rb}, \mathit{fun3}}
 \\
 the \emph{compare} instruction performs a comparison between the value in
 \emph{rb} and \emph{rc} then saves the result in the \emph{flag} register.
@@ -4078,7 +4078,7 @@ register is set. the type of comparsion in \emph{fun3} can be one of:
 
 \needspace{8\baselineskip}
 \subsection{logic}
-\insrcrbimmthree{rc}{rb}{fun}{10011}{\textbf{logic.i64}\: rc, rb, fun3}
+\insrcrbimmthree{rc}{rb}{fun}{10011}{\textbf{logic.i64}\: \mathit{rc}, \mathit{rb}, \mathit{fun3}}
 \\
 the \emph{logic} instruction performs a logic operation on the value
 in the \emph{rb} register then stores the result in the \emph{rc}
@@ -4119,7 +4119,7 @@ register. the type of logic operations in \emph{fun3} can be one of:
 
 \needspace{8\baselineskip}
 \subsection{pin}
-\insrcrbrc{rc}{rb}{ra}{10100}{\textbf{pin.i64}\: rc, rb, ra}
+\insrcrbrc{rc}{rb}{ra}{10100}{\textbf{pin.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
 \\
 the \emph{pin} or \emph{pack-indirect} instruction packs two absolute
 addresses as an \emph{i32x2} \emph{(pc,ib)} relative address vector.
@@ -4136,7 +4136,7 @@ vector and saved to the register \emph{rc}.
 
 \needspace{8\baselineskip}
 \subsection{and}
-\insrcrbrc{rc}{rb}{ra}{10101}{\textbf{and.i64}\: rc, rb, ra}
+\insrcrbrc{rc}{rb}{ra}{10101}{\textbf{and.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
 \\
 the \emph{and} instruction performs a \emph{logical-and} of the register
 \emph{rb} and the register \emph{ra} and saves the result in the
@@ -4147,7 +4147,7 @@ register \emph{rc}.
 
 \needspace{8\baselineskip}
 \subsection{or}
-\insrcrbrc{rc}{rb}{ra}{10110}{\textbf{or.i64}\: rc, rb, ra}
+\insrcrbrc{rc}{rb}{ra}{10110}{\textbf{or.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
 \\
 the \emph{or} instruction performs a \emph{logical-or} of the register
 \emph{rb} and the register \emph{ra} and saves the result in the
@@ -4158,7 +4158,7 @@ register \emph{rc}.
 
 \needspace{8\baselineskip}
 \subsection{xor}
-\insrcrbrc{rc}{rb}{ra}{10111}{\textbf{xor.i64}\: rc, rb, ra}
+\insrcrbrc{rc}{rb}{ra}{10111}{\textbf{xor.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
 \\
 the \emph{xor} instruction performs a \emph{logical-exclusive-or}
 of the register \emph{rb} and the register \emph{ra} and saves the
@@ -4169,7 +4169,7 @@ result in the register \emph{rc}.
 
 \needspace{8\baselineskip}
 \subsection{add}
-\insrcrbrc{rc}{rb}{ra}{11000}{\textbf{add.i64}\: rc, rb, ra; \mathit{flag}}
+\insrcrbrc{rc}{rb}{ra}{11000}{\textbf{add.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}; \mathit{flag}}
 \\
 the \emph{add} instruction adds the \emph{rb} register to
 the \emph{ra} register and saves the result in the \emph{rc} register,
@@ -4181,7 +4181,7 @@ and carry is saved to the \emph{flag} register.
 
 \needspace{8\baselineskip}
 \subsection{srl}
-\insrcrbrc{rc}{rb}{ra}{11001}{\textbf{srl.i64}\: rc, rb, ra}
+\insrcrbrc{rc}{rb}{ra}{11001}{\textbf{srl.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
 \\
 the \emph{srl} or \emph{shift-right-logical} instruction performs a
 logical right shift of the value in the \emph{rb} register by the
@@ -4194,7 +4194,7 @@ zeros are copied into the right most bits.
 
 \needspace{8\baselineskip}
 \subsection{sra}
-\insrcrbrc{rc}{rb}{ra}{11010}{\textbf{sra.i64}\: rc, rb, ra}
+\insrcrbrc{rc}{rb}{ra}{11010}{\textbf{sra.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
 \\
 the \emph{sra} or \emph{shift-right-arithmetic} instruction performs an
 arithmetic right shift of the value in the \emph{rb} register by the
@@ -4206,7 +4206,7 @@ number of bits in register \emph{ra} then saves the result in the
 
 \needspace{8\baselineskip}
 \subsection{sll}
-\insrcrbrc{rc}{rb}{ra}{11011}{\textbf{sll.i64}\: rc, rb, ra}
+\insrcrbrc{rc}{rb}{ra}{11011}{\textbf{sll.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
 \\
 the \emph{sll} or \emph{shift-left-logical} instruction performs a
 logical left shift of the value in the \emph{rb} register by the
@@ -4218,7 +4218,7 @@ number of bits in register \emph{ra} then saves the result in the
 
 \needspace{8\baselineskip}
 \subsection{sub}
-\insrcrbrc{rc}{rb}{ra}{11100}{\textbf{sub.i64}\: rc, rb, ra; \mathit{flag}}
+\insrcrbrc{rc}{rb}{ra}{11100}{\textbf{sub.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}; \mathit{flag}}
 \\
 the \emph{sub} instruction subtracts the \emph{ra} register from
 the \emph{rb} register and saves the result in the \emph{rc} register,
@@ -4230,7 +4230,7 @@ and borrow is saved to the \emph{flag} register.
 
 \needspace{8\baselineskip}
 \subsection{mul}
-\insrcrbrc{rc}{rb}{ra}{11101}{\textbf{mul.i64}\: rc, rb, ra}
+\insrcrbrc{rc}{rb}{ra}{11101}{\textbf{mul.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
 \\
 the \emph{mul} instruction performs signed multiplication of the
 \emph{rb} register with the \emph{ra} register and saves the
@@ -4241,7 +4241,7 @@ result in the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{div}
-\insrcrbrc{rc}{rb}{ra}{11110}{\textbf{div.i64}\: rc, rb, ra}
+\insrcrbrc{rc}{rb}{ra}{11110}{\textbf{div.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
 \\
 the \emph{div} instruction performs signed division of the
 \emph{rb} register by the \emph{ra} register and saves the
@@ -4258,7 +4258,7 @@ a subsequent branch can handle the division by zero.
 
 \needspace{8\baselineskip}
 \subsection{illegal}
-\insnimmnine{uimm}{11111}{\textbf{illegal}\: uimm9}
+\insnimmnine{uimm}{11111}{\textbf{illegal}\: \mathit{uimm9}}
 \\
 the \emph{illegal} instruction causes an illegal instruction trap.
 \emph{program counter} and trap cause are saved to privileged registers
@@ -4655,38 +4655,38 @@ r7    & ra    & return address / (pc,ib) link vector        & caller \\
 \node [font=\tiny,anchor=base] at (14.5,2.2)  {\textbf{1}};
 \node [font=\tiny,anchor=base] at (15.5,2.2)  {\textbf{0}};
 
-\ainsnimmnine{0}{uimm}{00000}{\textbf{break}\: uimm9}
-\ainsnimmnine{1}{simm}{00001}{\textbf{j}\: simm9 \times 2}
-\ainsnimmnine{2}{simm}{00010}{\textbf{b}\: simm9 \times 2}
-\ainsnimmnine{3}{simm}{00011}{\textbf{ibj}\: simm9 \times 64}
-\ainsrcimmsix{4}{fun}{uimm}{00100}{\textbf{link.i64}\: fun3, ib64(uimm6)}
-\ainsrcimmsix{5}{rc}{uimm}{00101}{\textbf{movh.i64}\: rc, ib32(uimm6)}
-\ainsrcimmsix{6}{rc}{uimm}{00110}{\textbf{movw.i64}\: rc, ib64(uimm6)}
-\ainsrcimmsix{7}{rc}{simm}{00111}{\textbf{movi.i64}\: rc, simm6}
-\ainsrcimmsix{8}{rc}{simm}{01000}{\textbf{addi.i64}\: rc, simm6; \mathit{flag}}
-\ainsrcimmsix{9}{rc}{uimm}{01001}{\textbf{srli.i64}\: rc, uimm6}
-\ainsrcimmsix{10}{rc}{uimm}{01010}{\textbf{srai.i64}\: rc, uimm6}
-\ainsrcimmsix{11}{rc}{uimm}{01011}{\textbf{slli.i64}\: rc, uimm6}
-\ainsrcimmsix{12}{rc}{uimm}{01100}{\textbf{addh.i64}\: rc, ib32(uimm6); \mathit{flag}}
-\ainsrcimmsix{13}{rc}{uimm}{01101}{\textbf{leapc.i64}\: rc, ib32(uimm6)(pc)}
-\ainsrcimmsix{14}{rc}{uimm}{01110}{\textbf{loadpc.i64}\: rc, ib32(uimm6)(pc)}
-\ainsrcimmsix{15}{rc}{uimm}{01111}{\textbf{storepc.i64}\: rc, ib32(uimm6)(pc)}
-\ainsrcrbimmthree{16}{rc}{rb}{uimm}{10000}{\textbf{load.i64}\: rc, (uimm3 \times 8)(rb)}
-\ainsrcrbimmthree{17}{rc}{rb}{uimm}{10001}{\textbf{store.i64}\: rc, (uimm3 \times 8)(rb)}
-\ainsrcrbimmthree{18}{rc}{rb}{fun}{10010}{\textbf{compare.i64}\: rc, rb, fun3}
-\ainsrcrbimmthree{19}{rc}{rb}{fun}{10011}{\textbf{logic.i64}\: rc, rb, fun3}
-\ainsrcrbrc{20}{rc}{rb}{ra}{10100}{\textbf{pin.i64}\: rc, rb, ra}
-\ainsrcrbrc{21}{rc}{rb}{ra}{10101}{\textbf{and.i64}\: rc, rb, ra}
-\ainsrcrbrc{22}{rc}{rb}{ra}{10110}{\textbf{or.i64}\: rc, rb, ra}
-\ainsrcrbrc{23}{rc}{rb}{ra}{10111}{\textbf{xor.i64}\: rc, rb, ra}
-\ainsrcrbrc{24}{rc}{rb}{ra}{11000}{\textbf{add.i64}\: rc, rb, ra; \mathit{flag}}
-\ainsrcrbrc{25}{rc}{rb}{ra}{11001}{\textbf{srl.i64}\: rc, rb, ra}
-\ainsrcrbrc{26}{rc}{rb}{ra}{11010}{\textbf{sra.i64}\: rc, rb, ra}
-\ainsrcrbrc{27}{rc}{rb}{ra}{11011}{\textbf{sll.i64}\: rc, rb, ra}
-\ainsrcrbrc{28}{rc}{rb}{ra}{11100}{\textbf{sub.i64}\: rc, rb, ra; \mathit{flag}}
-\ainsrcrbrc{29}{rc}{rb}{ra}{11101}{\textbf{mul.i64}\: rc, rb, ra}
-\ainsrcrbrc{30}{rc}{rb}{ra}{11110}{\textbf{div.i64}\: rc, rb, ra}
-\ainsnimmnine{31}{uimm}{11111}{\textbf{illegal}\: uimm9}
+\ainsnimmnine{0}{uimm}{00000}{\textbf{break}\: \mathit{uimm9}}
+\ainsnimmnine{1}{simm}{00001}{\textbf{j}\: \mathit{simm9} \times 2}
+\ainsnimmnine{2}{simm}{00010}{\textbf{b}\: \mathit{simm9} \times 2}
+\ainsnimmnine{3}{simm}{00011}{\textbf{ibj}\: \mathit{simm9} \times 64}
+\ainsrcimmsix{4}{fun}{uimm}{00100}{\textbf{link.i64}\: \mathit{fun3}, \mathit{ib64}(\mathit{uimm6})}
+\ainsrcimmsix{5}{rc}{uimm}{00101}{\textbf{movh.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})}
+\ainsrcimmsix{6}{rc}{uimm}{00110}{\textbf{movw.i64}\: \mathit{rc}, \mathit{ib64}(\mathit{uimm6})}
+\ainsrcimmsix{7}{rc}{simm}{00111}{\textbf{movi.i64}\: \mathit{rc}, \mathit{simm6}}
+\ainsrcimmsix{8}{rc}{simm}{01000}{\textbf{addi.i64}\: \mathit{rc}, \mathit{simm6}; \mathit{flag}}
+\ainsrcimmsix{9}{rc}{uimm}{01001}{\textbf{srli.i64}\: \mathit{rc}, \mathit{uimm6}}
+\ainsrcimmsix{10}{rc}{uimm}{01010}{\textbf{srai.i64}\: \mathit{rc}, \mathit{uimm6}}
+\ainsrcimmsix{11}{rc}{uimm}{01011}{\textbf{slli.i64}\: \mathit{rc}, \mathit{uimm6}}
+\ainsrcimmsix{12}{rc}{uimm}{01100}{\textbf{addh.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6}); \mathit{flag}}
+\ainsrcimmsix{13}{rc}{uimm}{01101}{\textbf{leapc.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}
+\ainsrcimmsix{14}{rc}{uimm}{01110}{\textbf{loadpc.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}
+\ainsrcimmsix{15}{rc}{uimm}{01111}{\textbf{storepc.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}
+\ainsrcrbimmthree{16}{rc}{rb}{uimm}{10000}{\textbf{load.i64}\: \mathit{rc}, (\mathit{uimm3} \times 8)(\mathit{rb})}
+\ainsrcrbimmthree{17}{rc}{rb}{uimm}{10001}{\textbf{store.i64}\: \mathit{rc}, (\mathit{uimm3} \times 8)(\mathit{rb})}
+\ainsrcrbimmthree{18}{rc}{rb}{fun}{10010}{\textbf{compare.i64}\: \mathit{rc}, \mathit{rb}, \mathit{fun3}}
+\ainsrcrbimmthree{19}{rc}{rb}{fun}{10011}{\textbf{logic.i64}\: \mathit{rc}, \mathit{rb}, \mathit{fun3}}
+\ainsrcrbrc{20}{rc}{rb}{ra}{10100}{\textbf{pin.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
+\ainsrcrbrc{21}{rc}{rb}{ra}{10101}{\textbf{and.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
+\ainsrcrbrc{22}{rc}{rb}{ra}{10110}{\textbf{or.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
+\ainsrcrbrc{23}{rc}{rb}{ra}{10111}{\textbf{xor.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
+\ainsrcrbrc{24}{rc}{rb}{ra}{11000}{\textbf{add.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}; \mathit{flag}}
+\ainsrcrbrc{25}{rc}{rb}{ra}{11001}{\textbf{srl.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
+\ainsrcrbrc{26}{rc}{rb}{ra}{11010}{\textbf{sra.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
+\ainsrcrbrc{27}{rc}{rb}{ra}{11011}{\textbf{sll.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
+\ainsrcrbrc{28}{rc}{rb}{ra}{11100}{\textbf{sub.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}; \mathit{flag}}
+\ainsrcrbrc{29}{rc}{rb}{ra}{11101}{\textbf{mul.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
+\ainsrcrbrc{30}{rc}{rb}{ra}{11110}{\textbf{div.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
+\ainsnimmnine{31}{uimm}{11111}{\textbf{illegal}\: \mathit{uimm9}}
 \ainshdr{-1}{operand}{opcode}{size}
 
 \end{scope}
