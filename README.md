@@ -31,17 +31,17 @@ this list of points outlines the primary differentiating elements of
 the super regular RISC architecture:
 
 - variable length instruction format supporting 16, 32, 64, and 128-bit
-  instruction packets.
-- instruction formats and 2-bit size encoding is detailed here:
-  [packet.pdf](/doc/packet.pdf) and here [glyph.pdf](/doc/glyph.pdf).
-- 16-bit compressed instruction packets can access 8x64-bit registers.
+  instructions.
+- 1-bit predicate for compare, branch, add with carry, and subtract with
+  borrow.
+- 16-bit compressed instruction packets that can access 8x64-bit registers.
 - (pc,ib) is a special program counter and immediate base register address
   vector.
 - link register contains packed i32x2 relative address vector to function
   entry.
 - `ibj` _(immediate-block-jump)_ adds a relative address to the immediate
   base register.
-- `movib` _(move-immediate-block)_ uses unsigned displacement to access
+- `movw` _(move-word-immediate-block)_ uses unsigned displacement to access
   constants.
 - `jalib` _(jump-and-link-immediate-block)_ or _(call)_ links address
   vector and adds constants to (pc,ib).
@@ -49,8 +49,12 @@ the super regular RISC architecture:
   vector from and adds constants to (pc,ib).
 - `pin` _(pack-indirect)_ packs two absolute addresses as relative address
   vector from (pc,ib).
-- `ret` requires a relocation due to the use of relative link address
-  vectors.
+
+compiled versions of the architecture specification are available from the
+following URLs:
+
+- current: [glyph.pdf](https://metaparadigm.com/~mclark/glyph.pdf)
+- latest: [glyph-20250721.pdf](https://metaparadigm.com/~mclark/glyph-20250721.pdf)
 
 ## opcodes
 
