@@ -3924,7 +3924,8 @@ immediate value in \emph{simm6} then adds it to the \emph{rc} register,
 and carry is saved to the \emph{flag} register.
 \begin{Verbatim}
     result = reg[rc] + simm6
-    reg[rc] = result ;flag = result >= (1 << 64)
+    flag = result < reg[rc]
+    reg[rc] = result
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -3970,7 +3971,8 @@ sign-extends to 64-bits, then adds to the \emph{rc} register,
 and carry is saved to the \emph{flag} register.
 \begin{Verbatim}
     result = reg[rc] + const-mem<i32>[ib + uimm6 * 4]
-    reg[rc] = result ; flag = result >= (1 << 64)
+    flag = result < reg[rc]
+    reg[rc] = result
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -4176,7 +4178,8 @@ the \emph{ra} register and saves the result in the \emph{rc} register,
 and carry is saved to the \emph{flag} register.
 \begin{Verbatim}
     result = reg[rb] + reg[ra]
-    reg[rc] = result ; flag = result >= (1 << 64)
+    flag = result < reg[rb]
+    reg[rc] = result
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -4224,8 +4227,9 @@ the \emph{sub} instruction subtracts the \emph{ra} register from
 the \emph{rb} register and saves the result in the \emph{rc} register,
 and borrow is saved to the \emph{flag} register.
 \begin{Verbatim}
-    reg[rc] = reg[rb] - reg[ra]
+    result = reg[rb] - reg[ra]
     flag = reg[rb] < reg[ra]
+    reg[rc] = result
 \end{Verbatim}
 
 \needspace{8\baselineskip}
