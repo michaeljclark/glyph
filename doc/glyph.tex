@@ -300,19 +300,22 @@ variable-length instruction format, the instruction set, its assembly
 syntax, and the programming language calling convention.
 \\
 \par\noindent
-this document does not simply present an architecture that is a
-reimplementation of existing ideas; rather, it introduces a novel
-architecture with an instruction coding scheme optimized for efficient
-parallel decoding in hardware or software, combined with contemporary
-practice in instruction semantics.
+this document does not simply present an architecture reimplementing
+existing ideas; rather, it introduces a novel architecture featuring an
+instruction coding scheme optimized for efficient parallel decoding in
+hardware or software, combined with contemporary practices in instruction
+semantics, including the use of single-bit predicates in compare
+instructions to enable an optimal mapping to vector operations.
 \\
 \par\noindent
 in addition to the core instruction set, the architecture also defines
-extensions for capabilities, virtual domains and software-defined
-memory management. the capability extension adds fine-grained page-based
-permissions and role based access control. the domain extension adds
-virtualization for trap routing, page translation, and context switching.
-the machine extension provides for custom address translation schemes.
+extensions for capabilities, virtual domains, software-defined memory
+management and environment. the capability extension adds fine-grained
+page-based permissions and role based access control. the domain
+extension adds virtualization for trap routing, page translation, and
+context switching. the machine extension provides for custom address
+translation schemes. finally, the environment extension adds controls
+for power and reset.
 \\
 \par\noindent
 this work is intended for computer architects, systems programmers,
