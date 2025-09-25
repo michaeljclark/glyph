@@ -4230,10 +4230,12 @@ number of bits in register \emph{ra} then saves the result in the
 \\
 the \emph{sub} instruction subtracts the \emph{ra} register from
 the \emph{rb} register and saves the result in the \emph{rc} register,
-and borrow is saved to the \emph{flag} register.
+and carry \emph{not borrow} is saved to the \emph{flag} register.
+\textbf{note:} this differs from borrow semantics; flag is \emph{true carry}
+and can be used with \emph{adc} or \emph{sbc} instructions without inversion.
 \begin{Verbatim}
     result = reg[rb] - reg[ra]
-    flag = reg[rb] < reg[ra]
+    flag = reg[rb] >= reg[ra]
     reg[rc] = result
 \end{Verbatim}
 
