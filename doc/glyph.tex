@@ -23,6 +23,7 @@
 
 \AtBeginBibliography{\small}
 
+\newcommand{\textbi}[1]{\textbf{\textit{#1}}}
 \newcommand{\fmtlogtwo}[1]{\fpeval{round(ln(#1)/ln(2), 2)}}
 
 \def\verbatim@font{\linespread{1}\normalfont\ttfamily}
@@ -776,74 +777,6 @@ storage space containing all types.}
 \end{figure}
 
 \newpage
-\section{Core concepts}
-
-\par\noindent
-glyph is a super regular RISC architecture that encodes constants in a
-secondary stream accessed via an \emph{immediate base} register that points at
-immediate blocks containing constants accessed via a constant address
-mode. the \emph{immediate base} register branches like the
-\emph{program counter}, and procedure calls and returns set and restore
-\emph{(pc,ib)} together.
-\\
-\par\noindent
-glyph uses relative address vectors in its link register which is different
-to typical RISC architectures. glyph does this so that the branch instructions
-can fit \emph{(pc,ib)} into the a single link register for compatibility with
-traditional RISC architectures. glyph achieves this by packing two relative
-\emph{(pc,ib)} displacements into a relative address vector\footnote{the
-architecture defines two parameters: \emph{ALEN} and \emph{XLEN},
-which respectively to refer to width of addresses and width of general
-purpose registers in bits. when $XLEN \ge ALEN \times 2$ it is possible to
-pack absolute addresses instead of relative addresses, as would be the case
-where \emph{ALEN=64} and \emph{XLEN=128}.}.
-\\
-\par\noindent
-immediate blocks can be switched using the immediate block branch
-instruction. immediate blocks, unlike typical RISC architectures, mean
-that most relocations are word sized like CISC architectures, and can
-use C-style structure packing and alignment rules.
-\\
-\par\noindent
-this list outlines some differentiating elements of the super regular
-RISC architecture:
-
-\begin{itemize}[itemsep=0pt]
-\item variable length instruction format supporting 16, 32, 64, and 128-bit
-instructions.
-\item 1-bit predicate for compare, branch, add with carry, and subtract with
-borrow.
-\item 16-bit compressed instruction packets that can access 8 registers.
-\item \emph{(pc,ib)} is a \emph{program counter} and
-\emph{immediate base} register address vector.
-\item link register contains a packed relative \emph{(pc,ib)} address vector
-to function entry.
-\item \texttt{ibj} --- \emph{immediate-block-jump} adds a relative address
-to the \emph{immediate base} register.
-\item \texttt{movw} --- \emph{move-word-immediate-block} uses a displacement
-to access a constant.
-\item \texttt{jalib} --- \emph{jump-and-link-immediate-block} or
-\emph{link-function-call} copies the address vector into the link register
-and adds constants to \emph{(pc,ib)}. it is used to branch the \emph{program
-counter} and \emph{immediate base} register at the same time for calling
-procedures.
-\item \texttt{jtlib} --- \emph{jump-to-link-immediate-block} or
-\emph{link-function-return} subtracts link vector from and adds constants
-to \emph{(pc,ib)}. it is used to branch the \emph{program counter} and the
-\emph{immediate base} register at the same time for returning from called
-procedures.
-\item \texttt{pin} --- \emph{pack-indirect} packs two absolute addresses as
-relative address vector from \emph{(pc,ib)} and is used for calling
-absolute addresses such as virtual functions.
-\end{itemize}
-
-\par\noindent
-the \texttt{pin} and \texttt{link} instructions form a modular arithmetic
-ring of relative address vectors, due to their use of relative addresses.
-relative address vectors can be encrypted, decrypted, and authenticated to
-form a verifiable chain of addresses for control flow integrity.
-
-\newpage
 \section{Program streams}
 \label{sec:program-streams}
 
@@ -969,6 +902,144 @@ relative addressing mode.
 \\
 
 \newpage
+\section{Core concepts}
+
+\par\noindent
+glyph is a super regular RISC architecture that encodes constants in a
+secondary stream accessed via an \emph{immediate base} register that points at
+immediate blocks containing constants accessed via a constant address
+mode. the \emph{immediate base} register branches like the
+\emph{program counter}, and procedure calls and returns set and restore
+\emph{(pc,ib)} together.
+\\
+\par\noindent
+glyph uses relative address vectors in its link register which is different
+to typical RISC architectures. glyph does this so that the branch instructions
+can fit \emph{(pc,ib)} into the a single link register for compatibility with
+traditional RISC architectures. glyph achieves this by packing two relative
+\emph{(pc,ib)} displacements into a relative address vector\footnote{the
+architecture defines two parameters: \emph{ALEN} and \emph{XLEN},
+which respectively to refer to width of addresses and width of general
+purpose registers in bits. when $XLEN \ge ALEN \times 2$ it is possible to
+pack absolute addresses instead of relative addresses, as would be the case
+where \emph{ALEN=64} and \emph{XLEN=128}.}.
+\\
+\par\noindent
+immediate blocks can be switched using the immediate block branch
+instruction. immediate blocks, unlike typical RISC architectures, mean
+that most relocations are word sized like CISC architectures, and can
+use C-style structure packing and alignment rules.
+\\
+\par\noindent
+this list outlines some differentiating elements of the super regular
+RISC architecture:
+
+\begin{itemize}[itemsep=0pt]
+\item variable length instruction format supporting 16, 32, and 64-bit
+instructions.
+\item 1-bit predicate for compare, branch, add with carry, and subtract with
+borrow.
+\item 16-bit compressed instruction packets that can access 8 registers.
+\item \emph{(pc,ib)} is a \emph{program counter} and
+\emph{immediate base} register address vector.
+\item link register contains a packed relative \emph{(pc,ib)} address vector
+to function entry.
+\item \texttt{ibj} --- \emph{immediate-block-jump} adds a relative address
+to the \emph{immediate base} register.
+\item \texttt{movw} --- \emph{move-word-immediate-block} uses a displacement
+to access a constant.
+\item \texttt{jalib} --- \emph{jump-and-link-immediate-block} or
+\emph{link-function-call} copies the address vector into the link register
+and adds constants to \emph{(pc,ib)}. it is used to branch the \emph{program
+counter} and \emph{immediate base} register at the same time for calling
+procedures.
+\item \texttt{jtlib} --- \emph{jump-to-link-immediate-block} or
+\emph{link-function-return} subtracts link vector from and adds constants
+to \emph{(pc,ib)}. it is used to branch the \emph{program counter} and the
+\emph{immediate base} register at the same time for returning from called
+procedures.
+\item \texttt{pin} --- \emph{pack-indirect} packs two absolute addresses as
+relative address vector from \emph{(pc,ib)} and is used for calling
+absolute addresses such as virtual functions.
+\end{itemize}
+
+\par\noindent
+the \texttt{pin} and \texttt{link} instructions form a modular arithmetic
+ring of relative address vectors, due to their use of relative addresses.
+relative address vectors can be encrypted, decrypted, and authenticated to
+form a verifiable chain of addresses for control flow integrity.
+
+\newpage
+\section{Core parameters}
+
+\par\noindent
+glyph has serveral architectural parameters that define the dimensions
+of an instance of the architecture to allow the archiecture to be
+instantiated in several different configurations. these configurations
+are grouped into architectural profiles.
+
+\subsection{architectural parameters}
+
+glyph defines a unified floating-point and integer scalar register file
+with 8 or 64 registers and an optional unified floating-point and integer
+vector register file with 64 registers.
+
+\begin{itemize}[itemsep=0pt]
+\item 16-bit instruction packet can access 8 registers with up to 3 operands.
+\item 32-bit instruction packet can access 64 registers with up to 3 operands.
+\item 64-bit instruction packet can access 64 registers with up to 6 operands.
+\end{itemize}
+
+\par\noindent
+glyph architectural parameters are as follows:
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Parameter} & \textbf{Value}& \textbf{Description} \\
+\hline
+SREG & 8, 64      & number of scalar registers \\
+VREG & --, 64     & number of vector registers \\
+ILEN & 16, 32, 64 & width of largest instruction in bits \\
+ALEN & 64         & width of arithmetic on scalars in bits \\
+XLEN & 64, 128    & width of scalar registers in bits \\
+VLEN & 512, 4096  & width of vector registers in bits \\
+GLEN & 128        & width of vector lane group in bits \\
+\hline
+\end{tabular}
+\caption{architectural parameters}
+\label{tab:architectural-parameters}
+\end{table}
+
+\subsection{architectural profiles}
+
+glyph architectural parameters are linked to the dimensions of the
+register slots in the variable length instruction packets. the 16-bit
+packet can be used in a freestanding microcontroller profile. the 32-bit
+packet contains scalar and packed-SIMD\footnote{SIMD - Single Instruction
+Multiple Data} instructions on scalar registers. the 64-bit packet
+contains packed-SIMD instruction on vector registers.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|l|l|l|l|l|l|l|}
+\hline
+\textbf{profile} & \textbf{SREG} & \textbf{VREG} & \textbf{ILEN} & \textbf{ALEN} & \textbf{XLEN} & \textbf{VLEN} & \textbf{GLEN} \\
+\hline
+\emph{scalar-min} & 8  & -  & 16 & 64  & 64  & -    & -   \\
+\emph{scalar-max} & 64 & -  & 32 & 64  & 128 & -    & -   \\
+\emph{vector-min} & 64 & 64 & 64 & 64  & 128 & 512  & 128 \\
+\emph{vector-max} & 64 & 64 & 64 & 64  & 128 & 4096 & 128 \\
+\hline
+\end{tabular}
+\caption{architectural profiles}
+\label{tab:architectural-profiles}
+\end{table}
+
+\newpage
 \section{Instruction format}
 \label{sec:instruction-format}
 
@@ -979,218 +1050,6 @@ scheme, whereby successive instruction packets extend the fields in
 the previous instruction packet~\cite{US6877084B1}. instruction words
 can begin on any 16-bit aligned address.
 
-\subsection{instruction templates}
-
-the variable length instruction format has a single base format
-where fields in the template instruction form are extended by
-successive instruction packets.
-
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[scale=0.5]
-\node at (15.500000,1.250000) [font=\scriptsize] {1};
-\node at (16.500000,1.250000) [font=\scriptsize] {0};
-\node at (10.500000,1.250000) [font=\scriptsize] {6};
-\node at (14.500000,1.250000) [font=\scriptsize] {2};
-\node at (1.500000,1.250000) [font=\scriptsize] {15};
-\node at (9.500000,1.250000) [font=\scriptsize] {7};
-\draw (15.000000,1.000000) -- (15.000000,1.500000);
-\draw (10.000000,1.000000) -- (10.000000,1.500000);
-\draw (1.000000,1.000000) -- (1.000000,1.500000);
-\draw (17.000000,1.000000) -- (17.000000,1.500000);
-\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
-\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
-\fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
-\draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
-\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
-\end{tikzpicture}
-\caption{instruction template --- 16-bit.}
-\label{fig:glyph-instruction-template-16}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[scale=0.5]
-\node at (15.500000,1.250000) [font=\scriptsize] {1};
-\node at (16.500000,1.250000) [font=\scriptsize] {0};
-\node at (10.500000,1.250000) [font=\scriptsize] {6};
-\node at (14.500000,1.250000) [font=\scriptsize] {2};
-\node at (1.500000,1.250000) [font=\scriptsize] {15};
-\node at (9.500000,1.250000) [font=\scriptsize] {7};
-\draw (15.000000,1.000000) -- (15.000000,1.500000);
-\draw (10.000000,1.000000) -- (10.000000,1.500000);
-\draw (1.000000,1.000000) -- (1.000000,1.500000);
-\draw (17.000000,1.000000) -- (17.000000,1.500000);
-\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
-\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
-\fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
-\draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
-\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
-\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
-\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
-\node at (16.000000,-0.500000) [font=\scriptsize] {$sz_{[3:2]}$};
-\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
-\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
-\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
-\fill [black!5]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
-\draw [black!90]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
-\node at (5.500000,-0.500000) [font=\scriptsize] {$operand_{[17:9]}$};
-\end{tikzpicture}
-\caption{instruction template --- 32-bit.}
-\label{fig:glyph-instruction-template-32}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[scale=0.5]
-\node at (15.500000,1.250000) [font=\scriptsize] {1};
-\node at (16.500000,1.250000) [font=\scriptsize] {0};
-\node at (10.500000,1.250000) [font=\scriptsize] {6};
-\node at (14.500000,1.250000) [font=\scriptsize] {2};
-\node at (1.500000,1.250000) [font=\scriptsize] {15};
-\node at (9.500000,1.250000) [font=\scriptsize] {7};
-\draw (15.000000,1.000000) -- (15.000000,1.500000);
-\draw (10.000000,1.000000) -- (10.000000,1.500000);
-\draw (1.000000,1.000000) -- (1.000000,1.500000);
-\draw (17.000000,1.000000) -- (17.000000,1.500000);
-\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
-\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
-\fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
-\draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
-\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
-\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
-\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
-\node at (16.000000,-0.500000) [font=\scriptsize] {$sz_{[3:2]}$};
-\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
-\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
-\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
-\fill [black!5]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
-\draw [black!90]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
-\node at (5.500000,-0.500000) [font=\scriptsize] {$operand_{[17:9]}$};
-\fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
-\draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
-\node at (16.000000,-1.500000) [font=\scriptsize] {$sz_{[5:4]}$};
-\fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
-\draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
-\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
-\fill [black!5]  (1.000000,-2.000000) rectangle (10.000000,-1.000000);
-\draw [black!90]  (1.000000,-2.000000) rectangle (10.000000,-1.000000);
-\node at (5.500000,-1.500000) [font=\scriptsize] {$operand_{[26:18]}$};
-\fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
-\draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
-\node at (16.000000,-2.500000) [font=\scriptsize] {$sz_{[7:6]}$};
-\fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
-\draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
-\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
-\fill [black!5]  (1.000000,-3.000000) rectangle (10.000000,-2.000000);
-\draw [black!90]  (1.000000,-3.000000) rectangle (10.000000,-2.000000);
-\node at (5.500000,-2.500000) [font=\scriptsize] {$operand_{[35:27]}$};
-\end{tikzpicture}
-\caption{instruction template --- 64-bit.}
-\label{fig:glyph-instruction-template-64}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[scale=0.5]
-\node at (15.500000,1.250000) [font=\scriptsize] {1};
-\node at (16.500000,1.250000) [font=\scriptsize] {0};
-\node at (10.500000,1.250000) [font=\scriptsize] {6};
-\node at (14.500000,1.250000) [font=\scriptsize] {2};
-\node at (1.500000,1.250000) [font=\scriptsize] {15};
-\node at (9.500000,1.250000) [font=\scriptsize] {7};
-\draw (15.000000,1.000000) -- (15.000000,1.500000);
-\draw (10.000000,1.000000) -- (10.000000,1.500000);
-\draw (1.000000,1.000000) -- (1.000000,1.500000);
-\draw (17.000000,1.000000) -- (17.000000,1.500000);
-\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
-\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
-\fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
-\draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
-\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
-\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
-\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
-\node at (16.000000,-0.500000) [font=\scriptsize] {$sz_{[3:2]}$};
-\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
-\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
-\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
-\fill [black!5]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
-\draw [black!90]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
-\node at (5.500000,-0.500000) [font=\scriptsize] {$operand_{[17:9]}$};
-\fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
-\draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
-\node at (16.000000,-1.500000) [font=\scriptsize] {$sz_{[5:4]}$};
-\fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
-\draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
-\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
-\fill [black!5]  (1.000000,-2.000000) rectangle (10.000000,-1.000000);
-\draw [black!90]  (1.000000,-2.000000) rectangle (10.000000,-1.000000);
-\node at (5.500000,-1.500000) [font=\scriptsize] {$operand_{[26:18]}$};
-\fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
-\draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
-\node at (16.000000,-2.500000) [font=\scriptsize] {$sz_{[7:6]}$};
-\fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
-\draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
-\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
-\fill [black!5]  (1.000000,-3.000000) rectangle (10.000000,-2.000000);
-\draw [black!90]  (1.000000,-3.000000) rectangle (10.000000,-2.000000);
-\node at (5.500000,-2.500000) [font=\scriptsize] {$operand_{[35:27]}$};
-\fill [black!5]  (15.000000,-4.000000) rectangle (17.000000,-3.000000);
-\draw [black!90]  (15.000000,-4.000000) rectangle (17.000000,-3.000000);
-\node at (16.000000,-3.500000) [font=\scriptsize] {$sz_{[9:8]}$};
-\fill [black!5]  (10.000000,-4.000000) rectangle (15.000000,-3.000000);
-\draw [black!90]  (10.000000,-4.000000) rectangle (15.000000,-3.000000);
-\node at (12.500000,-3.500000) [font=\scriptsize] {$opcode_{[24:20]}$};
-\fill [black!5]  (1.000000,-4.000000) rectangle (10.000000,-3.000000);
-\draw [black!90]  (1.000000,-4.000000) rectangle (10.000000,-3.000000);
-\node at (5.500000,-3.500000) [font=\scriptsize] {$operand_{[44:36]}$};
-\fill [black!5]  (15.000000,-5.000000) rectangle (17.000000,-4.000000);
-\draw [black!90]  (15.000000,-5.000000) rectangle (17.000000,-4.000000);
-\node at (16.000000,-4.500000) [font=\scriptsize] {$sz_{[11:10]}$};
-\fill [black!5]  (10.000000,-5.000000) rectangle (15.000000,-4.000000);
-\draw [black!90]  (10.000000,-5.000000) rectangle (15.000000,-4.000000);
-\node at (12.500000,-4.500000) [font=\scriptsize] {$opcode_{[29:25]}$};
-\fill [black!5]  (1.000000,-5.000000) rectangle (10.000000,-4.000000);
-\draw [black!90]  (1.000000,-5.000000) rectangle (10.000000,-4.000000);
-\node at (5.500000,-4.500000) [font=\scriptsize] {$operand_{[53:45]}$};
-\fill [black!5]  (15.000000,-6.000000) rectangle (17.000000,-5.000000);
-\draw [black!90]  (15.000000,-6.000000) rectangle (17.000000,-5.000000);
-\node at (16.000000,-5.500000) [font=\scriptsize] {$sz_{[13:12]}$};
-\fill [black!5]  (10.000000,-6.000000) rectangle (15.000000,-5.000000);
-\draw [black!90]  (10.000000,-6.000000) rectangle (15.000000,-5.000000);
-\node at (12.500000,-5.500000) [font=\scriptsize] {$opcode_{[34:30]}$};
-\fill [black!5]  (1.000000,-6.000000) rectangle (10.000000,-5.000000);
-\draw [black!90]  (1.000000,-6.000000) rectangle (10.000000,-5.000000);
-\node at (5.500000,-5.500000) [font=\scriptsize] {$operand_{[62:54]}$};
-\fill [black!5]  (15.000000,-7.000000) rectangle (17.000000,-6.000000);
-\draw [black!90]  (15.000000,-7.000000) rectangle (17.000000,-6.000000);
-\node at (16.000000,-6.500000) [font=\scriptsize] {$sz_{[15:14]}$};
-\fill [black!5]  (10.000000,-7.000000) rectangle (15.000000,-6.000000);
-\draw [black!90]  (10.000000,-7.000000) rectangle (15.000000,-6.000000);
-\node at (12.500000,-6.500000) [font=\scriptsize] {$opcode_{[39:35]}$};
-\fill [black!5]  (1.000000,-7.000000) rectangle (10.000000,-6.000000);
-\draw [black!90]  (1.000000,-7.000000) rectangle (10.000000,-6.000000);
-\node at (5.500000,-6.500000) [font=\scriptsize] {$operand_{[71:63]}$};
-\end{tikzpicture}
-\caption{instruction template --- 128-bit.}
-\label{fig:glyph-instruction-template-128}
-\end{figure}
 
 \subsection{instruction sizes}
 
@@ -1211,27 +1070,192 @@ this table shows the size fields for the different instruction sizes:
 16-bit   & \texttt{\{00}\}                       \\
 32-bit   & \texttt{\{01,11\}}                    \\
 64-bit   & \texttt{\{10,11,11,11\}}              \\
-128-bit  & \texttt{\{11,11,11,11,11,11,11,11\}}  \\
 \hline
 \end{tabular}
 \caption{variable-length instruction size fields}
 \label{tab:instruction-size-fields}
 \end{table}
 
+\subsection{instruction decoding}
+
+the instruction size encoding and field extension scheme has been designed
+to minimize complexity for parallel decoding in hardware and software.
+the following table shows the instruction width combinations for
+various width parallel instruction decoders.
+\\
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{Packets} & \textbf{Bits} & \textbf{Bytes} & $\bm{n_{combos}}$ & $\bm{\log_2(n)}$ \\
+\hline
+1-wide  & 16-bit   & 2  & 1     & \fmtlogtwo{1} \\
+2-wide  & 32-bit   & 4  & 16    & \fmtlogtwo{16} \\
+4-wide  & 64-bit   & 8  & 58    & \fmtlogtwo{58} \\
+8-wide  & 128-bit  & 16 & 574   & \fmtlogtwo{574} \\
+16-wide & 256-bit  & 32 & 51904 & \fmtlogtwo{51904} \\
+\hline
+\end{tabular}
+\caption{instruction decode combinations}
+\label{tab:instruction-decode-combos}
+\end{table}
+
+\newpage
 \subsection{instruction forms}
 
+the variable length instruction format has a single base format
+where fields in the template instruction form are extended by
+successive instruction packets.
+\\
+\par\noindent
 the instructions forms are super regular in that operand and opcode
 bits do not overlap and the number and complexity of the formats is
 reduced so that vectorized instruction decoding is simple in both
 hardware and software. the scheme is designed so that \emph{1-bit} of
 coding space in the larger packet can be used to extend register sizes.
 
+\subsubsection{instruction templates}
+
+this section details the layout of the variable sized instructions:
+\\
+
+\noindent
+\begin{minipage}[c]{0.53\linewidth}
+\begin{tikzpicture}[scale=0.5]
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.42\linewidth}
+\small
+\textbi{op16} \\ 16-bit instruction packet
+\end{minipage}
+
+\vspace{0.75em}
+
+\noindent
+\begin{minipage}[c]{0.53\linewidth}
+\begin{tikzpicture}[scale=0.5]
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {$sz_{[3:2]}$};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (5.500000,-0.500000) [font=\scriptsize] {$operand_{[17:9]}$};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.42\linewidth}
+\small
+\vspace{1.5em}
+\textbi{op32} \\ 32-bit instruction packet
+\end{minipage}
+
+\vspace{0.75em}
+
+\noindent
+\begin{minipage}[c]{0.53\linewidth}
+\begin{tikzpicture}[scale=0.5]
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {$sz_{[3:2]}$};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (5.500000,-0.500000) [font=\scriptsize] {$operand_{[17:9]}$};
+\fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\node at (16.000000,-1.500000) [font=\scriptsize] {$sz_{[5:4]}$};
+\fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
+\fill [black!5]  (1.000000,-2.000000) rectangle (10.000000,-1.000000);
+\draw [black!90]  (1.000000,-2.000000) rectangle (10.000000,-1.000000);
+\node at (5.500000,-1.500000) [font=\scriptsize] {$operand_{[26:18]}$};
+\fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\node at (16.000000,-2.500000) [font=\scriptsize] {$sz_{[7:6]}$};
+\fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
+\fill [black!5]  (1.000000,-3.000000) rectangle (10.000000,-2.000000);
+\draw [black!90]  (1.000000,-3.000000) rectangle (10.000000,-2.000000);
+\node at (5.500000,-2.500000) [font=\scriptsize] {$operand_{[35:27]}$};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.42\linewidth}
+\small
+\vspace{4.5em}
+\textbi{op64} \\ 64-bit instruction packet
+\end{minipage}
+
 \subsubsection{16-bit instruction forms}
 
 this section details the layout of the 16-bit instruction forms:
+\\
 
-\begin{figure}[H]
-\centering
+\noindent
+\begin{minipage}[c]{0.53\linewidth}
 \begin{tikzpicture}[scale=0.5]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
@@ -1253,12 +1277,16 @@ this section details the layout of the 16-bit instruction forms:
 \draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
 \node at (5.500000,0.500000) [font=\scriptsize] {$imm_{[5:0]}$};
 \end{tikzpicture}
-\caption{16-bit large immediate.}
-\label{fig:glyph-iform-opi-16}
-\end{figure}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.42\linewidth}
+\small
+\textbi{op16i} \\ 16-bit large immediate
+\end{minipage}
 
-\begin{figure}[H]
-\centering
+\vspace{0.75em}
+
+\noindent
+\begin{minipage}[c]{0.53\linewidth}
 \begin{tikzpicture}[scale=0.5]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
@@ -1286,12 +1314,16 @@ this section details the layout of the 16-bit instruction forms:
 \draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
 \node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
 \end{tikzpicture}
-\caption{16-bit one operand with immediate.}
-\label{fig:glyph-iform-op1ri-16}
-\end{figure}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.42\linewidth}
+\small
+\textbi{op16ri} \\ 16-bit one operand with immediate
+\end{minipage}
 
-\begin{figure}[H]
-\centering
+\vspace{0.75em}
+
+\noindent
+\begin{minipage}[c]{0.53\linewidth}
 \begin{tikzpicture}[scale=0.5]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
@@ -1325,12 +1357,16 @@ this section details the layout of the 16-bit instruction forms:
 \draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
 \node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
 \end{tikzpicture}
-\caption{16-bit two operand with immediate.}
-\label{fig:glyph-iform-op2ri-16}
-\end{figure}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.42\linewidth}
+\small
+\textbi{op16rri} \\ 16-bit two operand with immediate
+\end{minipage}
 
-\begin{figure}[H]
-\centering
+\vspace{0.75em}
+
+\noindent
+\begin{minipage}[c]{0.53\linewidth}
 \begin{tikzpicture}[scale=0.5]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
@@ -1364,17 +1400,20 @@ this section details the layout of the 16-bit instruction forms:
 \draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
 \node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
 \end{tikzpicture}
-\caption{16-bit three operand.}
-\label{fig:glyph-iform-op3r-16}
-\end{figure}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.42\linewidth}
+\small
+\textbi{op16r3} \\ 16-bit three operand
+\end{minipage}
 
 \newpage
 \subsubsection{32-bit instruction forms}
 
 this section details the layout of the 32-bit instruction forms:
+\\
 
-\begin{figure}[H]
-\centering
+\noindent
+\begin{minipage}[c]{0.53\linewidth}
 \begin{tikzpicture}[scale=0.5]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
@@ -1405,12 +1444,17 @@ this section details the layout of the 32-bit instruction forms:
 \draw [black!90]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
 \node at (5.500000,-0.500000) [font=\scriptsize] {$imm_{[17:9]}$};
 \end{tikzpicture}
-\caption{32-bit large immediate.}
-\label{fig:glyph-iform-opi-32}
-\end{figure}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.42\linewidth}
+\small
+\vspace{1.5em}
+\textbi{op32i} \\ 32-bit large immediate
+\end{minipage}
 
-\begin{figure}[H]
-\centering
+\vspace{0.75em}
+
+\noindent
+\begin{minipage}[c]{0.53\linewidth}
 \begin{tikzpicture}[scale=0.5]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
@@ -1450,12 +1494,17 @@ this section details the layout of the 32-bit instruction forms:
 \draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
 \node at (2.500000,-0.500000) [font=\scriptsize] {$rc_{[5:3]}$};
 \end{tikzpicture}
-\caption{32-bit one operand with immediate.}
-\label{fig:glyph-iform-op1ri-32}
-\end{figure}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.42\linewidth}
+\small
+\vspace{1.5em}
+\textbi{op32ri} \\ 32-bit one operand with immediate
+\end{minipage}
 
-\begin{figure}[H]
-\centering
+\vspace{0.75em}
+
+\noindent
+\begin{minipage}[c]{0.53\linewidth}
 \begin{tikzpicture}[scale=0.5]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
@@ -1504,12 +1553,17 @@ this section details the layout of the 32-bit instruction forms:
 \draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
 \node at (2.500000,-0.500000) [font=\scriptsize] {$rc_{[5:3]}$};
 \end{tikzpicture}
-\caption{32-bit two operand with immediate.}
-\label{fig:glyph-iform-op2ri-32}
-\end{figure}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.42\linewidth}
+\small
+\vspace{1.5em}
+\textbi{op32rri} \\ 32-bit two operand with immediate
+\end{minipage}
 
-\begin{figure}[H]
-\centering
+\vspace{0.75em}
+
+\noindent
+\begin{minipage}[c]{0.53\linewidth}
 \begin{tikzpicture}[scale=0.5]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
@@ -1558,95 +1612,419 @@ this section details the layout of the 32-bit instruction forms:
 \draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
 \node at (2.500000,-0.500000) [font=\scriptsize] {$rc_{[5:3]}$};
 \end{tikzpicture}
-\caption{32-bit three operand.}
-\label{fig:glyph-iform-op3r-32}
-\end{figure}
-
-\subsection{instruction decoding}
-
-the instruction size encoding and field extension scheme has been designed
-to minimize complexity for parallel decoding in hardware and software.
-the following table shows the instruction width combinations for
-various width parallel instruction decoders.
-\\
-\begin{table}[h]
-\centering
+\end{minipage}\hfill
+\begin{minipage}[c]{0.42\linewidth}
 \small
-\begin{tabular}{|c|c|c|c|c|}
-\hline
-\textbf{Packets} & \textbf{Bits} & \textbf{Bytes} & $\bm{n_{combos}}$ & $\bm{\log_2(n)}$ \\
-\hline
-1-wide  & 16-bit   & 2  & 1     & \fmtlogtwo{1} \\
-2-wide  & 32-bit   & 4  & 16    & \fmtlogtwo{16} \\
-4-wide  & 64-bit   & 8  & 58    & \fmtlogtwo{58} \\
-8-wide  & 128-bit  & 16 & 574   & \fmtlogtwo{574} \\
-16-wide & 256-bit  & 32 & 51904 & \fmtlogtwo{51904} \\
-\hline
-\end{tabular}
-\caption{instruction decode combinations}
-\label{tab:instruction-decode-combos}
-\end{table}
+\vspace{1.5em}
+\textbi{op32r3} \\ 32-bit three operand
+\end{minipage}
+
+\subsubsection{64-bit instruction forms}
+
+this section details the layout of the 64-bit instruction forms:
+\\
+
+\noindent
+\begin{minipage}[c]{0.53\linewidth}
+\begin{tikzpicture}[scale=0.5]
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{10}};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$imm_{[5:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {\textbf{11}};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (5.500000,-0.500000) [font=\scriptsize] {$imm_{[11:6]}$};
+\fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\node at (16.000000,-1.500000) [font=\scriptsize] {\textbf{11}};
+\fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
+\fill [black!5]  (1.000000,-2.000000) rectangle (10.000000,-1.000000);
+\draw [black!90]  (1.000000,-2.000000) rectangle (10.000000,-1.000000);
+\node at (5.500000,-1.500000) [font=\scriptsize] {$imm_{[17:12]}$};
+\fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\node at (16.000000,-2.500000) [font=\scriptsize] {\textbf{11}};
+\fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
+\fill [black!5]  (1.000000,-3.000000) rectangle (10.000000,-2.000000);
+\draw [black!90]  (1.000000,-3.000000) rectangle (10.000000,-2.000000);
+\node at (5.500000,-2.500000) [font=\scriptsize] {$imm_{[23:18]}$};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.42\linewidth}
+\small
+\vspace{4.5em}
+\textbi{op64i} \\ 64-bit large immediate
+\end{minipage}
+
+\vspace{0.75em}
+
+\noindent
+\begin{minipage}[c]{0.53\linewidth}
+\begin{tikzpicture}[scale=0.5]
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (4.500000,1.250000) [font=\scriptsize] {12};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (3.500000,1.250000) [font=\scriptsize] {13};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (4.000000,1.000000) -- (4.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{10}};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (4.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (4.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (7.000000,0.500000) [font=\scriptsize] {$imm_{[5:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {\textbf{11}};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (4.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (4.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (7.000000,-0.500000) [font=\scriptsize] {$imm_{[11:6]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\node at (2.500000,-0.500000) [font=\scriptsize] {$rc_{[5:3]}$};
+\fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\node at (16.000000,-1.500000) [font=\scriptsize] {\textbf{11}};
+\fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
+\fill [black!5]  (4.000000,-2.000000) rectangle (10.000000,-1.000000);
+\draw [black!90]  (4.000000,-2.000000) rectangle (10.000000,-1.000000);
+\node at (7.000000,-1.500000) [font=\scriptsize] {$imm_{[17:12]}$};
+\fill [black!5]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
+\draw [black!90]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
+\node at (2.500000,-1.500000) [font=\scriptsize] {$rf_{[8:6]}$};
+\fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\node at (16.000000,-2.500000) [font=\scriptsize] {\textbf{11}};
+\fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
+\fill [black!5]  (4.000000,-3.000000) rectangle (10.000000,-2.000000);
+\draw [black!90]  (4.000000,-3.000000) rectangle (10.000000,-2.000000);
+\node at (7.000000,-2.500000) [font=\scriptsize] {$imm_{[23:18]}$};
+\fill [black!5]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
+\draw [black!90]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
+\node at (2.500000,-2.500000) [font=\scriptsize] {$rf_{[11:9]}$};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.42\linewidth}
+\small
+\vspace{4.5em}
+\textbi{op64rri} \\ 64-bit two operand with immediate
+\end{minipage}
+
+\vspace{0.75em}
+
+\noindent
+\begin{minipage}[c]{0.53\linewidth}
+\begin{tikzpicture}[scale=0.5]
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (7.500000,1.250000) [font=\scriptsize] {9};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (4.500000,1.250000) [font=\scriptsize] {12};
+\node at (6.500000,1.250000) [font=\scriptsize] {10};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (3.500000,1.250000) [font=\scriptsize] {13};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (7.000000,1.000000) -- (7.000000,1.500000);
+\draw (4.000000,1.000000) -- (4.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{10}};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (8.500000,0.500000) [font=\scriptsize] {$imm_{[2:0]}$};
+\fill [black!5]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\draw [black!90]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$rb_{[2:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {\textbf{11}};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (8.500000,-0.500000) [font=\scriptsize] {$imm_{[5:3]}$};
+\fill [black!5]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
+\draw [black!90]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
+\node at (5.500000,-0.500000) [font=\scriptsize] {$rb_{[5:3]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\node at (2.500000,-0.500000) [font=\scriptsize] {$rc_{[5:3]}$};
+\fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\node at (16.000000,-1.500000) [font=\scriptsize] {\textbf{11}};
+\fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
+\fill [black!5]  (7.000000,-2.000000) rectangle (10.000000,-1.000000);
+\draw [black!90]  (7.000000,-2.000000) rectangle (10.000000,-1.000000);
+\node at (8.500000,-1.500000) [font=\scriptsize] {$imm_{[8:6]}$};
+\fill [black!5]  (4.000000,-2.000000) rectangle (7.000000,-1.000000);
+\draw [black!90]  (4.000000,-2.000000) rectangle (7.000000,-1.000000);
+\node at (5.500000,-1.500000) [font=\scriptsize] {$re_{[8:6]}$};
+\fill [black!5]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
+\draw [black!90]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
+\node at (2.500000,-1.500000) [font=\scriptsize] {$rf_{[8:6]}$};
+\fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\node at (16.000000,-2.500000) [font=\scriptsize] {\textbf{11}};
+\fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
+\fill [black!5]  (7.000000,-3.000000) rectangle (10.000000,-2.000000);
+\draw [black!90]  (7.000000,-3.000000) rectangle (10.000000,-2.000000);
+\node at (8.500000,-2.500000) [font=\scriptsize] {$imm_{[11:9]}$};
+\fill [black!5]  (4.000000,-3.000000) rectangle (7.000000,-2.000000);
+\draw [black!90]  (4.000000,-3.000000) rectangle (7.000000,-2.000000);
+\node at (5.500000,-2.500000) [font=\scriptsize] {$re_{[11:9]}$};
+\fill [black!5]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
+\draw [black!90]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
+\node at (2.500000,-2.500000) [font=\scriptsize] {$rf_{[11:9]}$};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.42\linewidth}
+\small
+\vspace{4.5em}
+\textbi{op64r4i} \\ 64-bit four operand with immediate
+\end{minipage}
+
+\vspace{0.75em}
+
+\noindent
+\begin{minipage}[c]{0.53\linewidth}
+\begin{tikzpicture}[scale=0.5]
+\node at (15.500000,1.250000) [font=\scriptsize] {1};
+\node at (16.500000,1.250000) [font=\scriptsize] {0};
+\node at (10.500000,1.250000) [font=\scriptsize] {6};
+\node at (14.500000,1.250000) [font=\scriptsize] {2};
+\node at (7.500000,1.250000) [font=\scriptsize] {9};
+\node at (9.500000,1.250000) [font=\scriptsize] {7};
+\node at (4.500000,1.250000) [font=\scriptsize] {12};
+\node at (6.500000,1.250000) [font=\scriptsize] {10};
+\node at (1.500000,1.250000) [font=\scriptsize] {15};
+\node at (3.500000,1.250000) [font=\scriptsize] {13};
+\draw (15.000000,1.000000) -- (15.000000,1.500000);
+\draw (10.000000,1.000000) -- (10.000000,1.500000);
+\draw (7.000000,1.000000) -- (7.000000,1.500000);
+\draw (4.000000,1.000000) -- (4.000000,1.500000);
+\draw (1.000000,1.000000) -- (1.000000,1.500000);
+\draw (17.000000,1.000000) -- (17.000000,1.500000);
+\fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
+\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{10}};
+\fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
+\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\fill [black!5]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\draw [black!90]  (7.000000,0.000000) rectangle (10.000000,1.000000);
+\node at (8.500000,0.500000) [font=\scriptsize] {$ra_{[2:0]}$};
+\fill [black!5]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\draw [black!90]  (4.000000,0.000000) rectangle (7.000000,1.000000);
+\node at (5.500000,0.500000) [font=\scriptsize] {$rb_{[2:0]}$};
+\fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
+\node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
+\node at (16.000000,-0.500000) [font=\scriptsize] {\textbf{11}};
+\fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
+\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\fill [black!5]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
+\draw [black!90]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
+\node at (8.500000,-0.500000) [font=\scriptsize] {$ra_{[5:3]}$};
+\fill [black!5]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
+\draw [black!90]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
+\node at (5.500000,-0.500000) [font=\scriptsize] {$rb_{[5:3]}$};
+\fill [black!5]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
+\node at (2.500000,-0.500000) [font=\scriptsize] {$rc_{[5:3]}$};
+\fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
+\node at (16.000000,-1.500000) [font=\scriptsize] {\textbf{11}};
+\fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
+\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
+\fill [black!5]  (7.000000,-2.000000) rectangle (10.000000,-1.000000);
+\draw [black!90]  (7.000000,-2.000000) rectangle (10.000000,-1.000000);
+\node at (8.500000,-1.500000) [font=\scriptsize] {$rd_{[8:6]}$};
+\fill [black!5]  (4.000000,-2.000000) rectangle (7.000000,-1.000000);
+\draw [black!90]  (4.000000,-2.000000) rectangle (7.000000,-1.000000);
+\node at (5.500000,-1.500000) [font=\scriptsize] {$re_{[8:6]}$};
+\fill [black!5]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
+\draw [black!90]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
+\node at (2.500000,-1.500000) [font=\scriptsize] {$rf_{[8:6]}$};
+\fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
+\node at (16.000000,-2.500000) [font=\scriptsize] {\textbf{11}};
+\fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
+\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
+\fill [black!5]  (7.000000,-3.000000) rectangle (10.000000,-2.000000);
+\draw [black!90]  (7.000000,-3.000000) rectangle (10.000000,-2.000000);
+\node at (8.500000,-2.500000) [font=\scriptsize] {$rd_{[11:9]}$};
+\fill [black!5]  (4.000000,-3.000000) rectangle (7.000000,-2.000000);
+\draw [black!90]  (4.000000,-3.000000) rectangle (7.000000,-2.000000);
+\node at (5.500000,-2.500000) [font=\scriptsize] {$re_{[11:9]}$};
+\fill [black!5]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
+\draw [black!90]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
+\node at (2.500000,-2.500000) [font=\scriptsize] {$rf_{[11:9]}$};
+\end{tikzpicture}
+\end{minipage}\hfill
+\begin{minipage}[c]{0.42\linewidth}
+\small
+\vspace{4.5em}
+\textbi{op64r6} \\ 64-bit six operand
+\end{minipage}
 
 \newpage
 \section{Register file}
 
-the glyph register file is extensible due to the variable length
-instruction format and supports a different number of registers
-depending on the instruction size.
+glyph has register state comprised of a predicate register, program
+counter, and immediate base registers, a unified floating-point and integer
+scalar register file, and an optional unified floating-point and integer
+vector register file, each with an extensible number of registers.
+
+\subsection{template architectural profile}
+
+the register state accessible by the template architectural
+profile is comprised of:
+
 \begin{itemize}[itemsep=0pt]
-\item 16-bit instruction packet can access 8 registers with up to 3 operands.
-\item 32-bit instruction packet can access 64 registers with up to 3 operands.
-\item 64-bit instruction packet can access 64 registers with up to 6 operands.
+\item 1-bit predicate register (\emph{flag}).
+\item ALEN-bit \emph{program counter} register (aligned to 2 bytes).
+\item ALEN-bit \emph{immediate base} register (aligned to 64 bytes).
+\item SREG \texttimes\,XLEN-bit scalar registers (\textsf{r0} --- \textsf{r\textit{N}}).
+\item VREG \texttimes\,VLEN-bit vector registers (\textsf{v0} --- \textsf{v\textit{N}}).
 \end{itemize}
 
 \par\noindent
-the register state accessible by the 16-bit instruction packet is comprised of:
-\begin{itemize}[itemsep=0pt]
-\item \emph{program counter} register (aligned to 2 bytes).
-\item \emph{immediate base} register (aligned to 64 bytes).
-\item 8 \texttimes general purpose registers (\emph{r0} through \emph{r7}).
-\item 1 \texttimes predicate register (\emph{flag}).
-\end{itemize}
-
-\par\noindent
-the following diagram shows the register state accessible by the 16-bit
-instruction packet:
+the following diagram shows the template architectural profile
+register state:
 \\
 
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[scale=0.5]
 \begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
-\foreach \x in {0,...,7}
-  \fill [black!5] (0,\x)    rectangle (16,\x+1);
-\foreach \x in {0,...,7}
-  \draw [black!95] (0,\x)    rectangle (16,\x+1);
-\node [font=\small,anchor=base] at (8,0.25)  {\textsf{r7}};
-\node [font=\small,anchor=base] at (8,1.25)  {\textsf{r6}};
-\node [font=\small,anchor=base] at (8,2.25)  {\textsf{r5}};
-\node [font=\small,anchor=base] at (8,3.25)  {\textsf{r4}};
-\node [font=\small,anchor=base] at (8,4.25)  {\textsf{r3}};
-\node [font=\small,anchor=base] at (8,5.25)  {\textsf{r2}};
-\node [font=\small,anchor=base] at (8,6.25)  {\textsf{r1}};
-\node [font=\small,anchor=base] at (8,7.25)  {\textsf{r0}};
+\foreach \x in {0,...,7} {
+  \ifnum\x=6\relax
+    % skip r6
+  \else
+    \fill [black!5] (8,7-\x)    rectangle (16,8-\x);
+  \fi
+}
+\foreach \x in {0,...,7} {
+\ifnum\x=6\relax
+    % skip r6
+  \else
+    \draw [black!95] (8,7-\x)    rectangle (16,8-\x);
+  \fi
+}
+\foreach \x in {0,...,5}
+  \node[font=\small, anchor=base] at (12,{7.25-\x}) {\textsf{r\x}};
+\foreach \x in {0,...,7} {
+  \ifnum\x=6\relax
+    % skip r6
+  \else
+    \fill [black!5] (0,-1-\x)    rectangle (16,-2-\x);
+  \fi
+}
+\foreach \x in {0,...,7} {
+\ifnum\x=6\relax
+    % skip r6
+  \else
+    \draw [black!95] (0,-1-\x)    rectangle (16,-2-\x);
+  \fi
+}
+\foreach \x in {0,...,5}
+  \node[font=\small, anchor=base] at (8,{-1.75-\x}) {\textsf{v\x}};
 
-\node [font=\tiny,anchor=base west] at (8,11.2)  {\textsf{ALEN}};
+\node[black!50, font=\large] at (12,1.70) {$\vdots$};
+\node[black!50, font=\large] at (8,-7.30) {$\vdots$};
+
+\node[font=\small, anchor=base] at (12,0.25) {\textsf{r\textit{N}}};
+\node[font=\small, anchor=base] at (8,-8.75) {\textsf{v\textit{N}}};
+
+\node [font=\tiny,anchor=base west] at (12,11.2)  {\textsf{ALEN}};
 \node [font=\tiny,anchor=base east] at (16,11.2)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,8.2)  {\textsf{XLEN}};
+\node [font=\tiny,anchor=base west] at (8,8.2)  {\textsf{XLEN}};
 \node [font=\tiny,anchor=base east] at (16,8.2)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (0,-0.8)  {\textsf{VLEN}};
+\node [font=\tiny,anchor=base east] at (16,-0.8)  {\textsf{0}};
 
-\fill [black!15] (8,9)    rectangle (16,10);
-\draw [black!95] (8,9)    rectangle (16,10);
+\fill [black!15] (12,9)    rectangle (16,10);
+\draw [black!95] (12,9)    rectangle (16,10);
 
-\fill [black!15] (8,10)    rectangle (16,11);
-\draw [black!95] (8,10)    rectangle (16,11);
+\fill [black!15] (12,10)    rectangle (16,11);
+\draw [black!95] (12,10)    rectangle (16,11);
 
-\fill [black!15] (14,-2)    rectangle (16,-1);
-\draw [black!95] (14,-2)    rectangle (16,-1);
+\fill [black!15] (14,12)    rectangle (16,13);
+\draw [black!95] (14,12)    rectangle (16,13);
 
-\node [font=\small,anchor=base] at (12,9.25)  {\textsf{ib}};
-\node [font=\small,anchor=base] at (12,10.25)  {\textsf{pc}};
-\node [font=\small,anchor=base] at (15,-1.75)  {\textsf{flag}};
+\node [font=\small,anchor=base] at (14,9.25)  {\textsf{ib}};
+\node [font=\small,anchor=base] at (14,10.25)  {\textsf{pc}};
+\node [font=\small,anchor=base] at (15,12.25)  {\textsf{flag}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
+    (16,12) -- (16,13) node[midway,xshift=1mm,align=center,font=\tiny,
+        text width=17mm,anchor=west]{\textsf{\shortstack{predicate}}};
 
 \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
     (16,9) -- (16,11) node[midway,xshift=1mm,align=center,font=\tiny,
@@ -1654,24 +2032,391 @@ instruction packet:
 
 \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
     (16,0) -- (16,8) node[midway,xshift=1mm,align=center,font=\tiny,
-        text width=17mm,anchor=west]{\textsf{\shortstack{general\\purpose\\registers}}};
+        text width=17mm,anchor=west]{\textsf{\shortstack{scalar\\registers}}};
 
 \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
-    (16,-2) -- (16,-1) node[midway,xshift=1mm,align=center,font=\tiny,
-        text width=17mm,anchor=west]{\textsf{\shortstack{predicate}}};
+    (16,-9) -- (16,-1) node[midway,xshift=1mm,align=center,font=\tiny,
+        text width=17mm,anchor=west]{\textsf{\shortstack{vector\\registers}}};
 
 \end{scope}
 \end{tikzpicture}
-\caption{register state accessible by 16-bit instruction packet.}
-\label{fig:glyph-register-state-64}
+\caption{template architectural profile register state.}
+\label{fig:glyph-register-state-template}
+\end{figure}
+
+\newpage
+\subsection{\emph{scalar-min} architectural profile}
+
+the register state accessible by the \emph{scalar-min} architectural
+profile is comprised of:
+
+\begin{itemize}[itemsep=0pt]
+\item 1-bit predicate register (\emph{flag}).
+\item 64-bit \emph{program counter} register (aligned to 2 bytes).
+\item 64-bit \emph{immediate base} register (aligned to 64 bytes).
+\item 8 \texttimes\,64-bit scalar registers (\textsf{r0} --- \textsf{r7}).
+\end{itemize}
+
+\par\noindent
+the following diagram shows the \emph{scalar-min} architectural profile
+register state:
+\\
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+\foreach \x in {0,...,7}
+  \fill [black!5] (12,\x)    rectangle (16,\x+1);
+\foreach \x in {0,...,7}
+  \draw [black!95] (12,\x)    rectangle (16,\x+1);
+\foreach \i in {0,...,7}
+  \node[font=\small, anchor=base] at (14,{7.25-\i}) {\textsf{r\i}};
+
+\node [font=\tiny,anchor=base west] at (12,11.2)  {\textsf{64}};
+\node [font=\tiny,anchor=base east] at (16,11.2)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (12,8.2)  {\textsf{64}};
+\node [font=\tiny,anchor=base east] at (16,8.2)  {\textsf{0}};
+
+\fill [black!15] (12,9)    rectangle (16,10);
+\draw [black!95] (12,9)    rectangle (16,10);
+
+\fill [black!15] (12,10)    rectangle (16,11);
+\draw [black!95] (12,10)    rectangle (16,11);
+
+\fill [black!15] (14,12)    rectangle (16,13);
+\draw [black!95] (14,12)    rectangle (16,13);
+
+\node [font=\small,anchor=base] at (14,9.25)  {\textsf{ib}};
+\node [font=\small,anchor=base] at (14,10.25)  {\textsf{pc}};
+\node [font=\small,anchor=base] at (15,12.25)  {\textsf{flag}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
+    (16,12) -- (16,13) node[midway,xshift=1mm,align=center,font=\tiny,
+        text width=17mm,anchor=west]{\textsf{\shortstack{predicate}}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
+    (16,9) -- (16,11) node[midway,xshift=1mm,align=center,font=\tiny,
+        text width=17mm,anchor=west]{\textsf{\shortstack{control\\registers}}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
+    (16,0) -- (16,8) node[midway,xshift=1mm,align=center,font=\tiny,
+        text width=17mm,anchor=west]{\textsf{\shortstack{scalar\\registers}}};
+
+\end{scope}
+\end{tikzpicture}
+\caption{\emph{scalar-min} architectural profile register state.}
+\label{fig:glyph-register-state-scalar-min}
 \end{figure}
 
 \par\noindent
-the use of
-\emph{ALEN}\footnote{\emph{ALEN} refers to the width of addresses in bits.} and
-\emph{XLEN}\footnote{\emph{XLEN} refers to the width of general purpose registers in bits.}
-parameters is to indicate that the width of addresses can be less than
-the width of the general purpose registers.
+when $XLEN < ALEN \times 2$ it is not possible to pack absolute addresses
+in the link register, so the \texttt{PIN} and \texttt{LINK} instructions
+save relative addresses in the link register. this increases latency in
+branch address calculation compared to absolute addresses.
+
+\newpage
+\subsection{\emph{scalar-max} architectural profile}
+
+the register state accessible by the \emph{scalar-max} architectural
+profile is comprised of:
+
+\begin{itemize}[itemsep=0pt]
+\item 1-bit predicate register (\emph{flag}).
+\item 64-bit \emph{program counter} register (aligned to 2 bytes).
+\item 64-bit \emph{immediate base} register (aligned to 64 bytes).
+\item 64 \texttimes\,128-bit scalar registers (\textsf{r0} --- \textsf{r63}).
+\end{itemize}
+
+\par\noindent
+the following diagram shows the \emph{scalar-max} architectural profile
+register state:
+\\
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+\foreach \x in {0,...,7} {
+  \ifnum\x=6\relax
+    % skip r6
+  \else
+    \fill [black!5] (8,7-\x)    rectangle (16,8-\x);
+  \fi
+}
+\foreach \x in {0,...,7} {
+\ifnum\x=6\relax
+    % skip r6
+  \else
+    \draw [black!95] (8,7-\x)    rectangle (16,8-\x);
+  \fi
+}
+\foreach \x in {0,...,5}
+  \node[font=\small, anchor=base] at (12,{7.25-\x}) {\textsf{r\x}};
+
+\node[font=\small, anchor=base] at (12,0.25) {\textsf{r63}};
+
+\node [font=\tiny,anchor=base west] at (12,11.2)  {\textsf{64}};
+\node [font=\tiny,anchor=base east] at (16,11.2)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (8,8.2)  {\textsf{128}};
+\node [font=\tiny,anchor=base east] at (16,8.2)  {\textsf{0}};
+
+\node[black!50, font=\large] at (12,1.70) {$\vdots$};
+
+\fill [black!15] (12,9)    rectangle (16,10);
+\draw [black!95] (12,9)    rectangle (16,10);
+
+\fill [black!15] (12,10)    rectangle (16,11);
+\draw [black!95] (12,10)    rectangle (16,11);
+
+\fill [black!15] (14,12)    rectangle (16,13);
+\draw [black!95] (14,12)    rectangle (16,13);
+
+\node [font=\small,anchor=base] at (14,9.25)  {\textsf{ib}};
+\node [font=\small,anchor=base] at (14,10.25)  {\textsf{pc}};
+\node [font=\small,anchor=base] at (15,12.25)  {\textsf{flag}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
+    (16,12) -- (16,13) node[midway,xshift=1mm,align=center,font=\tiny,
+        text width=17mm,anchor=west]{\textsf{\shortstack{predicate}}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
+    (16,9) -- (16,11) node[midway,xshift=1mm,align=center,font=\tiny,
+        text width=17mm,anchor=west]{\textsf{\shortstack{control\\registers}}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
+    (16,0) -- (16,8) node[midway,xshift=1mm,align=center,font=\tiny,
+        text width=17mm,anchor=west]{\textsf{\shortstack{scalar\\registers}}};
+
+\end{scope}
+\end{tikzpicture}
+\caption{\emph{scalar-max} architectural profile register state.}
+\label{fig:glyph-register-state-scalar-max}
+\end{figure}
+
+\par\noindent
+when $XLEN \ge ALEN \times 2$ it is possible to pack absolute addresses
+in the link register, so the \texttt{PIN} and \texttt{LINK} instructions
+save abosulte addresses in the link register instead. this reduces latency
+in branch address calculation compared to relative addresses.
+
+\newpage
+\subsection{\emph{vector-min} architectural profile}
+
+the register state accessible by the \emph{vector-min} architectural
+profile is comprised of:
+
+\begin{itemize}[itemsep=0pt]
+\item 1-bit predicate register (\emph{flag}).
+\item 64-bit \emph{program counter} register (aligned to 2 bytes).
+\item 64-bit \emph{immediate base} register (aligned to 64 bytes).
+\item 64 \texttimes\,128-bit scalar registers (\textsf{r0} --- \textsf{r63}).
+\item 64 \texttimes\,512-bit vector registers (\textsf{v0} --- \textsf{v63}).
+\end{itemize}
+
+\par\noindent
+the following diagram shows the \emph{vector-min} architectural profile
+register state:
+\\
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+\foreach \x in {0,...,7} {
+  \ifnum\x=6\relax
+    % skip r6
+  \else
+    \fill [black!5] (8,7-\x)    rectangle (16,8-\x);
+  \fi
+}
+\foreach \x in {0,...,7} {
+\ifnum\x=6\relax
+    % skip r6
+  \else
+    \draw [black!95] (8,7-\x)    rectangle (16,8-\x);
+  \fi
+}
+\foreach \x in {0,...,5}
+  \node[font=\small, anchor=base] at (12,{7.25-\x}) {\textsf{r\x}};
+\foreach \x in {0,...,7} {
+  \ifnum\x=6\relax
+    % skip r6
+  \else
+    \fill [black!5] (0,-1-\x)    rectangle (16,-2-\x);
+  \fi
+}
+\foreach \x in {0,...,7} {
+\ifnum\x=6\relax
+    % skip r6
+  \else
+    \draw [black!95] (0,-1-\x)    rectangle (16,-2-\x);
+  \fi
+}
+\foreach \x in {0,...,5}
+  \node[font=\small, anchor=base] at (8,{-1.75-\x}) {\textsf{v\x}};
+
+\foreach \x in {1,...,3} {
+  \draw[black!20] (4*\x,-1) -- (4*\x,-7);
+  \draw[black!20] (4*\x,-8) -- (4*\x,-9);
+}
+
+\node[black!50, font=\large] at (12,1.70) {$\vdots$};
+\node[black!50, font=\large] at (8,-7.30) {$\vdots$};
+
+\node[font=\small, anchor=base] at (12,0.25) {\textsf{r63}};
+\node[font=\small, anchor=base] at (8,-8.75) {\textsf{v63}};
+
+\node [font=\tiny,anchor=base west] at (12,11.2)  {\textsf{64}};
+\node [font=\tiny,anchor=base east] at (16,11.2)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (8,8.2)  {\textsf{128}};
+\node [font=\tiny,anchor=base east] at (16,8.2)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (0,-0.8)  {\textsf{512}};
+\node [font=\tiny,anchor=base east] at (16,-0.8)  {\textsf{0}};
+
+\fill [black!15] (12,9)    rectangle (16,10);
+\draw [black!95] (12,9)    rectangle (16,10);
+
+\fill [black!15] (12,10)    rectangle (16,11);
+\draw [black!95] (12,10)    rectangle (16,11);
+
+\fill [black!15] (14,12)    rectangle (16,13);
+\draw [black!95] (14,12)    rectangle (16,13);
+
+\node [font=\small,anchor=base] at (14,9.25)  {\textsf{ib}};
+\node [font=\small,anchor=base] at (14,10.25)  {\textsf{pc}};
+\node [font=\small,anchor=base] at (15,12.25)  {\textsf{flag}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
+    (16,12) -- (16,13) node[midway,xshift=1mm,align=center,font=\tiny,
+        text width=17mm,anchor=west]{\textsf{\shortstack{predicate}}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
+    (16,9) -- (16,11) node[midway,xshift=1mm,align=center,font=\tiny,
+        text width=17mm,anchor=west]{\textsf{\shortstack{control\\registers}}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
+    (16,0) -- (16,8) node[midway,xshift=1mm,align=center,font=\tiny,
+        text width=17mm,anchor=west]{\textsf{\shortstack{scalar\\registers}}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
+    (16,-9) -- (16,-1) node[midway,xshift=1mm,align=center,font=\tiny,
+        text width=17mm,anchor=west]{\textsf{\shortstack{vector\\registers}}};
+
+\end{scope}
+\end{tikzpicture}
+\caption{\emph{vector-min} architectural profile register state.}
+\label{fig:glyph-register-state-vector-min}
+\end{figure}
+
+\newpage
+\subsection{\emph{vector-max} architectural profile}
+
+the register state accessible by the \emph{vector-max} architectural
+profile is comprised of:
+
+\begin{itemize}[itemsep=0pt]
+\item 1-bit predicate register (\emph{flag}).
+\item 64-bit \emph{program counter} register (aligned to 2 bytes).
+\item 64-bit \emph{immediate base} register (aligned to 64 bytes).
+\item 64 \texttimes\,128-bit scalar registers (\textsf{r0} --- \textsf{r63}).
+\item 64 \texttimes\,4096-bit vector registers (\textsf{v0} --- \textsf{v63}).
+\end{itemize}
+
+\par\noindent
+the following diagram shows the \emph{vector-max} architectural profile
+register state:
+\\
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+\foreach \x in {0,...,7} {
+  \ifnum\x=6\relax
+    % skip r6
+  \else
+    \fill [black!5] (8,7-\x)    rectangle (16,8-\x);
+  \fi
+}
+\foreach \x in {0,...,7} {
+\ifnum\x=6\relax
+    % skip r6
+  \else
+    \draw [black!95] (8,7-\x)    rectangle (16,8-\x);
+  \fi
+}
+\foreach \x in {0,...,5}
+  \node[font=\small, anchor=base] at (12,{7.25-\x}) {\textsf{r\x}};
+\foreach \x in {0,...,7} {
+  \ifnum\x=6\relax
+    % skip r6
+  \else
+    \fill [black!5] (0,-1-\x)    rectangle (16,-2-\x);
+  \fi
+}
+\foreach \x in {0,...,7} {
+\ifnum\x=6\relax
+    % skip r6
+  \else
+    \draw [black!95] (0,-1-\x)    rectangle (16,-2-\x);
+  \fi
+}
+\foreach \x in {0,...,5}
+  \node[font=\small, anchor=base] at (8,{-1.75-\x}) {\textsf{v\x}};
+
+\foreach \x in {1,...,31} {
+  \draw[black!20] (0.5*\x,-1) -- (0.5*\x,-7);
+  \draw[black!20] (0.5*\x,-8) -- (0.5*\x,-9);
+}
+
+\node[black!50, font=\large] at (12,1.70) {$\vdots$};
+\node[black!50, font=\large] at (8,-7.30) {$\vdots$};
+
+\node[font=\small, anchor=base] at (12,0.25) {\textsf{r63}};
+\node[font=\small, anchor=base] at (8,-8.75) {\textsf{v63}};
+
+\node [font=\tiny,anchor=base west] at (12,11.2)  {\textsf{64}};
+\node [font=\tiny,anchor=base east] at (16,11.2)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (8,8.2)  {\textsf{128}};
+\node [font=\tiny,anchor=base east] at (16,8.2)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (0,-0.8)  {\textsf{4096}};
+\node [font=\tiny,anchor=base east] at (16,-0.8)  {\textsf{0}};
+
+\fill [black!15] (12,9)    rectangle (16,10);
+\draw [black!95] (12,9)    rectangle (16,10);
+
+\fill [black!15] (12,10)    rectangle (16,11);
+\draw [black!95] (12,10)    rectangle (16,11);
+
+\fill [black!15] (14,12)    rectangle (16,13);
+\draw [black!95] (14,12)    rectangle (16,13);
+
+\node [font=\small,anchor=base] at (14,9.25)  {\textsf{ib}};
+\node [font=\small,anchor=base] at (14,10.25)  {\textsf{pc}};
+\node [font=\small,anchor=base] at (15,12.25)  {\textsf{flag}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
+    (16,12) -- (16,13) node[midway,xshift=1mm,align=center,font=\tiny,
+        text width=17mm,anchor=west]{\textsf{\shortstack{predicate}}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
+    (16,9) -- (16,11) node[midway,xshift=1mm,align=center,font=\tiny,
+        text width=17mm,anchor=west]{\textsf{\shortstack{control\\registers}}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
+    (16,0) -- (16,8) node[midway,xshift=1mm,align=center,font=\tiny,
+        text width=17mm,anchor=west]{\textsf{\shortstack{scalar\\registers}}};
+
+\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
+    (16,-9) -- (16,-1) node[midway,xshift=1mm,align=center,font=\tiny,
+        text width=17mm,anchor=west]{\textsf{\shortstack{vector\\registers}}};
+
+\end{scope}
+\end{tikzpicture}
+\caption{\emph{vector-max} architectural profile register state.}
+\label{fig:glyph-register-state-vector-max}
+\end{figure}
 
 \newpage
 \section{Example pipeline}
