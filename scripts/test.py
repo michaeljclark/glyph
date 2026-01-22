@@ -2,6 +2,7 @@
 
 import os
 import pathlib
+import hashlib
 import subprocess
 
 def exec_test(temp, name, prog):
@@ -23,13 +24,18 @@ for script in sorted(tests.glob('*.py')):
     golang = os.path.join(tests, '%s.go' % name)
     if os.access(script, os.X_OK) and  os.access(native, os.X_OK) and os.access(golang, os.F_OK):
         native_txt = exec_test(temp, '%s_%s' % (name, 'native'), [native])
-        script_txt =  exec_test(temp, '%s_%s' % (name, 'script'), [script])
+        python_txt =  exec_test(temp, '%s_%s' % (name, 'script'), [script])
         golang_txt =  exec_test(temp, '%s_%s' % (name, 'golang'), ['go','run',golang])
         diff_result = subprocess.run(['diff3',
-            native_txt, script_txt, golang_txt], capture_output=True, text=True)
+            native_txt, python_txt, golang_txt], capture_output=True, text=True)
+        native_hash = hashlib.sha256(open(native_txt, "rb").read()).hexdigest()
+        python_hash = hashlib.sha256(open(python_txt, "rb").read()).hexdigest()
+        golang_hash = hashlib.sha256(open(golang_txt, "rb").read()).hexdigest()
         os.unlink(native_txt)
-        os.unlink(script_txt)
+        os.unlink(python_txt)
         os.unlink(golang_txt)
-        print('%s\n%s' % (name, diff_result.stdout), end='')
+        print('%-32s %s %s %s' % (name, native_hash[0:15], python_hash[0:15], golang_hash[0:15]))
+        if diff_result.stdout:
+            print(diff_result.stdout, end='')
 
 os.rmdir(temp)
