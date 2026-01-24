@@ -8,10 +8,10 @@ func t() {
         0xfffffc00,
     }
     i := []uint16{
-        CPU_encode_op_addh_i64(0,2),
+        CPU_encode_op_addd_i64(0,2),
         CPU_encode_op_break(0),
     }
-    CPU_test("addh_1", c, i);
+    CPU_test("addd_1", c, i);
 }
 
 func main() {

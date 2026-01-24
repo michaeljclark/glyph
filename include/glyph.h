@@ -33,14 +33,14 @@ enum
     cpu_op_b            = 0b00010, // op0r_imm9 pcrel9*2
     cpu_op_ibj          = 0b00011, // op0r_imm9 pcrel9*64
     cpu_op_link_i64     = 0b00100, // op1r_imm6 ib64(imm6*8)
-    cpu_op_movh_i64     = 0b00101, // op1r_imm6 ib32(imm6*8)
-    cpu_op_movw_i64     = 0b00110, // op1r_imm6 ib64(imm6*8)
+    cpu_op_movd_i64     = 0b00101, // op1r_imm6 ib32(imm6*8)
+    cpu_op_movq_i64     = 0b00110, // op1r_imm6 ib64(imm6*8)
     cpu_op_movi_i64     = 0b00111, // op1r_imm6
     cpu_op_addi_i64     = 0b01000, // op1r_imm6
     cpu_op_srli_i64     = 0b01001, // op1r_imm6
     cpu_op_srai_i64     = 0b01010, // op1r_imm6
     cpu_op_slli_i64     = 0b01011, // op1r_imm6
-    cpu_op_addh_i64     = 0b01100, // op1r_imm6 ib32(imm6*4)
+    cpu_op_addd_i64     = 0b01100, // op1r_imm6 ib32(imm6*4)
     cpu_op_leapc_i64    = 0b01101, // op1r_imm6 ib32(imm6*4)(pc)
     cpu_op_loadpc_i64   = 0b01110, // op1r_imm6 ib32(imm6*4)(pc)
     cpu_op_storepc_i64  = 0b01111, // op1r_imm6 ib32(imm6*4)(pc)
@@ -354,12 +354,12 @@ __glyph_func__ int cpu_exec_op_link_i64(cpu_state *cpu, u64 inst)
 
     return 0;
 }
-__glyph_func__ int cpu_exec_op_movh_i64(cpu_state *cpu, u64 inst)
+__glyph_func__ int cpu_exec_op_movd_i64(cpu_state *cpu, u64 inst)
 {
     cpu->r[rc(inst)] = cpu_const_i32(cpu, uimm6(inst));
     return 2;
 }
-__glyph_func__ int cpu_exec_op_movw_i64(cpu_state *cpu, u64 inst)
+__glyph_func__ int cpu_exec_op_movq_i64(cpu_state *cpu, u64 inst)
 {
     cpu->r[rc(inst)] = cpu_const_i64(cpu, uimm6(inst));
     return 2;
@@ -389,7 +389,7 @@ __glyph_func__ int cpu_exec_op_slli_i64(cpu_state *cpu, u64 inst)
     cpu->r[rc(inst)] = cpu->r[rc(inst)] << uimm6(inst);
     return 2;
 }
-__glyph_func__ int cpu_exec_op_addh_i64(cpu_state *cpu, u64 inst)
+__glyph_func__ int cpu_exec_op_addd_i64(cpu_state *cpu, u64 inst)
 {
     cpu->r[rc(inst)] = cpu->r[rc(inst)] + cpu_const_i32(cpu, uimm6(inst));
     return 2;
@@ -647,14 +647,14 @@ static const char* cpu_opcode_str[32] =
     [cpu_op_b]              = "b",
     [cpu_op_ibj]            = "ibj",
     [cpu_op_link_i64]       = "link.i64",
-    [cpu_op_movh_i64]       = "movh.i64",
-    [cpu_op_movw_i64]       = "movw.i64",
+    [cpu_op_movd_i64]       = "movd.i64",
+    [cpu_op_movq_i64]       = "movq.i64",
     [cpu_op_movi_i64]       = "movi.i64",
     [cpu_op_addi_i64]       = "addi.i64",
     [cpu_op_srli_i64]       = "srli.i64",
     [cpu_op_srai_i64]       = "srai.i64",
     [cpu_op_slli_i64]       = "slli.i64",
-    [cpu_op_addh_i64]       = "addh.i64",
+    [cpu_op_addd_i64]       = "addd.i64",
     [cpu_op_leapc_i64]      = "leapc.i64",
     [cpu_op_loadpc_i64]     = "loadpc.i64",
     [cpu_op_storepc_i64]    = "storepc.i64",
@@ -763,14 +763,14 @@ static const uchar cpu_op_type[32] =
     [cpu_op_b]              = op0r_simm9x2,
     [cpu_op_ibj]            = op0r_simm9x64,
     [cpu_op_link_i64]       = op1r_fun3_ib32x2_link,
-    [cpu_op_movh_i64]       = op1r_ib32_uimm6,
-    [cpu_op_movw_i64]       = op1r_ib64_uimm6,
+    [cpu_op_movd_i64]       = op1r_ib32_uimm6,
+    [cpu_op_movq_i64]       = op1r_ib64_uimm6,
     [cpu_op_movi_i64]       = op1r_simm6,
     [cpu_op_addi_i64]       = op1r_simm6,
     [cpu_op_srli_i64]       = op1r_uimm6,
     [cpu_op_srai_i64]       = op1r_uimm6,
     [cpu_op_slli_i64]       = op1r_uimm6,
-    [cpu_op_addh_i64]       = op1r_mib64_uimm6,
+    [cpu_op_addd_i64]       = op1r_mib64_uimm6,
     [cpu_op_leapc_i64]      = op1r_mib64_uimm6,
     [cpu_op_loadpc_i64]     = op1r_mib64_uimm6,
     [cpu_op_storepc_i64]    = op1r_mib64_uimm6,
@@ -846,11 +846,11 @@ __glyph_func__ u16 cpu_encode_op_jtlib_i64(int rc, int ibrel6) {
 __glyph_func__ u16 cpu_encode_op_jalaib_i64(int rc, int ibrel6) {
     return op1ri6_enc(cpu_op_link_i64, cpu_link_jalaib_r6 | (rc & 1), ibrel6);
 }
-__glyph_func__ u16 cpu_encode_op_movh_i64(int rc, int ibrel6) {
-    return op1ri6_enc(cpu_op_movh_i64, rc, ibrel6);
+__glyph_func__ u16 cpu_encode_op_movd_i64(int rc, int ibrel6) {
+    return op1ri6_enc(cpu_op_movd_i64, rc, ibrel6);
 }
-__glyph_func__ u16 cpu_encode_op_movw_i64(int rc, int ibrel6) {
-    return op1ri6_enc(cpu_op_movw_i64, rc, ibrel6);
+__glyph_func__ u16 cpu_encode_op_movq_i64(int rc, int ibrel6) {
+    return op1ri6_enc(cpu_op_movq_i64, rc, ibrel6);
 }
 __glyph_func__ u16 cpu_encode_op_movi_i64(int rc, int imm6) {
     return op1ri6_enc(cpu_op_movi_i64, rc, imm6);
@@ -867,8 +867,8 @@ __glyph_func__ u16 cpu_encode_op_srai_i64(int rc, int imm6) {
 __glyph_func__ u16 cpu_encode_op_slli_i64(int rc, int imm6) {
     return op1ri6_enc(cpu_op_slli_i64, rc, imm6);
 }
-__glyph_func__ u16 cpu_encode_op_addh_i64(int rc, int ibimm6) {
-    return op1ri6_enc(cpu_op_addh_i64, rc, ibimm6);
+__glyph_func__ u16 cpu_encode_op_addd_i64(int rc, int ibimm6) {
+    return op1ri6_enc(cpu_op_addd_i64, rc, ibimm6);
 }
 __glyph_func__ u16 cpu_encode_op_leapc_i64(int rc, int ibimm6) {
     return op1ri6_enc(cpu_op_leapc_i64, rc, ibimm6);
@@ -983,14 +983,14 @@ __glyph_func__ int cpu_exec(cpu_state *cpu, u64 inst)
     case cpu_op_b: return cpu_exec_op_b(cpu, inst);
     case cpu_op_ibj: return cpu_exec_op_ibj(cpu, inst);
     case cpu_op_link_i64: return cpu_exec_op_link_i64(cpu, inst);
-    case cpu_op_movh_i64: return cpu_exec_op_movh_i64(cpu, inst);
-    case cpu_op_movw_i64: return cpu_exec_op_movw_i64(cpu, inst);
+    case cpu_op_movd_i64: return cpu_exec_op_movd_i64(cpu, inst);
+    case cpu_op_movq_i64: return cpu_exec_op_movq_i64(cpu, inst);
     case cpu_op_movi_i64: return cpu_exec_op_movi_i64(cpu, inst);
     case cpu_op_addi_i64: return cpu_exec_op_addi_i64(cpu, inst);
     case cpu_op_srli_i64: return cpu_exec_op_srli_i64(cpu, inst);
     case cpu_op_srai_i64: return cpu_exec_op_srai_i64(cpu, inst);
     case cpu_op_slli_i64: return cpu_exec_op_slli_i64(cpu, inst);
-    case cpu_op_addh_i64: return cpu_exec_op_addh_i64(cpu, inst);
+    case cpu_op_addd_i64: return cpu_exec_op_addd_i64(cpu, inst);
     case cpu_op_leapc_i64: return cpu_exec_op_leapc_i64(cpu, inst);
     case cpu_op_loadpc_i64: return cpu_exec_op_loadpc_i64(cpu, inst);
     case cpu_op_storepc_i64: return cpu_exec_op_storepc_i64(cpu, inst);

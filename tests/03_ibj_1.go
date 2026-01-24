@@ -16,7 +16,7 @@ func t() {
     }
     i := []uint16{
         CPU_encode_op_ibj(64),
-        CPU_encode_op_movw_i64(0,0),
+        CPU_encode_op_movq_i64(0,0),
         CPU_encode_op_break(0),
     }
     CPU_test("ibj_1", c, i);

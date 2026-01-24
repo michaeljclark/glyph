@@ -18,7 +18,7 @@ func t() {
     i := []uint16{
         CPU_encode_op_jalib_i64(7,0),
         CPU_encode_op_break(0),
-        CPU_encode_op_movw_i64(0,1),
+        CPU_encode_op_movq_i64(0,1),
         CPU_encode_op_or_i64(0,0,0),
         CPU_encode_op_jtlib_i64(7,0),
     }

@@ -41,7 +41,7 @@ the super regular RISC architecture:
   entry.
 - `ibj` _(immediate-block-jump)_ adds a relative address to the immediate
   base register.
-- `movw` _(move-word-immediate-block)_ uses unsigned displacement to access
+- `movq` _(move-word-immediate-block)_ uses unsigned displacement to access
   constants.
 - `jalib` _(jump-and-link-immediate-block)_ or _(call)_ links address
   vector and adds constants to (pc,ib).
@@ -54,7 +54,7 @@ compiled versions of the architecture specification are available from the
 following URLs:
 
 - current: [glyph.pdf](https://metaparadigm.com/~mclark/glyph.pdf)
-- latest: [glyph-20260122.pdf](https://metaparadigm.com/~mclark/glyph-20260122.pdf)
+- latest: [glyph-20260125.pdf](https://metaparadigm.com/~mclark/glyph-20260125.pdf)
 
 ## opcodes
 
@@ -71,14 +71,14 @@ this list outlines instructions, opcodes, and descriptions used in the
 | 03 | ibj          | op0r_imm9_16 | 00011 | **ib-jump** simm9*64                        |
 | 04 | link.i64     | op1r_imm6_16 | 00100 | **link** fun3,ib64(uimm6*8)                 |
 |    |              |              |       |   fun3[2:1]=jib,jalib,jtlib,jalalib         |
-| 05 | movh.i64     | op1r_imm6_16 | 00101 | **move-half** rc,ib32(uimm6*8)              |
-| 06 | movw.i64     | op1r_imm6_16 | 00110 | **move-word** rc,ib64(uimm6*8)              |
+| 05 | movd.i64     | op1r_imm6_16 | 00101 | **move-dword** rc,ib32(uimm6*8)             |
+| 06 | movq.i64     | op1r_imm6_16 | 00110 | **move-qword** rc,ib64(uimm6*8)             |
 | 07 | movi.i64     | op1r_imm6_16 | 00111 | **mov-imm6** rc,simm6                       |
 | 08 | addi.i64     | op1r_imm6_16 | 01000 | **add-imm6** rc,simm6                       |
 | 09 | srli.i64     | op1r_imm6_16 | 01001 | **shift-right-logical-imm** rc,uimm6        |
 | 10 | srai.i64     | op1r_imm6_16 | 01010 | **shift-right-arith-imm** rc,uimm6          |
 | 11 | slli.i64     | op1r_imm6_16 | 01011 | **shift-left-logical-imm** rc,uimm6         |
-| 12 | addh.i64     | op1r_imm6_16 | 01100 | **add-half** rc,ib32(uimm6*4)               |
+| 12 | addd.i64     | op1r_imm6_16 | 01100 | **add-dword** rc,ib32(uimm6*4)              |
 | 13 | leapc.i64    | op1r_imm6_16 | 01101 | **lea-pc** rc,ib32(uimm6*4)(pc)             |
 | 14 | loadpc.i64   | op1r_imm6_16 | 01110 | **load-pc** rc,ib32(uimm6*4)(pc)            |
 | 15 | storepc.i64  | op1r_imm6_16 | 01111 | **store-pc** rc,ib32(uimm6*4)(pc)           |

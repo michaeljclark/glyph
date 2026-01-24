@@ -946,7 +946,7 @@ borrow.
 to function entry.
 \item \texttt{ibj} --- \emph{immediate-block-jump} adds a relative address
 to the \emph{immediate base} register.
-\item \texttt{movw} --- \emph{move-word-immediate-block} uses a displacement
+\item \texttt{mov} --- \emph{move-word-immediate-block} uses a displacement
 to access a constant.
 \item \texttt{jalib} --- \emph{jump-and-link-immediate-block} or
 \emph{link-function-call} copies the address vector into the link register
@@ -1005,7 +1005,7 @@ VREG & --, 64     & number of vector registers \\
 ILEN & 16, 32, 64 & width of largest instruction in bits \\
 ALEN & 64         & width of arithmetic on scalars in bits \\
 XLEN & 64, 128    & width of scalar registers in bits \\
-VLEN & 512, 4096  & width of vector registers in bits \\
+VLEN & 512, 1024  & width of vector registers in bits \\
 GLEN & 128        & width of vector lane group in bits \\
 \hline
 \end{tabular}
@@ -1032,7 +1032,7 @@ contains packed-SIMD instruction on vector registers.
 \emph{scalar-min} & 8  & -  & 16 & 64  & 64  & -    & -   \\
 \emph{scalar-max} & 64 & -  & 32 & 64  & 128 & -    & -   \\
 \emph{vector-min} & 64 & 64 & 64 & 64  & 128 & 512  & 128 \\
-\emph{vector-max} & 64 & 64 & 64 & 64  & 128 & 4096 & 128 \\
+\emph{vector-max} & 64 & 64 & 64 & 64  & 128 & 1024 & 128 \\
 \hline
 \end{tabular}
 \caption{architectural profiles}
@@ -2320,7 +2320,7 @@ profile is comprised of:
 \item 64-bit \emph{program counter} register (aligned to 2 bytes).
 \item 64-bit \emph{immediate base} register (aligned to 64 bytes).
 \item 64 \texttimes\,128-bit scalar registers (\textsf{r0} --- \textsf{r63}).
-\item 64 \texttimes\,4096-bit vector registers (\textsf{v0} --- \textsf{v63}).
+\item 64 \texttimes\,1024-bit vector registers (\textsf{v0} --- \textsf{v63}).
 \end{itemize}
 
 \par\noindent
@@ -2365,9 +2365,9 @@ register state:
 \foreach \x in {0,...,5}
   \node[font=\small, anchor=base] at (8,{-1.75-\x}) {\textsf{v\x}};
 
-\foreach \x in {1,...,31} {
-  \draw[black!20] (0.5*\x,-1) -- (0.5*\x,-7);
-  \draw[black!20] (0.5*\x,-8) -- (0.5*\x,-9);
+\foreach \x in {1,...,7} {
+  \draw[black!20] (2*\x,-1) -- (2*\x,-7);
+  \draw[black!20] (2*\x,-8) -- (2*\x,-9);
 }
 
 \node[black!50, font=\large] at (12,1.70) {$\vdots$};
@@ -2380,7 +2380,7 @@ register state:
 \node [font=\tiny,anchor=base east] at (16,11.2)  {\textsf{0}};
 \node [font=\tiny,anchor=base west] at (8,8.2)  {\textsf{128}};
 \node [font=\tiny,anchor=base east] at (16,8.2)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,-0.8)  {\textsf{4096}};
+\node [font=\tiny,anchor=base west] at (0,-0.8)  {\textsf{1024}};
 \node [font=\tiny,anchor=base east] at (16,-0.8)  {\textsf{0}};
 
 \fill [black!15] (12,9)    rectangle (16,10);
@@ -4635,10 +4635,10 @@ authentication failures should generate a trap for the operating system to
 dispatch to a control flow integrity trap handler.
 
 \needspace{8\baselineskip}
-\subsection{movh}
-\insrcimmsix{rc}{uimm}{00101}{\textbf{movh.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})}
+\subsection{movd}
+\insrcimmsix{rc}{uimm}{00101}{\textbf{movd.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})}
 \\
-the \emph{movh} or \emph{move-half-immediate-block} instruction loads a
+the \emph{movd} or \emph{move-dword-immediate-block} instruction loads a
 32-bit constant addressed by \emph{$[ib + uimm6 \times 4]$}, which it
 sign-extends to 64-bits, then saves to the \emph{rc} register.
 \begin{Verbatim}
@@ -4646,10 +4646,10 @@ sign-extends to 64-bits, then saves to the \emph{rc} register.
 \end{Verbatim}
 
 \needspace{8\baselineskip}
-\subsection{movw}
-\insrcimmsix{rc}{uimm}{00110}{\textbf{movw.i64}\: \mathit{rc}, \mathit{ib64}(\mathit{uimm6})}
+\subsection{movq}
+\insrcimmsix{rc}{uimm}{00110}{\textbf{movq.i64}\: \mathit{rc}, \mathit{ib64}(\mathit{uimm6})}
 \\
-the \emph{movw} or \emph{move-word-immediate-block} instruction loads a
+the \emph{movq} or \emph{move-qword-immediate-block} instruction loads a
 64-bit constant addressed by \emph{$[ib + uimm6 \times 8]$} then saves
 it to the \emph{rc} register.
 \begin{Verbatim}
@@ -4714,10 +4714,10 @@ the \emph{rc} register. zeros are copied into the right most bits.
 \end{Verbatim}
 
 \needspace{8\baselineskip}
-\subsection{addh}
-\insrcimmsix{rc}{uimm}{01100}{\textbf{addh.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6}); \mathit{flag}}
+\subsection{addd}
+\insrcimmsix{rc}{uimm}{01100}{\textbf{addd.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6}); \mathit{flag}}
 \\
-the \emph{addh} or \emph{add-half-immediate-block} instruction loads
+the \emph{addd} or \emph{add-half-immediate-block} instruction loads
 a 32-bit constant addressed by \emph{$[ib + uimm6 \times 4]$}, which it
 sign-extends to 64-bits, then adds to the \emph{rc} register,
 and carry is saved to the \emph{flag} register.
@@ -5246,7 +5246,107 @@ the following table lists glyph assembler pseudo instruction aliases:
 \end{table}
 
 \newpage
-\section{Calling convention}
+\section{Type Conventions}
+
+glyph adopts a common type naming convention for integer and floating-point
+scalar and packed-SIMD vector types. each type is described by several attributes:
+
+\begin{itemize}[itemsep=0pt]
+\item unique type name
+\item unique short symbol used in opcodes
+\item vector length (omitted for scalar types)
+\item mnemonic indicating the operand type and width
+\item human-readable description
+\end{itemize}
+
+\par\noindent
+short symbols for signed integers have single-letter codes. unsigned types
+and floating-point symbols are explicitly distinguished by \texttt{u} and
+\texttt{f} suffixes, eliminating ambiguity with single-letter symbols.
+the mnemonics have been chosen to disambiguate operand size and type.
+
+\subsection{scalar types}
+
+the following table lists scalar types used by the assembler:
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{type} & \textbf{symbol} & \textbf{mnemonic} & \textbf{description} \\
+\hline
+\texttt{i8}   & \texttt{b}  & \emph{byte}   & 8-bit signed integer (byte) \\
+\texttt{i16}  & \texttt{w}  & \emph{word}   & 16-bit signed integer (word) \\
+\texttt{i32}  & \texttt{d}  & \emph{dword}  & 32-bit signed integer (double-word) \\
+\texttt{i64}  & \texttt{q}  & \emph{qword}  & 64-bit signed integer (quad-word) \\
+\texttt{i128} & \texttt{o}  & \emph{oword}  & 128-bit signed integer (octa-word) \\
+\texttt{u8}   & \texttt{bu} & \emph{ubyte}  & 8-bit unsigned integer (byte) \\
+\texttt{u16}  & \texttt{wu} & \emph{uword}  & 16-bit unsigned integer (word) \\
+\texttt{u32}  & \texttt{du} & \emph{udword} & 32-bit unsigned integer (double-word) \\
+\texttt{u64}  & \texttt{qu} & \emph{uqword} & 64-bit unsigned integer (quad-word) \\
+\texttt{u128} & \texttt{ou} & \emph{uoword} & 128-bit unsigned integer (octa-word) \\
+\texttt{f16}  & \texttt{hf} & \emph{half}   & IEEE 754 16-bit floating-point (half-precision) \\
+\texttt{f32}  & \texttt{sf} & \emph{float}  & IEEE 754 32-bit floating-point (single-precision) \\
+\texttt{f64}  & \texttt{df} & \emph{double} & IEEE 754 64-bit floating-point (double-precision) \\
+\texttt{f128} & \texttt{qf} & \emph{quad}   & IEEE 754 128-bit floating-point (quad-precision) \\
+\hline
+\end{tabular}
+\caption{scalar types}
+\label{tab:scalar-types}
+\end{table}
+
+\foreach \factor/\width/\sym\name/\bits in
+ {0/128/xv/xmm/000, 1/256/yv/ymm/001, 2/512/zv/zmm/010,
+  3/1024/uv/umm/100, 4/2048/vv/vmm/101, 5/4096/wv/wmm/110} {
+
+\pgfmathsetmacro{\nb}{int(16 * pow(2,\factor))}
+\pgfmathsetmacro{\nw}{int(8 * pow(2,\factor))}
+\pgfmathsetmacro{\nd}{int(4 * pow(2,\factor))}
+\pgfmathsetmacro{\nq}{int(2 * pow(2,\factor))}
+\pgfmathsetmacro{\no}{int(1 * pow(2,\factor))}
+
+\begin{samepage}
+\needspace{9\baselineskip}
+\subsection{\width-bit vector types \texttt{(L=0b\bits)}}
+
+the following table lists \width-bit vector types used by the assembler:
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{type}    & \textbf{symbol} & \textbf{mnemonic} & \textbf{description} \\
+\hline
+\texttt{m\width}  & \texttt{\sym}    & \emph{\name}        & \width-bit opaque vector type \\
+\texttt{i8x\nb}   & \texttt{\nb{}b}  & \emph{\nb * byte}   & \nb x 8-bit signed integer (byte) \\
+\texttt{i16x\nw}  & \texttt{\nw{}w}  & \emph{\nw * word}   & \nw x 16-bit signed integer (word) \\
+\texttt{i32x\nd}  & \texttt{\nd{}d}  & \emph{\nd * dword}  & \nd x 32-bit signed integer (double-word) \\
+\texttt{i64x\nq}  & \texttt{\nq{}q}  & \emph{\nq * qword}  & \nq x 64-bit signed integer (quad-word) \\
+\texttt{i128x\no} & \texttt{\no{}o}  & \emph{\no * oword}  & \no x 128-bit signed integer (octa-word) \\
+\texttt{u8x\nb}   & \texttt{\nb{}bu} & \emph{\nb * ubyte}  & \nb x 8-bit unsigned integer (byte) \\
+\texttt{u16x\nw}  & \texttt{\nw{}wu} & \emph{\nw * uword}  & \nw x 16-bit unsigned integer (word) \\
+\texttt{u32x\nd}  & \texttt{\nd{}du} & \emph{\nd * udword} & \nd x 32-bit unsigned integer (double-word) \\
+\texttt{u64x\nq}  & \texttt{\nq{}qu} & \emph{\nq * uqword} & \nq x 64-bit unsigned integer (quad-word) \\
+\texttt{u128x\no} & \texttt{\no{}ou} & \emph{\no * uoword} & \no x 128-bit unsigned integer (octa-word) \\
+\texttt{f16x\nw}  & \texttt{\nw{}hf} & \emph{\nw * half}   & \nw x IEEE 754 16-bit floating-point (half-precision) \\
+\texttt{f32x\nd}  & \texttt{\nd{}sf} & \emph{\nd * float}  & \nd x IEEE 754 32-bit floating-point (single-precision) \\
+\texttt{f64x\nq}  & \texttt{\nq{}df} & \emph{\nq * double} & \nq x IEEE 754 64-bit floating-point (double-precision) \\
+\texttt{f128x\no} & \texttt{\no{}qf} & \emph{\no * quad}   & \no x IEEE 754 128-bit floating-point (double-precision) \\
+\hline
+\end{tabular}
+\caption{\width-bit vector types}
+\label{tab:\width-bit-vector-types}
+\end{table}
+\end{samepage}
+
+\vspace{-0.5em}
+
+}
+
+\newpage
+\section{Calling conventions}
 \subsection{calling convention --- 16-bit}
 
 the 16-bit instruction packet, while intended to be used in conjunction
@@ -5418,14 +5518,14 @@ r7    & ra    & return address / (pc,ib) link vector        & caller \\
 \ainsnimmnine{2}{simm}{00010}{\textbf{b}\: \mathit{simm9} \times 2}
 \ainsnimmnine{3}{simm}{00011}{\textbf{ibj}\: \mathit{simm9} \times 64}
 \ainsrcimmsix{4}{fun}{uimm}{00100}{\textbf{link.i64}\: \mathit{fun3}, \mathit{ib64}(\mathit{uimm6})}
-\ainsrcimmsix{5}{rc}{uimm}{00101}{\textbf{movh.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})}
-\ainsrcimmsix{6}{rc}{uimm}{00110}{\textbf{movw.i64}\: \mathit{rc}, \mathit{ib64}(\mathit{uimm6})}
+\ainsrcimmsix{5}{rc}{uimm}{00101}{\textbf{movd.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})}
+\ainsrcimmsix{6}{rc}{uimm}{00110}{\textbf{movq.i64}\: \mathit{rc}, \mathit{ib64}(\mathit{uimm6})}
 \ainsrcimmsix{7}{rc}{simm}{00111}{\textbf{movi.i64}\: \mathit{rc}, \mathit{simm6}}
 \ainsrcimmsix{8}{rc}{simm}{01000}{\textbf{addi.i64}\: \mathit{rc}, \mathit{simm6}; \mathit{flag}}
 \ainsrcimmsix{9}{rc}{uimm}{01001}{\textbf{srli.i64}\: \mathit{rc}, \mathit{uimm6}}
 \ainsrcimmsix{10}{rc}{uimm}{01010}{\textbf{srai.i64}\: \mathit{rc}, \mathit{uimm6}}
 \ainsrcimmsix{11}{rc}{uimm}{01011}{\textbf{slli.i64}\: \mathit{rc}, \mathit{uimm6}}
-\ainsrcimmsix{12}{rc}{uimm}{01100}{\textbf{addh.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6}); \mathit{flag}}
+\ainsrcimmsix{12}{rc}{uimm}{01100}{\textbf{addd.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6}); \mathit{flag}}
 \ainsrcimmsix{13}{rc}{uimm}{01101}{\textbf{leapc.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}
 \ainsrcimmsix{14}{rc}{uimm}{01110}{\textbf{loadpc.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}
 \ainsrcimmsix{15}{rc}{uimm}{01111}{\textbf{storepc.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}

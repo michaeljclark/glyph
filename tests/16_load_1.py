@@ -9,7 +9,7 @@ def t():
         0xfedcba9876543210,
     ]
     i = [
-        cpu_encode_op_movw_i64(0,1),
+        cpu_encode_op_movq_i64(0,1),
         cpu_encode_op_load_i64(1,0,0x10),
         cpu_encode_op_break(0),
     ]
