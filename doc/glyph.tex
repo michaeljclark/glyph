@@ -1005,7 +1005,7 @@ VREG & --, 64     & number of vector registers \\
 ILEN & 16, 32, 64 & width of largest instruction in bits \\
 ALEN & 64         & width of arithmetic on scalars in bits \\
 XLEN & 64, 128    & width of scalar registers in bits \\
-VLEN & 512, 1024  & width of vector registers in bits \\
+VLEN & 512, 4096  & width of vector registers in bits \\
 GLEN & 128        & width of vector lane group in bits \\
 \hline
 \end{tabular}
@@ -1032,7 +1032,7 @@ contains packed-SIMD instruction on vector registers.
 \emph{scalar-min} & 8  & -  & 16 & 64  & 64  & -    & -   \\
 \emph{scalar-max} & 64 & -  & 32 & 64  & 128 & -    & -   \\
 \emph{vector-min} & 64 & 64 & 64 & 64  & 128 & 512  & 128 \\
-\emph{vector-max} & 64 & 64 & 64 & 64  & 128 & 1024 & 128 \\
+\emph{vector-max} & 64 & 64 & 64 & 64  & 128 & 4096 & 128 \\
 \hline
 \end{tabular}
 \caption{architectural profiles}
@@ -2320,7 +2320,7 @@ profile is comprised of:
 \item 64-bit \emph{program counter} register (aligned to 2 bytes).
 \item 64-bit \emph{immediate base} register (aligned to 64 bytes).
 \item 64 \texttimes\,128-bit scalar registers (\textsf{r0} --- \textsf{r63}).
-\item 64 \texttimes\,1024-bit vector registers (\textsf{v0} --- \textsf{v63}).
+\item 64 \texttimes\,4096-bit vector registers (\textsf{v0} --- \textsf{v63}).
 \end{itemize}
 
 \par\noindent
@@ -2365,9 +2365,9 @@ register state:
 \foreach \x in {0,...,5}
   \node[font=\small, anchor=base] at (8,{-1.75-\x}) {\textsf{v\x}};
 
-\foreach \x in {1,...,7} {
-  \draw[black!20] (2*\x,-1) -- (2*\x,-7);
-  \draw[black!20] (2*\x,-8) -- (2*\x,-9);
+\foreach \x in {1,...,31} {
+  \draw[black!20] (0.5*\x,-1) -- (0.5*\x,-7);
+  \draw[black!20] (0.5*\x,-8) -- (0.5*\x,-9);
 }
 
 \node[black!50, font=\large] at (12,1.70) {$\vdots$};
@@ -2380,7 +2380,7 @@ register state:
 \node [font=\tiny,anchor=base east] at (16,11.2)  {\textsf{0}};
 \node [font=\tiny,anchor=base west] at (8,8.2)  {\textsf{128}};
 \node [font=\tiny,anchor=base east] at (16,8.2)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,-0.8)  {\textsf{1024}};
+\node [font=\tiny,anchor=base west] at (0,-0.8)  {\textsf{4096}};
 \node [font=\tiny,anchor=base east] at (16,-0.8)  {\textsf{0}};
 
 \fill [black!15] (12,9)    rectangle (16,10);
