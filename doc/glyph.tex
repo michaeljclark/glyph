@@ -4533,6 +4533,89 @@ are as follows:
 \end{algorithmic}
 \end{algorithm}
 
+\newpage
+\section{Virtual machine}
+
+glyph defines a base virtual machine model with a well-defined minimum set of
+firmware interfaces, hardware description models and virtual devices for I/O.
+
+\subsection{firmware interface}
+
+the base virtual machine model provides early boot interfaces to bootloaders
+and operating systems using the Unified Extensible Firmware Interface (UEFI).
+the following minimal set of UEFI protocols are required in the glyph base
+virtual machine model.
+
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|}
+\hline
+\textbf{name} & \textbf{description} \\
+\hline
+\texttt{EFI\_LOADED\_IMAGE\_PROTOCOL}        & image context and load parameters \\
+\texttt{EFI\_DEVICE\_PATH\_PROTOCOL}         & device and image location encoding \\
+\texttt{EFI\_BLOCK\_IO\_PROTOCOL}            & block device access to boot media \\
+\texttt{EFI\_SERIAL\_IO\_PROTOCOL}           & serial device access to console \\
+\texttt{EFI\_SIMPLE\_FILE\_SYSTEM\_PROTOCOL} & filesystem access for boot media \\
+\hline
+\end{tabular}
+\caption{glyph virtual machine UEFI protocols}
+\label{tab:glyph-virtual-machine-uefi-protocols}
+\end{table}
+
+\vspace{-0.5em}
+
+\subsection{hardware description}
+
+the base virtual machine model uses device-tree to describe hardware
+configuration properties such as physical memory layout, device identities
+and properties such as memory-mapped I/O addresses, interrupt routing and
+other configuration parameters.
+
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|}
+\hline
+\textbf{name} & \textbf{description} \\
+\hline
+\textbf{(DTS)} device tree source & the hardware description format \\
+\textbf{(DTB)} device tree binary & the compiled binary object \\
+\textbf{(FDT)} flattened device tree & the standard format used by bootloaders \\
+\hline
+\end{tabular}
+\caption{glyph virtual machine hardware description}
+\label{tab:glyph-virtual-machine-hardware-description}
+\end{table}
+
+\vspace{-0.5em}
+
+\subsection{virtual devices}
+
+the base virtual machine model uses OASIS Virtual I/O (VirtIO) as an
+interface for emulated devices inside glyph virtual machines. the
+following minimal set of VirtIO device models are required in the
+base virtual machine model.
+
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|}
+\hline
+\textbf{name} & \textbf{description} \\
+\hline
+\texttt{virtio-net}     & network device \\
+\texttt{virtio-block}   & block device \\
+\texttt{virtio-console} & console device \\
+\texttt{virtio-rng}     & random number generator \\
+\texttt{virtio-9p}      & 9p filesystem \\
+\hline
+\end{tabular}
+\caption{glyph virtual machine virtual devices}
+\label{tab:glyph-virtual-machine-virtual-devices}
+\end{table}
+
 \chapter{Instructions} \label{sec:instructions}
 
 \section{Instruction listing --- 16-bit}
