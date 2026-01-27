@@ -5381,7 +5381,7 @@ the following table lists scalar types used by the assembler:
 
 \foreach \factor/\width/\sym\name/\bits in
  {0/128/xv/xmm/000, 1/256/yv/ymm/001, 2/512/zv/zmm/010,
-  3/1024/uv/umm/100, 4/2048/vv/vmm/101, 5/4096/wv/wmm/110} {
+  3/1024/uv/umm/011, 4/2048/vv/vmm/100, 5/4096/wv/wmm/101} {
 
 \pgfmathsetmacro{\nb}{int(16 * pow(2,\factor))}
 \pgfmathsetmacro{\nw}{int(8 * pow(2,\factor))}
