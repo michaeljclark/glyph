@@ -4317,39 +4317,42 @@ for \emph{leaf} entries.
 \label{sec:page-table-addresses}
 the page table translation system has three types of addresses:
 translation addresses, virtual addresses and physical addresses.
-page table translation addresses have a 1 --- 4 bit address space
-prefix to allow them to contain user and system virtual addresses
-as well as physical addresses. the page table translation and lookup
-virtual address structure is as follows:
+page table translation addresses have a 1 --- 5 bit address space
+prefix to denote user, system, physical, group shared and thread
+local address spaces. the page table translation and lookup virtual
+address structure is as follows:
 
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (26,0)   rectangle (32,1);
-\node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{11}};
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (29,0.25)  {\emph{page offset}};
+\node [font=\tiny,anchor=base]  at (26.5,1.25) {\textsf{11}};
+\node [font=\tiny,anchor=base]  at (31.5,1.25) {\textsf{0}};
+\node [font=\small,anchor=base] at (29,0.25)   {\emph{page offset}};
 \draw [black!95] (8.0,0)   rectangle (26,1);
-\node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{12}};
-\node [font=\tiny,anchor=base] at (10.5,1.25)  {\textsf{43}};
-\node [font=\small,anchor=base] at (18.0,0.25)  {\emph{page number}};
+\node [font=\tiny,anchor=base]  at (25.5,1.25) {\textsf{12}};
+\node [font=\tiny,anchor=base]  at (11,1.25)   {\textsf{42}};
+\node [font=\small,anchor=base] at (18.0,0.25) {\emph{page number}};
 \draw [black!25,dashed] (8.0,0)      rectangle (8.5,1);
 \draw [black!25,dashed] (8.5,0)      rectangle (9.0,1);
 \draw [black!25,dashed] (9.0,0)      rectangle (9.5,1);
 \draw [black!25,dashed] (9.5,0)      rectangle (10.0,1);
-\draw [black!95] (8.0,0)   rectangle (10.0,1);
-\node [font=\tiny,anchor=base] at (9.5,1.25)  {\textsf{44}};
-\node [font=\tiny,anchor=base] at (8.5,1.25)  {\textsf{47}};
-\node [font=\small,anchor=base] at (9.0,0.25)  {\texttt{AS}};
+\draw [black!25,dashed] (10.0,0)      rectangle (10.5,1);
+\draw [black!95] (8.0,0)   rectangle (10.5,1);
+\node [font=\tiny,anchor=base]  at (10,1.25)   {\textsf{43}};
+\node [font=\tiny,anchor=base]  at (8.5,1.25)  {\textsf{47}};
+\node [font=\small,anchor=base] at (9.25,0.25) {\texttt{AS}};
 \draw [black!95] (0.0,0)   rectangle (8.0,1);
-\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
-\node [font=\tiny,anchor=base] at (7.5,1.25)  {\textsf{48}};
+\node [font=\tiny,anchor=base]  at (0.5,1.25)  {\textsf{63}};
+\node [font=\tiny,anchor=base]  at (7.5,1.25)  {\textsf{48}};
 \node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
 \end{tikzpicture}
 \caption{64-bit translation address structure.}
 \label{fig:64-bit-translation-address-structure}
 \end{figure}
+
+\vspace{-0.75em}
 
 \begin{table}[h]
 \centering
@@ -4361,11 +4364,15 @@ virtual address structure is as follows:
 \texttt{0b0.} & user \\
 \texttt{0b10.} & system \\
 \texttt{0b110.} & physical \\
+\texttt{0b1110.} & group \\
+\texttt{0b11110.} & thread \\
 \hline
 \end{tabular}
-\caption{1---4 bit translation address space prefixes.}
-\label{tab:1-4-bit-translation-address-space-prefixes}
+\caption{1---5 bit translation address space prefixes.}
+\label{tab:1-5-bit-translation-address-space-prefixes}
 \end{table}
+
+\vspace{-0.75em}
 
 \begin{figure}[H]
 \centering
