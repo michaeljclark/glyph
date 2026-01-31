@@ -4319,7 +4319,7 @@ the page table translation system has three types of addresses:
 translation addresses, virtual addresses and physical addresses.
 page table translation addresses have a 1 --- 5 bit address space
 prefix to denote user, system, physical, group shared and thread
-local address spaces. the page table translation and lookup virtual
+private address spaces. the page table translation and lookup virtual
 address structure is as follows:
 
 \begin{figure}[H]
@@ -4365,7 +4365,7 @@ address structure is as follows:
 \texttt{0b10.} & system \\
 \texttt{0b110.} & physical \\
 \texttt{0b1110.} & group \\
-\texttt{0b11110.} & thread \\
+\texttt{0b11110.} & private \\
 \hline
 \end{tabular}
 \caption{1---5 bit translation address space prefixes.}
