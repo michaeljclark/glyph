@@ -390,13 +390,13 @@ that point to values held in registers, plus \emph{load} and \emph{store}
 instructions to retrieve and commit values to main memory. a \emph{load-store}
 architecture alleviates the need to add complex addressing modes,
 plus intput-output to peripherals and secondary storage use
-\emph{MMIO}\footnote{\emph{MMIO}\,- Memory-mapped I/O.} to avoid needing
+\emph{MMIO}\footnote{\emph{MMIO}\,-- Memory-mapped I/O.} to avoid needing
 special \emph{Input/Output} instructions.
 
 \subsection{registers}
 
 registers are temporary storage used to fill input and output
-operands for the \emph{ALU}\footnote{\emph{ALU}\,– Arithmetic logic unit.}
+operands for the \emph{ALU}\footnote{\emph{ALU}\,-- Arithmetic logic unit.}
 before and after execution of instructions. registers are
 organized as a word-addressable store where each register number refers
 to $XLEN \in \{64, 128\}$ bits of data. \emph{XLEN} is a parameter that
@@ -445,7 +445,7 @@ specifiess the width of registers in bits.
 \subsection{memory}
 
 main memory is primary storage which in modern computers is most likely
-\emph{DRAM}\footnote{\emph{DRAM}\,– Dynamic random-access memory.}.
+\emph{DRAM}\footnote{\emph{DRAM}\,-- Dynamic random-access memory.}.
 main memory is organized as a byte-addressable store where each address
 refers to a byte which is 8-bits of data. \emph{ALEN} is a parameter that
 specifies the width of addresses in bits.
@@ -1941,7 +1941,7 @@ counter, and immediate base registers, a unified floating-point and integer
 scalar register file, and an optional unified floating-point and integer
 vector register file, each with an extensible number of registers.
 
-\subsection{template architectural profile}
+\subsection{template configuration}
 
 the register state accessible by the template architectural
 profile is comprised of:
@@ -1955,7 +1955,7 @@ profile is comprised of:
 \end{itemize}
 
 \par\noindent
-the following diagram shows the template architectural profile
+the following diagram shows the template configuration
 register state:
 \\
 
@@ -2040,12 +2040,12 @@ register state:
 
 \end{scope}
 \end{tikzpicture}
-\caption{template architectural profile register state.}
+\caption{template configuration register state.}
 \label{fig:glyph-register-state-template}
 \end{figure}
 
 \newpage
-\subsection{\emph{scalar-min} architectural profile}
+\subsection{\emph{scalar-min} configuration}
 
 the register state accessible by the \emph{scalar-min} architectural
 profile is comprised of:
@@ -2058,7 +2058,7 @@ profile is comprised of:
 \end{itemize}
 
 \par\noindent
-the following diagram shows the \emph{scalar-min} architectural profile
+the following diagram shows the \emph{scalar-min} configuration
 register state:
 \\
 
@@ -2105,7 +2105,7 @@ register state:
 
 \end{scope}
 \end{tikzpicture}
-\caption{\emph{scalar-min} architectural profile register state.}
+\caption{\emph{scalar-min} configuration register state.}
 \label{fig:glyph-register-state-scalar-min}
 \end{figure}
 
@@ -2116,7 +2116,7 @@ save relative addresses in the link register. this increases latency in
 branch address calculation compared to absolute addresses.
 
 \newpage
-\subsection{\emph{scalar-max} architectural profile}
+\subsection{\emph{scalar-max} configuration}
 
 the register state accessible by the \emph{scalar-max} architectural
 profile is comprised of:
@@ -2129,7 +2129,7 @@ profile is comprised of:
 \end{itemize}
 
 \par\noindent
-the following diagram shows the \emph{scalar-max} architectural profile
+the following diagram shows the \emph{scalar-max} configuration
 register state:
 \\
 
@@ -2190,7 +2190,7 @@ register state:
 
 \end{scope}
 \end{tikzpicture}
-\caption{\emph{scalar-max} architectural profile register state.}
+\caption{\emph{scalar-max} configuration register state.}
 \label{fig:glyph-register-state-scalar-max}
 \end{figure}
 
@@ -2201,7 +2201,7 @@ save abosulte addresses in the link register instead. this reduces latency
 in branch address calculation compared to relative addresses.
 
 \newpage
-\subsection{\emph{vector-min} architectural profile}
+\subsection{\emph{vector-min} configuration}
 
 the register state accessible by the \emph{vector-min} architectural
 profile is comprised of:
@@ -2215,7 +2215,7 @@ profile is comprised of:
 \end{itemize}
 
 \par\noindent
-the following diagram shows the \emph{vector-min} architectural profile
+the following diagram shows the \emph{vector-min} configuration
 register state:
 \\
 
@@ -2305,12 +2305,12 @@ register state:
 
 \end{scope}
 \end{tikzpicture}
-\caption{\emph{vector-min} architectural profile register state.}
+\caption{\emph{vector-min} configuration register state.}
 \label{fig:glyph-register-state-vector-min}
 \end{figure}
 
 \newpage
-\subsection{\emph{vector-max} architectural profile}
+\subsection{\emph{vector-max} configuration}
 
 the register state accessible by the \emph{vector-max} architectural
 profile is comprised of:
@@ -2324,7 +2324,7 @@ profile is comprised of:
 \end{itemize}
 
 \par\noindent
-the following diagram shows the \emph{vector-max} architectural profile
+the following diagram shows the \emph{vector-max} configuration
 register state:
 \\
 
@@ -2414,9 +2414,68 @@ register state:
 
 \end{scope}
 \end{tikzpicture}
-\caption{\emph{vector-max} architectural profile register state.}
+\caption{\emph{vector-max} configuration register state.}
 \label{fig:glyph-register-state-vector-max}
 \end{figure}
+
+\newpage
+\section{Memory model}
+
+glyph adopts a simple and pragmatic memory model designed for practical
+implementation in hardware or for translation to processors with
+weakly ordered \emph{acquire-release} memory models and to processors with
+\emph{strongly-ordered} memory models possessing a \emph{total store order}.
+
+\subsection{address spaces}
+
+glyph divides the address space into five categories of memory
+with different characteristics:
+
+\begin{itemize}[itemsep=0pt]
+\item \emph{user} --- virtual memory visible to unprivileged software with the \emph{user} capability.
+\item \emph{system} --- virtual memory visible to privileged software with the \emph{system} capability.
+\item \emph{physical} --- physical memory that is visible globally and has well-defined ordering rules.
+\item \emph{group} --- high-speed physical memory visible to a group of shared threads.
+\item \emph{private} --- high-speed physical memory visible to only a single thread.
+\end{itemize}
+
+\par\noindent
+the \emph{group} and \emph{private} address spaces are defined to align
+with the OpenCL\footnote{OpenCL -- \emph{The OpenCL Specification} (API,
+Platform, and Language Specifications), Khronos Group.} memory model.
+the \emph{group} address space corresponds to OpenCL work-group shared
+memory (\textsf{\_\_local}), while the \emph{private} address space
+corresponds to OpenCL per-thread memory (\textsf{\_\_private}). the
+visibility, lifetime, and synchronization semantics of these address
+spaces follow the principles of OpenCL work-group and private memory,
+including the requirement for explicit synchronization to establish
+ordering and visibility between threads accessing \emph{group} memory.
+
+\subsection{atomic operations}
+
+glyph is designed to support translation to instruction sets with
+\emph{weakly-ordered} memory operations. to achieve this all
+\emph{strongly-ordered} operations with writes must act as
+implicit write ordering barriers for relaxed memory operations.
+this means any instruction with \emph{strongly-ordered} writes must
+act as an implicit write barrier: relaxed writes may not be reordered
+with respect to a \emph{strongly-ordered} or \emph{synchronized} memory
+write, and relaxed reads may not be reordered before such a write:
+\emph{write–write} and \emph{write–read} ordering.
+\\
+\par\noindent
+translation to \emph{weakly-ordered} memory systems with \emph{acquire-release}
+ordering requires implicit barriers around atomic write operations because
+they act as implicit synchronization points. \emph{acquire} loads are
+relaxed except for ordering enforced by prior \emph{strongly-ordered}
+stores, and constrain only subsequent memory operations. the addition
+of scoped \emph{group} and \emph{private} address spaces ameliorates the
+cost of maintaining a total store order on global memory.
+
+\begin{itemize}[itemsep=0pt]
+\item \emph{group} --- shared memory with visibility scoped to a localized group of threads.
+\item \emph{private} --- per-thread memory with no inter-thread synchronization requirements.
+\end{itemize}
 
 \newpage
 \section{Example pipeline}
@@ -5357,7 +5416,7 @@ the mnemonics have been chosen to disambiguate operand size and type.
 
 \subsection{scalar types}
 
-the following table lists scalar types used by the assembler:
+the following table lists scalar types with their symbols, mnemonics and descriptions:
 
 \begin{table}[H]
 \centering
@@ -5386,6 +5445,10 @@ the following table lists scalar types used by the assembler:
 \label{tab:scalar-types}
 \end{table}
 
+\subsection{vector types}
+
+the following section describes vector types from 128-bit through to 4096-bit.
+
 \foreach \factor/\width/\sym\name/\bits in
  {0/128/xv/xmm/000, 1/256/yv/ymm/001, 2/512/zv/zmm/010,
   3/1024/uv/umm/011, 4/2048/vv/vmm/100, 5/4096/wv/wmm/101} {
@@ -5398,9 +5461,9 @@ the following table lists scalar types used by the assembler:
 
 \begin{samepage}
 \needspace{9\baselineskip}
-\subsection{\width-bit vector types \texttt{(L=0b\bits)}}
+\subsubsection{\width-bit vector types \texttt{(L=0b\bits)}}
 
-the following table lists \width-bit vector types used by the assembler:
+the following table lists \width-bit vector types with their symbols, mnemonics and descriptions:
 
 \begin{table}[H]
 \centering
