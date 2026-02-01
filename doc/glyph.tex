@@ -5195,35 +5195,35 @@ assembler and the output from the assembler is an object file.
 
 \subsection{object}
 object files contain compiled relocatable object code and data emitted
-by the assembler. an object file cannot be run, rather it is used as
-input to the linker in a program linking step which combines them to
-produce an executable file or shared library.
+by the assembler. an object file cannot be run, rather it is used as input
+to the archiver or linker in archiving or linking steps that combine them
+to produce an archive or an executable file or library.
 
 \subsection{archive}
 archive files contain collections of relocatable object files and are
-typically referred to as static libraries. archive files use a simple
+sometimes referred to as static libraries. archive files use a simple
 format that appends together a set of object files with an index listing
 the object files contained in the archive. thin archive files just
-contain the index listing the object files without any associated data.
+contain the index listing the object files without the associated data.
 
 \subsection{executable}
 executable files contain compiled relocatable object code and data
-that has been linked together by a linker in a program linking step
-using multple object files, archive files and shared libraries as input.
+that has been linked together by a linker in a linking step
+using multple object files, archive files and libraries as input.
 executable files can be statically or dynamically linked. dynamically
-linked executables files express dependencies on shared libraries.
+linked executables files express dependencies on libraries which are
+loaded at runtime.
 
-\subsection{shared library}
-shared library files contain compiled relocatable object code and data
-that have been linked together by a linker in a program linking step
-using multple object files, archive files and shared libraries as input.
-shared libraries
-are dynamically linked by a runtime linker, and they express dependencies
-on other shared libraries which need to be loaded at runtime.
+\subsection{library}
+library files are runtime-loadable archive files containing position-%
+independent object code and data, together with a symbol table and metadata.
+they are produced by a linker from multiple object files, archive files and
+libraries as input. libraries can be loaded by a runtime loader, and they
+express dependencies on other libraries which need to be loaded at runtime.
 
 \subsection{section}
 a section is a name for a region of code or data in an object file,
-executable file or shared library file. the files can be made up of
+executable file or library file. the files can be made up of
 multiple sections where each section corresponds to several types of
 executable code or data. this list contains the most common types:
 
@@ -5245,7 +5245,7 @@ contained within a small set of specific segment types.
 \subsection{symbol}
 symbols are metadata table entries that contains a name with a
 mapping to an address. symbols are present in object files and dynamic
-symbols are present in shared libraries and executables. they can be
+symbols are present in libraries and executables. they can be
 referred to in relocation entries and debugging metadata.
 
 \subsection{relocation}
@@ -5253,10 +5253,10 @@ relocations are metadata table entries used to update relocatable addresses
 during linking. relocations contains a type, a file offset pointing to text
 or data, and a pointer to a symbol name whose address needs to be updated
 during the linking step. relocations can be present in object files and
-dynamic relocations are present in shared libraries and executables.
+dynamic relocations are present in libraries and executables.
 
-\subsection{program linking}
-program linking is the process of combining multiple relocatable object
+\subsection{linking}
+linking is the process of combining multiple relocatable object
 files by merging and aligning sections, resolving symbol references across
 files, assigning final symbol addresses, applying relocation fixups using
 relocation entries, and adding debug metadata.
