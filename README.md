@@ -8,22 +8,31 @@ _Figure 1 - instruction (pc-relative) and constant (ib-relative) streams_
 
 ## introduction
 
-glyph is a super regular RISC architecture that encodes constants in a
-secondary constant stream accessed via an immediate base register. the
-immediate base register branches like the program counter and the call
-instructions sets _(pc,ib)_ together for procedure calls and returns.
+glyph is a proposed computer architecture that emphasizes simplicity,
+efficiency, and flexibility. unlike typical processors, it separates
+instructions from constants, which can make programs smaller and faster
+to execute. it uses a compact, regular instruction format and a small
+'predicate' register for control flow. the design carefully considers
+how a processor reads, interprets, and executes instructions.
 
-glyph uses relative addresses in its link register which is different
-to typical RISC architectures. glyph needs to do this for the branch
-instruction to fit _(pc,ib)_ into the link register for compatibility.
-glyph achieves this by packing together two 32-bit relative _(pc,ib)_
-displacements in an _i32x2_ vector.
+## background
 
-immediate blocks can be linked together using relative displacements
-and switched using the constant branch instruction detailed below.
-immediate blocks, unlike typical RISC architectures, mean that most
-relocations are word sized like CISC architectures, and can use C-style
-structure packing and alignment rules.
+glyph is a super-regular RISC architecture that encodes constants in a
+secondary constant stream accessed via an immediate base _(ib)_ register
+that points to immediate blocks containing constants. the _(ib)_ register
+can branch like the program counter _(pc)_, and call instructions set
+_(pc, ib)_ simultaneously for procedure calls.
+
+glyph uses relative addresses in its link register, allowing branch
+instructions to pack _(pc, ib)_ displacements for compatibility with a
+single link register. this is achieved by packing two 32-bit relative
+_(pc, ib)_ displacements into an _i32x2_ vector. a 128-bit version of
+the instruction set relaxes this relative address requirement.
+
+glyph immediate blocks can be chained using relative displacements and
+switched via the constant branch instruction. unlike typical RISC
+architectures, immediate blocks containing constants allow relocations
+to be word-sized, following C-style packing and alignment rules.
 
 ## architecture
 
