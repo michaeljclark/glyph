@@ -5395,10 +5395,12 @@ the following table lists glyph assembler pseudo instruction aliases:
 \end{table}
 
 \newpage
-\section{Type Conventions}
+\section{Type conventions}
 
 glyph adopts a common type naming convention for integer and floating-point
-scalar and packed-SIMD vector types. each type is described by several attributes:
+scalar and packed SIMD vector types. each type is described by several attributes:
+
+\vspace{-0.3em}
 
 \begin{itemize}[itemsep=0pt]
 \item unique type name
@@ -5408,6 +5410,21 @@ scalar and packed-SIMD vector types. each type is described by several attribute
 \item human-readable description
 \end{itemize}
 
+\vspace{-0.3em}
+
+\par\noindent
+there are three basic scalar types used with the scalar and packed SIMD instructions:
+
+\vspace{-0.3em}
+
+\begin{itemize}[itemsep=0pt]
+\item unsigned fixed-width integer
+\item signed fixed-width two's complement integer
+\item IEEE-754 fixed-width binary floating-point number
+\end{itemize}
+
+\vspace{-0.3em}
+
 \par\noindent
 short symbols for signed integers have single-letter codes. unsigned types
 and floating-point symbols are explicitly distinguished by \texttt{u} and
@@ -5416,7 +5433,7 @@ the mnemonics have been chosen to disambiguate operand size and type.
 
 \subsection{scalar types}
 
-the following table lists scalar types with their symbols, mnemonics and descriptions:
+the following table lists scalar types, their symbols, mnemonics and descriptions:
 
 \begin{table}[H]
 \centering
@@ -5463,7 +5480,7 @@ the following section describes vector types from 128-bit through to 4096-bit.
 \needspace{9\baselineskip}
 \subsubsection{\width-bit vector types \texttt{(L=0b\bits)}}
 
-the following table lists \width-bit vector types with their symbols, mnemonics and descriptions:
+the following table lists \width-bit vector types, their symbols, mnemonics and descriptions:
 
 \begin{table}[H]
 \centering
