@@ -2807,10 +2807,11 @@ registers:
 \texttt{0x25} & saddr     & system thread address \\
 \texttt{0x26} & sdomain   & system thread domain \\
 \texttt{0x27} & starget   & system target address \\
-\texttt{0x28} & smessage  & system target message \\
-\texttt{0x29} & stimer    & system deadline timer \\
-\texttt{0x2a} & sie       & system interrupt enable \\
-\texttt{0x2b} & sip       & system interrupt pending \\
+\texttt{0x28} & smask     & system target mask \\
+\texttt{0x29} & smessage  & system target message \\
+\texttt{0x2a} & stimer    & system deadline timer \\
+\texttt{0x2b} & sie       & system interrupt enable \\
+\texttt{0x2c} & sip       & system interrupt pending \\
 \hline
 \multicolumn{3}{|l|}{\textbf{privileged debug registers}} \\
 \hline
@@ -3213,12 +3214,16 @@ can alias. this address is assigned during context switching.
 \newpage
 \subsubsection{system target address (\texttt{starget})}
 \texttt{starget} is a read-write register containing the system-wide
-target address of a thread to send a virtual interrupt.
-all-zeros is the \emph{boot service processor}.
-all-ones is the \emph{broadcast address}.
-zero in the \emph{A} field is a \emph{topological address}.
-one in the \emph{A} field is a \emph{domain address}.
-\\
+target address of a set of threads to send virtual interrupts to.
+this register must be set before writing to \texttt{smessage}.
+
+\begin{itemize}[itemsep=0pt]
+\item all-zeros is the \emph{boot processor}.
+\item all-ones is the \emph{broadcast address}.
+\item zero in the \emph{A} field is a \emph{topological address}.
+\item one in the \emph{A} field is a \emph{domain address}.
+\end{itemize}
+
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
@@ -3228,6 +3233,19 @@ one in the \emph{A} field is a \emph{domain address}.
 \node [font=\small,anchor=base] at (16.25,0.25)  {\emph{target address}};
 \node [font=\tiny,anchor=base] at (0.25,1.25)  {\textsf{63}};
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{A}};
+\end{tikzpicture}
+
+\subsubsection{system target mask (\texttt{smask})}
+\texttt{smask} is a read-write register containing the system-wide
+address mask of a set of threads to send virtual interrupts to.
+this register must be set before writing to \texttt{smessage}.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{target mask}};
 \end{tikzpicture}
 
 \subsubsection{system target message (\texttt{smessage})}
@@ -3259,6 +3277,7 @@ timer interrupts are marked pending in the \texttt{T} field of the
 \node [font=\small,anchor=base] at (16,0.25)  {\emph{clock time}};
 \end{tikzpicture}
 
+\newpage
 \subsubsection{system interrupt enable (\texttt{sie})}
 \texttt{sie} is a read-write register that contains interrupt enable flags
 for 32 wired interrupt pins.
