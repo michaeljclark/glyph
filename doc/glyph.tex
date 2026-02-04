@@ -2606,7 +2606,7 @@ this register is visible if \texttt{scontrol.F} is enabled.
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{I}};
 \draw [black!95] (30,0)    rectangle (31,1);
 \node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
@@ -2653,7 +2653,7 @@ precision. this register is visible if \texttt{scontrol.F} is enabled.
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{Z}};
 \draw [black!95] (30,0)    rectangle (31,1);
 \node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
@@ -2740,8 +2740,8 @@ this register is visible if \texttt{scontrol.D} is enabled.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (0.5,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread address}};
 \node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{XLEN-1}};
+\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread address}};
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{0}};
 \end{tikzpicture}
 
@@ -2755,8 +2755,8 @@ this register is visible if \texttt{scontrol.D} is enabled.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (0.5,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread domain}};
 \node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{XLEN-1}};
+\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread domain}};
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{1}};
 \end{tikzpicture}
 
@@ -2839,7 +2839,7 @@ the \texttt{V} field indicates whether a virtual interrupt is pending.
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{T}};
 \draw [black!95] (30,0)    rectangle (31,1);
 \node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
@@ -2870,7 +2870,7 @@ are enabled.
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{I}};
 \end{tikzpicture}
 
@@ -2928,7 +2928,7 @@ current trap.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (29,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (29.5,1.25)  {\textsf{5}};
+\node [font=\tiny,anchor=base west] at (29,1.25)  {\textsf{5}};
 \node [font=\small,anchor=base] at (30.5,0.25)  {\emph{cause}};
 \end{tikzpicture}
 
@@ -2978,7 +2978,7 @@ while state is being saved, and for double-faults to be detected.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (29,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (29.5,1.25)  {\textsf{5}};
+\node [font=\tiny,anchor=base west] at (29,1.25)  {\textsf{5}};
 \node [font=\small,anchor=base] at (30.5,0.25)  {\emph{cause}};
 \end{tikzpicture}
 
@@ -3041,7 +3041,7 @@ the section describes the privileged system registers.
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{F}};
 \draw [black!95] (30,0)    rectangle (31,1);
 \node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
@@ -3082,7 +3082,7 @@ the section describes the privileged system registers.
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{F}};
 \draw [black!95] (30,0)    rectangle (31,1);
 \node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
@@ -3127,15 +3127,15 @@ fields. the allowable values are specified in the following table.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (28,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (28.5,1.25)  {\textsf{7}};
+\node [font=\tiny,anchor=base west] at (28,1.25)  {\textsf{7}};
 \node [font=\small,anchor=base] at (30,0.25)  {\emph{patch}};
 \draw [black!95] (24.0,0)   rectangle (28,1);
-\node [font=\tiny,anchor=base] at (27.5,1.25)  {\textsf{8}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {\textsf{15}};
+\node [font=\tiny,anchor=base east] at (28,1.25)  {\textsf{8}};
+\node [font=\tiny,anchor=base west] at (24,1.25)  {\textsf{15}};
 \node [font=\small,anchor=base] at (26.0,0.25)  {\emph{minor}};
 \draw [black!95] (20.0,0)   rectangle (24.0,1);
-\node [font=\tiny,anchor=base] at (23.5,1.25)  {\textsf{16}};
-\node [font=\tiny,anchor=base] at (20.5,1.25)  {\textsf{23}};
+\node [font=\tiny,anchor=base east] at (24,1.25)  {\textsf{16}};
+\node [font=\tiny,anchor=base west] at (20,1.25)  {\textsf{23}};
 \node [font=\small,anchor=base] at (22.0,0.25)  {\emph{major}};
 \end{tikzpicture}
 
@@ -3163,15 +3163,15 @@ field contains the address space identifier for this thread.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (26,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{11}};
+\node [font=\tiny,anchor=base west] at (26,1.25)  {\textsf{11}};
 \node [font=\small,anchor=base] at (29,0.25)  {\emph{ASID}};
 \draw [black!95] (8.0,0)   rectangle (26,1);
-\node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{12}};
-\node [font=\tiny,anchor=base] at (8.5,1.25)  {\textsf{47}};
+\node [font=\tiny,anchor=base east] at (26,1.25)  {\textsf{12}};
+\node [font=\tiny,anchor=base west] at (8,1.25)  {\textsf{47}};
 \node [font=\small,anchor=base] at (17.0,0.25)  {\emph{physical page number}};
 \draw [black!95] (0.0,0)   rectangle (8.0,1);
-\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
-\node [font=\tiny,anchor=base] at (7.5,1.25)  {\textsf{48}};
+\node [font=\tiny,anchor=base east] at (8,1.25)  {\textsf{48}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{63}};
 \node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
 \end{tikzpicture}
 
@@ -3282,7 +3282,7 @@ for 32 wired interrupt pins.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (16,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (16.5,1.25)  {\textsf{31}};
+\node [font=\tiny,anchor=base west] at (16,1.25)  {\textsf{31}};
 \node [font=\small,anchor=base] at (24,0.25)  {\emph{interrupt enable 0-31}};
 \end{tikzpicture}
 
@@ -3295,7 +3295,7 @@ for 32 wired interrupt pins.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (16,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (16.5,1.25)  {\textsf{31}};
+\node [font=\tiny,anchor=base west] at (16,1.25)  {\textsf{31}};
 \node [font=\small,anchor=base] at (24,0.25)  {\emph{interrupt pending 0-31}};
 \end{tikzpicture}
 
@@ -3310,7 +3310,7 @@ monitor execeptions.
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{S}};
 \draw [black!95] (30,0)    rectangle (31,1);
 \node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
@@ -3494,7 +3494,7 @@ the capability extension.
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{C}};
 \end{tikzpicture}
 
@@ -3530,7 +3530,7 @@ used to check loads from pages with a matching page table color.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ncol}$};
+\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{read perms}};
 \end{tikzpicture}
 
@@ -3544,7 +3544,7 @@ used to check stores to pages with a matching page table color.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ncol}$};
+\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{write perms}};
 \end{tikzpicture}
 
@@ -3558,7 +3558,7 @@ used to check execution in pages with a matching page table color.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ncol}$};
+\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{exec perms}};
 \end{tikzpicture}
 
@@ -3586,7 +3586,7 @@ from executable pages with a matching page table color.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ncol}$};
+\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{system role}};
 \end{tikzpicture}
 
@@ -3601,7 +3601,7 @@ executable pages with a matching page table color.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ncol}$};
+\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{domain role}};
 \end{tikzpicture}
 
@@ -3616,7 +3616,7 @@ executable pages with a matching page table color.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ncol}$};
+\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{capability role}};
 \end{tikzpicture}
 
@@ -3631,7 +3631,7 @@ executable pages with a matching page table color.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ncol}$};
+\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{machine role}};
 \end{tikzpicture}
 
@@ -3659,7 +3659,7 @@ memory pages with a matching \emph{page table color} index.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ncol}$};
+\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{read perms}};
 \end{tikzpicture}
 
@@ -3675,7 +3675,7 @@ memory pages with a matching \emph{page table color} index.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ncol}$};
+\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{write perms}};
 \end{tikzpicture}
 
@@ -3691,7 +3691,7 @@ executable pages with a matching \emph{page table color} index.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ncol}$};
+\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{exec perms}};
 \end{tikzpicture}
 
@@ -3771,7 +3771,7 @@ domain number and control the next domain number.
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{V}};
 \end{tikzpicture}
 
@@ -3798,7 +3798,7 @@ of the last domain.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (28,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (28.5,1.25)  {$log_2(\mathit{ndom})$};
+\node [font=\tiny,anchor=base west] at (28,1.25)  {$log_2(\mathit{ndom})$};
 \node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
 \end{tikzpicture}
 
@@ -3811,7 +3811,7 @@ of the current domain.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (28,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (28.5,1.25)  {$log_2(\mathit{ndom})$};
+\node [font=\tiny,anchor=base west] at (28,1.25)  {$log_2(\mathit{ndom})$};
 \node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
 \end{tikzpicture}
 
@@ -3824,7 +3824,7 @@ of the next domain.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (28,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (28.5,1.25)  {$log_2(\mathit{ndom})$};
+\node [font=\tiny,anchor=base west] at (28,1.25)  {$log_2(\mathit{ndom})$};
 \node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
 \end{tikzpicture}
 
@@ -3845,7 +3845,7 @@ allowed to transition to as the next domain.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (24,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (24.5,1.25)  {$\mathit{ndom}$};
+\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ndom}$};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{allowed domains}};
 \end{tikzpicture}
 
@@ -3859,7 +3859,7 @@ are routed to.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (28,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (28.5,1.25)  {$log_2(\mathit{ndom})$};
+\node [font=\tiny,anchor=base west] at (28,1.25)  {$log_2(\mathit{ndom})$};
 \node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
 \end{tikzpicture}
 
@@ -3873,7 +3873,7 @@ are routed to.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (28,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (28.5,1.25)  {$log_2(\mathit{ndom})$};
+\node [font=\tiny,anchor=base west] at (28,1.25)  {$log_2(\mathit{ndom})$};
 \node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
 \end{tikzpicture}
 
@@ -3887,7 +3887,7 @@ are routed to.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (28,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (28.5,1.25)  {$log_2(\mathit{ndom})$};
+\node [font=\tiny,anchor=base west] at (28,1.25)  {$log_2(\mathit{ndom})$};
 \node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
 \end{tikzpicture}
 
@@ -3901,7 +3901,7 @@ are routed to.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (28,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (28.5,1.25)  {$log_2(\mathit{ndom})$};
+\node [font=\tiny,anchor=base west] at (28,1.25)  {$log_2(\mathit{ndom})$};
 \node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
 \end{tikzpicture}
 
@@ -3939,15 +3939,15 @@ for the target domain into \texttt{sptr} to enable address translation.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (26,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{11}};
+\node [font=\tiny,anchor=base west] at (26,1.25)  {\textsf{11}};
 \node [font=\small,anchor=base] at (29,0.25)  {\emph{ASID}};
 \draw [black!95] (8.0,0)   rectangle (26,1);
-\node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{12}};
-\node [font=\tiny,anchor=base] at (8.5,1.25)  {\textsf{47}};
+\node [font=\tiny,anchor=base east] at (26,1.25)  {\textsf{12}};
+\node [font=\tiny,anchor=base west] at (8,1.25)  {\textsf{47}};
 \node [font=\small,anchor=base] at (17.0,0.25)  {\emph{physical page number}};
 \draw [black!95] (0.0,0)   rectangle (8.0,1);
-\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
-\node [font=\tiny,anchor=base] at (7.5,1.25)  {\textsf{48}};
+\node [font=\tiny,anchor=base east] at (8,1.25)  {\textsf{48}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{63}};
 \node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
 \end{tikzpicture}
 
@@ -4028,7 +4028,7 @@ control and features.
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{V}};
 \draw [black!95] (30,0)    rectangle (31,1);
 \node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
@@ -4061,7 +4061,7 @@ control and features.
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
 \node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{V}};
 \draw [black!95] (30,0)    rectangle (31,1);
 \node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
@@ -4103,24 +4103,25 @@ translation virtual address for the current page translation miss fault.
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (26,0)   rectangle (32,1);
-\node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{11}};
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (26,1.25)  {\textsf{11}};
 \node [font=\small,anchor=base] at (29,0.25)  {\emph{page offset}};
 \draw [black!95] (8.0,0)   rectangle (26,1);
-\node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{12}};
-\node [font=\tiny,anchor=base] at (10.5,1.25)  {\textsf{43}};
+\node [font=\tiny,anchor=base east] at (26,1.25)  {\textsf{12}};
+\node [font=\tiny,anchor=base west] at (10.5,1.25)  {\textsf{42}};
 \node [font=\small,anchor=base] at (18.0,0.25)  {\emph{page number}};
 \draw [black!25,dashed] (8.0,0)      rectangle (8.5,1);
 \draw [black!25,dashed] (8.5,0)      rectangle (9.0,1);
 \draw [black!25,dashed] (9.0,0)      rectangle (9.5,1);
 \draw [black!25,dashed] (9.5,0)      rectangle (10.0,1);
-\draw [black!95] (8.0,0)   rectangle (10.0,1);
-\node [font=\tiny,anchor=base] at (9.5,1.25)  {\textsf{44}};
-\node [font=\tiny,anchor=base] at (8.5,1.25)  {\textsf{47}};
-\node [font=\small,anchor=base] at (9.0,0.25)  {\texttt{AS}};
+\draw [black!25,dashed] (10.0,0)      rectangle (10.5,1);
+\draw [black!95] (8.0,0)   rectangle (10.5,1);
+\node [font=\tiny,anchor=base east]  at (10.5,1.25)   {\textsf{43}};
+\node [font=\tiny,anchor=base west]  at (8,1.25)  {\textsf{47}};
+\node [font=\small,anchor=base] at (9.25,0.25) {\texttt{AS}};
 \draw [black!95] (0.0,0)   rectangle (8.0,1);
-\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
-\node [font=\tiny,anchor=base] at (7.5,1.25)  {\textsf{48}};
+\node [font=\tiny,anchor=base east] at (8,1.25)  {\textsf{48}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{63}};
 \node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
 \end{tikzpicture}
 
@@ -4134,11 +4135,11 @@ translation miss fault.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (26,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{11}};
+\node [font=\tiny,anchor=base west] at (26,1.25)  {\textsf{11}};
 \node [font=\small,anchor=base] at (29,0.25)  {\emph{ASID}};
 \draw [black!95] (24,0)    rectangle (26,1);
-\node [font=\tiny,anchor=base] at (25.75,1.25)  {\textsf{12}};
-\node [font=\tiny,anchor=base] at (24.25,1.25)  {\textsf{15}};
+\node [font=\tiny,anchor=base east] at (26,1.25)  {\textsf{12}};
+\node [font=\tiny,anchor=base west] at (24,1.25)  {\textsf{15}};
 \node [font=\small,anchor=base] at (25,0.25)  {\emph{fmt}};
 \end{tikzpicture}
 
@@ -4251,9 +4252,9 @@ environment log.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (0,0)    rectangle (4,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
-\node [font=\tiny,anchor=base] at (3.5,1.25)  {\textsf{56}};
-\node [font=\tiny,anchor=base] at (4.5,1.25)  {\textsf{55}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{63}};
+\node [font=\tiny,anchor=base east] at (4,1.25)  {\textsf{56}};
+\node [font=\tiny,anchor=base west] at (4,1.25)  {\textsf{55}};
 \node [font=\small,anchor=base] at (2,0.25)  {\texttt{OP}};
 \node [font=\small,anchor=base] at (16.5,0.25)  {\emph{cause code}};
 \end{tikzpicture}
@@ -4350,13 +4351,14 @@ for \emph{leaf} entries.
 \node [font=\tiny,anchor=base] at (28.25,0.3)  {\texttt{D}};
 \node [font=\small,anchor=base] at (17,0.25)  {\emph{physical page number}};
 \draw [black!95] (0.0,0)   rectangle (26,1);
-\node [font=\tiny,anchor=base] at (27.5,1.25)  {\textsf{8}};
-\node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{11}};
+\node [font=\tiny,anchor=base east] at (28,1.25)  {\textsf{8}};
+\node [font=\tiny,anchor=base west] at (26,1.25)  {\textsf{11}};
 \node [font=\small,anchor=base] at (27,0.25)  {\emph{color}};
-\node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{12}};
+\node [font=\tiny,anchor=base east] at (26,1.25)  {\textsf{12}};
+\node [font=\tiny,anchor=base west] at (8,1.25)  {\textsf{47}};
 \draw [black!95] (0.0,0)   rectangle (8.0,1);
-\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
-\node [font=\tiny,anchor=base] at (7.5,1.25)  {\textsf{48}};
+\node [font=\tiny,anchor=base east] at (8,1.25)  {\textsf{48}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{63}};
 \node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
 \end{tikzpicture}
 \caption{64-bit page table entry structure.}
@@ -4399,25 +4401,25 @@ address structure is as follows:
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (26,0)   rectangle (32,1);
-\node [font=\tiny,anchor=base]  at (26.5,1.25) {\textsf{11}};
-\node [font=\tiny,anchor=base]  at (31.5,1.25) {\textsf{0}};
-\node [font=\small,anchor=base] at (29,0.25)   {\emph{page offset}};
+\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (26,1.25)  {\textsf{11}};
+\node [font=\small,anchor=base] at (29,0.25)  {\emph{page offset}};
 \draw [black!95] (8.0,0)   rectangle (26,1);
-\node [font=\tiny,anchor=base]  at (25.5,1.25) {\textsf{12}};
-\node [font=\tiny,anchor=base]  at (11,1.25)   {\textsf{42}};
-\node [font=\small,anchor=base] at (18.0,0.25) {\emph{page number}};
+\node [font=\tiny,anchor=base east] at (26,1.25)  {\textsf{12}};
+\node [font=\tiny,anchor=base west] at (10.5,1.25)  {\textsf{42}};
+\node [font=\small,anchor=base] at (18.0,0.25)  {\emph{page number}};
 \draw [black!25,dashed] (8.0,0)      rectangle (8.5,1);
 \draw [black!25,dashed] (8.5,0)      rectangle (9.0,1);
 \draw [black!25,dashed] (9.0,0)      rectangle (9.5,1);
 \draw [black!25,dashed] (9.5,0)      rectangle (10.0,1);
 \draw [black!25,dashed] (10.0,0)      rectangle (10.5,1);
 \draw [black!95] (8.0,0)   rectangle (10.5,1);
-\node [font=\tiny,anchor=base]  at (10,1.25)   {\textsf{43}};
-\node [font=\tiny,anchor=base]  at (8.5,1.25)  {\textsf{47}};
+\node [font=\tiny,anchor=base east]  at (10.5,1.25)   {\textsf{43}};
+\node [font=\tiny,anchor=base west]  at (8,1.25)  {\textsf{47}};
 \node [font=\small,anchor=base] at (9.25,0.25) {\texttt{AS}};
 \draw [black!95] (0.0,0)   rectangle (8.0,1);
-\node [font=\tiny,anchor=base]  at (0.5,1.25)  {\textsf{63}};
-\node [font=\tiny,anchor=base]  at (7.5,1.25)  {\textsf{48}};
+\node [font=\tiny,anchor=base east] at (8,1.25)  {\textsf{48}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{63}};
 \node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
 \end{tikzpicture}
 \caption{64-bit translation address structure.}
@@ -4451,28 +4453,28 @@ address structure is as follows:
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (26,0)   rectangle (32,1);
-\node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{11}};
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (26,1.25)  {\textsf{11}};
 \node [font=\small,anchor=base] at (29,0.25)  {\emph{page offset}};
 \draw [black!95] (21.5,0)   rectangle (26,1);
-\node [font=\tiny,anchor=base] at (22.0,1.25)  {\textsf{20}};
-\node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{12}};
+\node [font=\tiny,anchor=base east] at (26,1.25)  {\textsf{12}};
+\node [font=\tiny,anchor=base west] at (21.5,1.25)  {\textsf{20}};
 \node [font=\small,anchor=base] at (23.75,0.25)  {\emph{pn[0]}};
 \draw [black!95] (17.0,0)   rectangle (21.5,1);
-\node [font=\tiny,anchor=base] at (17.5,1.25)  {\textsf{29}};
-\node [font=\tiny,anchor=base] at (21.0,1.25)  {\textsf{21}};
+\node [font=\tiny,anchor=base east] at (21.5,1.25)  {\textsf{21}};
+\node [font=\tiny,anchor=base west] at (17,1.25)  {\textsf{29}};
 \node [font=\small,anchor=base] at (19.25,0.25)  {\emph{pn[1]}};
 \draw [black!95] (12.5,0)   rectangle (17.0,1);
-\node [font=\tiny,anchor=base] at (13.0,1.25)  {\textsf{38}};
-\node [font=\tiny,anchor=base] at (16.5,1.25)  {\textsf{30}};
+\node [font=\tiny,anchor=base east] at (17,1.25)  {\textsf{30}};
+\node [font=\tiny,anchor=base west] at (12.5,1.25)  {\textsf{38}};
 \node [font=\small,anchor=base] at (14.75,0.25)  {\emph{pn[2]}};
 \draw [black!95] (8.0,0)   rectangle (12.5,1);
-\node [font=\tiny,anchor=base] at (8.5,1.25)  {\textsf{47}};
-\node [font=\tiny,anchor=base] at (12.0,1.25)  {\textsf{39}};
+\node [font=\tiny,anchor=base east] at (12.5,1.25)  {\textsf{39}};
+\node [font=\tiny,anchor=base west] at (8,1.25)  {\textsf{47}};
 \node [font=\small,anchor=base] at (10.25,0.25)  {\emph{pn[3]}};
 \draw [black!95] (0.0,0)   rectangle (8.0,1);
-\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
-\node [font=\tiny,anchor=base] at (7.5,1.25)  {\textsf{48}};
+\node [font=\tiny,anchor=base east] at (8,1.25)  {\textsf{48}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{63}};
 \node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
 \end{tikzpicture}
 \caption{64-bit lookup virtual address structure.}
