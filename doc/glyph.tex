@@ -5196,52 +5196,53 @@ and the \emph{program counter} is set to a trap vector address.
 this glyph assembly language reference begins with an introduction to
 assembler and linker concepts and terminology, followed by sections
 describing the glyph assembler directives, and pseudo-instruction aliases.
-section~\ref{sec:instructions} contains a complete listing of instruction.
+section~\ref{sec:instructions} contains a complete listing of instructions.
 
 \section{Concepts}
-this section covers assembler high level concepts required to understand
-the concepts involved in assembling and linking executable code from
-source files. the terminology used in this section is applicable to the
-PE/COFF, ELF and Mach-O file formats.
+this section covers the concepts required to understand assembling and
+linking executable code from source files. the terminology used in this
+section is generally applicable to ELF, PE/COFF, and Mach-O formats, with
+the exception that all code is position-independent.
 
 \subsection{assembly}
-assembly files contains assembly language directives, macros and
+assembly files contain assembly language directives, macros and
 instructions describing program code and data. they can be handwritten
 or emitted by a compiler. an assembly file is the input file to the
 assembler and the output from the assembler is an object file.
 
 \subsection{object}
-object files contain compiled relocatable object code and data emitted
-by the assembler. an object file cannot be run, rather it is used as input
+object files contain compiled position-independent object code and data with
+relocations. an object file cannot be run; rather it is used as input
 to the archiver or linker in archiving or linking steps that combine them
 to produce an archive or an executable file or library.
 
 \subsection{archive}
-archive files contain collections of relocatable object files and are
-sometimes referred to as static libraries. archive files use a simple
-format that appends together a set of object files with an index listing
-the object files contained in the archive. thin archive files just
-contain the index listing the object files without the associated data.
+archive files contain a collection of compiled position-independent object
+files with relocations and are sometimes referred to as static libraries.
+archive files use a simple format that concatenates a set of object
+files with an index listing the objects contained in the archive.
+thin archives contain the index listing the object files without
+the associated data.
 
 \subsection{executable}
-executable files contain compiled relocatable object code and data
-that has been linked together by a linker in a linking step
-using multple object files, archive files and libraries as input.
+executable files contain compiled position-independent object code and
+data that has been linked together by a linker in a linking step
+using multiple object files, archive files, and libraries as input.
 executable files can be statically or dynamically linked. dynamically
-linked executables files express dependencies on libraries which are
+linked executables express dependencies on libraries which are
 loaded at runtime.
 
 \subsection{library}
 library files are runtime-loadable archive files containing position-%
 independent object code and data, together with a symbol table and metadata.
-they are produced by a linker from multiple object files, archive files and
+they are produced by a linker from multiple object files, archive files, and
 libraries as input. libraries can be loaded by a runtime loader, and they
 express dependencies on other libraries which need to be loaded at runtime.
 
 \subsection{section}
 a section is a name for a region of code or data in an object file,
 executable file or library file. the files can be made up of
-multiple sections where each section corresponds to several types of
+multiple sections where each section corresponds to one specific type of
 executable code or data. this list contains the most common types:
 
 \begin{itemize}[itemsep=0pt]
@@ -5253,21 +5254,21 @@ executable code or data. this list contains the most common types:
 \end{itemize}
 
 \subsection{segment}
-segments are loadable regions of code or data in an an executable or shared
+segments are loadable regions of code or data in an executable or shared
 library. segments describe virtual addresses, file offsets and memory access
 permissions for mapped sections. in ELF, a segment can map to one or more
 sections. in PE/COFF sections are mapped directly. in Mach-O, sections are
 contained within a small set of specific segment types.
 
 \subsection{symbol}
-symbols are metadata table entries that contains a name with a
+symbols are entries in a metadata table that contain a name with a
 mapping to an address. symbols are present in object files and dynamic
 symbols are present in libraries and executables. they can be
 referred to in relocation entries and debugging metadata.
 
 \subsection{relocation}
 relocations are metadata table entries used to update relocatable addresses
-during linking. relocations contains a type, a file offset pointing to text
+during linking. relocations contain a type, a file offset pointing to text
 or data, and a pointer to a symbol name whose address needs to be updated
 during the linking step. relocations can be present in object files and
 dynamic relocations are present in libraries and executables.
