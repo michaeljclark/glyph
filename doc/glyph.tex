@@ -2454,18 +2454,20 @@ ordering and visibility between threads accessing \emph{group} memory.
 \subsection{atomic operations}
 
 glyph is designed to support translation to instruction sets with
-\emph{weakly-ordered} memory operations. to achieve this all
-\emph{strongly-ordered} operations with writes must act as
-implicit write ordering barriers for relaxed memory operations.
-this means any instruction with \emph{strongly-ordered} writes must
-act as an implicit write barrier: relaxed writes may not be reordered
-with respect to a \emph{strongly-ordered} or \emph{synchronized} memory
-write, and relaxed reads may not be reordered before such a write:
-\emph{write–write} and \emph{write–read} ordering.
+\emph{weakly-ordered} memory operations. to achieve this, all
+\emph{strongly-ordered} operations with writes must have
+implicit memory ordering barriers with respect to relaxed memory
+operations. this means any instruction with \emph{strongly-ordered}
+writes must be preceded by an implicit memory barrier such that
+prior writes may not be reordered past a \emph{strongly-ordered} or
+\emph{synchronized} memory write, subsequent reads may not be reordered
+before such a write, and reads to the same memory location preserve
+program order. i.e. \emph{write–write}, \emph{write–read}, and
+\emph{read–read} ordering constraints.
 \\
 \par\noindent
 translation to \emph{weakly-ordered} memory systems with \emph{acquire-release}
-ordering requires implicit barriers around atomic write operations because
+ordering requires implicit barriers around locked atomic operations because
 they act as implicit synchronization points. \emph{acquire} loads are
 relaxed except for ordering enforced by prior \emph{strongly-ordered}
 stores, and constrain only subsequent memory operations. the addition
