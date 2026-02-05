@@ -2432,8 +2432,8 @@ glyph divides the address space into five categories of memory
 with different characteristics:
 
 \begin{itemize}[itemsep=0pt]
-\item \emph{user} --- virtual memory accessible to unprivileged software with \emph{user} capability.
-\item \emph{system} --- virtual memory accessible to privileged software with \emph{system} capability.
+\item \emph{user} --- virtual memory accessible to unprivileged software with \emph{user} role.
+\item \emph{system} --- virtual memory accessible to privileged software with \emph{system} role.
 \item \emph{physical} --- physical memory visible globally with well-defined ordering rules.
 \item \emph{group} --- high-speed physical memory visible to a group of shared threads.
 \item \emph{private} --- high-speed physical memory visible to only a single thread.
@@ -4622,6 +4622,44 @@ are as follows:
 glyph defines a base virtual machine model with a well-defined minimum set of
 firmware interfaces, hardware description models and virtual devices for I/O.
 
+\subsection{hypervisor}
+
+the virtual machine defines several roles. the \emph{domain},
+\emph{capability}, and \emph{machine} roles are used by the hypervisor
+to control domain switching, trap routing, execution permissions and
+software-defined page-based virtual address translation.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{symbol} & \textbf{role} & \textbf{description} \\
+\hline
+\texttt{usr} & user       & execution of user-level programs \\
+\texttt{sys} & system     & operating system software \\
+\texttt{dom} & domain     & domain scheduling and routing \\
+\texttt{cap} & capability & capabilities and permissions \\
+\texttt{mac} & machine    & software-defined memory management \\
+\hline
+\end{tabular}
+\caption{glyph virtual machine  roles}
+\label{tab:glyph-virtual-machine-roles}
+\end{table}
+
+\par\noindent
+the hypervisor is responsible for setting up the capability permission
+registers, trap routing and context switching registers, and the initial
+state of system registers to create threads in an isolated context before
+handing over control to the firmware.
+\\
+\par\noindent
+the \texttt{macmsg}, \texttt{capmsg}, and \texttt{dommsg} instructions are
+used to cause traps into the hypervisor to configure software-defined memory
+management, capabilities and permissions, and domain scheduling and routing.
+ the hypervisor runs with the
+\emph{machine}, \emph{capability}, and \emph{domain} roles.
+
 \subsection{firmware interface}
 
 the base virtual machine model provides early boot interfaces to bootloaders
@@ -4631,7 +4669,7 @@ virtual machine model.
 
 \begin{table}[h]
 \centering
-\footnotesize
+\small
 \begin{tabular}{|l|l|}
 \hline
 \textbf{name} & \textbf{description} \\
@@ -4647,8 +4685,15 @@ virtual machine model.
 \label{tab:glyph-virtual-machine-uefi-protocols}
 \end{table}
 
-\vspace{-0.5em}
+\par\noindent
+the firmware is responsible for setting up boot page tables with a
+self-map of physical memory, enabling page-based virtual address
+translation, providing the hardware description in device-tree format,
+initializing devices required for loading the bootloader, then loading
+and executing the bootloader by calling into \texttt{EfiMain}.
+the firmware runs with the \emph{system} role.
 
+\newpage
 \subsection{hardware description}
 
 the base virtual machine model uses device-tree to describe hardware
@@ -4658,21 +4703,28 @@ other configuration parameters.
 
 \begin{table}[h]
 \centering
-\footnotesize
-\begin{tabular}{|l|l|}
+\small
+\begin{tabular}{|l|l|l|}
 \hline
-\textbf{name} & \textbf{description} \\
+\textbf{symbol} & \textbf{name} & \textbf{description} \\
 \hline
-\textbf{(DTS)} device tree source & the hardware description format \\
-\textbf{(DTB)} device tree binary & the compiled binary object \\
-\textbf{(FDT)} flattened device tree & the standard format used by bootloaders \\
+\textbf{DTS} & device tree source & the hardware description format \\
+\textbf{DTB} & device tree binary & the compiled binary object \\
+\textbf{FDT} & flattened device tree & the standard format used by bootloaders \\
 \hline
 \end{tabular}
 \caption{glyph virtual machine hardware description}
 \label{tab:glyph-virtual-machine-hardware-description}
 \end{table}
 
-\vspace{-0.5em}
+\par\noindent
+the hardware description is responsible for providing a complete map of
+physical memory and system devices and resources to the firmware and
+system software. it encodes memory regions, bus hierarchies, interrupt
+controllers, and device-specific configuration properties in device-tree
+format. the firmware parses it at boot to initialize devices, and exposes
+it to the bootloader and system software, ensuring a uniform view of
+virtual hardware.
 
 \subsection{virtual devices}
 
@@ -4683,7 +4735,7 @@ base virtual machine model.
 
 \begin{table}[h]
 \centering
-\footnotesize
+\small
 \begin{tabular}{|l|l|}
 \hline
 \textbf{name} & \textbf{description} \\
@@ -4698,6 +4750,13 @@ base virtual machine model.
 \caption{glyph virtual machine virtual devices}
 \label{tab:glyph-virtual-machine-virtual-devices}
 \end{table}
+
+\par\noindent
+the virtual devices provide the interface between the guest operating
+system and emulated I/O hardware. each device implements a VirtIO protocol
+and exposes standard operations such as configuration, data transfer, and
+interrupt signaling. the firmware and system software device drivers use
+the virtual devices to perform I/O in a platform-independent way.
 
 \chapter{Instructions} \label{sec:instructions}
 
