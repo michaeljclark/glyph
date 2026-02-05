@@ -325,7 +325,7 @@ this work is intended for computer architects, systems programmers,
 students of computing machinery, and anyone interested in the evolution
 of RISC design. by the end of the document, readers should be able to
 reason about computer programs at the instruction level and understand
-the logic behind the architecture’s design choices—with enough detail
+the logic behind the architectural design choices—with enough detail
 to implement the architecture in hardware or software.
 
 \chapter{Architecture}
@@ -780,7 +780,7 @@ storage space containing all types.}
 \section{Program streams}
 \label{sec:program-streams}
 
-glyph seperates the stored programs into two streams, one with instructions
+glyph separates the stored programs into two streams, one with instructions
 and one with constants~\cite{Solomonoff1964}. the instruction stream is
 addressed with the \emph{program counter (pc)} and the constant stream is
 addressed with the \emph{immediate base (ib)} register. this could be
@@ -973,8 +973,8 @@ form a verifiable chain of addresses for control flow integrity.
 \section{Core parameters}
 
 \par\noindent
-glyph has serveral architectural parameters that define the dimensions
-of an instance of the architecture to allow the archiecture to be
+glyph has several architectural parameters that define the dimensions
+of an instance of the architecture to allow the architecture to be
 instantiated in several different configurations. these configurations
 are grouped into architectural profiles.
 
@@ -1017,7 +1017,7 @@ GLEN & 128        & width of vector lane group in bits \\
 
 glyph architectural parameters are linked to the dimensions of the
 register slots in the variable length instruction packets. the 16-bit
-packet can be used in a freestanding microcontroller profile. the 32-bit
+packet can be used in a freestanding micro-controller profile. the 32-bit
 packet contains scalar and packed-SIMD\footnote{SIMD - Single Instruction
 Multiple Data} instructions on scalar registers. the 64-bit packet
 contains packed-SIMD instruction on vector registers.
@@ -2197,7 +2197,7 @@ register state:
 \par\noindent
 when $XLEN \ge ALEN \times 2$ it is possible to pack absolute addresses
 in the link register, so the \texttt{PIN} and \texttt{LINK} instructions
-save abosulte addresses in the link register instead. this reduces latency
+save absolute addresses in the link register instead. this reduces latency
 in branch address calculation compared to relative addresses.
 
 \newpage
@@ -2996,7 +2996,7 @@ counter} address before the trap.
 \node [font=\small,anchor=base] at (16,0.25)  {\emph{program counter}};
 \end{tikzpicture}
 
-\subsubsection{trap exception immedidate base (\texttt{teib})}
+\subsubsection{trap exception immediate base (\texttt{teib})}
 \texttt{teib} is a read-only register which contains the \emph{immediate
 base} address before the trap.
 \\
@@ -3005,7 +3005,7 @@ base} address before the trap.
 \draw [black!95] (0,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
 \node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{ALEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{immedidate base}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{immediate base}};
 \end{tikzpicture}
 
 \subsubsection{trap handler program counter (\texttt{thpc})}
@@ -3307,7 +3307,7 @@ the section describes the privileged debug registers.
 
 \subsubsection{debug status (\texttt{dstatus})}
 \texttt{dstatus} is a read-only register containing status bits for debug
-monitor execeptions.
+monitor exceptions.
 \\
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
@@ -3424,7 +3424,7 @@ monitor exception} for a matching memory store address.
 the architecture provides an optional capabilities extension that
 provides a capability check for permissions and capabilities enabled by
 \emph{page table colors} in page table entries. color permissions mask
-pask page table permissions based on \emph{page table color}. color
+page table permissions based on \emph{page table color}. color
 capabilities restrict access to system, domain, capability and machine
 registers based on \emph{page table color}.
 \\
@@ -4484,7 +4484,7 @@ address structure is as follows:
 \end{figure}
 
 \subsection{page table translation}
-the page table walker performs page table lookups to translate virtual
+the page table walker performs page table lookup to translate virtual
 addresses into physical addresses. the page table walker reads the page
 table root pointer then walks the \emph{trie-based} page table structure
 to find a leaf entry containing a physical page address.
@@ -5018,7 +5018,7 @@ the \emph{compare} instruction performs a comparison between the value in
 \emph{rb} and \emph{rc} then saves the result in the \emph{flag} register.
 the \emph{compare} opcode is also used to perform conditional move whereby
 the \emph{rb} register is copied into the \emph{rc} if the \emph{flag}
-register is set. the type of comparsion in \emph{fun3} can be one of:
+register is set. the type of comparison in \emph{fun3} can be one of:
 \\
 \begin{table}[h]
 \centering
@@ -5335,7 +5335,7 @@ dynamic relocations are present in libraries and executables.
 \subsection{linking}
 linking is the process of combining multiple relocatable object
 files by merging and aligning sections, resolving symbol references across
-files, assigning final symbol addresses, applying relocation fixups using
+files, assigning final symbol addresses, applying relocation fix-ups using
 relocation entries, and adding debug metadata.
 
 \newpage
@@ -5400,11 +5400,11 @@ the following table lists glyph assembler directives:
 \newpage
 \section{Pseudo-instructions}
 
-the assembler implements a number of convenience psuedo-instruction aliases
+the assembler implements a number of convenience pseudo-instruction aliases
 that are formed from regular instructions, but have implicit or deduced arguments.
 \\
 \par\noindent
-the following table lists glyph assembler pseudo instruction aliases:
+the following table lists glyph assembler pseudo-instruction aliases:
 
 \begin{table}[h]
 \centering
