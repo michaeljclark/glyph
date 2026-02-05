@@ -404,7 +404,7 @@ specifiess the width of registers in bits.
 \\
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
 
 \foreach \x in {0,...,3}
@@ -452,7 +452,7 @@ specifies the width of addresses in bits.
 \\
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
 
 \foreach \x in {0,...,3}
@@ -510,7 +510,7 @@ on the instruction template and instruction forms.
 \\
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
 \node at (10.500000,1.250000) [font=\scriptsize] {6};
@@ -523,13 +523,13 @@ on the instruction template and instruction forms.
 \draw (17.000000,1.000000) -- (17.000000,1.500000);
 \fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
 \draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
+\node at (16.000000,0.500000) [font=\scriptsize] {$\mathsf{sz_{[1:0]}}$};
 \fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
 \draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\node at (12.500000,0.500000) [font=\scriptsize] {$\mathsf{opcode_{[4:0]}}$};
 \fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
 \draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
-\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
+\node at (5.500000,0.500000) [font=\scriptsize] {$\mathsf{operand_{[8:0]}}$};
 \end{tikzpicture}
 \caption{16-bit instruction containing one packet.}
 \label{fig:16-bit-instruction-word}
@@ -537,7 +537,7 @@ on the instruction template and instruction forms.
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
 \node at (10.500000,1.250000) [font=\scriptsize] {6};
@@ -550,22 +550,22 @@ on the instruction template and instruction forms.
 \draw (17.000000,1.000000) -- (17.000000,1.500000);
 \fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
 \draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
+\node at (16.000000,0.500000) [font=\scriptsize] {$\mathsf{sz_{[1:0]}}$};
 \fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
 \draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\node at (12.500000,0.500000) [font=\scriptsize] {$\mathsf{opcode_{[4:0]}}$};
 \fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
 \draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
-\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
+\node at (5.500000,0.500000) [font=\scriptsize] {$\mathsf{operand_{[8:0]}}$};
 \fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
 \draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
-\node at (16.000000,-0.500000) [font=\scriptsize] {$sz_{[3:2]}$};
+\node at (16.000000,-0.500000) [font=\scriptsize] {$\mathsf{sz_{[3:2]}}$};
 \fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
 \draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
-\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\node at (12.500000,-0.500000) [font=\scriptsize] {$\mathsf{opcode_{[9:5]}}$};
 \fill [black!5]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
 \draw [black!90]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
-\node at (5.500000,-0.500000) [font=\scriptsize] {$operand_{[17:9]}$};
+\node at (5.500000,-0.500000) [font=\scriptsize] {$\mathsf{operand_{[17:9]}}$};
 \end{tikzpicture}
 \caption{32-bit instruction containing two packets.}
 \label{fig:32-bit-instruction-word}
@@ -581,7 +581,7 @@ counter} called \emph{pc-relative} addresses.
 \\
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
 \foreach \x in {0,...,1} {
   \fill [black!5] (0,\x)    rectangle (8,\x+1);
@@ -610,7 +610,7 @@ counter} called \emph{pc-relative} addresses.
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
 
 \fill [black!5] (0,0)    rectangle (8,1);
@@ -668,7 +668,7 @@ storage space containing all types.}
 \\
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
 \foreach \x in {0,...,1} {
   \fill [black!5] (0,\x)    rectangle (8,\x+1);
@@ -697,7 +697,7 @@ storage space containing all types.}
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
 \foreach \x in {0,...,1} {
   \fill [black!5] (0,\x)    rectangle (8,\x+1);
@@ -726,7 +726,7 @@ storage space containing all types.}
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
 \foreach \x in {0,...,1} {
   \fill [black!5] (0,\x)    rectangle (8,\x+1);
@@ -755,7 +755,7 @@ storage space containing all types.}
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
 \foreach \x in {0,...,1} {
   \fill [black!5] (0,\x)    rectangle (8,\x+1);
@@ -1118,11 +1118,14 @@ coding space in the larger packet can be used to extend register sizes.
 \subsubsection{instruction templates}
 
 this section details the layout of the variable sized instructions:
-\\
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[c]{1.0\textwidth}
 
 \noindent
 \begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
 \node at (10.500000,1.250000) [font=\scriptsize] {6};
@@ -1135,13 +1138,13 @@ this section details the layout of the variable sized instructions:
 \draw (17.000000,1.000000) -- (17.000000,1.500000);
 \fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
 \draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
+\node at (16.000000,0.500000) [font=\scriptsize] {$\mathsf{sz_{[1:0]}}$};
 \fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
 \draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\node at (12.500000,0.500000) [font=\scriptsize] {$\mathsf{opcode_{[4:0]}}$};
 \fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
 \draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
-\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
+\node at (5.500000,0.500000) [font=\scriptsize] {$\mathsf{operand_{[8:0]}}$};
 \end{tikzpicture}
 \end{minipage}\hfill
 \begin{minipage}[c]{0.42\linewidth}
@@ -1149,11 +1152,11 @@ this section details the layout of the variable sized instructions:
 \textbi{op16} \\ 16-bit instruction packet
 \end{minipage}
 
-\vspace{0.75em}
+\vspace{0.44em}
 
 \noindent
 \begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
 \node at (10.500000,1.250000) [font=\scriptsize] {6};
@@ -1166,22 +1169,22 @@ this section details the layout of the variable sized instructions:
 \draw (17.000000,1.000000) -- (17.000000,1.500000);
 \fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
 \draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
+\node at (16.000000,0.500000) [font=\scriptsize] {$\mathsf{sz_{[1:0]}}$};
 \fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
 \draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\node at (12.500000,0.500000) [font=\scriptsize] {$\mathsf{opcode_{[4:0]}}$};
 \fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
 \draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
-\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
+\node at (5.500000,0.500000) [font=\scriptsize] {$\mathsf{operand_{[8:0]}}$};
 \fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
 \draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
-\node at (16.000000,-0.500000) [font=\scriptsize] {$sz_{[3:2]}$};
+\node at (16.000000,-0.500000) [font=\scriptsize] {$\mathsf{sz_{[3:2]}}$};
 \fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
 \draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
-\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\node at (12.500000,-0.500000) [font=\scriptsize] {$\mathsf{opcode_{[9:5]}}$};
 \fill [black!5]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
 \draw [black!90]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
-\node at (5.500000,-0.500000) [font=\scriptsize] {$operand_{[17:9]}$};
+\node at (5.500000,-0.500000) [font=\scriptsize] {$\mathsf{operand_{[17:9]}}$};
 \end{tikzpicture}
 \end{minipage}\hfill
 \begin{minipage}[c]{0.42\linewidth}
@@ -1190,11 +1193,11 @@ this section details the layout of the variable sized instructions:
 \textbi{op32} \\ 32-bit instruction packet
 \end{minipage}
 
-\vspace{0.75em}
+\vspace{0.44em}
 
 \noindent
 \begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
 \node at (10.500000,1.250000) [font=\scriptsize] {6};
@@ -1207,40 +1210,40 @@ this section details the layout of the variable sized instructions:
 \draw (17.000000,1.000000) -- (17.000000,1.500000);
 \fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
 \draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\node at (16.000000,0.500000) [font=\scriptsize] {$sz_{[1:0]}$};
+\node at (16.000000,0.500000) [font=\scriptsize] {$\mathsf{sz_{[1:0]}}$};
 \fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
 \draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\node at (12.500000,0.500000) [font=\scriptsize] {$\mathsf{opcode_{[4:0]}}$};
 \fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
 \draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
-\node at (5.500000,0.500000) [font=\scriptsize] {$operand_{[8:0]}$};
+\node at (5.500000,0.500000) [font=\scriptsize] {$\mathsf{operand_{[8:0]}}$};
 \fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
 \draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
-\node at (16.000000,-0.500000) [font=\scriptsize] {$sz_{[3:2]}$};
+\node at (16.000000,-0.500000) [font=\scriptsize] {$\mathsf{sz_{[3:2]}}$};
 \fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
 \draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
-\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\node at (12.500000,-0.500000) [font=\scriptsize] {$\mathsf{opcode_{[9:5]}}$};
 \fill [black!5]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
 \draw [black!90]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
-\node at (5.500000,-0.500000) [font=\scriptsize] {$operand_{[17:9]}$};
+\node at (5.500000,-0.500000) [font=\scriptsize] {$\mathsf{operand_{[17:9]}}$};
 \fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
 \draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
-\node at (16.000000,-1.500000) [font=\scriptsize] {$sz_{[5:4]}$};
+\node at (16.000000,-1.500000) [font=\scriptsize] {$\mathsf{sz_{[5:4]}}$};
 \fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
 \draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
-\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
+\node at (12.500000,-1.500000) [font=\scriptsize] {$\mathsf{opcode_{[14:10]}}$};
 \fill [black!5]  (1.000000,-2.000000) rectangle (10.000000,-1.000000);
 \draw [black!90]  (1.000000,-2.000000) rectangle (10.000000,-1.000000);
-\node at (5.500000,-1.500000) [font=\scriptsize] {$operand_{[26:18]}$};
+\node at (5.500000,-1.500000) [font=\scriptsize] {$\mathsf{operand_{[26:18]}}$};
 \fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
 \draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
-\node at (16.000000,-2.500000) [font=\scriptsize] {$sz_{[7:6]}$};
+\node at (16.000000,-2.500000) [font=\scriptsize] {$\mathsf{sz_{[7:6]}}$};
 \fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
 \draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
-\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
+\node at (12.500000,-2.500000) [font=\scriptsize] {$\mathsf{opcode_{[19:15]}}$};
 \fill [black!5]  (1.000000,-3.000000) rectangle (10.000000,-2.000000);
 \draw [black!90]  (1.000000,-3.000000) rectangle (10.000000,-2.000000);
-\node at (5.500000,-2.500000) [font=\scriptsize] {$operand_{[35:27]}$};
+\node at (5.500000,-2.500000) [font=\scriptsize] {$\mathsf{operand_{[35:27]}}$};
 \end{tikzpicture}
 \end{minipage}\hfill
 \begin{minipage}[c]{0.42\linewidth}
@@ -1249,14 +1252,22 @@ this section details the layout of the variable sized instructions:
 \textbi{op64} \\ 64-bit instruction packet
 \end{minipage}
 
+\end{minipage}
+\caption{layout of the variable sized instructions.}
+\label{fig:glyph-template-iform-layout}
+\end{figure}
+
 \subsubsection{16-bit instruction forms}
 
 this section details the layout of the 16-bit instruction forms:
-\\
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[c]{1.0\textwidth}
 
 \noindent
 \begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
 \node at (10.500000,1.250000) [font=\scriptsize] {6};
@@ -1269,13 +1280,13 @@ this section details the layout of the 16-bit instruction forms:
 \draw (17.000000,1.000000) -- (17.000000,1.500000);
 \fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
 \draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{00}};
+\node at (16.000000,0.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{00}}$};
 \fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
 \draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\node at (12.500000,0.500000) [font=\scriptsize] {$\mathsf{opcode_{[4:0]}}$};
 \fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
 \draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
-\node at (5.500000,0.500000) [font=\scriptsize] {$imm_{[5:0]}$};
+\node at (5.500000,0.500000) [font=\scriptsize] {$\mathsf{imm_{[5:0]}}$};
 \end{tikzpicture}
 \end{minipage}\hfill
 \begin{minipage}[c]{0.42\linewidth}
@@ -1283,11 +1294,11 @@ this section details the layout of the 16-bit instruction forms:
 \textbi{op16i} \\ 16-bit large immediate
 \end{minipage}
 
-\vspace{0.75em}
+\vspace{0.44em}
 
 \noindent
 \begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
 \node at (10.500000,1.250000) [font=\scriptsize] {6};
@@ -1303,16 +1314,16 @@ this section details the layout of the 16-bit instruction forms:
 \draw (17.000000,1.000000) -- (17.000000,1.500000);
 \fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
 \draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{00}};
+\node at (16.000000,0.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{00}}$};
 \fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
 \draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\node at (12.500000,0.500000) [font=\scriptsize] {$\mathsf{opcode_{[4:0]}}$};
 \fill [black!5]  (4.000000,0.000000) rectangle (10.000000,1.000000);
 \draw [black!90]  (4.000000,0.000000) rectangle (10.000000,1.000000);
-\node at (7.000000,0.500000) [font=\scriptsize] {$imm_{[5:0]}$};
+\node at (7.000000,0.500000) [font=\scriptsize] {$\mathsf{imm_{[5:0]}}$};
 \fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
 \draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
-\node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\node at (2.500000,0.500000) [font=\scriptsize] {$\mathsf{rc_{[2:0]}}$};
 \end{tikzpicture}
 \end{minipage}\hfill
 \begin{minipage}[c]{0.42\linewidth}
@@ -1320,11 +1331,11 @@ this section details the layout of the 16-bit instruction forms:
 \textbi{op16ri} \\ 16-bit one operand with immediate
 \end{minipage}
 
-\vspace{0.75em}
+\vspace{0.44em}
 
 \noindent
 \begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
 \node at (10.500000,1.250000) [font=\scriptsize] {6};
@@ -1343,19 +1354,19 @@ this section details the layout of the 16-bit instruction forms:
 \draw (17.000000,1.000000) -- (17.000000,1.500000);
 \fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
 \draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{00}};
+\node at (16.000000,0.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{00}}$};
 \fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
 \draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\node at (12.500000,0.500000) [font=\scriptsize] {$\mathsf{opcode_{[4:0]}}$};
 \fill [black!5]  (7.000000,0.000000) rectangle (10.000000,1.000000);
 \draw [black!90]  (7.000000,0.000000) rectangle (10.000000,1.000000);
-\node at (8.500000,0.500000) [font=\scriptsize] {$imm_{[2:0]}$};
+\node at (8.500000,0.500000) [font=\scriptsize] {$\mathsf{imm_{[2:0]}}$};
 \fill [black!5]  (4.000000,0.000000) rectangle (7.000000,1.000000);
 \draw [black!90]  (4.000000,0.000000) rectangle (7.000000,1.000000);
-\node at (5.500000,0.500000) [font=\scriptsize] {$rb_{[2:0]}$};
+\node at (5.500000,0.500000) [font=\scriptsize] {$\mathsf{rb_{[2:0]}}$};
 \fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
 \draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
-\node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\node at (2.500000,0.500000) [font=\scriptsize] {$\mathsf{rc_{[2:0]}}$};
 \end{tikzpicture}
 \end{minipage}\hfill
 \begin{minipage}[c]{0.42\linewidth}
@@ -1363,11 +1374,11 @@ this section details the layout of the 16-bit instruction forms:
 \textbi{op16rri} \\ 16-bit two operand with immediate
 \end{minipage}
 
-\vspace{0.75em}
+\vspace{0.44em}
 
 \noindent
 \begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
 \node at (10.500000,1.250000) [font=\scriptsize] {6};
@@ -1386,19 +1397,19 @@ this section details the layout of the 16-bit instruction forms:
 \draw (17.000000,1.000000) -- (17.000000,1.500000);
 \fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
 \draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{00}};
+\node at (16.000000,0.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{00}}$};
 \fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
 \draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\node at (12.500000,0.500000) [font=\scriptsize] {$\mathsf{opcode_{[4:0]}}$};
 \fill [black!5]  (7.000000,0.000000) rectangle (10.000000,1.000000);
 \draw [black!90]  (7.000000,0.000000) rectangle (10.000000,1.000000);
-\node at (8.500000,0.500000) [font=\scriptsize] {$ra_{[2:0]}$};
+\node at (8.500000,0.500000) [font=\scriptsize] {$\mathsf{ra_{[2:0]}}$};
 \fill [black!5]  (4.000000,0.000000) rectangle (7.000000,1.000000);
 \draw [black!90]  (4.000000,0.000000) rectangle (7.000000,1.000000);
-\node at (5.500000,0.500000) [font=\scriptsize] {$rb_{[2:0]}$};
+\node at (5.500000,0.500000) [font=\scriptsize] {$\mathsf{rb_{[2:0]}}$};
 \fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
 \draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
-\node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\node at (2.500000,0.500000) [font=\scriptsize] {$\mathsf{rc_{[2:0]}}$};
 \end{tikzpicture}
 \end{minipage}\hfill
 \begin{minipage}[c]{0.42\linewidth}
@@ -1406,15 +1417,23 @@ this section details the layout of the 16-bit instruction forms:
 \textbi{op16r3} \\ 16-bit three operand
 \end{minipage}
 
+\end{minipage}
+\caption{layout of the 16-bit instruction forms.}
+\label{fig:glyph-16bit-iform-layout}
+\end{figure}
+
 \newpage
 \subsubsection{32-bit instruction forms}
 
 this section details the layout of the 32-bit instruction forms:
-\\
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[c]{1.0\textwidth}
 
 \noindent
 \begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
 \node at (10.500000,1.250000) [font=\scriptsize] {6};
@@ -1427,22 +1446,22 @@ this section details the layout of the 32-bit instruction forms:
 \draw (17.000000,1.000000) -- (17.000000,1.500000);
 \fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
 \draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{01}};
+\node at (16.000000,0.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{01}}$};
 \fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
 \draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\node at (12.500000,0.500000) [font=\scriptsize] {$\mathsf{opcode_{[4:0]}}$};
 \fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
 \draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
-\node at (5.500000,0.500000) [font=\scriptsize] {$imm_{[8:0]}$};
+\node at (5.500000,0.500000) [font=\scriptsize] {$\mathsf{imm_{[8:0]}}$};
 \fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
 \draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
-\node at (16.000000,-0.500000) [font=\scriptsize] {\textbf{11}};
+\node at (16.000000,-0.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
 \fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
 \draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
-\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\node at (12.500000,-0.500000) [font=\scriptsize] {$\mathsf{opcode_{[9:5]}}$};
 \fill [black!5]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
 \draw [black!90]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
-\node at (5.500000,-0.500000) [font=\scriptsize] {$imm_{[17:9]}$};
+\node at (5.500000,-0.500000) [font=\scriptsize] {$\mathsf{imm_{[17:9]}}$};
 \end{tikzpicture}
 \end{minipage}\hfill
 \begin{minipage}[c]{0.42\linewidth}
@@ -1451,11 +1470,11 @@ this section details the layout of the 32-bit instruction forms:
 \textbi{op32i} \\ 32-bit large immediate
 \end{minipage}
 
-\vspace{0.75em}
+\vspace{0.44em}
 
 \noindent
 \begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
 \node at (10.500000,1.250000) [font=\scriptsize] {6};
@@ -1471,28 +1490,28 @@ this section details the layout of the 32-bit instruction forms:
 \draw (17.000000,1.000000) -- (17.000000,1.500000);
 \fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
 \draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{01}};
+\node at (16.000000,0.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{01}}$};
 \fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
 \draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\node at (12.500000,0.500000) [font=\scriptsize] {$\mathsf{opcode_{[4:0]}}$};
 \fill [black!5]  (4.000000,0.000000) rectangle (10.000000,1.000000);
 \draw [black!90]  (4.000000,0.000000) rectangle (10.000000,1.000000);
-\node at (7.000000,0.500000) [font=\scriptsize] {$imm_{[5:0]}$};
+\node at (7.000000,0.500000) [font=\scriptsize] {$\mathsf{imm_{[5:0]}}$};
 \fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
 \draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
-\node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\node at (2.500000,0.500000) [font=\scriptsize] {$\mathsf{rc_{[2:0]}}$};
 \fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
 \draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
-\node at (16.000000,-0.500000) [font=\scriptsize] {\textbf{11}};
+\node at (16.000000,-0.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
 \fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
 \draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
-\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\node at (12.500000,-0.500000) [font=\scriptsize] {$\mathsf{opcode_{[9:5]}}$};
 \fill [black!5]  (4.000000,-1.000000) rectangle (10.000000,0.000000);
 \draw [black!90]  (4.000000,-1.000000) rectangle (10.000000,0.000000);
-\node at (7.000000,-0.500000) [font=\scriptsize] {$imm_{[11:6]}$};
+\node at (7.000000,-0.500000) [font=\scriptsize] {$\mathsf{imm_{[11:6]}}$};
 \fill [black!5]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
 \draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
-\node at (2.500000,-0.500000) [font=\scriptsize] {$rc_{[5:3]}$};
+\node at (2.500000,-0.500000) [font=\scriptsize] {$\mathsf{rc_{[5:3]}}$};
 \end{tikzpicture}
 \end{minipage}\hfill
 \begin{minipage}[c]{0.42\linewidth}
@@ -1501,11 +1520,11 @@ this section details the layout of the 32-bit instruction forms:
 \textbi{op32ri} \\ 32-bit one operand with immediate
 \end{minipage}
 
-\vspace{0.75em}
+\vspace{0.44em}
 
 \noindent
 \begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
 \node at (10.500000,1.250000) [font=\scriptsize] {6};
@@ -1524,34 +1543,34 @@ this section details the layout of the 32-bit instruction forms:
 \draw (17.000000,1.000000) -- (17.000000,1.500000);
 \fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
 \draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{01}};
+\node at (16.000000,0.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{01}}$};
 \fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
 \draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\node at (12.500000,0.500000) [font=\scriptsize] {$\mathsf{opcode_{[4:0]}}$};
 \fill [black!5]  (7.000000,0.000000) rectangle (10.000000,1.000000);
 \draw [black!90]  (7.000000,0.000000) rectangle (10.000000,1.000000);
-\node at (8.500000,0.500000) [font=\scriptsize] {$imm_{[2:0]}$};
+\node at (8.500000,0.500000) [font=\scriptsize] {$\mathsf{imm_{[2:0]}}$};
 \fill [black!5]  (4.000000,0.000000) rectangle (7.000000,1.000000);
 \draw [black!90]  (4.000000,0.000000) rectangle (7.000000,1.000000);
-\node at (5.500000,0.500000) [font=\scriptsize] {$rb_{[2:0]}$};
+\node at (5.500000,0.500000) [font=\scriptsize] {$\mathsf{rb_{[2:0]}}$};
 \fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
 \draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
-\node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\node at (2.500000,0.500000) [font=\scriptsize] {$\mathsf{rc_{[2:0]}}$};
 \fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
 \draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
-\node at (16.000000,-0.500000) [font=\scriptsize] {\textbf{11}};
+\node at (16.000000,-0.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
 \fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
 \draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
-\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\node at (12.500000,-0.500000) [font=\scriptsize] {$\mathsf{opcode_{[9:5]}}$};
 \fill [black!5]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
 \draw [black!90]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
-\node at (8.500000,-0.500000) [font=\scriptsize] {$imm_{[5:3]}$};
+\node at (8.500000,-0.500000) [font=\scriptsize] {$\mathsf{imm_{[5:3]}}$};
 \fill [black!5]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
 \draw [black!90]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
-\node at (5.500000,-0.500000) [font=\scriptsize] {$rb_{[5:3]}$};
+\node at (5.500000,-0.500000) [font=\scriptsize] {$\mathsf{rb_{[5:3]}}$};
 \fill [black!5]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
 \draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
-\node at (2.500000,-0.500000) [font=\scriptsize] {$rc_{[5:3]}$};
+\node at (2.500000,-0.500000) [font=\scriptsize] {$\mathsf{rc_{[5:3]}}$};
 \end{tikzpicture}
 \end{minipage}\hfill
 \begin{minipage}[c]{0.42\linewidth}
@@ -1560,11 +1579,11 @@ this section details the layout of the 32-bit instruction forms:
 \textbi{op32rri} \\ 32-bit two operand with immediate
 \end{minipage}
 
-\vspace{0.75em}
+\vspace{0.44em}
 
 \noindent
 \begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
 \node at (10.500000,1.250000) [font=\scriptsize] {6};
@@ -1583,34 +1602,34 @@ this section details the layout of the 32-bit instruction forms:
 \draw (17.000000,1.000000) -- (17.000000,1.500000);
 \fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
 \draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{01}};
+\node at (16.000000,0.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{01}}$};
 \fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
 \draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\node at (12.500000,0.500000) [font=\scriptsize] {$\mathsf{opcode_{[4:0]}}$};
 \fill [black!5]  (7.000000,0.000000) rectangle (10.000000,1.000000);
 \draw [black!90]  (7.000000,0.000000) rectangle (10.000000,1.000000);
-\node at (8.500000,0.500000) [font=\scriptsize] {$ra_{[2:0]}$};
+\node at (8.500000,0.500000) [font=\scriptsize] {$\mathsf{ra_{[2:0]}}$};
 \fill [black!5]  (4.000000,0.000000) rectangle (7.000000,1.000000);
 \draw [black!90]  (4.000000,0.000000) rectangle (7.000000,1.000000);
-\node at (5.500000,0.500000) [font=\scriptsize] {$rb_{[2:0]}$};
+\node at (5.500000,0.500000) [font=\scriptsize] {$\mathsf{rb_{[2:0]}}$};
 \fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
 \draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
-\node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\node at (2.500000,0.500000) [font=\scriptsize] {$\mathsf{rc_{[2:0]}}$};
 \fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
 \draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
-\node at (16.000000,-0.500000) [font=\scriptsize] {\textbf{11}};
+\node at (16.000000,-0.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
 \fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
 \draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
-\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\node at (12.500000,-0.500000) [font=\scriptsize] {$\mathsf{opcode_{[9:5]}}$};
 \fill [black!5]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
 \draw [black!90]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
-\node at (8.500000,-0.500000) [font=\scriptsize] {$ra_{[5:3]}$};
+\node at (8.500000,-0.500000) [font=\scriptsize] {$\mathsf{ra_{[5:3]}}$};
 \fill [black!5]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
 \draw [black!90]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
-\node at (5.500000,-0.500000) [font=\scriptsize] {$rb_{[5:3]}$};
+\node at (5.500000,-0.500000) [font=\scriptsize] {$\mathsf{rb_{[5:3]}}$};
 \fill [black!5]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
 \draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
-\node at (2.500000,-0.500000) [font=\scriptsize] {$rc_{[5:3]}$};
+\node at (2.500000,-0.500000) [font=\scriptsize] {$\mathsf{rc_{[5:3]}}$};
 \end{tikzpicture}
 \end{minipage}\hfill
 \begin{minipage}[c]{0.42\linewidth}
@@ -1619,14 +1638,22 @@ this section details the layout of the 32-bit instruction forms:
 \textbi{op32r3} \\ 32-bit three operand
 \end{minipage}
 
+\end{minipage}
+\caption{layout of the 32-bit instruction forms.}
+\label{fig:glyph-32bit-iform-layout}
+\end{figure}
+
 \subsubsection{64-bit instruction forms}
 
 this section details the layout of the 64-bit instruction forms:
-\\
+
+\begin{figure}[H]
+\centering
+\begin{minipage}[c]{1.0\textwidth}
 
 \noindent
 \begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
 \node at (10.500000,1.250000) [font=\scriptsize] {6};
@@ -1639,40 +1666,40 @@ this section details the layout of the 64-bit instruction forms:
 \draw (17.000000,1.000000) -- (17.000000,1.500000);
 \fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
 \draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{10}};
+\node at (16.000000,0.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{10}}$};
 \fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
 \draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\node at (12.500000,0.500000) [font=\scriptsize] {$\mathsf{opcode_{[4:0]}}$};
 \fill [black!5]  (1.000000,0.000000) rectangle (10.000000,1.000000);
 \draw [black!90]  (1.000000,0.000000) rectangle (10.000000,1.000000);
-\node at (5.500000,0.500000) [font=\scriptsize] {$imm_{[5:0]}$};
+\node at (5.500000,0.500000) [font=\scriptsize] {$\mathsf{imm_{[5:0]}}$};
 \fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
 \draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
-\node at (16.000000,-0.500000) [font=\scriptsize] {\textbf{11}};
+\node at (16.000000,-0.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
 \fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
 \draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
-\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\node at (12.500000,-0.500000) [font=\scriptsize] {$\mathsf{opcode_{[9:5]}}$};
 \fill [black!5]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
 \draw [black!90]  (1.000000,-1.000000) rectangle (10.000000,0.000000);
-\node at (5.500000,-0.500000) [font=\scriptsize] {$imm_{[11:6]}$};
+\node at (5.500000,-0.500000) [font=\scriptsize] {$\mathsf{imm_{[11:6]}}$};
 \fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
 \draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
-\node at (16.000000,-1.500000) [font=\scriptsize] {\textbf{11}};
+\node at (16.000000,-1.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
 \fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
 \draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
-\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
+\node at (12.500000,-1.500000) [font=\scriptsize] {$\mathsf{opcode_{[14:10]}}$};
 \fill [black!5]  (1.000000,-2.000000) rectangle (10.000000,-1.000000);
 \draw [black!90]  (1.000000,-2.000000) rectangle (10.000000,-1.000000);
-\node at (5.500000,-1.500000) [font=\scriptsize] {$imm_{[17:12]}$};
+\node at (5.500000,-1.500000) [font=\scriptsize] {$\mathsf{imm_{[17:12]}}$};
 \fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
 \draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
-\node at (16.000000,-2.500000) [font=\scriptsize] {\textbf{11}};
+\node at (16.000000,-2.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
 \fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
 \draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
-\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
+\node at (12.500000,-2.500000) [font=\scriptsize] {$\mathsf{opcode_{[19:15]}}$};
 \fill [black!5]  (1.000000,-3.000000) rectangle (10.000000,-2.000000);
 \draw [black!90]  (1.000000,-3.000000) rectangle (10.000000,-2.000000);
-\node at (5.500000,-2.500000) [font=\scriptsize] {$imm_{[23:18]}$};
+\node at (5.500000,-2.500000) [font=\scriptsize] {$\mathsf{imm_{[23:18]}}$};
 \end{tikzpicture}
 \end{minipage}\hfill
 \begin{minipage}[c]{0.42\linewidth}
@@ -1681,11 +1708,11 @@ this section details the layout of the 64-bit instruction forms:
 \textbi{op64i} \\ 64-bit large immediate
 \end{minipage}
 
-\vspace{0.75em}
+\vspace{0.44em}
 
 \noindent
 \begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
 \node at (10.500000,1.250000) [font=\scriptsize] {6};
@@ -1701,52 +1728,52 @@ this section details the layout of the 64-bit instruction forms:
 \draw (17.000000,1.000000) -- (17.000000,1.500000);
 \fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
 \draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{10}};
+\node at (16.000000,0.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{10}}$};
 \fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
 \draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\node at (12.500000,0.500000) [font=\scriptsize] {$\mathsf{opcode_{[4:0]}}$};
 \fill [black!5]  (4.000000,0.000000) rectangle (10.000000,1.000000);
 \draw [black!90]  (4.000000,0.000000) rectangle (10.000000,1.000000);
-\node at (7.000000,0.500000) [font=\scriptsize] {$imm_{[5:0]}$};
+\node at (7.000000,0.500000) [font=\scriptsize] {$\mathsf{imm_{[5:0]}}$};
 \fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
 \draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
-\node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\node at (2.500000,0.500000) [font=\scriptsize] {$\mathsf{rc_{[2:0]}}$};
 \fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
 \draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
-\node at (16.000000,-0.500000) [font=\scriptsize] {\textbf{11}};
+\node at (16.000000,-0.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
 \fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
 \draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
-\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\node at (12.500000,-0.500000) [font=\scriptsize] {$\mathsf{opcode_{[9:5]}}$};
 \fill [black!5]  (4.000000,-1.000000) rectangle (10.000000,0.000000);
 \draw [black!90]  (4.000000,-1.000000) rectangle (10.000000,0.000000);
-\node at (7.000000,-0.500000) [font=\scriptsize] {$imm_{[11:6]}$};
+\node at (7.000000,-0.500000) [font=\scriptsize] {$\mathsf{imm_{[11:6]}}$};
 \fill [black!5]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
 \draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
-\node at (2.500000,-0.500000) [font=\scriptsize] {$rc_{[5:3]}$};
+\node at (2.500000,-0.500000) [font=\scriptsize] {$\mathsf{rc_{[5:3]}}$};
 \fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
 \draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
-\node at (16.000000,-1.500000) [font=\scriptsize] {\textbf{11}};
+\node at (16.000000,-1.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
 \fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
 \draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
-\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
+\node at (12.500000,-1.500000) [font=\scriptsize] {$\mathsf{opcode_{[14:10]}}$};
 \fill [black!5]  (4.000000,-2.000000) rectangle (10.000000,-1.000000);
 \draw [black!90]  (4.000000,-2.000000) rectangle (10.000000,-1.000000);
-\node at (7.000000,-1.500000) [font=\scriptsize] {$imm_{[17:12]}$};
+\node at (7.000000,-1.500000) [font=\scriptsize] {$\mathsf{imm_{[17:12]}}$};
 \fill [black!5]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
 \draw [black!90]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
-\node at (2.500000,-1.500000) [font=\scriptsize] {$rf_{[8:6]}$};
+\node at (2.500000,-1.500000) [font=\scriptsize] {$\mathsf{rf_{[8:6]}}$};
 \fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
 \draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
-\node at (16.000000,-2.500000) [font=\scriptsize] {\textbf{11}};
+\node at (16.000000,-2.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
 \fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
 \draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
-\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
+\node at (12.500000,-2.500000) [font=\scriptsize] {$\mathsf{opcode_{[19:15]}}$};
 \fill [black!5]  (4.000000,-3.000000) rectangle (10.000000,-2.000000);
 \draw [black!90]  (4.000000,-3.000000) rectangle (10.000000,-2.000000);
-\node at (7.000000,-2.500000) [font=\scriptsize] {$imm_{[23:18]}$};
+\node at (7.000000,-2.500000) [font=\scriptsize] {$\mathsf{imm_{[23:18]}}$};
 \fill [black!5]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
 \draw [black!90]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
-\node at (2.500000,-2.500000) [font=\scriptsize] {$rf_{[11:9]}$};
+\node at (2.500000,-2.500000) [font=\scriptsize] {$\mathsf{rf_{[11:9]}}$};
 \end{tikzpicture}
 \end{minipage}\hfill
 \begin{minipage}[c]{0.42\linewidth}
@@ -1755,11 +1782,11 @@ this section details the layout of the 64-bit instruction forms:
 \textbi{op64rri} \\ 64-bit two operand with immediate
 \end{minipage}
 
-\vspace{0.75em}
+\vspace{0.44em}
 
 \noindent
 \begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
 \node at (10.500000,1.250000) [font=\scriptsize] {6};
@@ -1778,64 +1805,64 @@ this section details the layout of the 64-bit instruction forms:
 \draw (17.000000,1.000000) -- (17.000000,1.500000);
 \fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
 \draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{10}};
+\node at (16.000000,0.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{10}}$};
 \fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
 \draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\node at (12.500000,0.500000) [font=\scriptsize] {$\mathsf{opcode_{[4:0]}}$};
 \fill [black!5]  (7.000000,0.000000) rectangle (10.000000,1.000000);
 \draw [black!90]  (7.000000,0.000000) rectangle (10.000000,1.000000);
-\node at (8.500000,0.500000) [font=\scriptsize] {$imm_{[2:0]}$};
+\node at (8.500000,0.500000) [font=\scriptsize] {$\mathsf{imm_{[2:0]}}$};
 \fill [black!5]  (4.000000,0.000000) rectangle (7.000000,1.000000);
 \draw [black!90]  (4.000000,0.000000) rectangle (7.000000,1.000000);
-\node at (5.500000,0.500000) [font=\scriptsize] {$rb_{[2:0]}$};
+\node at (5.500000,0.500000) [font=\scriptsize] {$\mathsf{rb_{[2:0]}}$};
 \fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
 \draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
-\node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\node at (2.500000,0.500000) [font=\scriptsize] {$\mathsf{rc_{[2:0]}}$};
 \fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
 \draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
-\node at (16.000000,-0.500000) [font=\scriptsize] {\textbf{11}};
+\node at (16.000000,-0.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
 \fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
 \draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
-\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\node at (12.500000,-0.500000) [font=\scriptsize] {$\mathsf{opcode_{[9:5]}}$};
 \fill [black!5]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
 \draw [black!90]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
-\node at (8.500000,-0.500000) [font=\scriptsize] {$imm_{[5:3]}$};
+\node at (8.500000,-0.500000) [font=\scriptsize] {$\mathsf{imm_{[5:3]}}$};
 \fill [black!5]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
 \draw [black!90]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
-\node at (5.500000,-0.500000) [font=\scriptsize] {$rb_{[5:3]}$};
+\node at (5.500000,-0.500000) [font=\scriptsize] {$\mathsf{rb_{[5:3]}}$};
 \fill [black!5]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
 \draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
-\node at (2.500000,-0.500000) [font=\scriptsize] {$rc_{[5:3]}$};
+\node at (2.500000,-0.500000) [font=\scriptsize] {$\mathsf{rc_{[5:3]}}$};
 \fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
 \draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
-\node at (16.000000,-1.500000) [font=\scriptsize] {\textbf{11}};
+\node at (16.000000,-1.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
 \fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
 \draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
-\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
+\node at (12.500000,-1.500000) [font=\scriptsize] {$\mathsf{opcode_{[14:10]}}$};
 \fill [black!5]  (7.000000,-2.000000) rectangle (10.000000,-1.000000);
 \draw [black!90]  (7.000000,-2.000000) rectangle (10.000000,-1.000000);
-\node at (8.500000,-1.500000) [font=\scriptsize] {$imm_{[8:6]}$};
+\node at (8.500000,-1.500000) [font=\scriptsize] {$\mathsf{imm_{[8:6]}}$};
 \fill [black!5]  (4.000000,-2.000000) rectangle (7.000000,-1.000000);
 \draw [black!90]  (4.000000,-2.000000) rectangle (7.000000,-1.000000);
-\node at (5.500000,-1.500000) [font=\scriptsize] {$re_{[8:6]}$};
+\node at (5.500000,-1.500000) [font=\scriptsize] {$\mathsf{re_{[8:6]}}$};
 \fill [black!5]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
 \draw [black!90]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
-\node at (2.500000,-1.500000) [font=\scriptsize] {$rf_{[8:6]}$};
+\node at (2.500000,-1.500000) [font=\scriptsize] {$\mathsf{rf_{[8:6]}}$};
 \fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
 \draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
-\node at (16.000000,-2.500000) [font=\scriptsize] {\textbf{11}};
+\node at (16.000000,-2.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
 \fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
 \draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
-\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
+\node at (12.500000,-2.500000) [font=\scriptsize] {$\mathsf{opcode_{[19:15]}}$};
 \fill [black!5]  (7.000000,-3.000000) rectangle (10.000000,-2.000000);
 \draw [black!90]  (7.000000,-3.000000) rectangle (10.000000,-2.000000);
-\node at (8.500000,-2.500000) [font=\scriptsize] {$imm_{[11:9]}$};
+\node at (8.500000,-2.500000) [font=\scriptsize] {$\mathsf{imm_{[11:9]}}$};
 \fill [black!5]  (4.000000,-3.000000) rectangle (7.000000,-2.000000);
 \draw [black!90]  (4.000000,-3.000000) rectangle (7.000000,-2.000000);
-\node at (5.500000,-2.500000) [font=\scriptsize] {$re_{[11:9]}$};
+\node at (5.500000,-2.500000) [font=\scriptsize] {$\mathsf{re_{[11:9]}}$};
 \fill [black!5]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
 \draw [black!90]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
-\node at (2.500000,-2.500000) [font=\scriptsize] {$rf_{[11:9]}$};
+\node at (2.500000,-2.500000) [font=\scriptsize] {$\mathsf{rf_{[11:9]}}$};
 \end{tikzpicture}
 \end{minipage}\hfill
 \begin{minipage}[c]{0.42\linewidth}
@@ -1844,11 +1871,11 @@ this section details the layout of the 64-bit instruction forms:
 \textbi{op64r4i} \\ 64-bit four operand with immediate
 \end{minipage}
 
-\vspace{0.75em}
+\vspace{0.44em}
 
 \noindent
 \begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \node at (15.500000,1.250000) [font=\scriptsize] {1};
 \node at (16.500000,1.250000) [font=\scriptsize] {0};
 \node at (10.500000,1.250000) [font=\scriptsize] {6};
@@ -1867,64 +1894,64 @@ this section details the layout of the 64-bit instruction forms:
 \draw (17.000000,1.000000) -- (17.000000,1.500000);
 \fill [black!5]  (15.000000,0.000000) rectangle (17.000000,1.000000);
 \draw [black!90]  (15.000000,0.000000) rectangle (17.000000,1.000000);
-\node at (16.000000,0.500000) [font=\scriptsize] {\textbf{10}};
+\node at (16.000000,0.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{10}}$};
 \fill [black!5]  (10.000000,0.000000) rectangle (15.000000,1.000000);
 \draw [black!90]  (10.000000,0.000000) rectangle (15.000000,1.000000);
-\node at (12.500000,0.500000) [font=\scriptsize] {$opcode_{[4:0]}$};
+\node at (12.500000,0.500000) [font=\scriptsize] {$\mathsf{opcode_{[4:0]}}$};
 \fill [black!5]  (7.000000,0.000000) rectangle (10.000000,1.000000);
 \draw [black!90]  (7.000000,0.000000) rectangle (10.000000,1.000000);
-\node at (8.500000,0.500000) [font=\scriptsize] {$ra_{[2:0]}$};
+\node at (8.500000,0.500000) [font=\scriptsize] {$\mathsf{ra_{[2:0]}}$};
 \fill [black!5]  (4.000000,0.000000) rectangle (7.000000,1.000000);
 \draw [black!90]  (4.000000,0.000000) rectangle (7.000000,1.000000);
-\node at (5.500000,0.500000) [font=\scriptsize] {$rb_{[2:0]}$};
+\node at (5.500000,0.500000) [font=\scriptsize] {$\mathsf{rb_{[2:0]}}$};
 \fill [black!5]  (1.000000,0.000000) rectangle (4.000000,1.000000);
 \draw [black!90]  (1.000000,0.000000) rectangle (4.000000,1.000000);
-\node at (2.500000,0.500000) [font=\scriptsize] {$rc_{[2:0]}$};
+\node at (2.500000,0.500000) [font=\scriptsize] {$\mathsf{rc_{[2:0]}}$};
 \fill [black!5]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
 \draw [black!90]  (15.000000,-1.000000) rectangle (17.000000,0.000000);
-\node at (16.000000,-0.500000) [font=\scriptsize] {\textbf{11}};
+\node at (16.000000,-0.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
 \fill [black!5]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
 \draw [black!90]  (10.000000,-1.000000) rectangle (15.000000,0.000000);
-\node at (12.500000,-0.500000) [font=\scriptsize] {$opcode_{[9:5]}$};
+\node at (12.500000,-0.500000) [font=\scriptsize] {$\mathsf{opcode_{[9:5]}}$};
 \fill [black!5]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
 \draw [black!90]  (7.000000,-1.000000) rectangle (10.000000,0.000000);
-\node at (8.500000,-0.500000) [font=\scriptsize] {$ra_{[5:3]}$};
+\node at (8.500000,-0.500000) [font=\scriptsize] {$\mathsf{ra_{[5:3]}}$};
 \fill [black!5]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
 \draw [black!90]  (4.000000,-1.000000) rectangle (7.000000,0.000000);
-\node at (5.500000,-0.500000) [font=\scriptsize] {$rb_{[5:3]}$};
+\node at (5.500000,-0.500000) [font=\scriptsize] {$\mathsf{rb_{[5:3]}}$};
 \fill [black!5]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
 \draw [black!90]  (1.000000,-1.000000) rectangle (4.000000,0.000000);
-\node at (2.500000,-0.500000) [font=\scriptsize] {$rc_{[5:3]}$};
+\node at (2.500000,-0.500000) [font=\scriptsize] {$\mathsf{rc_{[5:3]}}$};
 \fill [black!5]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
 \draw [black!90]  (15.000000,-2.000000) rectangle (17.000000,-1.000000);
-\node at (16.000000,-1.500000) [font=\scriptsize] {\textbf{11}};
+\node at (16.000000,-1.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
 \fill [black!5]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
 \draw [black!90]  (10.000000,-2.000000) rectangle (15.000000,-1.000000);
-\node at (12.500000,-1.500000) [font=\scriptsize] {$opcode_{[14:10]}$};
+\node at (12.500000,-1.500000) [font=\scriptsize] {$\mathsf{opcode_{[14:10]}}$};
 \fill [black!5]  (7.000000,-2.000000) rectangle (10.000000,-1.000000);
 \draw [black!90]  (7.000000,-2.000000) rectangle (10.000000,-1.000000);
-\node at (8.500000,-1.500000) [font=\scriptsize] {$rd_{[8:6]}$};
+\node at (8.500000,-1.500000) [font=\scriptsize] {$\mathsf{rd_{[8:6]}}$};
 \fill [black!5]  (4.000000,-2.000000) rectangle (7.000000,-1.000000);
 \draw [black!90]  (4.000000,-2.000000) rectangle (7.000000,-1.000000);
-\node at (5.500000,-1.500000) [font=\scriptsize] {$re_{[8:6]}$};
+\node at (5.500000,-1.500000) [font=\scriptsize] {$\mathsf{re_{[8:6]}}$};
 \fill [black!5]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
 \draw [black!90]  (1.000000,-2.000000) rectangle (4.000000,-1.000000);
-\node at (2.500000,-1.500000) [font=\scriptsize] {$rf_{[8:6]}$};
+\node at (2.500000,-1.500000) [font=\scriptsize] {$\mathsf{rf_{[8:6]}}$};
 \fill [black!5]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
 \draw [black!90]  (15.000000,-3.000000) rectangle (17.000000,-2.000000);
-\node at (16.000000,-2.500000) [font=\scriptsize] {\textbf{11}};
+\node at (16.000000,-2.500000) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
 \fill [black!5]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
 \draw [black!90]  (10.000000,-3.000000) rectangle (15.000000,-2.000000);
-\node at (12.500000,-2.500000) [font=\scriptsize] {$opcode_{[19:15]}$};
+\node at (12.500000,-2.500000) [font=\scriptsize] {$\mathsf{opcode_{[19:15]}}$};
 \fill [black!5]  (7.000000,-3.000000) rectangle (10.000000,-2.000000);
 \draw [black!90]  (7.000000,-3.000000) rectangle (10.000000,-2.000000);
-\node at (8.500000,-2.500000) [font=\scriptsize] {$rd_{[11:9]}$};
+\node at (8.500000,-2.500000) [font=\scriptsize] {$\mathsf{rd_{[11:9]}}$};
 \fill [black!5]  (4.000000,-3.000000) rectangle (7.000000,-2.000000);
 \draw [black!90]  (4.000000,-3.000000) rectangle (7.000000,-2.000000);
-\node at (5.500000,-2.500000) [font=\scriptsize] {$re_{[11:9]}$};
+\node at (5.500000,-2.500000) [font=\scriptsize] {$\mathsf{re_{[11:9]}}$};
 \fill [black!5]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
 \draw [black!90]  (1.000000,-3.000000) rectangle (4.000000,-2.000000);
-\node at (2.500000,-2.500000) [font=\scriptsize] {$rf_{[11:9]}$};
+\node at (2.500000,-2.500000) [font=\scriptsize] {$\mathsf{rf_{[11:9]}}$};
 \end{tikzpicture}
 \end{minipage}\hfill
 \begin{minipage}[c]{0.42\linewidth}
@@ -1932,6 +1959,11 @@ this section details the layout of the 64-bit instruction forms:
 \vspace{4.5em}
 \textbi{op64r6} \\ 64-bit six operand
 \end{minipage}
+
+\end{minipage}
+\caption{layout of the 64-bit instruction forms.}
+\label{fig:glyph-64bit-iform-layout}
+\end{figure}
 
 \newpage
 \section{Register file}
@@ -1961,7 +1993,7 @@ register state:
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
 \foreach \x in {0,...,7} {
   \ifnum\x=6\relax
@@ -2064,7 +2096,7 @@ register state:
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
 \foreach \x in {0,...,7}
   \fill [black!5] (12,\x)    rectangle (16,\x+1);
@@ -2135,7 +2167,7 @@ register state:
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
 \foreach \x in {0,...,7} {
   \ifnum\x=6\relax
@@ -2221,7 +2253,7 @@ register state:
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
 \foreach \x in {0,...,7} {
   \ifnum\x=6\relax
@@ -2330,7 +2362,7 @@ register state:
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
 \foreach \x in {0,...,7} {
   \ifnum\x=6\relax
