@@ -21,7 +21,7 @@
 \usetikzlibrary{decorations.pathreplacing, arrows.meta, positioning}
 \title{Instructions}
 
-\AtBeginBibliography{\small}
+\AtBeginBibliography{\footnotesize}
 
 \newcommand{\textbi}[1]{\textbf{\textit{#1}}}
 \newcommand{\fmtlogtwo}[1]{\fpeval{round(ln(#1)/ln(2), 2)}}
@@ -2449,6 +2449,594 @@ register state:
 \caption{\emph{vector-max} configuration register state.}
 \label{fig:glyph-register-state-vector-max}
 \end{figure}
+
+\newpage
+\section{Type formats}
+
+there are three basic scalar types used with the scalar and packed SIMD instructions:
+
+\vspace{-0.3em}
+
+\begin{itemize}[itemsep=0pt]
+\item unsigned fixed-width integer
+\item signed fixed-width two's complement integer
+\item fixed-width binary floating-point number
+\end{itemize}
+
+\subsection{numeric rules}
+
+this section describes the numeric encoding, arithmetic, and comparison
+rules for signed and unsigned integers and for floating-point numbers.
+
+\subsubsection{unsigned fixed-width integer rules}
+
+unsigned fixed-width integers are represented using an \emph{n}-bit
+form, with range $[0,\; 2^{n}-1]$. arithmetic operations on unsigned
+integers wrap around on overflow according to modulo $2^n$ arithmetic.
+relational comparisons are performed according to unsigned magnitude.
+
+\subsubsection{signed fixed-width integer rules}
+
+signed fixed-width integers are represented using an \emph{n}-bit
+two’s complement form, with range $[-2^{n-1},\; 2^{n-1}-1]$.
+negative numbers are encoded by inverting all bits and adding one.
+addition and subtraction operations on signed integers wrap
+around on overflow according to modulo $2^n$ arithmetic.
+multiplication and division operations on signed integers truncate
+toward zero and set the sign to the \emph{exclusive-or} of the two signs.
+relational comparisons are performed according to signed magnitude.
+
+\subsubsection{binary floating-point number rules}
+
+binary floating‑point number formats and arithmetic rules defined
+in this specification conform to the IEEE standard for floating‑point
+arithmetic, \emph{IEEE-754-2019}~\cite{ieee754-2019}, which specifies
+fixed‑width binary interchange formats, encoding of sign, exponent,
+and fraction fields, and defines arithmetic, comparison, and rounding
+behavior, including the handling of exceptional values such as NaNs
+and infinities. the 8‑bit binary floating‑point formats follow the
+definitions in the current IEEE P754 working draft, and the 16‑bit
+brain floating‑point format \emph{bfloat16} is specified by the
+\emph{OpenCL bfloat16 Conversions Extension}.
+
+\newpage
+\subsection{unsigned integer formats}
+
+the following unsigned fixed-width integer formats are supported.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{type} & \textbf{bits} & \textbf{format} \\
+\hline
+uint8 & 8 & unsigned 8-bit integer \\
+uint16 & 16 & unsigned 16-bit integer \\
+uint32 & 32 & unsigned 32-bit integer \\
+uint64 & 64 & unsigned 64-bit integer \\
+\hline
+\end{tabular}
+\caption{unsigned integer formats}
+\label{tab:unsigned-integer-formats}
+\end{table}
+
+\par\noindent
+
+\begin{samepage}
+\needspace{9\baselineskip}
+\subsubsection{8-bit unsigned integer}
+
+the 8-bit unsigned integer has an 8-bit number ($n$) field.
+
+\vspace{0.5em}
+
+\par\noindent
+\begin{tikzpicture}[xscale=0.45,yscale=0.40]
+\draw [black!95] (0,0)   rectangle (8,1);
+\node [font=\tiny,anchor=base east] at (8,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{7}};
+\node [font=\small,anchor=base] at (4,0.25)  {$n_{[7:0]}$};
+\end{tikzpicture}
+\end{samepage}
+
+\begin{samepage}
+\needspace{9\baselineskip}
+\subsubsection{16-bit unsigned integer}
+
+the 16-bit unsigned integer has a 16-bit number ($n$) field.
+
+\vspace{0.5em}
+
+\par\noindent
+\begin{tikzpicture}[xscale=0.45,yscale=0.40]
+\draw [black!95] (0,0)   rectangle (16,1);
+\node [font=\tiny,anchor=base east] at (16,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{15}};
+\node [font=\small,anchor=base] at (8,0.25)  {$n_{[15:0]}$};
+\end{tikzpicture}
+\end{samepage}
+
+\begin{samepage}
+\needspace{9\baselineskip}
+\subsubsection{32-bit unsigned integer}
+
+the 32-bit unsigned integer has a 32-bit number ($n$) field.
+
+\vspace{0.5em}
+
+\par\noindent
+\begin{tikzpicture}[xscale=0.45,yscale=0.40]
+\draw [black!95] (0,0)   rectangle (32,1);
+\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{31}};
+\node [font=\small,anchor=base] at (16,0.25)  {$n_{[31:0]}$};
+\end{tikzpicture}
+\end{samepage}
+
+\begin{samepage}
+\needspace{9\baselineskip}
+\subsubsection{64-bit unsigned integer}
+
+the 64-bit unsigned integer has a 64-bit number ($n$) field.
+
+\vspace{0.5em}
+
+\par\noindent
+\begin{tikzpicture}[xscale=0.45,yscale=0.40]
+\draw [black!95] (0,-2)    rectangle (32,-1);
+\node [font=\tiny,anchor=base east] at (32,-0.75)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (0,-0.75)  {\textsf{31}};
+\node [font=\small,anchor=base] at (16,-1.75)  {$n_{[31:0]}$};
+
+\draw [black!95] (0,0)   rectangle (32,1);
+\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{32}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,0.25)  {$n_{[63:32]}$};
+\end{tikzpicture}
+\end{samepage}
+
+\newpage
+\subsection{signed two's complement integer formats}
+
+the following signed fixed-width two's complement integer formats are supported.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{type} & \textbf{bits} & \textbf{format} \\
+\hline
+int8 & 8 & signed 8-bit two's complement integer \\
+int16 & 16 & signed 16-bit ttwo's complement integer \\
+int32 & 32 & signed 32-bit two's complement integer \\
+int64 & 64 & signed 64-bit two's complement integer \\
+\hline
+\end{tabular}
+\caption{signed two's complement integer formats}
+\label{tab:signed-twos-complement-integer-formats}
+\end{table}
+
+\begin{samepage}
+\needspace{9\baselineskip}
+\subsubsection{8-bit signed integer}
+
+the 8-bit signed integer has an 8-bit two's complement number ($n$) field.
+
+\vspace{0.5em}
+
+\par\noindent
+\begin{tikzpicture}[xscale=0.45,yscale=0.40]
+\draw [black!95] (1,0)   rectangle (8,1);
+\node [font=\tiny,anchor=base east] at (8,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (1,1.25)  {\textsf{6}};
+\node [font=\small,anchor=base] at (4,0.25)  {$n_{[7:0]}$};
+\draw [black!95] (0.0,0)   rectangle (1.0,1);
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{7}};
+\node [font=\small,anchor=base] at (0.5,0.25)  {$\pm$};
+\end{tikzpicture}
+\end{samepage}
+
+\begin{samepage}
+\needspace{9\baselineskip}
+\subsubsection{16-bit signed integer}
+
+the 16-bit signed integer has a 16-bit two's complement number ($n$) field.
+
+\vspace{0.5em}
+
+\par\noindent
+\begin{tikzpicture}[xscale=0.45,yscale=0.40]
+\draw [black!95] (1,0)   rectangle (16,1);
+\node [font=\tiny,anchor=base east] at (16,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (1,1.25)  {\textsf{14}};
+\node [font=\small,anchor=base] at (8,0.25)  {$n_{[15:0]}$};
+\draw [black!95] (0.0,0)   rectangle (1.0,1);
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{15}};
+\node [font=\small,anchor=base] at (0.5,0.25)  {$\pm$};
+\end{tikzpicture}
+\end{samepage}
+
+\begin{samepage}
+\needspace{9\baselineskip}
+\subsubsection{32-bit signed integer}
+
+the 32-bit signed integer has a 32-bit two's complement number ($n$) field.
+
+\vspace{0.5em}
+
+\par\noindent
+\begin{tikzpicture}[xscale=0.45,yscale=0.40]
+\draw [black!95] (1,0)   rectangle (32,1);
+\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (1,1.25)  {\textsf{30}};
+\node [font=\small,anchor=base] at (16,0.25)  {$n_{[31:0]}$};
+\draw [black!95] (0.0,0)   rectangle (1.0,1);
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{31}};
+\node [font=\small,anchor=base] at (0.5,0.25)  {$\pm$};
+\end{tikzpicture}
+\end{samepage}
+
+\begin{samepage}
+\needspace{9\baselineskip}
+\subsubsection{64-bit signed integer}
+
+the 64-bit signed integer has a 64-bit two's complement number ($n$) field.
+
+\vspace{0.5em}
+
+\par\noindent
+\begin{tikzpicture}[xscale=0.45,yscale=0.40]
+\draw [black!95] (0,-2)    rectangle (32,-1);
+\node [font=\tiny,anchor=base east] at (32,-0.75)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (0,-0.75)  {\textsf{31}};
+\node [font=\small,anchor=base] at (16,-1.75)  {$n_{[31:0]}$};
+
+\draw [black!95] (1,0)   rectangle (32,1);
+\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{32}};
+\node [font=\tiny,anchor=base west] at (1,1.25)  {\textsf{62}};
+\node [font=\small,anchor=base] at (16,0.25)  {$n_{[63:32]}$};
+\draw [black!95] (0.0,0)   rectangle (1.0,1);
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (0.5,0.25)  {$\pm$};
+\end{tikzpicture}
+\end{samepage}
+
+\newpage
+\subsection{binary floating-point number formats}
+
+the following binary floating-point number formats are supported.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{type} & \textbf{exponent} & \textbf{fraction} & \textbf{format} \\
+\hline
+binary8p4 & 4 & 3 & IEEE 754-draft 8-bit floating-point \emph{p4} \\
+binary8p5 & 5 & 2 &  IEEE 754-draft 8-bit floating-point \emph{p5} \\
+bfloat16 & 8 & 7 & OpenCL 16‑bit brain floating-point \\
+binary16 & 5 & 10 & IEEE 754 16-bit floating-point \\
+binary32 & 8 & 23 & IEEE 754 32-bit floating-point \\
+binary64 & 11 & 52 & IEEE 754 64-bit floating-point \\
+binary128 & 15 & 112 & IEEE 754 128-bit floating-point \\
+\hline
+\end{tabular}
+\caption{IEEE-754 floating-point number formats}
+\label{tab:ieee754-floating-point-number-formats}
+\end{table}
+
+\begin{samepage}
+\needspace{9\baselineskip}
+\subsubsection{IEEE-754-draft 8-bit floating-point \emph{p4} \emph{(binary8p4)}}
+
+\emph{IEEE-754-draft binary8p4} has 1-bit sign ($\pm$), 4-bit exponent ($e$),
+and 3-bit fraction ($f$) fields.
+
+\par\noindent
+\begin{tikzpicture}[xscale=0.45,yscale=0.40]
+\draw [black!95] (0,0)    rectangle (8,1);
+\draw [black!95] (5,0)    rectangle (8,1);
+\node [font=\tiny,anchor=base east] at (8,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (5,1.25)  {\textsf{2}};
+\node [font=\small,anchor=base] at (6.5,0.25)  {$f_{[2:0]}$};
+\draw [black!95] (1.0,0)   rectangle (5,1);
+\node [font=\tiny,anchor=base east] at (5,1.25)  {\textsf{3}};
+\node [font=\tiny,anchor=base west] at (1,1.25)  {\textsf{6}};
+\node [font=\small,anchor=base] at (3,0.25)  {$e_{[3:0]}$};
+\draw [black!95] (0.0,0)   rectangle (1.0,1);
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{7}};
+\node [font=\small,anchor=base] at (0.5,0.25)  {$\pm$};
+\end{tikzpicture}
+\end{samepage}
+
+\begin{samepage}
+\needspace{9\baselineskip}
+\subsubsection{IEEE-754-draft 8-bit floating-point \emph{p5} \emph{(binary8p5)}}
+
+\emph{IEEE-754-draft binary8p5} has 1-bit sign ($\pm$), 5-bit exponent ($e$),
+and 2-bit fraction ($f$) fields.
+
+\vspace{0.5em}
+
+\par\noindent
+\begin{tikzpicture}[xscale=0.45,yscale=0.40]
+\draw [black!95] (0,0)    rectangle (8,1);
+\draw [black!95] (6,0)    rectangle (8,1);
+\node [font=\tiny,anchor=base east] at (8,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (6,1.25)  {\textsf{1}};
+\node [font=\small,anchor=base] at (7,0.25)  {$f_{[1:0]}$};
+\draw [black!95] (1.0,0)   rectangle (6,1);
+\node [font=\tiny,anchor=base east] at (6,1.25)  {\textsf{2}};
+\node [font=\tiny,anchor=base west] at (1,1.25)  {\textsf{6}};
+\node [font=\small,anchor=base] at (3.5,0.25)  {$e_{[4:0]}$};
+\draw [black!95] (0.0,0)   rectangle (1.0,1);
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{7}};
+\node [font=\small,anchor=base] at (0.5,0.25)  {$\pm$};
+\end{tikzpicture}
+\end{samepage}
+
+\begin{samepage}
+\needspace{9\baselineskip}
+\subsubsection{OpenCL 16-bit brain floating-point \emph{(bfloat16)}}
+
+\emph{bfloat16} has 1-bit sign ($\pm$), 8-bit exponent ($e$),
+and 7-bit fraction ($f$) fields.
+
+\vspace{0.5em}
+
+\par\noindent
+\begin{tikzpicture}[xscale=0.45,yscale=0.40]
+\draw [black!95] (0,0)    rectangle (16,1);
+\draw [black!95] (9,0)    rectangle (16,1);
+\node [font=\tiny,anchor=base east] at (16,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (9,1.25)  {\textsf{6}};
+\node [font=\small,anchor=base] at (12.5,0.25)  {$f_{[6:0]}$};
+\draw [black!95] (1.0,0)   rectangle (9,1);
+\node [font=\tiny,anchor=base east] at (9,1.25)  {\textsf{7}};
+\node [font=\tiny,anchor=base west] at (1,1.25)  {\textsf{14}};
+\node [font=\small,anchor=base] at (5,0.25)  {$e_{[7:0]}$};
+\draw [black!95] (0.0,0)   rectangle (1.0,1);
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{15}};
+\node [font=\small,anchor=base] at (0.5,0.25)  {$\pm$};
+\end{tikzpicture}
+\end{samepage}
+
+\begin{samepage}
+\needspace{9\baselineskip}
+\subsubsection{IEEE-754 16-bit floating-point \emph{(binary16)}}
+
+\emph{IEEE-754 binary16} has 1-bit sign ($\pm$), 5-bit exponent ($e$),
+and 10-bit fraction ($f$) fields.
+
+\vspace{0.5em}
+
+\par\noindent
+\begin{tikzpicture}[xscale=0.45,yscale=0.40]
+\draw [black!95] (0,0)    rectangle (16,1);
+\draw [black!95] (6,0)    rectangle (16,1);
+\node [font=\tiny,anchor=base east] at (16,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (6,1.25)  {\textsf{9}};
+\node [font=\small,anchor=base] at (11,0.25)  {$f_{[9:0]}$};
+\draw [black!95] (1.0,0)   rectangle (6,1);
+\node [font=\tiny,anchor=base east] at (6,1.25)  {\textsf{10}};
+\node [font=\tiny,anchor=base west] at (1,1.25)  {\textsf{14}};
+\node [font=\small,anchor=base] at (3.5,0.25)  {$e_{[4:0]}$};
+\draw [black!95] (0.0,0)   rectangle (1.0,1);
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{15}};
+\node [font=\small,anchor=base] at (0.5,0.25)  {$\pm$};
+\end{tikzpicture}
+\end{samepage}
+
+\begin{samepage}
+\needspace{9\baselineskip}
+\subsubsection{IEEE-754 32-bit floating-point \emph{(binary32)}}
+
+\emph{IEEE-754 binary32} has 1-bit sign ($\pm$), 8-bit exponent ($e$),
+and 23-bit fraction ($f$) fields.
+
+\vspace{0.5em}
+
+\par\noindent
+\begin{tikzpicture}[xscale=0.45,yscale=0.40]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (9,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (9,1.25)  {\textsf{22}};
+\node [font=\small,anchor=base] at (20.5,0.25)  {$f_{[22:0]}$};
+\draw [black!95] (1.0,0)   rectangle (9,1);
+\node [font=\tiny,anchor=base east] at (9,1.25)  {\textsf{23}};
+\node [font=\tiny,anchor=base west] at (1,1.25)  {\textsf{30}};
+\node [font=\small,anchor=base] at (5.0,0.25)  {$e_{[7:0]}$};
+\draw [black!95] (0.0,0)   rectangle (1.0,1);
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{31}};
+\node [font=\small,anchor=base] at (0.5,0.25)  {$\pm$};
+\end{tikzpicture}
+\end{samepage}
+
+\begin{samepage}
+\needspace{9\baselineskip}
+\subsubsection{IEEE-754 64-bit floating-point \emph{(binary64)}}
+
+\emph{IEEE-754 binary64} has 1-bit sign ($\pm$), 11-bit exponent ($e$),
+and 52-bit fraction ($f$) fields.
+
+\vspace{0.5em}
+
+\par\noindent
+\begin{tikzpicture}[xscale=0.45,yscale=0.40]
+\draw [black!95] (0,-2)    rectangle (32,-1);
+\node [font=\tiny,anchor=base east] at (32,-0.75)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (0,-0.75)  {\textsf{31}};
+\node [font=\small,anchor=base] at (16,-1.75)  {$f_{[31:0]}$};
+
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{32}};
+\node [font=\tiny,anchor=base west] at (12,1.25)  {\textsf{51}};
+\node [font=\small,anchor=base] at (22,0.25)  {$f_{[51:32]}$};
+\draw [black!95] (12,0)   rectangle (32,1);
+\node [font=\tiny,anchor=base east] at (12,1.25)  {\textsf{52}};
+\node [font=\tiny,anchor=base west] at (1,1.25)  {\textsf{62}};
+\node [font=\small,anchor=base] at (6.5,0.25)  {$e_{[10:0]}$};
+\draw [black!95] (0.0,0)   rectangle (1.0,1);
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (0.5,0.25)  {$\pm$};
+\end{tikzpicture}
+\end{samepage}
+
+\begin{samepage}
+\needspace{9\baselineskip}
+\subsubsection{IEEE-754 128-bit floating-point \emph{(binary128)}}
+
+\emph{IEEE-754 binary128} has 1-bit sign ($\pm$), 15-bit exponent ($e$),
+and 112-bit fraction ($f$) fields.
+
+\vspace{0.5em}
+
+\par\noindent
+\begin{tikzpicture}[xscale=0.45,yscale=0.40]
+\draw [black!95] (0,-6)    rectangle (32,-5);
+\node [font=\tiny,anchor=base east] at (32,-4.75)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (0,-4.75)  {\textsf{31}};
+\node [font=\small,anchor=base] at (16,-5.75)  {$f_{[31:0]}$};
+
+\draw [black!95] (0,-4)    rectangle (32,-3);
+\node [font=\tiny,anchor=base east] at (32,-2.75)  {\textsf{32}};
+\node [font=\tiny,anchor=base west] at (0,-2.75)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,-3.75)  {$f_{[63:32]}$};
+
+\draw [black!95] (0,-2)    rectangle (32,-1);
+\node [font=\tiny,anchor=base east] at (32,-0.75)  {\textsf{64}};
+\node [font=\tiny,anchor=base west] at (0,-0.75)  {\textsf{95}};
+\node [font=\small,anchor=base] at (16,-1.75)  {$f_{[95:64]}$};
+
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{96}};
+\node [font=\tiny,anchor=base west] at (16,1.25)  {\textsf{111}};
+\node [font=\small,anchor=base] at (24,0.25)  {$f_{[111:96]}$};
+\draw [black!95] (1,0)   rectangle (16,1);
+\node [font=\tiny,anchor=base east] at (16,1.25)  {\textsf{112}};
+\node [font=\tiny,anchor=base west] at (1,1.25)  {\textsf{126}};
+\node [font=\small,anchor=base] at (8.5,0.25)  {$e_{[14:0]}$};
+\draw [black!95] (0.0,0)   rectangle (1.0,1);
+\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{127}};
+\node [font=\small,anchor=base] at (0.5,0.25)  {$\pm$};
+\end{tikzpicture}
+\end{samepage}
+
+\newpage
+\section{Type conventions}
+
+glyph adopts a common type naming convention for integer and floating-point
+scalar and packed SIMD vector types. each type is described by several attributes:
+
+\vspace{-0.3em}
+
+\begin{itemize}[itemsep=0pt]
+\item unique type name
+\item unique short symbol used in opcodes
+\item vector length (omitted for scalar types)
+\item mnemonic indicating the operand type and width
+\item human-readable description
+\end{itemize}
+
+\par\noindent
+short symbols for signed integers have single-letter codes. unsigned types
+and floating-point symbols are explicitly distinguished by \texttt{u} and
+\texttt{f} suffixes, eliminating ambiguity with single-letter symbols.
+the mnemonics have been chosen to disambiguate operand size and type.
+
+\subsection{scalar types}
+
+the following table lists scalar types, their symbols, mnemonics and descriptions:
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{type} & \textbf{symbol} & \textbf{mnemonic} & \textbf{description} \\
+\hline
+\texttt{i8}   & \texttt{b}  & \emph{byte}   & 8-bit signed integer (byte) \\
+\texttt{i16}  & \texttt{w}  & \emph{word}   & 16-bit signed integer (word) \\
+\texttt{i32}  & \texttt{d}  & \emph{dword}  & 32-bit signed integer (double-word) \\
+\texttt{i64}  & \texttt{q}  & \emph{qword}  & 64-bit signed integer (quad-word) \\
+\texttt{i128} & \texttt{o}  & \emph{oword}  & 128-bit signed integer (octa-word) \\
+\texttt{u8}   & \texttt{bu} & \emph{ubyte}  & 8-bit unsigned integer (byte) \\
+\texttt{u16}  & \texttt{wu} & \emph{uword}  & 16-bit unsigned integer (word) \\
+\texttt{u32}  & \texttt{du} & \emph{udword} & 32-bit unsigned integer (double-word) \\
+\texttt{u64}  & \texttt{qu} & \emph{uqword} & 64-bit unsigned integer (quad-word) \\
+\texttt{u128} & \texttt{ou} & \emph{uoword} & 128-bit unsigned integer (octa-word) \\
+\texttt{f8e4} & \texttt{p4} & - & IEEE 754-draft 8-bit floating-point \emph{p4} (binary8p4) \\
+\texttt{f8e5} & \texttt{p5} & - & IEEE 754-draft 8-bit floating-point \emph{p5} (binary8p5) \\
+\texttt{bf16} & \texttt{bf} & - & OpenCL 16-bit brain floating-point (bfloat16) \\
+\texttt{f16}  & \texttt{hf} & \emph{half}   & IEEE 754 16-bit floating-point (binary16) \\
+\texttt{f32}  & \texttt{sf} & \emph{float}  & IEEE 754 32-bit floating-point (binary32) \\
+\texttt{f64}  & \texttt{df} & \emph{double} & IEEE 754 64-bit floating-point (binary64) \\
+\texttt{f128} & \texttt{qf} & \emph{quad}   & IEEE 754 128-bit floating-point (binary128) \\
+\hline
+\end{tabular}
+\caption{scalar types}
+\label{tab:scalar-types}
+\end{table}
+
+\subsection{vector types}
+
+the following section describes vector types from 128-bit through to 4096-bit.
+
+\foreach \factor/\width/\sym\name/\bits in
+ {0/128/xv/xmm/000, 1/256/yv/ymm/001, 2/512/zv/zmm/010,
+  3/1024/uv/umm/011, 4/2048/vv/vmm/100, 5/4096/wv/wmm/101} {
+
+\pgfmathsetmacro{\nb}{int(16 * pow(2,\factor))}
+\pgfmathsetmacro{\nw}{int(8 * pow(2,\factor))}
+\pgfmathsetmacro{\nd}{int(4 * pow(2,\factor))}
+\pgfmathsetmacro{\nq}{int(2 * pow(2,\factor))}
+\pgfmathsetmacro{\no}{int(1 * pow(2,\factor))}
+
+\begin{samepage}
+\needspace{9\baselineskip}
+\subsubsection{\width-bit vector types \texttt{(L=0b\bits)}}
+
+the following table lists \width-bit vector types, their symbols, mnemonics and descriptions:
+
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{type}    & \textbf{symbol} & \textbf{mnemonic} & \textbf{description} \\
+\hline
+\texttt{b\width}  & \texttt{\sym}    & \emph{\name}         & \width-bit opaque vector type \\
+\texttt{i8x\nb}   & \texttt{\nb{}b}  & \emph{\nb\ * byte}   & \nb\ \texttimes\ 8-bit signed integer (byte) \\
+\texttt{i16x\nw}  & \texttt{\nw{}w}  & \emph{\nw\ * word}   & \nw\ \texttimes\ 16-bit signed integer (word) \\
+\texttt{i32x\nd}  & \texttt{\nd{}d}  & \emph{\nd\ * dword}  & \nd\ \texttimes\ 32-bit signed integer (double-word) \\
+\texttt{i64x\nq}  & \texttt{\nq{}q}  & \emph{\nq\ * qword}  & \nq\ \texttimes\ 64-bit signed integer (quad-word) \\
+\texttt{i128x\no} & \texttt{\no{}o}  & \emph{\no\ * oword}  & \no\ \texttimes\ 128-bit signed integer (octa-word) \\
+\texttt{u8x\nb}   & \texttt{\nb{}bu} & \emph{\nb\ * ubyte}  & \nb\ \texttimes\ 8-bit unsigned integer (byte) \\
+\texttt{u16x\nw}  & \texttt{\nw{}wu} & \emph{\nw\ * uword}  & \nw\ \texttimes\ 16-bit unsigned integer (word) \\
+\texttt{u32x\nd}  & \texttt{\nd{}du} & \emph{\nd\ * udword} & \nd\ \texttimes\ 32-bit unsigned integer (double-word) \\
+\texttt{u64x\nq}  & \texttt{\nq{}qu} & \emph{\nq\ * uqword} & \nq\ \texttimes\ 64-bit unsigned integer (quad-word) \\
+\texttt{u128x\no} & \texttt{\no{}ou} & \emph{\no\ * uoword} & \no\ \texttimes\ 128-bit unsigned integer (octa-word) \\
+\texttt{f8e4x\nb}  & \texttt{\nb{}p4} & - & \nb\ \texttimes\ IEEE 754-draft 8-bit floating-point \emph{p4} (binary8p4) \\
+\texttt{f8e5x\nb}  & \texttt{\nb{}p5} & - & \nb\ \texttimes\ IEEE 754-draft 8-bit floating-point \emph{p5} (binary8p5) \\
+\texttt{bf16x\nw}  & \texttt{\nw{}hf} & - & \nw\ \texttimes\ OpenCL 16-bit brain floating-point (bfloat16) \\
+\texttt{f16x\nw}  & \texttt{\nw{}hf} & \emph{\nw\ * half}   & \nw\ \texttimes\ IEEE 754 16-bit floating-point (binary16) \\
+\texttt{f32x\nd}  & \texttt{\nd{}sf} & \emph{\nd\ * float}  & \nd\ \texttimes\ IEEE 754 32-bit floating-point (binary32) \\
+\texttt{f64x\nq}  & \texttt{\nq{}df} & \emph{\nq\ * double} & \nq\ \texttimes\ IEEE 754 64-bit floating-point (binary64) \\
+\texttt{f128x\no} & \texttt{\no{}qf} & \emph{\no\ * quad}   & \no\ \texttimes\ IEEE 754 128-bit floating-point (binary128) \\
+\hline
+\end{tabular}
+\caption{\width-bit vector types}
+\label{tab:\width-bit-vector-types}
+\end{table}
+\end{samepage}
+
+\vspace{-0.5em}
+
+}
 
 \newpage
 \section{Memory model}
@@ -5502,127 +6090,6 @@ the following table lists glyph assembler pseudo-instruction aliases:
 \caption{Pseudo instructions}
 \label{tab:pseudo-instructions}
 \end{table}
-
-\newpage
-\section{Type conventions}
-
-glyph adopts a common type naming convention for integer and floating-point
-scalar and packed SIMD vector types. each type is described by several attributes:
-
-\vspace{-0.3em}
-
-\begin{itemize}[itemsep=0pt]
-\item unique type name
-\item unique short symbol used in opcodes
-\item vector length (omitted for scalar types)
-\item mnemonic indicating the operand type and width
-\item human-readable description
-\end{itemize}
-
-\vspace{-0.3em}
-
-\par\noindent
-there are three basic scalar types used with the scalar and packed SIMD instructions:
-
-\vspace{-0.3em}
-
-\begin{itemize}[itemsep=0pt]
-\item unsigned fixed-width integer
-\item signed fixed-width two's complement integer
-\item IEEE-754 fixed-width binary floating-point number
-\end{itemize}
-
-\vspace{-0.3em}
-
-\par\noindent
-short symbols for signed integers have single-letter codes. unsigned types
-and floating-point symbols are explicitly distinguished by \texttt{u} and
-\texttt{f} suffixes, eliminating ambiguity with single-letter symbols.
-the mnemonics have been chosen to disambiguate operand size and type.
-
-\subsection{scalar types}
-
-the following table lists scalar types, their symbols, mnemonics and descriptions:
-
-\begin{table}[H]
-\centering
-\footnotesize
-\begin{tabular}{|l|l|l|l|}
-\hline
-\textbf{type} & \textbf{symbol} & \textbf{mnemonic} & \textbf{description} \\
-\hline
-\texttt{i8}   & \texttt{b}  & \emph{byte}   & 8-bit signed integer (byte) \\
-\texttt{i16}  & \texttt{w}  & \emph{word}   & 16-bit signed integer (word) \\
-\texttt{i32}  & \texttt{d}  & \emph{dword}  & 32-bit signed integer (double-word) \\
-\texttt{i64}  & \texttt{q}  & \emph{qword}  & 64-bit signed integer (quad-word) \\
-\texttt{i128} & \texttt{o}  & \emph{oword}  & 128-bit signed integer (octa-word) \\
-\texttt{u8}   & \texttt{bu} & \emph{ubyte}  & 8-bit unsigned integer (byte) \\
-\texttt{u16}  & \texttt{wu} & \emph{uword}  & 16-bit unsigned integer (word) \\
-\texttt{u32}  & \texttt{du} & \emph{udword} & 32-bit unsigned integer (double-word) \\
-\texttt{u64}  & \texttt{qu} & \emph{uqword} & 64-bit unsigned integer (quad-word) \\
-\texttt{u128} & \texttt{ou} & \emph{uoword} & 128-bit unsigned integer (octa-word) \\
-\texttt{f16}  & \texttt{hf} & \emph{half}   & IEEE 754 16-bit floating-point (half-precision) \\
-\texttt{f32}  & \texttt{sf} & \emph{float}  & IEEE 754 32-bit floating-point (single-precision) \\
-\texttt{f64}  & \texttt{df} & \emph{double} & IEEE 754 64-bit floating-point (double-precision) \\
-\texttt{f128} & \texttt{qf} & \emph{quad}   & IEEE 754 128-bit floating-point (quad-precision) \\
-\hline
-\end{tabular}
-\caption{scalar types}
-\label{tab:scalar-types}
-\end{table}
-
-\subsection{vector types}
-
-the following section describes vector types from 128-bit through to 4096-bit.
-
-\foreach \factor/\width/\sym\name/\bits in
- {0/128/xv/xmm/000, 1/256/yv/ymm/001, 2/512/zv/zmm/010,
-  3/1024/uv/umm/011, 4/2048/vv/vmm/100, 5/4096/wv/wmm/101} {
-
-\pgfmathsetmacro{\nb}{int(16 * pow(2,\factor))}
-\pgfmathsetmacro{\nw}{int(8 * pow(2,\factor))}
-\pgfmathsetmacro{\nd}{int(4 * pow(2,\factor))}
-\pgfmathsetmacro{\nq}{int(2 * pow(2,\factor))}
-\pgfmathsetmacro{\no}{int(1 * pow(2,\factor))}
-
-\begin{samepage}
-\needspace{9\baselineskip}
-\subsubsection{\width-bit vector types \texttt{(L=0b\bits)}}
-
-the following table lists \width-bit vector types, their symbols, mnemonics and descriptions:
-
-\begin{table}[H]
-\centering
-\footnotesize
-\begin{tabular}{|l|l|l|l|}
-\hline
-\textbf{type}    & \textbf{symbol} & \textbf{mnemonic} & \textbf{description} \\
-\hline
-\texttt{b\width}  & \texttt{\sym}    & \emph{\name}         & \width-bit opaque vector type \\
-\texttt{i8x\nb}   & \texttt{\nb{}b}  & \emph{\nb\ * byte}   & \nb\ \texttimes\ 8-bit signed integer (byte) \\
-\texttt{i16x\nw}  & \texttt{\nw{}w}  & \emph{\nw\ * word}   & \nw\ \texttimes\ 16-bit signed integer (word) \\
-\texttt{i32x\nd}  & \texttt{\nd{}d}  & \emph{\nd\ * dword}  & \nd\ \texttimes\ 32-bit signed integer (double-word) \\
-\texttt{i64x\nq}  & \texttt{\nq{}q}  & \emph{\nq\ * qword}  & \nq\ \texttimes\ 64-bit signed integer (quad-word) \\
-\texttt{i128x\no} & \texttt{\no{}o}  & \emph{\no\ * oword}  & \no\ \texttimes\ 128-bit signed integer (octa-word) \\
-\texttt{u8x\nb}   & \texttt{\nb{}bu} & \emph{\nb\ * ubyte}  & \nb\ \texttimes\ 8-bit unsigned integer (byte) \\
-\texttt{u16x\nw}  & \texttt{\nw{}wu} & \emph{\nw\ * uword}  & \nw\ \texttimes\ 16-bit unsigned integer (word) \\
-\texttt{u32x\nd}  & \texttt{\nd{}du} & \emph{\nd\ * udword} & \nd\ \texttimes\ 32-bit unsigned integer (double-word) \\
-\texttt{u64x\nq}  & \texttt{\nq{}qu} & \emph{\nq\ * uqword} & \nq\ \texttimes\ 64-bit unsigned integer (quad-word) \\
-\texttt{u128x\no} & \texttt{\no{}ou} & \emph{\no\ * uoword} & \no\ \texttimes\ 128-bit unsigned integer (octa-word) \\
-\texttt{f16x\nw}  & \texttt{\nw{}hf} & \emph{\nw\ * half}   & \nw\ \texttimes\ IEEE 754 16-bit floating-point (half-precision) \\
-\texttt{f32x\nd}  & \texttt{\nd{}sf} & \emph{\nd\ * float}  & \nd\ \texttimes\ IEEE 754 32-bit floating-point (single-precision) \\
-\texttt{f64x\nq}  & \texttt{\nq{}df} & \emph{\nq\ * double} & \nq\ \texttimes\ IEEE 754 64-bit floating-point (double-precision) \\
-\texttt{f128x\no} & \texttt{\no{}qf} & \emph{\no\ * quad}   & \no\ \texttimes\ IEEE 754 128-bit floating-point (double-precision) \\
-\hline
-\end{tabular}
-\caption{\width-bit vector types}
-\label{tab:\width-bit-vector-types}
-\end{table}
-\end{samepage}
-
-\vspace{-0.5em}
-
-}
 
 \newpage
 \section{Calling conventions}
