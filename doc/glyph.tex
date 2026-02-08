@@ -1002,6 +1002,7 @@ glyph architectural parameters are as follows:
 \hline
 SREG & 8, 64      & number of scalar registers \\
 VREG & --, 64     & number of vector registers \\
+MLEN & 32         & width of message addresses in bits \\
 ILEN & 16, 32, 64 & width of largest instruction in bits \\
 ALEN & 64         & width of arithmetic on scalars in bits \\
 XLEN & 64, 128    & width of scalar registers in bits \\
@@ -1025,14 +1026,16 @@ contains packed-SIMD instruction on vector registers.
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{|l|l|l|l|l|l|l|l|}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
 \hline
-\textbf{profile} & \textbf{SREG} & \textbf{VREG} & \textbf{ILEN} & \textbf{ALEN} & \textbf{XLEN} & \textbf{VLEN} & \textbf{GLEN} \\
+\textbf{profile} &
+\textbf{SREG} & \textbf{VREG} & \textbf{MLEN} & \textbf{ILEN} &
+\textbf{ALEN} & \textbf{XLEN} & \textbf{VLEN} & \textbf{GLEN} \\
 \hline
-\emph{scalar-min} & 8  & -  & 16 & 64  & 64  & -    & -   \\
-\emph{scalar-max} & 64 & -  & 32 & 64  & 128 & -    & -   \\
-\emph{vector-min} & 64 & 64 & 64 & 64  & 128 & 512  & 128 \\
-\emph{vector-max} & 64 & 64 & 64 & 64  & 128 & 4096 & 128 \\
+\emph{scalar-min} & 8  & -  & 32  & 16 & 64  & 64  & -    & -   \\
+\emph{scalar-max} & 64 & -  & 32  & 32 & 64  & 128 & -    & -   \\
+\emph{vector-min} & 64 & 64 & 32  & 64 & 64  & 128 & 512  & 128 \\
+\emph{vector-max} & 64 & 64 & 32  & 64 & 64  & 128 & 4096 & 128 \\
 \hline
 \end{tabular}
 \caption{architectural profiles}
@@ -3362,7 +3365,7 @@ this register is visible if \texttt{scontrol.D} is enabled.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (0.5,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{XLEN-1}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
 \node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread address}};
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{0}};
 \end{tikzpicture}
@@ -3377,7 +3380,7 @@ this register is visible if \texttt{scontrol.D} is enabled.
 \draw [black!95] (0,0)    rectangle (32,1);
 \draw [black!95] (0.5,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{XLEN-1}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
 \node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread domain}};
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{1}};
 \end{tikzpicture}
@@ -3809,7 +3812,7 @@ address is uniquely assigned during system initialization.
 \draw [black!95] (0.5,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
 \node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread address}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{XLEN-1}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{0}};
 \end{tikzpicture}
 
@@ -3825,7 +3828,7 @@ can alias. this address is assigned during context switching.
 \draw [black!95] (0.5,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
 \node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread domain}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{XLEN-1}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{1}};
 \end{tikzpicture}
 
@@ -3848,7 +3851,7 @@ this register must be set before writing to \texttt{smessage}.
 \draw [black!95] (0.5,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
 \node [font=\small,anchor=base] at (16.25,0.25)  {\emph{target address}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{XLEN-1}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{A}};
 \end{tikzpicture}
 
@@ -3861,7 +3864,7 @@ this register must be set before writing to \texttt{smessage}.
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{XLEN-1}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
 \node [font=\small,anchor=base] at (16,0.25)  {\emph{target mask}};
 \end{tikzpicture}
 
@@ -3875,7 +3878,7 @@ virtual interrupts are marked pending in the \texttt{V} field of the
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{XLEN-1}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
 \node [font=\small,anchor=base] at (16,0.25)  {\emph{message value}};
 \end{tikzpicture}
 
