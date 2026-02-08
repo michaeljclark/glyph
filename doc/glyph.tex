@@ -995,13 +995,15 @@ glyph architectural parameters are as follows:
 
 \begin{table}[h]
 \centering
-\small
+\footnotesize
 \begin{tabular}{|l|l|l|}
 \hline
 \textbf{Parameter} & \textbf{Value}& \textbf{Description} \\
 \hline
 SREG & 8, 64      & number of scalar registers \\
 VREG & --, 64     & number of vector registers \\
+NDOM & --, 16     & number of domain contexts \\
+NCOL & --, 16     & number of architectural colors \\
 MLEN & 32         & width of message addresses in bits \\
 ILEN & 16, 32, 64 & width of largest instruction in bits \\
 ALEN & 64         & width of arithmetic on scalars in bits \\
@@ -1014,6 +1016,8 @@ GLEN & 128        & width of vector lane group in bits \\
 \label{tab:architectural-parameters}
 \end{table}
 
+\vspace{-1em}
+
 \subsection{architectural profiles}
 
 glyph architectural parameters are linked to the dimensions of the
@@ -1025,17 +1029,17 @@ contains packed-SIMD instruction on vector registers.
 
 \begin{table}[h]
 \centering
-\small
-\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
+\footnotesize
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|}
 \hline
 \textbf{profile} &
-\textbf{SREG} & \textbf{VREG} & \textbf{MLEN} & \textbf{ILEN} &
-\textbf{ALEN} & \textbf{XLEN} & \textbf{VLEN} & \textbf{GLEN} \\
+\textbf{SREG} & \textbf{VREG} & \textbf{NDOM} & \textbf{NCOL} & \textbf{MLEN} &
+\textbf{ILEN} & \textbf{ALEN} & \textbf{XLEN} & \textbf{VLEN} & \textbf{GLEN} \\
 \hline
-\emph{scalar-min} & 8  & -  & 32  & 16 & 64  & 64  & -    & -   \\
-\emph{scalar-max} & 64 & -  & 32  & 32 & 64  & 128 & -    & -   \\
-\emph{vector-min} & 64 & 64 & 32  & 64 & 64  & 128 & 512  & 128 \\
-\emph{vector-max} & 64 & 64 & 32  & 64 & 64  & 128 & 4096 & 128 \\
+\emph{scalar-min} & 8  & -  & -  & -  & 32  & 16 & 64  & 64  & -    & -   \\
+\emph{scalar-max} & 64 & -  & 16 & 16 & 32  & 32 & 64  & 128 & -    & -   \\
+\emph{vector-min} & 64 & 64 & 16 & 16 & 32  & 64 & 64  & 128 & 512  & 128 \\
+\emph{vector-max} & 64 & 64 & 16 & 16 & 32  & 64 & 64  & 128 & 4096 & 128 \\
 \hline
 \end{tabular}
 \caption{architectural profiles}
