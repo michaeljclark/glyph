@@ -5481,6 +5481,76 @@ the processor initiates a \emph{domain context switch} to the
 to the value in the \texttt{ctime} register.
 
 \newpage
+\subsection{domain context switch}
+
+interrupt delivery due to synchronous and asynchronous exceptions
+causes a domain switch to the trap routing domain for the role the
+exception is routed to for the current domain: the
+\emph{system}, \emph{domain}, \emph{capability}, and \emph{machine} roles.
+
+\begin{itemize}[itemsep=0pt]
+\item \texttt{domsys[domcurr]} contains the system default domain.
+\item \texttt{domdom[domcurr]} contains the domain default domain.
+\item \texttt{domcap[domcurr]} contains the capability default domain.
+\item \texttt{dommac[domcurr]} contains the machine default domain.
+\end{itemize}
+
+\par\noindent
+the following domain vectors hold state for a domain context switch.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{domain register} & \textbf{system register} & \textbf{description} \\
+\hline
+\texttt{domscratch[n]} & \texttt{tscratch} & trap scratch value \\
+\texttt{domthpc[n]} & \texttt{thpc} & trap handler program counter \\
+\texttt{domthib[n]} & \texttt{thib} & trap handler immediate base \\
+\texttt{domaddr[n]} & \texttt{sdomain} & system domain address \\
+\texttt{domptr[n]} & \texttt{sptr} & system page table root pointer \\
+\hline
+\end{tabular}
+\caption{domain context switch registers}
+\label{tab:domain-context-switch-registers}
+\end{table}
+
+\par\noindent
+the following procedure is used to perform a domain context switch.
+
+\begin{algorithm}[H]
+\footnotesize
+\caption{context switch to a domain and execute its trap handler}
+\begin{algorithmic}[1]
+\Function{switch\_domain}{$\mathit{domain,cause,value}$}
+    \State $\mathit{tepc} \gets \mathit{pc}$
+    \Comment{save program counter register}
+    \State $\mathit{teib} \gets \mathit{ib}$
+    \Comment{save immediate base register}
+    \State $\mathit{tcause} \gets \mathit{cause}$
+    \Comment{set trap cause}
+    \State $\mathit{tvalue} \gets \mathit{value}$
+    \Comment{set trap value}
+    \State $\mathit{tscratch}\gets \mathit{domscratch[domain]}$
+    \Comment{restore trap scratch value}
+    \State $\mathit{thpc} \gets \mathit{domthpc[domain]}$
+    \Comment{restore trap handler program counter}
+    \State $\mathit{thib} \gets \mathit{domthib[domain]}$
+    \Comment{restore trap handler immediate base}
+    \State $\mathit{sdomain} \gets \mathit{domaddr[domain]}$
+    \Comment{restore system domain address}
+    \State $\mathit{sptr} \gets \mathit{domptr[domain]}$
+    \Comment{restore system page table root pointer}
+    \State $\mathit{pc} \gets \mathit{thpc}$
+    \Comment{set program counter to trap handler}
+    \State $\mathit{ib} \gets \mathit{thib}$
+    \Comment{set immediate base to trap handler}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\newpage
 \section{Virtual machine}
 
 glyph defines a base virtual machine model with a well-defined minimum set of
