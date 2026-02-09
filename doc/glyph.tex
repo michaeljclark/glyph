@@ -5524,6 +5524,12 @@ the following procedure is used to perform a domain context switch.
 \caption{context switch to a domain and execute its trap handler}
 \begin{algorithmic}[1]
 \Function{switch\_domain}{$\mathit{domain,cause,value}$}
+    \State $\mathit{domlast} \gets \mathit{domcurr}$
+    \Comment{save current domain to last}
+    \State $\mathit{domnext} \gets \mathit{domcurr}$
+    \Comment{save current domain to next}
+    \State $\mathit{domcurr} \gets \mathit{domain}$
+    \Comment{set new current domain}
     \State $\mathit{tepc} \gets \mathit{pc}$
     \Comment{save program counter register}
     \State $\mathit{teib} \gets \mathit{ib}$
