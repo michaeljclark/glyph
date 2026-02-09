@@ -230,6 +230,15 @@ __glyph_inline__ uint rb(u64 insn) { return (insn >> 10) & 7; }
 __glyph_inline__ uint rc(u64 insn) { return (insn >> 13) & 7; }
 
 /*
+ * bitmanip wrapper functions
+ */
+
+static u64 bswao_u64(u64 n) { return (u64)__builtin_bswap64(n); }
+static u64 ctz_u64(u64 n) { return (u64)(n == 0 ? 64 : __builtin_ctzll(n)); }
+static u64 clz_u64(u64 n) { return (u64)(n == 0 ? 64 : __builtin_clzll(n)); }
+static u64 popcount_u64(u64 n) { return (u64)__builtin_popcountll(n); }
+
+/*
  * cpu load, store and constants
  */
 
@@ -477,16 +486,16 @@ __glyph_func__ int cpu_exec_op_logic_i64(cpu_state *cpu, u64 inst)
         cpu->r[rc(inst)] = -cpu->r[rb(inst)];
         break;
     case cpu_logic_bswap:
-        cpu->r[rc(inst)] = (u64)__builtin_bswap64(cpu->r[rb(inst)]);
+        cpu->r[rc(inst)] = bswao_u64(cpu->r[rb(inst)]);
         break;
     case cpu_logic_ctz:
-        cpu->r[rc(inst)] = (u64)__builtin_ctzll(cpu->r[rb(inst)]);
+        cpu->r[rc(inst)] = ctz_u64(cpu->r[rb(inst)]);
         break;
     case cpu_logic_clz:
-        cpu->r[rc(inst)] = (u64)__builtin_clzll(cpu->r[rb(inst)]);
+        cpu->r[rc(inst)] = clz_u64(cpu->r[rb(inst)]);
         break;
     case cpu_logic_ctpop:
-        cpu->r[rc(inst)] = (u64)__builtin_popcountll(cpu->r[rb(inst)]);
+        cpu->r[rc(inst)] = popcount_u64(cpu->r[rb(inst)]);
         break;
     case cpu_logic_sext:
         /* sign-extend is a move unless XLEN > 64 */
