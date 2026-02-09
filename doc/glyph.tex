@@ -4376,10 +4376,11 @@ the following tables list the privileged domain system registers:
 \hline
 \multicolumn{4}{|l|}{\textbf{domain context registers}} \\
 \hline
-\texttt{0xa00...0xa0f} & domaddr$[n]$   & domain address & \\
-\texttt{0xb00...0xb0f} & domptr$[n]$    & domain page table root & \\
-\texttt{0xc00...0xc0f} & domthpc$[n]$   & domain trap handler program counter & \\
-\texttt{0xd00...0xd0f} & domthib$[n]$   & domain trap handler immediate base & \\
+\texttt{0xa00...0xa0f} & domscratch$[n]$& domain scratch & \\
+\texttt{0xb00...0xb0f} & domaddr$[n]$   & domain address & \\
+\texttt{0xc00...0xc0f} & domptr$[n]$    & domain page table root & \\
+\texttt{0xd00...0xd0f} & domthpc$[n]$   & domain trap handler program counter & \\
+\texttt{0xe00...0xe0f} & domthib$[n]$   & domain trap handler immediate base & \\
 \hline
 \end{tabularx}
 \caption{domain registers}
@@ -4541,11 +4542,23 @@ this section describes the \emph{domain context registers} that control
 virtual interrupt routing, page translation and trap entry functions for
 domain context switching.
 
+\subsubsection{domain scratch (\texttt{domscratch}$[\mathit{ndom}]$)}
+\texttt{domscratch}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
+registers containing an array of the scratch values associated with each
+domain.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
+\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{domain scratch}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{XLEN-1}};
+\end{tikzpicture}
+
 \subsubsection{domain address (\texttt{domaddr}$[\mathit{ndom}]$)}
 \texttt{domaddr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the domain addresses associated with each
-domain. domain context switches copy the value for the target domain into
-\texttt{sdomain} to enable virtual interrupt delivery.
+domain.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -4560,8 +4573,7 @@ domain. domain context switches copy the value for the target domain into
 \subsubsection{domain page table root (\texttt{domptr}$[\mathit{ndom}]$)}
 \texttt{domptr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the page table root physical addresses for
-address translation in each domain. domain context switches copy the value
-for the target domain into \texttt{sptr} to enable address translation.
+address translation in each domain.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -4583,10 +4595,7 @@ for the target domain into \texttt{sptr} to enable address translation.
 \subsubsection{domain trap handler program counter (\texttt{domthpc}$[\mathit{ndom}]$)}
 \texttt{domthpc}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the addresses for the domain trap handler
-routines in each domain. the address is a virtual address interpreted in
-relation to the page table root for the domain. domain context switches
-copy the value for the target domain into \texttt{thpc} and set the
-\emph{program counter} register.
+routines in each domain.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -4599,10 +4608,7 @@ copy the value for the target domain into \texttt{thpc} and set the
 \subsubsection{domain trap handler immediate base (\texttt{domthib}$[\mathit{ndom}]$)}
 \texttt{domthib}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the addresses for the domain trap handler
-constants in each domain. the address is a virtual address interpreted in
-relation to the page table root for the domain. domain context switches
-copy the value for the target domain into \texttt{thib} and set the
-\emph{immediate base} register.
+constants in each domain.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -5424,12 +5430,11 @@ there are 32 wired interrupt pins per processor. an interrupt is
 generated upon an edge condition on the lowest-numbered interrupt pin
 that is asserted. on the receiving processor, \texttt{dommac[domcurr]}
 contains the machine default domain used to route an asynchronous trap.
-a domain switch is initiated to deliver an asynchronous interrupt.
-the processor saves the \emph{program counter} and \emph{immediate base}
-registers, then branches to the trap handler for the machine default domain.
-\texttt{tcause} is set to \emph{interrupt-n} where \emph{n} is the pin number
-and \texttt{tvalue} is set to zero. wired interrupts over the processor
-cluster network are not currently defined.
+the processor initiates a \emph{domain context switch} to the
+\emph{machine default domain}, then branches to its trap handler.
+\texttt{tcause} is set to \emph{interrupt-n} where \emph{n} is the pin
+number and \texttt{tvalue} is set to zero. wired interrupts over the
+processor cluster network are undefined.
 
 \subsection{message signaled interrupts}
 
@@ -5459,9 +5464,8 @@ the following special addresses can be used.
 \par\noindent
 on the receiving processor, \texttt{dommac[domcurr]}
 contains the machine default domain used to route an asynchronous trap.
-a domain switch is initiated to deliver an asynchronous interrupt.
-the processor saves the \emph{program counter} and \emph{immediate base}
-registers, then branches to the trap handler for the machine default domain.
+the processor initiates a \emph{domain context switch} to the
+\emph{machine default domain}, then branches to its trap handler.
 \texttt{tcause} is set to \emph{virtual-interrupt} and \texttt{tvalue} is set
 to the value in the \texttt{smessage} register on the initiating processor.
 
@@ -5471,9 +5475,8 @@ deadline timer interrupts can be configured by setting the \texttt{stimer}
 register. an interrupt is generated when $\mathtt{stimer} \ge \mathtt{ctime}$.
 on the current processor, \texttt{dommac[domcurr]}
 contains the machine default domain used to route an asynchronous trap.
-a domain switch is initiated to deliver an asynchronous interrupt.
-the processor saves the \emph{program counter} and \emph{immediate base}
-registers, then branches to the trap handler for the machine default domain.
+the processor initiates a \emph{domain context switch} to the
+\emph{machine default domain}, then branches to its trap handler.
 \texttt{tcause} is set to \emph{timer-interrupt} and \texttt{tvalue} is set
 to the value in the \texttt{ctime} register.
 
