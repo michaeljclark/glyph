@@ -5427,7 +5427,7 @@ the following table shows the inter-domain trap routing table keys.
 
 there are 32 wired interrupt pins per processor. an interrupt is
 generated upon an edge condition on the lowest-numbered interrupt pin
-that is asserted. on the receiving processor, \texttt{dommac[domcurr]}
+that is asserted. on the signaled processor, \texttt{dommac[domcurr]}
 contains the machine default domain used to route an asynchronous trap.
 the processor initiates a \emph{domain context switch} to the
 \emph{machine default domain}, then branches to its trap handler.
@@ -5439,7 +5439,7 @@ processor cluster network are undefined.
 
 deadline timer interrupts can be configured by setting the \texttt{stimer}
 register. an interrupt is generated when $\mathtt{stimer} \ge \mathtt{ctime}$.
-on the current processor, \texttt{dommac[domcurr]}
+on the signaled processor, \texttt{dommac[domcurr]}
 contains the machine default domain used to route an asynchronous trap.
 the processor initiates a \emph{domain context switch} to the
 \emph{machine default domain}, then branches to its trap handler.
@@ -5482,7 +5482,7 @@ the following special addresses can be used.
 \end{table}
 
 \par\noindent
-on the receiving processor, \texttt{dommac[domcurr]}
+on the signaled processor, \texttt{dommac[domcurr]}
 contains the machine default domain used to route an asynchronous trap.
 the processor initiates a \emph{domain context switch} to the
 \emph{machine default domain}, then branches to its trap handler.
