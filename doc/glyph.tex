@@ -3584,7 +3584,7 @@ and may contain:
 \begin{itemize}[itemsep=0pt]
 \item the faulting instruction word for \emph{break} and \emph{illegal instruction exceptions}.
 \item the faulting address for \emph{misaligned}, \emph{access} and \emph{page faults}.
-\item the message value for \emph{virtual interrupts}.
+\item the masked thread or domain address for \emph{virtual interrupts}.
 \item the system clock time for \emph{timer interrupts}.
 \end{itemize}
 
@@ -3876,14 +3876,14 @@ this register must be set before writing to \texttt{smessage}.
 \texttt{smessage} is a write-only register that causes an edge-triggered
 virtual interrupt to be queued to the thread set in \texttt{starget}.
 virtual interrupts are marked pending in the \texttt{V} field of the
-\texttt{tstatus} register for the target thread.
+\texttt{tstatus} register for the target threads.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
 \node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{message value}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{message signal}};
 \end{tikzpicture}
 
 \subsubsection{system deadline timer (\texttt{stimer})}
@@ -5382,10 +5382,11 @@ routing tables} to route synchronous exceptions to the default domain
 for a specific role on the local processor.
 \\
 \par\noindent
-\textbf{globally-scoped inter-domain messages:} use the \emph{domain
-address table} to multicast asynchronous interrupts over the processor
-cluster network to the machine role of processors matching the advertised
-target address or domain after applying the address mask.
+\textbf{globally-scoped inter-domain messages:} use the \texttt{starget},
+\texttt{smask}, and \texttt{smessage} system registers, to multicast
+asynchronous message-signaled interrupts over the processor cluster network
+to the machine role of processors matching the advertised target thread or
+domain address after applying the address mask.
 \\
 \par\noindent
 the following table shows the inter-domain message instructions.
@@ -5393,14 +5394,14 @@ the following table shows the inter-domain message instructions.
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{|l|l|l|l|}
+\begin{tabular}{|l|l|l|}
 \hline
-\textbf{capability} & \textbf{synchronous call} & \textbf{synchronous return} & \textbf{asynchronous message} \\
+\textbf{capability} & \textbf{synchronous call} & \textbf{synchronous return} \\
 \hline
-\emph{system}      & \texttt{syscall} & \texttt{sysret} & \texttt{sysmsg} \emph{reg} \\
-\emph{domain}      & \texttt{domcall} & \texttt{domret} & \texttt{dommsg} \emph{reg} \\
-\emph{capability}  & \texttt{capcall} & \texttt{capret} & \texttt{capmsg} \emph{reg} \\
-\emph{machine}     & \texttt{maccall} & \texttt{macret} & \texttt{macmsg} \emph{reg} \\
+\emph{system}      & \texttt{syscall} & \texttt{sysret} \\
+\emph{domain}      & \texttt{domcall} & \texttt{domret} \\
+\emph{capability}  & \texttt{capcall} & \texttt{capret} \\
+\emph{machine}     & \texttt{maccall} & \texttt{macret} \\
 \hline
 \end{tabular}
 \caption{inter-domain message instructions}
@@ -5413,14 +5414,14 @@ the following table shows the inter-domain trap routing table keys.
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{|l|l|l|l|}
+\begin{tabular}{|l|l|l|}
 \hline
-\textbf{capability} & \textbf{synchronous call} & \textbf{synchronous return} & \textbf{asynchronous message} \\
+\textbf{capability} & \textbf{synchronous call} & \textbf{synchronous return} \\
 \hline
-\emph{system}      & \texttt{domsys[domcurr]} & \texttt{domsys[domnext]} & \texttt{domsys[idx(reg,domaddr)]} \\
-\emph{domain}      & \texttt{domdom[domcurr]} & \texttt{domdom[domnext]} & \texttt{domdom[idx(reg,domaddr)]} \\
-\emph{capability}  & \texttt{domcap[domcurr]} & \texttt{domcap[domnext]} & \texttt{domcap[idx(reg,domaddr)]} \\
-\emph{machine}     & \texttt{dommac[domcurr]} & \texttt{dommac[domnext]} & \texttt{dommac[idx(reg,domaddr)]} \\
+\emph{system}      & \texttt{domsys[domcurr]} & \texttt{domsys[domnext]} \\
+\emph{domain}      & \texttt{domdom[domcurr]} & \texttt{domdom[domnext]} \\
+\emph{capability}  & \texttt{domcap[domcurr]} & \texttt{domcap[domnext]} \\
+\emph{machine}     & \texttt{dommac[domcurr]} & \texttt{dommac[domnext]} \\
 \hline
 \end{tabular}
 \caption{inter-domain trap routing table keys}
@@ -5432,13 +5433,12 @@ the following table shows the inter-domain trap routing table keys.
 
 there are 32 wired interrupt pins per processor. an interrupt is
 generated upon an edge condition on the lowest-numbered interrupt pin
-that is asserted. on the signaled processor, \texttt{dommac[domcurr]}
+that is asserted. on signaled processors, \texttt{dommac[domcurr]}
 contains the machine default domain used to route an asynchronous trap.
 the processor initiates a \emph{domain context switch} to the
 \emph{machine default domain}, then branches to its trap handler.
 \texttt{tcause} is set to \emph{interrupt-n} where \emph{n} is the pin
-number and \texttt{tvalue} is set to zero. wired interrupts over the
-processor cluster network are undefined.
+number and \texttt{tvalue} is set to zero.
 
 \subsection{deadline timer interrupts}
 
@@ -5455,16 +5455,16 @@ to the value in the \texttt{ctime} register.
 
 message signaled interrupts, also known as globally-scoped inter-domain
 messages, are multicast over the processor cluster network to initiate
-asynchronous exceptions in the machine role of threads advertising the
-target address or domain after applying an address mask.
+asynchronous exceptions in the machine role of selected threads
+advertising the target thread or domain address after applying the
+address mask.
 \\
 \par\noindent
 the \emph{system} role of the initiating processor first disables
 interrupts, then sets the \texttt{starget} and \texttt{smask} registers
-with a target address or domain and mask, followed by writing the
-interrupt message value into \texttt{smessage}. a virtual interrupt
-is then multicast to the set of threads matching the masked thread or
-domain address.
+with a target thread or domain address and mask, followed by writing
+to the \texttt{smessage} register. a virtual interrupt is then multicast
+to the set of threads matching the masked thread or domain address.
 \\
 \par\noindent
 the following special addresses can be used.
@@ -5487,12 +5487,12 @@ the following special addresses can be used.
 \end{table}
 
 \par\noindent
-on the signaled processor, \texttt{dommac[domcurr]}
-contains the machine default domain used to route an asynchronous trap.
+on signaled processors, \texttt{dommac[domcurr]} contains the machine
+default domain used to route an asynchronous trap.
 the processor initiates a \emph{domain context switch} to the
 \emph{machine default domain}, then branches to its trap handler.
-\texttt{tcause} is set to \emph{virtual-interrupt} and \texttt{tvalue} is set
-to the value in the \texttt{smessage} register on the initiating processor.
+\texttt{tcause} is set to \emph{virtual-interrupt} and \texttt{tvalue} is
+set to the masked thread or domain address from the initiating processor.
 
 \newpage
 \subsection{domain context switch}
