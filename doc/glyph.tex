@@ -5328,32 +5328,31 @@ synchronous exceptions are grouped into \emph{system}, \emph{domain},
 routed based on the \emph{domain trap routing tables}: \texttt{domsys},
 \texttt{domdom}, \texttt{domcap}, and \texttt{dommac}.
 this section details the types of exceptions for each category.
-
-\subsubsection{system exceptions}
-
-system exceptions include: system faults arising from access to the system
-registers, illegal instruction faults, debug monitor faults, address
-alignment faults, memory access faults, page faults arising from page
-table configuration, and locally-scoped \emph{system role} messages.
-
-\subsubsection{capability exceptions}
-
-capability exceptions include: capability faults arising from access
-to the capability registers, configuration of the capability matrix,
-and locally-scoped \emph{capability role} messages.
-
-\subsubsection{domain exceptions}
-
-domain exceptions include: domain faults arising from access to the
-domain registers or configuration of the domain matrix, and
-locally-scoped \emph{domain role} messages.
-
-\subsubsection{machine exceptions}
-
-machine exceptions include: machine faults arising from access to the
-machine registers, wired, virtual and timer interrupts, translation
-lookaside buffer refill faults, and locally-scoped \emph{machine role}
-messages.
+\\
+\par\noindent
+\textbf{system exceptions:}
+faults arising from access to system registers, illegal instruction
+exceptions, break instruction exceptions, debug monitor exceptions,
+address alignment faults, memory access faults, page faults arising
+from page table entry configuration, and locally-scoped
+\emph{system role} messages.
+\\
+\par\noindent
+\textbf{capability exceptions:}
+faults arising from access to capability registers, access checks due
+to the configuration of the capability permission registers, capability
+role registers, and the capability matrix, and locally-scoped
+\emph{capability role} messages.
+\\
+\par\noindent
+\textbf{domain exceptions:}
+faults arising from access to domain registers, domain matrix checks,
+and locally-scoped \emph{domain role} messages.
+\\
+\par\noindent
+\textbf{machine exceptions:}
+faults arising from access to machine registers, translation lookaside
+buffer refill faults, and locally-scoped \emph{machine role} messages.
 
 \newpage
 \subsection{asynchronous exceptions}
