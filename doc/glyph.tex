@@ -5357,10 +5357,13 @@ buffer refill faults, and locally-scoped \emph{machine role} messages.
 \subsection{asynchronous exceptions}
 
 asynchronous exceptions are routed to the \emph{machine} role based
-on the \texttt{dommac} vector. asynchronous exceptions include:
-interrupts from wired interrupt pins, deadline timer interrupts,
-and message signaled interrupts, also known as globally scoped
-inter-domain messages.
+on the \texttt{dommac} vector\footnote{a future version of the
+specification will establish routing of globally-scoped inter-domain
+messages to roles. the current version of the specification routes
+them to the machine role for firmware dispatch}.
+asynchronous exceptions include: interrupts from wired interrupt pins,
+deadline timer interrupts, and message signaled interrupts, also known
+as globally-scoped inter-domain messages.
 
 \newpage
 \subsection{inter-domain messages}
