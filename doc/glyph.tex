@@ -5354,7 +5354,6 @@ and locally-scoped \emph{domain role} messages.
 faults arising from access to machine registers, translation lookaside
 buffer refill faults, and locally-scoped \emph{machine role} messages.
 
-\newpage
 \subsection{asynchronous exceptions}
 
 asynchronous exceptions are routed to the \emph{machine} role based
@@ -5363,6 +5362,7 @@ interrupts from wired interrupt pins, deadline timer interrupts,
 and message signaled interrupts, also known as globally scoped
 inter-domain messages.
 
+\newpage
 \subsection{inter-domain messages}
 
 inter-domain messages are used to send messages to threads locally
@@ -5423,7 +5423,7 @@ the following table shows the inter-domain trap routing table keys.
 \end{table}
 
 \newpage
-\subsection{wired interrupts}
+\subsection{wired interrupt pins}
 
 there are 32 wired interrupt pins per processor. an interrupt is
 generated upon an edge condition on the lowest-numbered interrupt pin
@@ -5434,6 +5434,17 @@ the processor initiates a \emph{domain context switch} to the
 \texttt{tcause} is set to \emph{interrupt-n} where \emph{n} is the pin
 number and \texttt{tvalue} is set to zero. wired interrupts over the
 processor cluster network are undefined.
+
+\subsection{deadline timer interrupts}
+
+deadline timer interrupts can be configured by setting the \texttt{stimer}
+register. an interrupt is generated when $\mathtt{stimer} \ge \mathtt{ctime}$.
+on the current processor, \texttt{dommac[domcurr]}
+contains the machine default domain used to route an asynchronous trap.
+the processor initiates a \emph{domain context switch} to the
+\emph{machine default domain}, then branches to its trap handler.
+\texttt{tcause} is set to \emph{timer-interrupt} and \texttt{tvalue} is set
+to the value in the \texttt{ctime} register.
 
 \subsection{message signaled interrupts}
 
@@ -5477,17 +5488,6 @@ the processor initiates a \emph{domain context switch} to the
 \emph{machine default domain}, then branches to its trap handler.
 \texttt{tcause} is set to \emph{virtual-interrupt} and \texttt{tvalue} is set
 to the value in the \texttt{smessage} register on the initiating processor.
-
-\subsection{deadline timer interrupts}
-
-deadline timer interrupts can be configured by setting the \texttt{stimer}
-register. an interrupt is generated when $\mathtt{stimer} \ge \mathtt{ctime}$.
-on the current processor, \texttt{dommac[domcurr]}
-contains the machine default domain used to route an asynchronous trap.
-the processor initiates a \emph{domain context switch} to the
-\emph{machine default domain}, then branches to its trap handler.
-\texttt{tcause} is set to \emph{timer-interrupt} and \texttt{tvalue} is set
-to the value in the \texttt{ctime} register.
 
 \newpage
 \subsection{domain context switch}
