@@ -5377,13 +5377,15 @@ or globally. inter-domain messages are grouped into two categories.
 \end{itemize}
 
 \par\noindent
-locally-scoped inter-domain messages use the \emph{domain trap routing
-tables} to route synchronous exceptions to the default domain for a
-specific role on the local processor.
-globally-scoped inter-domain messages use the \emph{domain address table}
-to multicast asynchronous interrupts over the processor cluster network
-to the machine role of processors matching the advertised target address
-or domain after applying the address mask.
+\textbf{locally-scoped inter-domain messages:} use the \emph{domain trap
+routing tables} to route synchronous exceptions to the default domain
+for a specific role on the local processor.
+\\
+\par\noindent
+\textbf{globally-scoped inter-domain messages:} use the \emph{domain
+address table} to multicast asynchronous interrupts over the processor
+cluster network to the machine role of processors matching the advertised
+target address or domain after applying the address mask.
 \\
 \par\noindent
 the following table shows the inter-domain message instructions.
