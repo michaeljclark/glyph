@@ -5454,12 +5454,22 @@ domain address.
 \par\noindent
 the following special addresses can be used.
 
-\begin{itemize}[itemsep=0pt]
-\item all-zeros is the \emph{boot processor}.
-\item all-ones is the \emph{broadcast address}.
-\item zero in the address MSB is a \emph{topological address}.
-\item one in the address MSB is a \emph{domain address}.
-\end{itemize}
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{address} & \textbf{type} & \textbf{description} \\
+\hline
+\texttt{0\ldots0}& all-zeros & \emph{boot processor} \\
+\texttt{1\ldots1} & all-ones & \emph{broadcast address} \\
+\texttt{0?\ldots} & MSB-zero & \emph{topological address} \\
+\texttt{1?\ldots} & MSB-one & \emph{domain address} \\
+\hline
+\end{tabular}
+\caption{special inter-domain message addresses}
+\label{tab:inter-domain-message-addresses}
+\end{table}
 
 \par\noindent
 on the receiving processor, \texttt{dommac[domcurr]}
