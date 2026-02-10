@@ -5524,6 +5524,11 @@ the following procedure is used to perform a domain context switch.
 \caption{context switch to a domain and execute its trap handler}
 \begin{algorithmic}[1]
 \Function{switch\_domain}{$\mathit{domain,cause,value}$}
+    \If {$\lnot\mathit{dommatrix[domcurr][domain]}$}
+    \Comment{check domain matrix}
+        \State \textbf{raise} \textbf{domain-fault}
+        \Comment{raise domain fault}
+    \EndIf
     \State $\mathit{domlast} \gets \mathit{domcurr}$
     \Comment{save current domain to last}
     \State $\mathit{domnext} \gets \mathit{domcurr}$
