@@ -4200,7 +4200,7 @@ system registers and instructions based on \emph{page table color}.
 when \texttt{ccontrol.C} is set, privileged system registers and
 instructions and will cause capability traps for illegal accesses.
 system registers and instructions are restricted based on the
-following roles: \emph{system}, \emph{domain}, \emph{capability}
+following roles: \emph{system}, \emph{domain}, \emph{capability},
 and \emph{machine}.
 
 \subsubsection{color system role (\texttt{colorsys})}
@@ -4365,22 +4365,23 @@ the following tables list the privileged domain system registers:
 \texttt{0x53} & domlast  & domain number last & \\
 \texttt{0x54} & domcurr  & domain number current & \\
 \texttt{0x55} & domnext  & domain number next & \\
+\texttt{0x500...0x50f} & dommatrix$[n]$ & domain matrix & \\
 \hline
 \multicolumn{4}{|l|}{\textbf{domain routing registers}} \\
 \hline
-\texttt{0x500...0x50f} & dommatrix$[n]$ & domain matrix & \\
 \texttt{0x600...0x60f} & domsys$[n]$    & domain system default domain & \\
 \texttt{0x700...0x70f} & domdom$[n]$    & domain domain default domain & \\
 \texttt{0x800...0x80f} & domcap$[n]$    & domain capability default domain & capability \\
 \texttt{0x900...0x90f} & dommac$[n]$    & domain machine default domain & machine \\
+\texttt{0xa00...0xa0f} & dommsg$[n]$    & domain message default domain & \\
 \hline
 \multicolumn{4}{|l|}{\textbf{domain context registers}} \\
 \hline
-\texttt{0xa00...0xa0f} & domscratch$[n]$& domain scratch & \\
-\texttt{0xb00...0xb0f} & domaddr$[n]$   & domain address & \\
-\texttt{0xc00...0xc0f} & domptr$[n]$    & domain page table root & \\
-\texttt{0xd00...0xd0f} & domthpc$[n]$   & domain trap handler program counter & \\
-\texttt{0xe00...0xe0f} & domthib$[n]$   & domain trap handler immediate base & \\
+\texttt{0xb00...0xb0f} & domscratch$[n]$& domain scratch & \\
+\texttt{0xc00...0xc0f} & domaddr$[n]$   & domain address & \\
+\texttt{0xd00...0xd0f} & domptr$[n]$    & domain page table root & \\
+\texttt{0xe00...0xe0f} & domthpc$[n]$   & domain trap handler program counter & \\
+\texttt{0xf00...0xf0f} & domthib$[n]$   & domain trap handler immediate base & \\
 \hline
 \end{tabularx}
 \caption{domain registers}
@@ -4390,9 +4391,9 @@ the following tables list the privileged domain system registers:
 \newpage
 \subsection{domain control registers}
 
-this section describes the \emph{domain control registers} which
-enable the domain extension and provide access to last and current
-domain number and control the next domain number.
+this section describes the \emph{domain control registers}, which enable
+the domain extension, provide access to the last and current domain number,
+control the next domain number, and control valid domain transitions.
 
 \subsubsection{domain control (\texttt{domcontrol})}
 \texttt{domcontrol} is a read-write register containing domain control bits.
@@ -4458,13 +4459,6 @@ of the next domain.
 \node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
 \end{tikzpicture}
 
-\newpage
-\subsection{domain routing registers}
-
-this section describes the \emph{domain routing registers} that control
-valid domain transitions and routing for context switching of system,
-domain, capability and machine traps.
-
 \subsubsection{domain matrix (\texttt{dommatrix}$[\mathit{ndom}]$)}
 \texttt{dommatrix}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing a matrix of the domains that the current domain is
@@ -4478,6 +4472,13 @@ allowed to transition to as the next domain.
 \node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ndom}$};
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{allowed domains}};
 \end{tikzpicture}
+
+\newpage
+\subsection{domain routing registers}
+
+this section describes the \emph{domain routing registers} that control
+routing for context switching of system, domain, capability, machine,
+and message traps.
 
 \subsubsection{domain system default domain (\texttt{domsys}$[\mathit{ndom}]$)}
 \texttt{domsys}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
@@ -4525,6 +4526,20 @@ are routed to.
 \texttt{dommac}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing the domain number of the domain that machine traps
 are routed to.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (28,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (28,1.25)  {$log_2(\mathit{ndom})$};
+\node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
+\end{tikzpicture}
+
+\subsubsection{domain message default domain (\texttt{dommsg}$[\mathit{ndom}]$)}
+\texttt{dommsg}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
+registers containing the domain number of the domain that virtual
+interrupts are routed to.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -5306,64 +5321,65 @@ processing of the asynchronous trap.
 capability and domain registers are used to configure the trap routing
 domains for context switches arising from interrupts and exceptions.
 trap routing is configured by the hypervisor in the \texttt{domsys},
-\texttt{domdom}, \texttt{domcap}, and \texttt{dommac} vectors,
-which contain the domain id of the domain that receive traps
-for the \emph{system}, \emph{domain}, \emph{capability}, and
-\emph{machine} roles respectively.
+\texttt{domdom}, \texttt{domcap}, \texttt{dommac}, and \texttt{dommsg}
+vectors, which contain the domain ids of domains that receive traps
+for the \emph{system}, \emph{domain}, \emph{capability}, \emph{machine},
+and \emph{message} roles respectively.
 synchronous and asynchronous interrupts and exceptions are delivered
-to the \emph{system}, \emph{domain}, \emph{capability}, and
-\emph{machine} roles depending on the category of the initiating event:
+to the \emph{system}, \emph{domain}, \emph{capability}, \emph{machine},
+and \emph{message} roles depending on the initiating event:
 
 \begin{itemize}[itemsep=0pt]
-\item \emph{system role} receives system-level access exceptions and messages.
-\item \emph{domain role} receives domain-level access exceptions and messages.
-\item \emph{capability role} receives capability-level access exceptions and messages.
-\item \emph{machine role} receives machine-level access exceptions and asynchronous interrupts.
+\item \emph{system role} receives system-level access exceptions.
+\item \emph{domain role} receives domain-level access exceptions.
+\item \emph{capability role} receives capability-level access exceptions.
+\item \emph{machine role} receives machine-level access exceptions.
+\item \emph{message role} receives asynchronous message exceptions.
 \end{itemize}
 
 \subsection{synchronous exceptions}
 
 synchronous exceptions are grouped into \emph{system}, \emph{domain},
-\emph{capability}, and \emph{machine} roles. synchronous exceptions are
-routed based on the \emph{domain trap routing tables}: \texttt{domsys},
-\texttt{domdom}, \texttt{domcap}, and \texttt{dommac}.
-this section details the types of exceptions for each category.
+\emph{capability}, and \emph{machine} roles and are routed based on the
+\texttt{domsys}, \texttt{domdom}, \texttt{domcap}, and \texttt{dommac}
+vectors:
 \\
 \par\noindent
 \textbf{system exceptions:}
-faults arising from access to system registers, illegal instruction
+arising from access to system registers, illegal instruction
 exceptions, break instruction exceptions, debug monitor exceptions,
 address alignment faults, memory access faults, page faults arising
 from page table entry configuration, and locally-scoped
-\emph{system role} messages.
+\emph{system role} messages, also known as system calls.
 \\
 \par\noindent
 \textbf{capability exceptions:}
-faults arising from access to capability registers, access checks due
+arising from access to capability registers, access checks due
 to the configuration of the capability permission registers, capability
 role registers, and the capability matrix, and locally-scoped
-\emph{capability role} messages.
+\emph{capability role} messages, also known as capability calls.
 \\
 \par\noindent
 \textbf{domain exceptions:}
-faults arising from access to domain registers, domain matrix checks,
-and locally-scoped \emph{domain role} messages.
+arising from access to domain registers, domain matrix checks, and
+locally-scoped \emph{domain role} messages, also known as hyper calls.
 \\
 \par\noindent
 \textbf{machine exceptions:}
 faults arising from access to machine registers, translation lookaside
-buffer refill faults, and locally-scoped \emph{machine role} messages.
+buffer refill faults, and locally-scoped \emph{machine role} messages,
+also known as machine calls.
 
 \subsection{asynchronous exceptions}
 
-asynchronous exceptions are routed to the \emph{machine} role based
-on the \texttt{dommac} vector\footnote{a future version of the
-specification will establish routing of globally-scoped inter-domain
-messages to roles. the current version of the specification routes
-them to the machine role for firmware dispatch}.
-asynchronous exceptions include: interrupts from wired interrupt pins,
-deadline timer interrupts, and message signaled interrupts, also known
-as globally-scoped inter-domain messages.
+asynchronous exceptions use the \emph{message} role and are
+routed based on the \texttt{dommsg} vector:
+\\
+\par\noindent
+\textbf{message exceptions:}
+arising from interrupt pins, the deadline timer, and
+globally-scoped inter-domain messages, also known as virtual interrupts
+or message-signaled interrupts.
 
 \newpage
 \subsection{inter-domain messages}
@@ -5402,6 +5418,7 @@ the following table shows the inter-domain message instructions.
 \emph{domain}      & \texttt{domcall} & \texttt{domret} \\
 \emph{capability}  & \texttt{capcall} & \texttt{capret} \\
 \emph{machine}     & \texttt{maccall} & \texttt{macret} \\
+\emph{message}     & -- & -- \\
 \hline
 \end{tabular}
 \caption{inter-domain message instructions}
@@ -5422,6 +5439,7 @@ the following table shows the inter-domain trap routing table keys.
 \emph{domain}      & \texttt{domdom[domcurr]} & \texttt{domdom[domnext]} \\
 \emph{capability}  & \texttt{domcap[domcurr]} & \texttt{domcap[domnext]} \\
 \emph{machine}     & \texttt{dommac[domcurr]} & \texttt{dommac[domnext]} \\
+\emph{message}     & \texttt{dommsg[domcurr]} & \texttt{dommsg[domnext]} \\
 \hline
 \end{tabular}
 \caption{inter-domain trap routing table keys}
@@ -5433,10 +5451,10 @@ the following table shows the inter-domain trap routing table keys.
 
 there are 32 wired interrupt pins per processor. an interrupt is
 generated upon an edge condition on the lowest-numbered interrupt pin
-that is asserted. on signaled processors, \texttt{dommac[domcurr]}
-contains the machine default domain used to route an asynchronous trap.
+that is asserted. on signaled processors, \texttt{dommsg[domcurr]}
+contains the message default domain used to route an asynchronous trap.
 the processor initiates a \emph{domain context switch} to the
-\emph{machine default domain}, then branches to its trap handler.
+\emph{message default domain}, then branches to its trap handler.
 \texttt{tcause} is set to \emph{interrupt-n} where \emph{n} is the pin
 number and \texttt{tvalue} is set to zero.
 
@@ -5444,18 +5462,18 @@ number and \texttt{tvalue} is set to zero.
 
 deadline timer interrupts can be configured by setting the \texttt{stimer}
 register. an interrupt is generated when $\mathtt{stimer} \ge \mathtt{ctime}$.
-on the signaled processor, \texttt{dommac[domcurr]}
-contains the machine default domain used to route an asynchronous trap.
+on the signaled processor, \texttt{dommsg[domcurr]}
+contains the message default domain used to route an asynchronous trap.
 the processor initiates a \emph{domain context switch} to the
-\emph{machine default domain}, then branches to its trap handler.
+\emph{message default domain}, then branches to its trap handler.
 \texttt{tcause} is set to \emph{timer-interrupt} and \texttt{tvalue} is set
 to the value in the \texttt{ctime} register.
 
 \subsection{message signaled interrupts}
 
-message signaled interrupts, also known as globally-scoped inter-domain
+message-signaled interrupts, also known as globally-scoped inter-domain
 messages, are multicast over the processor cluster network to initiate
-asynchronous exceptions in the machine role of selected threads
+asynchronous exceptions in the message role of selected threads
 advertising the target thread or domain address after applying the
 address mask.
 \\
@@ -5487,10 +5505,10 @@ the following special addresses can be used.
 \end{table}
 
 \par\noindent
-on signaled processors, \texttt{dommac[domcurr]} contains the machine
+on signaled processors, \texttt{dommsg[domcurr]} contains the message
 default domain used to route an asynchronous trap.
 the processor initiates a \emph{domain context switch} to the
-\emph{machine default domain}, then branches to its trap handler.
+\emph{message default domain}, then branches to its trap handler.
 \texttt{tcause} is set to \emph{virtual-interrupt} and \texttt{tvalue} is
 set to the masked thread or domain address from the initiating processor.
 
@@ -5499,14 +5517,16 @@ set to the masked thread or domain address from the initiating processor.
 
 interrupt delivery due to synchronous and asynchronous exceptions
 causes a domain switch to the trap routing domain for the role the
-exception is routed to for the current domain: the
-\emph{system}, \emph{domain}, \emph{capability}, and \emph{machine} roles.
+exception is routed to for the current domain: the \emph{system},
+\emph{domain}, \emph{capability}, \emph{machine}, and \emph{message}
+roles.
 
 \begin{itemize}[itemsep=0pt]
 \item \texttt{domsys[domcurr]} contains the system default domain.
 \item \texttt{domdom[domcurr]} contains the domain default domain.
 \item \texttt{domcap[domcurr]} contains the capability default domain.
 \item \texttt{dommac[domcurr]} contains the machine default domain.
+\item \texttt{dommsg[domcurr]} contains the message default domain.
 \end{itemize}
 
 \par\noindent
@@ -5584,9 +5604,9 @@ firmware interfaces, hardware description models and virtual devices for I/O.
 \subsection{hypervisor}
 
 the virtual machine defines several roles. the \emph{domain},
-\emph{capability}, and \emph{machine} roles are used by the hypervisor
-to control domain switching, trap routing, execution permissions and
-software-defined page-based virtual address translation.
+\emph{capability}, \emph{machine}, and \emph{message} roles are used by
+the hypervisor to control domain switching, trap routing, execution
+permissions and software-defined page-based virtual address translation.
 
 \begin{table}[h]
 \centering
@@ -5600,9 +5620,10 @@ software-defined page-based virtual address translation.
 \texttt{dom} & domain     & domain scheduling and routing \\
 \texttt{cap} & capability & capabilities and permissions \\
 \texttt{mac} & machine    & software-defined memory management \\
+\texttt{msg} & message    & globally-scoped inter-domain messages \\
 \hline
 \end{tabular}
-\caption{glyph virtual machine  roles}
+\caption{glyph virtual machine roles}
 \label{tab:glyph-virtual-machine-roles}
 \end{table}
 
@@ -5611,13 +5632,6 @@ the hypervisor is responsible for setting up the capability permission
 registers, trap routing and context switching registers, and the initial
 state of system registers to create threads in an isolated context before
 handing over control to the firmware.
-\\
-\par\noindent
-the \texttt{macmsg}, \texttt{capmsg}, and \texttt{dommsg} instructions are
-used to cause traps into the hypervisor to configure software-defined memory
-management, capabilities and permissions, and domain scheduling and routing.
- the hypervisor runs with the
-\emph{machine}, \emph{capability}, and \emph{domain} roles.
 
 \subsection{firmware interface}
 
