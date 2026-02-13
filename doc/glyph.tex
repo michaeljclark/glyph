@@ -2501,10 +2501,20 @@ arithmetic, \emph{IEEE-754-2019}~\cite{ieee754-2019}, which specifies
 fixed‑width binary interchange formats, encoding of sign, exponent,
 and fraction fields, and defines arithmetic, comparison, and rounding
 behavior, including the handling of exceptional values such as NaNs
-and infinities. the 8‑bit binary floating‑point formats follow the
-definitions in the current IEEE P754 working draft, and the 16‑bit
-brain floating‑point format \emph{bfloat16} is specified by the
-\emph{OpenCL bfloat16 Conversions Extension}.
+and infinities.
+
+\begin{itemize}[itemsep=0pt]
+\item the quiet NaN has the most significant bit of the fraction field set to one.
+\item the signaling NaN has the most significant bit of the fraction field set to zero.
+\item the canonical NaNs have the sign bit and all remaining payload bits set to zero.
+\item all other NaN payloads are reserved for the implementation.
+\end{itemize}
+
+\par\noindent
+the 8‑bit binary floating‑point formats follow the definitions in the
+current IEEE P754 working draft, and the 16‑bit brain floating‑point
+format \emph{bfloat16} is specified by the \emph{OpenCL bfloat16
+Conversions Extension}.
 
 \newpage
 \subsection{unsigned integer formats}
