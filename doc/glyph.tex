@@ -4548,7 +4548,7 @@ are routed to.
 
 \subsubsection{domain message default domain (\texttt{dommsg}$[\mathit{ndom}]$)}
 \texttt{dommsg}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
-registers containing the domain number of the domain that virtual
+registers containing the domain number of the domain that asynchronous
 interrupts are routed to.
 \\
 \par\noindent
@@ -5411,7 +5411,7 @@ for a specific role on the local processor.
 \textbf{globally-scoped inter-domain messages:} use the \texttt{starget},
 \texttt{smask}, and \texttt{smessage} system registers, to multicast
 asynchronous message-signaled interrupts over the processor cluster network
-to the machine role of processors matching the advertised target thread or
+to the message role of processors matching the advertised target thread or
 domain address after applying the address mask.
 \\
 \par\noindent
