@@ -5256,11 +5256,11 @@ are as follows:
       (\mathit{op.W} \land \lnot\mathit{pte.D})$}
     \State \textbf{raise} \textbf{fault}
     \Comment{invalid accessed or dirty}
-  \ElsIf {$\lnot\mathit{tstatus.U} \land \lnot\mathit{scontrol.E} \land
+  \ElsIf {$\lnot\mathit{role(user)} \land \lnot\mathit{scontrol.E} \land
       \mathit{user} \land \mathit{op.X}$}
     \State \textbf{raise} \textbf{fault}
     \Comment{invalid user page execute}
-  \ElsIf {$\lnot\mathit{tstatus.U} \land \lnot\mathit{scontrol.A} \land
+  \ElsIf {$\lnot\mathit{role(user)} \land \lnot\mathit{scontrol.A} \land
       \mathit{user} \land \mathit{op.(R \lor W})$}
     \State \textbf{raise} \textbf{fault}
     \Comment{invalid user page access}
