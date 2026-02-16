@@ -5461,12 +5461,14 @@ the following table shows the inter-domain trap routing table keys.
 
 there are 32 wired interrupt pins per processor. an interrupt is
 generated upon an edge condition on the lowest-numbered interrupt pin
-that is asserted. on signaled processors, \texttt{dommsg[domcurr]}
-contains the message default domain used to route an asynchronous trap.
-the processor initiates a \emph{domain context switch} to the
-\emph{message default domain}, then branches to its trap handler.
-\texttt{tcause} is set to \emph{interrupt-n} where \emph{n} is the pin
-number and \texttt{tvalue} is set to zero.
+that is asserted. on the signaled processor, asynchronous traps for
+wired interrupts are unconditionally routed to domain 0\footnote{wired
+interrupts are routed to domain 0 because there is currently no mechanism
+to route them elsewhere. message interrupts must be used for virtual
+devices in domains besides domain 0.}. the processor initiates a
+\emph{domain context switch} to domain 0 and then branches to its trap
+handler. \texttt{tcause} is set to \emph{interrupt-n} where \emph{n} is
+the pin number, and \texttt{tvalue} is set to zero.
 
 \subsection{deadline timer interrupts}
 
