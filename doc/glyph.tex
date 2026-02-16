@@ -3472,7 +3472,7 @@ the section describes the privileged trap registers.
 \subsubsection{trap status (\texttt{tstatus})}
 \texttt{tstatus} is a read-only register containing trap status.
 the \texttt{T} field indicates whether a timer interrupt is pending.
-the \texttt{V} field indicates whether a virtual interrupt is pending.
+the \texttt{M} field indicates whether a message interrupt is pending.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -3482,7 +3482,7 @@ the \texttt{V} field indicates whether a virtual interrupt is pending.
 \node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{T}};
 \draw [black!95] (30,0)    rectangle (31,1);
 \node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
-\node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{V}};
+\node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{M}};
 \end{tikzpicture}
 
 \begin{table}[h]
@@ -3493,7 +3493,7 @@ the \texttt{V} field indicates whether a virtual interrupt is pending.
 \textbf{no.} & \textbf{name} & \textbf{description} \\
 \hline
 \verb|1 << 0| & T   & timer interrupt pending \\
-\verb|1 << 1| & V   & virtual interrupt pending \\
+\verb|1 << 1| & M   & message interrupt pending \\
 \hline
 \end{tabular}
 \caption{trap status fields}
@@ -3578,7 +3578,7 @@ current trap.
 \hline
 \multicolumn{3}{|l|}{\textbf{system interrupts}} \\ \hline
 \verb|30| & timer-interrupt     & timer interrupt \\
-\verb|31| & virtual-interrupt   & virtual interrupt \\
+\verb|31| & message-interrupt   & message interrupt \\
 \hline
 \verb|32...63| & interrupt-n    & interrupt pins 0 -- 31 \\
 \hline
@@ -3594,7 +3594,7 @@ and may contain:
 \begin{itemize}[itemsep=0pt]
 \item the faulting instruction word for \emph{break} and \emph{illegal instruction exceptions}.
 \item the faulting address for \emph{misaligned}, \emph{access} and \emph{page faults}.
-\item the masked thread or domain address for \emph{virtual interrupts}.
+\item the masked thread or domain address for \emph{message interrupts}.
 \item the system clock time for \emph{timer interrupts}.
 \end{itemize}
 
@@ -3817,7 +3817,7 @@ field contains the address space identifier for this thread.
 \subsubsection{system thread address (\texttt{saddr})}
 \texttt{saddr} is a read-only register containing the unique system-wide
 topological address for this thread. the system-wide topological
-address is used as a target for inter-thread virtual interrupts. this
+address is used as a target for inter-thread message interrupts. this
 address is uniquely assigned during system initialization.
 \\
 \par\noindent
@@ -3833,7 +3833,7 @@ address is uniquely assigned during system initialization.
 \subsubsection{system thread domain (\texttt{sdomain})}
 \texttt{sdomain} is a read-only register containing the system-wide
 domain address for this thread. the system-wide domain address
-is used as a target for inter-thread virtual interrupts. this address
+is used as a target for inter-thread message interrupts. this address
 can alias. this address is assigned during context switching.
 \\
 \par\noindent
@@ -3849,7 +3849,7 @@ can alias. this address is assigned during context switching.
 \newpage
 \subsubsection{system target address (\texttt{starget})}
 \texttt{starget} is a read-write register containing the system-wide
-target address of a set of threads to send virtual interrupts to.
+target address of a set of threads to send message interrupts to.
 this register must be set before writing to \texttt{smessage}.
 
 \begin{itemize}[itemsep=0pt]
@@ -3871,7 +3871,7 @@ this register must be set before writing to \texttt{smessage}.
 
 \subsubsection{system target mask (\texttt{smask})}
 \texttt{smask} is a read-write register containing the system-wide
-address mask of a set of threads to send virtual interrupts to.
+address mask of a set of threads to send message interrupts to.
 this register must be set before writing to \texttt{smessage}.
 \\
 \par\noindent
@@ -3884,8 +3884,8 @@ this register must be set before writing to \texttt{smessage}.
 
 \subsubsection{system target message (\texttt{smessage})}
 \texttt{smessage} is a write-only register that causes an edge-triggered
-virtual interrupt to be queued to the thread set in \texttt{starget}.
-virtual interrupts are marked pending in the \texttt{V} field of the
+\emph{message interrupt} to be queued to the thread set in \texttt{starget}.
+message interrupts are marked pending in the \texttt{M} field of the
 \texttt{tstatus} register for the target threads.
 \\
 \par\noindent
@@ -4564,8 +4564,8 @@ interrupts are routed to.
 \subsection{domain context registers}
 
 this section describes the \emph{domain context registers} that control
-virtual interrupt routing, page translation and trap entry functions for
-domain context switching.
+message-signaled interrupt addresses, page translation and trap entry
+functions for domain context switching.
 
 \subsubsection{domain scratch (\texttt{domscratch}$[\mathit{ndom}]$)}
 \texttt{domscratch}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
@@ -5388,8 +5388,8 @@ routed based on the \texttt{dommsg} vector:
 \par\noindent
 \textbf{message exceptions:}
 arising from interrupt pins, the deadline timer, and
-globally-scoped inter-domain messages, also known as virtual interrupts
-or message-signaled interrupts.
+globally-scoped inter-domain messages, also known as message-signaled
+interrupts.
 
 \newpage
 \subsection{inter-domain messages}
@@ -5482,16 +5482,16 @@ to the value in the \texttt{ctime} register.
 \subsection{message signaled interrupts}
 
 message-signaled interrupts, also known as globally-scoped inter-domain
-messages, are multicast over the processor cluster network to initiate
-asynchronous exceptions in the message role of selected threads
-advertising the target thread or domain address after applying the
-address mask.
+messages, are multicast over the
+processor cluster network to initiate asynchronous exceptions in the
+message role of selected threads that advertise the target thread or
+domain address after applying the address mask.
 \\
 \par\noindent
 the \emph{system} role of the initiating processor first disables
 interrupts, then sets the \texttt{starget} and \texttt{smask} registers
-with a target thread or domain address and mask, followed by writing
-to the \texttt{smessage} register. a virtual interrupt is then multicast
+with a target thread or domain address and mask, followed by writing to
+the \texttt{smessage} register. a \emph{message interrupt} is then multicast
 to the set of threads matching the masked thread or domain address.
 \\
 \par\noindent
@@ -5519,7 +5519,7 @@ on signaled processors, \texttt{dommsg[domcurr]} contains the message
 default domain used to route an asynchronous trap.
 the processor initiates a \emph{domain context switch} to the
 \emph{message default domain}, then branches to its trap handler.
-\texttt{tcause} is set to \emph{virtual-interrupt} and \texttt{tvalue} is
+\texttt{tcause} is set to \emph{message-interrupt} and \texttt{tvalue} is
 set to the masked thread or domain address from the initiating processor.
 
 \newpage
