@@ -5608,6 +5608,132 @@ the following procedure is used to perform a domain context switch.
 \end{algorithm}
 
 \newpage
+\subsection{domain message router}
+
+in one proposed design, asynchronous interrupt messages are routed
+across the processor cluster network using address tables stored in
+CAM\footnote{CAM\,-- Content Addressable Memory} to aggregate domain
+address advertisements across the cluster. globally-scoped inter-domain
+messages carry an address and mask. the address may be either a
+\emph{topological address} or a \emph{domain address}. the use of a
+mask allows multiple addresses to be targeted with a single message.
+\\
+\par\noindent
+topological addresses are unique for each processor across the cluster.
+domain addresses may alias across multiple processors. both address types
+support multicast. topological addresses are multicast using the address
+mask. domain addresses are intrinsically multicast addresses, but may be
+combined with masked comparison to select multiple target domains.
+\\
+\par\noindent
+the following diagram shows routing tables for an example four node
+processor cluster.
+\\
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[xscale=0.5, yscale=0.45]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+
+\draw [black!95] (-14,-10.5) rectangle (-4,-5.5);
+\fill [black!5] (-13,-7.5) rectangle (-5,-6.5);
+\draw [black!95] (-13,-7.5) rectangle (-5,-6.5);
+\node [font=\scriptsize,anchor=center,align=center] at (-9,-7) {
+    \textsf{16-entry CAM}
+};
+\node [font=\scriptsize,anchor=center,align=center] at (-9,-9) {
+    \textsf{processor 2}
+};
+\fill [black!5] (-13,-4.5) rectangle (-5,-0.5);
+\draw [black!95] (-13,-4.5) rectangle (-5,-0.5);
+\node [font=\scriptsize,anchor=center,align=center] at (-9,-2.5) {
+    \textsf{64-entry CAM} \\ \emph{(comparand-masked)}
+};
+
+\draw [black!95] (-14,5.5) rectangle (-4,10.5);
+\fill [black!5] (-13,6.5) rectangle (-5,7.5);
+\draw [black!95] (-13,6.5) rectangle (-5,7.5);
+\node [font=\scriptsize,anchor=center,align=center] at (-9,7) {
+    \textsf{16-entry CAM}
+};
+\node [font=\scriptsize,anchor=center,align=center] at (-9,9) {
+    \textsf{processor 0}
+};
+\fill [black!5] (-13,0.5) rectangle (-5,4.5);
+\draw [black!95] (-13,0.5) rectangle (-5,4.5);
+\node [font=\scriptsize,anchor=center,align=center] at (-9,2.5) {
+    \textsf{64-entry CAM} \\ \emph{(comparand-masked)}
+};
+
+\draw [black!95] (4,-10.5) rectangle (14,-5.5);
+\fill [black!5] (5,-7.5) rectangle (13,-6.5);
+\draw [black!95] (5,-7.5) rectangle (13,-6.5);
+\node [font=\scriptsize,anchor=center,align=center] at (9,-7) {
+    \textsf{16-entry CAM}
+};
+\node [font=\scriptsize,anchor=center,align=center] at (9,-9) {
+    \textsf{processor 3}
+};
+\fill [black!5] (5,-4.5) rectangle (13,-0.5);
+\draw [black!95] (5,-4.5) rectangle (13,-0.5);
+\node [font=\scriptsize,anchor=center,align=center] at (9,-2.5) {
+    \textsf{64-entry CAM} \\ \emph{(comparand-masked)}
+};
+
+\draw [black!95] (4,5.5) rectangle (14,10.5);
+\fill [black!5] (5,6.5) rectangle (13,7.5);
+\draw [black!95] (5,6.5) rectangle (13,7.5);
+\node [font=\scriptsize,anchor=center,align=center] at (9,7) {
+    \textsf{16-entry CAM}
+};
+\node [font=\scriptsize,anchor=center,align=center] at (9,9) {
+    \textsf{processor 1}
+};
+\fill [black!5] (5,0.5) rectangle (13,4.5);
+\draw [black!95] (5,0.5) rectangle (13,4.5);
+\node [font=\scriptsize,anchor=center,align=center] at (9,2.5) {
+    \textsf{64-entry CAM} \\ \emph{(comparand-masked)}
+};
+
+\fill [black!5] (-4,-3.5) rectangle (-2,-1.5);
+\draw [black!95] (-4,-3.5) rectangle (-2,-1.5);
+\node [font=\scriptsize,anchor=center,align=center,xshift=1pt] at (-3,-2.5) {
+    \textsf{router}
+};
+
+\fill [black!5] (-4,1.5) rectangle (-2,3.5);
+\draw [black!95] (-4,1.5) rectangle (-2,3.5);
+\node [font=\scriptsize,anchor=center,align=center,xshift=1pt] at (-3,2.5) {
+    \textsf{router}
+};
+
+\fill [black!5] (2,-3.5) rectangle (4,-1.5);
+\draw [black!95] (2,-3.5) rectangle (4,-1.5);
+\node [font=\scriptsize,anchor=center,align=center,xshift=1pt] at (3,-2.5) {
+    \textsf{router}
+};
+
+\fill [black!5] (2,1.5) rectangle (4,3.5);
+\draw [black!95] (2,1.5) rectangle (4,3.5);
+\node [font=\scriptsize,anchor=center,align=center,xshift=1pt] at (3,2.5) {
+    \textsf{router}
+};
+
+\draw [black!95] (-2,-1.5) rectangle (2,1.5);
+\draw [black!95] (-2,-1.5) -- (2,1.5);
+\draw [black!95] (-2,1.5) -- (2,-1.5);
+
+\fill[black!95] (-2,-1.5) circle (2mm);
+\fill[black!95] (2,1.5)   circle (2mm);
+\fill[black!95] (-2,1.5)  circle (2mm);
+\fill[black!95] (2,-1.5)  circle (2mm);
+
+\end{scope}
+\end{tikzpicture}
+\caption{example four node processor--router network.}
+\label{fig:example-four-node-processor-router-network}
+\end{figure}
+
+\newpage
 \section{Virtual machine}
 
 glyph defines a base virtual machine model with a well-defined minimum set of
