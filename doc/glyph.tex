@@ -5634,98 +5634,106 @@ processor cluster.
 \begin{tikzpicture}[xscale=0.5, yscale=0.45]
 \begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
 
-\draw [black!95] (-14,-10.5) rectangle (-4,-5.5);
-\fill [black!5] (-13,-7.5) rectangle (-5,-6.5);
-\draw [black!95] (-13,-7.5) rectangle (-5,-6.5);
-\node [font=\scriptsize,anchor=center,align=center] at (-9,-7) {
-    \textsf{16-entry CAM}
+\draw [black!95] (-13.5,-10.5) rectangle (-3.5,-5.5);
+\fill [black!5] (-12.5,-7.5) rectangle (-4.5,-6.5);
+\draw [black!95] (-12.5,-7.5) rectangle (-4.5,-6.5);
+\node [font=\scriptsize,anchor=center,align=center] at (-8.5,-7) {
+    \texttt{domaddr} \textsf{(16-entry)}
 };
-\node [font=\scriptsize,anchor=center,align=center] at (-9,-9) {
+\node [font=\scriptsize,anchor=center,align=center] at (-8.5,-9) {
     \textsf{processor 2}
 };
-\fill [black!5] (-13,-4.5) rectangle (-5,-0.5);
-\draw [black!95] (-13,-4.5) rectangle (-5,-0.5);
-\node [font=\scriptsize,anchor=center,align=center] at (-9,-2.5) {
+\fill [black!5] (-12.5,-4.5) rectangle (-4.5,-0.5);
+\draw [black!95] (-12.5,-4.5) rectangle (-4.5,-0.5);
+\node [font=\scriptsize,anchor=center,align=center] at (-8.5,-2.5) {
     \textsf{64-entry CAM} \\ \emph{(comparand-masked)}
 };
+\draw[black!95, ->, -{Stealth}] (-8.5,-6.5) -- (-8.5,-4.5);
 
-\draw [black!95] (-14,5.5) rectangle (-4,10.5);
-\fill [black!5] (-13,6.5) rectangle (-5,7.5);
-\draw [black!95] (-13,6.5) rectangle (-5,7.5);
-\node [font=\scriptsize,anchor=center,align=center] at (-9,7) {
-    \textsf{16-entry CAM}
+\draw [black!95] (-13.5,5.5) rectangle (-3.5,10.5);
+\fill [black!5] (-12.5,6.5) rectangle (-4.5,7.5);
+\draw [black!95] (-12.5,6.5) rectangle (-4.5,7.5);
+\node [font=\scriptsize,anchor=center,align=center] at (-8.5,7) {
+    \texttt{domaddr} \textsf{(16-entry)}
 };
-\node [font=\scriptsize,anchor=center,align=center] at (-9,9) {
+\node [font=\scriptsize,anchor=center,align=center] at (-8.5,9) {
     \textsf{processor 0}
 };
-\fill [black!5] (-13,0.5) rectangle (-5,4.5);
-\draw [black!95] (-13,0.5) rectangle (-5,4.5);
-\node [font=\scriptsize,anchor=center,align=center] at (-9,2.5) {
+\fill [black!5] (-12.5,0.5) rectangle (-4.5,4.5);
+\draw [black!95] (-12.5,0.5) rectangle (-4.5,4.5);
+\node [font=\scriptsize,anchor=center,align=center] at (-8.5,2.5) {
     \textsf{64-entry CAM} \\ \emph{(comparand-masked)}
 };
+\draw[black!95, ->, -{Stealth}] (-8.5,6.5) -- (-8.5,4.5);
 
-\draw [black!95] (4,-10.5) rectangle (14,-5.5);
-\fill [black!5] (5,-7.5) rectangle (13,-6.5);
-\draw [black!95] (5,-7.5) rectangle (13,-6.5);
-\node [font=\scriptsize,anchor=center,align=center] at (9,-7) {
-    \textsf{16-entry CAM}
+\draw [black!95] (3.5,-10.5) rectangle (13.5,-5.5);
+\fill [black!5] (4.5,-7.5) rectangle (12.5,-6.5);
+\draw [black!95] (4.5,-7.5) rectangle (12.5,-6.5);
+\node [font=\scriptsize,anchor=center,align=center] at (8.5,-7) {
+    \texttt{domaddr} \textsf{(16-entry)}
 };
-\node [font=\scriptsize,anchor=center,align=center] at (9,-9) {
+\node [font=\scriptsize,anchor=center,align=center] at (8.5,-9) {
     \textsf{processor 3}
 };
-\fill [black!5] (5,-4.5) rectangle (13,-0.5);
-\draw [black!95] (5,-4.5) rectangle (13,-0.5);
-\node [font=\scriptsize,anchor=center,align=center] at (9,-2.5) {
+\fill [black!5] (4.5,-4.5) rectangle (12.5,-0.5);
+\draw [black!95] (4.5,-4.5) rectangle (12.5,-0.5);
+\node [font=\scriptsize,anchor=center,align=center] at (8.5,-2.5) {
     \textsf{64-entry CAM} \\ \emph{(comparand-masked)}
 };
+\draw[black!95, ->, -{Stealth}] (8.5,-6.5) -- (8.5,-4.5);
 
-\draw [black!95] (4,5.5) rectangle (14,10.5);
-\fill [black!5] (5,6.5) rectangle (13,7.5);
-\draw [black!95] (5,6.5) rectangle (13,7.5);
-\node [font=\scriptsize,anchor=center,align=center] at (9,7) {
-    \textsf{16-entry CAM}
+\draw [black!95] (3.5,5.5) rectangle (13.5,10.5);
+\fill [black!5] (4.5,6.5) rectangle (12.5,7.5);
+\draw [black!95] (4.5,6.5) rectangle (12.5,7.5);
+\node [font=\scriptsize,anchor=center,align=center] at (8.5,7) {
+    \texttt{domaddr} \textsf{(16-entry)}
 };
-\node [font=\scriptsize,anchor=center,align=center] at (9,9) {
+\node [font=\scriptsize,anchor=center,align=center] at (8.5,9) {
     \textsf{processor 1}
 };
-\fill [black!5] (5,0.5) rectangle (13,4.5);
-\draw [black!95] (5,0.5) rectangle (13,4.5);
-\node [font=\scriptsize,anchor=center,align=center] at (9,2.5) {
+\fill [black!5] (4.5,0.5) rectangle (12.5,4.5);
+\draw [black!95] (4.5,0.5) rectangle (12.5,4.5);
+\node [font=\scriptsize,anchor=center,align=center] at (8.5,2.5) {
     \textsf{64-entry CAM} \\ \emph{(comparand-masked)}
 };
+\draw[black!95, ->, -{Stealth}] (8.5,6.5) -- (8.5,4.5);
 
-\fill [black!5] (-4,-3.5) rectangle (-2,-1.5);
-\draw [black!95] (-4,-3.5) rectangle (-2,-1.5);
-\node [font=\scriptsize,anchor=center,align=center,xshift=1pt] at (-3,-2.5) {
+\fill [black!5] (-3.5,-3.5) rectangle (-1.5,-1.5);
+\draw [black!95] (-3.5,-3.5) rectangle (-1.5,-1.5);
+\node [font=\scriptsize,anchor=center,align=center,xshift=1pt] at (-2.5,-2.5) {
     \textsf{router}
 };
+\draw[black!95, <->, >={Stealth}] (-4.5,-2.5) -- (-3.5,-2.5);
 
-\fill [black!5] (-4,1.5) rectangle (-2,3.5);
-\draw [black!95] (-4,1.5) rectangle (-2,3.5);
-\node [font=\scriptsize,anchor=center,align=center,xshift=1pt] at (-3,2.5) {
+\fill [black!5] (-3.5,1.5) rectangle (-1.5,3.5);
+\draw [black!95] (-3.5,1.5) rectangle (-1.5,3.5);
+\node [font=\scriptsize,anchor=center,align=center,xshift=1pt] at (-2.5,2.5) {
     \textsf{router}
 };
+\draw[black!95, <->, >={Stealth}] (-4.5,2.5) -- (-3.5,2.5);
 
-\fill [black!5] (2,-3.5) rectangle (4,-1.5);
-\draw [black!95] (2,-3.5) rectangle (4,-1.5);
-\node [font=\scriptsize,anchor=center,align=center,xshift=1pt] at (3,-2.5) {
+\fill [black!5] (1.5,-3.5) rectangle (3.5,-1.5);
+\draw [black!95] (1.5,-3.5) rectangle (3.5,-1.5);
+\node [font=\scriptsize,anchor=center,align=center,xshift=1pt] at (2.5,-2.5) {
     \textsf{router}
 };
+\draw[black!95, <->, >={Stealth}] (4.5,-2.5) -- (3.5,-2.5);
 
-\fill [black!5] (2,1.5) rectangle (4,3.5);
-\draw [black!95] (2,1.5) rectangle (4,3.5);
-\node [font=\scriptsize,anchor=center,align=center,xshift=1pt] at (3,2.5) {
+\fill [black!5] (1.5,1.5) rectangle (3.5,3.5);
+\draw [black!95] (1.5,1.5) rectangle (3.5,3.5);
+\node [font=\scriptsize,anchor=center,align=center,xshift=1pt] at (2.5,2.5) {
     \textsf{router}
 };
+\draw[black!95, <->, >={Stealth}] (4.5,2.5) -- (3.5,2.5);
 
-\draw [black!95] (-2,-1.5) rectangle (2,1.5);
-\draw [black!95] (-2,-1.5) -- (2,1.5);
-\draw [black!95] (-2,1.5) -- (2,-1.5);
+\draw [black!95] (-1.5,-1.5) rectangle (1.5,1.5);
+\draw [black!95] (-1.5,-1.5) -- (1.5,1.5);
+\draw [black!95] (-1.5,1.5) -- (1.5,-1.5);
 
-\fill[black!95] (-2,-1.5) circle (2mm);
-\fill[black!95] (2,1.5)   circle (2mm);
-\fill[black!95] (-2,1.5)  circle (2mm);
-\fill[black!95] (2,-1.5)  circle (2mm);
+\fill[black!95] (-1.5,-1.5) circle (1.5mm);
+\fill[black!95] (1.5,1.5)   circle (1.5mm);
+\fill[black!95] (-1.5,1.5)  circle (1.5mm);
+\fill[black!95] (1.5,-1.5)  circle (1.5mm);
 
 \end{scope}
 \end{tikzpicture}
