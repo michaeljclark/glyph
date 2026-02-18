@@ -5438,10 +5438,12 @@ for a specific role on the local processor.
 \\
 \par\noindent
 \textbf{globally-scoped inter-domain messages:} use the \texttt{starget},
-\texttt{smask}, and \texttt{smessage} system registers, to multicast
-asynchronous message-signaled interrupts over the processor cluster network
-to the message role of processors matching the advertised target thread or
-domain address after applying the address mask.
+\texttt{smask}, and \texttt{smessage} system registers to multicast
+asynchronous message interrupts over the processor cluster network.
+interrupts are delivered to the message role of processors matching the
+advertised target thread or domain address after applying the address mask.
+\texttt{sstatus.E} signals message interrupt queuing errors due
+to \emph{head-of-line blocking} or other transport faults.
 \\
 \par\noindent
 the following table shows the inter-domain message instructions.
