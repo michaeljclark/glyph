@@ -3437,6 +3437,7 @@ registers:
 \hline
 \multicolumn{3}{|l|}{\textbf{privileged system registers}} \\
 \hline
+\texttt{0x20} & sstatus   & system status \\
 \texttt{0x21} & scontrol  & system control \\
 \texttt{0x22} & sfeature  & system feature \\
 \texttt{0x23} & sversion  & system version \\
@@ -3673,6 +3674,31 @@ system trap handler constants.
 \subsection{privileged system registers}
 the section describes the privileged system registers.
 
+\subsubsection{system status (\texttt{sstatus})}
+\texttt{sstatus} is a read-only register containing system status bits.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (31,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
+\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{E}};
+\end{tikzpicture}
+
+\begin{table}[h]
+\centering
+\footnotesize
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{no.} & \textbf{name} & \textbf{description} \\
+\hline
+\verb|1 << 0| & E   & system message fault \\
+\hline
+\end{tabular}
+\caption{system status fields}
+\label{tab:system-status-fields}
+\end{table}
+
 \subsubsection{system control (\texttt{scontrol})}
 \texttt{scontrol} is a read-write register containing system control bits.
 \\
@@ -3884,9 +3910,12 @@ this register must be set before writing to \texttt{smessage}.
 
 \subsubsection{system target message (\texttt{smessage})}
 \texttt{smessage} is a write-only register that causes an edge-triggered
-\emph{message interrupt} to be queued to the thread set in \texttt{starget}.
-message interrupts are marked pending in the \texttt{M} field of the
-\texttt{tstatus} register for the target threads.
+\emph{message interrupt} to be queued to the set of threads specified in
+the \texttt{starget} and \texttt{smask} registers. message interrupts are
+marked pending in the \texttt{M} field of the \texttt{tstatus} register
+of the receiving threads. message interrupt queuing can fail due to
+\emph{head-of-line blocking} or other transport faults. \texttt{sstatus.E}
+is set if the most recent message was discarded.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
