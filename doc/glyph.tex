@@ -5439,7 +5439,7 @@ for a specific role on the local processor.
 \par\noindent
 \textbf{globally-scoped inter-domain messages:} use the \texttt{starget},
 \texttt{smask}, and \texttt{smessage} system registers to multicast
-asynchronous message interrupts over the processor cluster network.
+asynchronous message interrupts over the processor network.
 interrupts are delivered to the message role of processors matching the
 advertised target thread or domain address after applying the address mask.
 \texttt{sstatus.E} signals message interrupt queuing errors due
@@ -5515,17 +5515,17 @@ to the value in the \texttt{ctime} register.
 \subsection{message signaled interrupts}
 
 message-signaled interrupts, also known as globally-scoped inter-domain
-messages, are multicast over the
-processor cluster network to initiate asynchronous exceptions in the
-message role of selected threads that advertise the target thread or
-domain address after applying the address mask.
+messages, are multicast over the processor network to initiate asynchronous
+exceptions in the message role of all threads that advertise the target
+thread or domain address after applying a mask.
 \\
 \par\noindent
 the \emph{system} role of the initiating processor first disables
 interrupts, then sets the \texttt{starget} and \texttt{smask} registers
 with a target thread or domain address and mask, followed by writing to
 the \texttt{smessage} register. a \emph{message interrupt} is then multicast
-to the set of threads matching the masked thread or domain address.
+to the set of threads matching the thread or domain address applying the mask.
+\texttt{sstatus.E} is set if an error occurs.
 \\
 \par\noindent
 the following special addresses can be used.
@@ -5641,24 +5641,33 @@ the following procedure is used to perform a domain context switch.
 \newpage
 \subsection{domain message router}
 
-in one proposed design, asynchronous interrupt messages are routed
-across the processor cluster network using address tables stored in
-CAM\footnote{CAM\,-- Content Addressable Memory} to aggregate domain
-address advertisements across the cluster. globally-scoped inter-domain
-messages carry an address and mask. the address may be either a
-\emph{topological address} or a \emph{domain address}. the use of a
-mask allows multiple addresses to be targeted with a single message.
+asynchronous interrupt messages are routed across the processor network
+using route tables that aggregate domain address advertisements.
+globally-scoped inter-domain messages carry an address and mask.
+the address may be either a \emph{topological address} or a
+\emph{domain address}. the use of a mask allows multiple addresses
+to be targeted with a single message.
 \\
 \par\noindent
-topological addresses are unique for each processor across the cluster.
+topological addresses are unique for each processor across the network.
 domain addresses may alias across multiple processors. both address types
 support multicast. topological addresses are multicast using the address
 mask. domain addresses are intrinsically multicast addresses, but may be
 combined with masked comparison to select multiple target domains.
 \\
 \par\noindent
+the processor network must provide reliable multicast.
+address and mask combinations may match multiple processors.
+output queues may experience \emph{head-of-line blocking}, which
+must be signaled to senders. receivers acknowledge each interrupt.
+the router associates a destination count with each queued message
+in the sender's output queue, initialized to the number of matching
+destinations and decremented on each acknowledgement; the message is
+dequeued when the count reaches zero.
+\\
+\par\noindent
 the following diagram shows routing tables for an example four node
-processor cluster.
+processor network.
 \\
 \begin{figure}[H]
 \centering
