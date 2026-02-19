@@ -3692,7 +3692,7 @@ the section describes the privileged system registers.
 \hline
 \textbf{no.} & \textbf{name} & \textbf{description} \\
 \hline
-\verb|1 << 0| & E   & system message fault \\
+\verb|1 << 0| & E   & system message exception \\
 \hline
 \end{tabular}
 \caption{system status fields}
@@ -3921,7 +3921,7 @@ the \texttt{starget} and \texttt{smask} registers. message interrupts are
 marked pending in the \texttt{M} field of the \texttt{tstatus} register
 of the receiving threads. message interrupt queuing can fail due to
 \emph{head-of-line blocking} or other transport faults. \texttt{sstatus.E}
-is set if the most recent message was discarded.
+is set if the most recent message was discarded due to an exception.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -5448,7 +5448,7 @@ for a specific role on the local processor.
 asynchronous message interrupts over the processor network.
 interrupts are delivered to the message role of processors matching the
 advertised target thread or domain address after applying the address mask.
-\texttt{sstatus.E} signals message interrupt queuing errors due
+\texttt{sstatus.E} signals message interrupt queuing exceptions due
 to \emph{head-of-line blocking} or other transport faults.
 \\
 \par\noindent
@@ -5531,7 +5531,7 @@ interrupts, then sets the \texttt{starget} and \texttt{smask} registers
 with a target thread or domain address and mask, followed by writing to
 the \texttt{smessage} register. a \emph{message interrupt} is then multicast
 to the set of threads matching the thread or domain address applying the mask.
-\texttt{sstatus.E} is set if an error occurs.
+\texttt{sstatus.E} is set if an exception occurs.
 \\
 \par\noindent
 the following special addresses can be used.
