@@ -5445,9 +5445,9 @@ for a specific role on the local processor.
 \par\noindent
 \textbf{globally-scoped inter-domain messages:} use the \texttt{starget},
 \texttt{smask}, and \texttt{smessage} system registers to multicast
-asynchronous message interrupts over the processor network.
-interrupts are delivered to the message role of processors matching the
-advertised target thread or domain address after applying the address mask.
+asynchronous message interrupts over the processor network. interrupts are
+delivered to the message role of processors matching the advertised target
+topological or domain address after applying the address mask.
 \texttt{sstatus.E} signals message interrupt queuing exceptions due
 to \emph{head-of-line blocking} or other transport faults.
 \\
@@ -5493,6 +5493,18 @@ the following table shows the inter-domain trap routing table keys.
 \label{tab:inter-domain-trap-routing-table-keys}
 \end{table}
 
+\par\noindent
+globally-scoped inter-domain messages can target unique
+\emph{topological addresses}, \emph{domain addresses}, or masked
+sets selecting multiple addresses for reliable multicast delivery:
+
+\begin{itemize}[itemsep=0pt]
+\item \textbf{topological addresses:} identify a unique hardware
+thread and domain number.
+\item \textbf{domain addresses:} identify a set of threads that
+share the same domain address.
+\end{itemize}
+
 \newpage
 \subsection{wired interrupt pins}
 
@@ -5528,7 +5540,7 @@ thread or domain address after applying a mask.
 \par\noindent
 the \emph{system} role of the initiating processor first disables
 interrupts, then sets the \texttt{starget} and \texttt{smask} registers
-with a target thread or domain address and mask, followed by writing to
+with a target topological or domain address and mask, followed by writing to
 the \texttt{smessage} register. a \emph{message interrupt} is then multicast
 to the set of threads matching the thread or domain address applying the mask.
 \texttt{sstatus.E} is set if an exception occurs.
