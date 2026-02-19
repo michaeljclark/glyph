@@ -3844,16 +3844,22 @@ field contains the address space identifier for this thread.
 \texttt{saddr} is a read-only register containing the unique system-wide
 topological address for this thread. the system-wide topological
 address is used as a target for inter-thread message interrupts. this
-address is uniquely assigned during system initialization.
+address is uniquely assigned during system initialization. if the domain
+extension is present, the least significant bits of the address encode
+the current domain number; otherwise, the structure of the topological
+address is implementation-defined.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
-\draw [black!95] (0.5,0)    rectangle (32,1);
+\draw [black!95] (0.5,0)    rectangle (28,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread address}};
+\node [font=\small,anchor=base] at (14.25,0.25)  {\emph{thread address}};
 \node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
 \node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{0}};
+\node [font=\tiny,anchor=base west] at (28,1.25)  {$log_2(\mathit{ndom})$};
+\node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
+
 \end{tikzpicture}
 
 \subsubsection{system thread domain (\texttt{sdomain})}
