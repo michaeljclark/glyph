@@ -3096,7 +3096,7 @@ glyph is designed to support translation to instruction sets with
 \emph{strongly-ordered} operations with writes must have
 implicit memory ordering barriers with respect to relaxed memory
 operations. this means any instruction with \emph{strongly-ordered}
-writes must be preceded by an implicit memory barrier such that
+writes must be followed by an implicit memory barrier such that
 prior writes may not be reordered past a \emph{strongly-ordered} or
 \emph{synchronized} memory write, subsequent reads may not be reordered
 before such a write, and reads to the same memory location preserve
