@@ -5665,11 +5665,13 @@ the address may be either a \emph{topological address} or a
 to be targeted with a single message.
 \\
 \par\noindent
-topological addresses are unique for each processor across the network.
-domain addresses may alias across multiple processors. both address types
-support multicast. topological addresses are multicast using the address
-mask. domain addresses are intrinsically multicast addresses, but may be
-combined with masked comparison to select multiple target domains.
+topological addresses are unique across the processor network. domain
+addresses may alias across processors. both address types support
+multicast. multicast to topological addresses uses an address mask.
+domain addresses are intrinsically multicast and may additionally use
+masked comparison to select multiple domains. at most one domain is
+matched per processor. if multiple domains match on one processor,
+the lowest-numbered domain is selected.
 \\
 \par\noindent
 the processor network must provide reliable multicast.
