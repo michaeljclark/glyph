@@ -3092,25 +3092,22 @@ ordering and visibility between threads accessing \emph{group} memory.
 \subsection{atomic operations}
 
 glyph is designed to support translation to instruction sets with
-\emph{weakly-ordered} memory operations. to achieve this, all
-\emph{strongly-ordered} operations with writes must have
-implicit memory ordering barriers with respect to relaxed memory
-operations. this means any instruction with \emph{strongly-ordered}
-writes must be followed by an implicit memory barrier such that
-prior writes may not be reordered past a \emph{strongly-ordered} or
-\emph{synchronized} memory write, subsequent reads may not be reordered
-before such a write, and reads to the same memory location preserve
-program order. i.e. \emph{write–write}, \emph{write–read}, and
-\emph{read–read} ordering constraints.
+\emph{weakly-ordered} memory operations. \emph{strongly-ordered} writes
+must enforce a \emph{total store order}. on \emph{weakly-ordered} systems,
+an implicit memory barrier must follow these writes to prevent subsequent
+reads from being reordered with respect to them.
 \\
 \par\noindent
-translation to \emph{weakly-ordered} memory systems with \emph{acquire-release}
-ordering requires implicit barriers around locked atomic operations because
-they act as implicit synchronization points. \emph{acquire} loads are
-relaxed except for ordering enforced by prior \emph{strongly-ordered}
-stores, and constrain only subsequent memory operations. the addition
-of scoped \emph{group} and \emph{private} address spaces ameliorates the
-cost of maintaining a total store order on global memory.
+thus, \emph{weakly-ordered} systems with \emph{acquire-release} ordering
+require memory barriers after \emph{strongly-ordered} writes and atomic
+\emph{read–modify–write} operations to act as implicit synchronization
+points. \emph{acquire} loads are relaxed except for ordering enforced
+by prior \emph{strongly-ordered} stores, and constrain only subsequent
+memory operations.
+\\
+\par\noindent
+the addition of scoped \emph{group} and \emph{private} address spaces
+ameliorates the cost of maintaining a total store order on global memory.
 
 \begin{itemize}[itemsep=0pt]
 \item \emph{group} --- shared memory with visibility scoped to a localized group of threads.
