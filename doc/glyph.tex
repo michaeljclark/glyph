@@ -5682,6 +5682,8 @@ the router associates a destination count with each queued message
 in the sender's output queue, initialized to the number of matching
 destinations and decremented on each acknowledgement; the message is
 dequeued when the count reaches zero.
+multicast delivery should be synchronized based on the maximum
+hop count, but is implementation-defined.
 \\
 \par\noindent
 the following diagram shows routing tables for an example four node
@@ -5689,7 +5691,7 @@ processor network.
 \\
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[xscale=0.5, yscale=0.45]
+\begin{tikzpicture}[scale=0.4]
 \begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
 
 \draw [black!95] (-13.5,-10.5) rectangle (-3.5,-5.5);
@@ -5759,28 +5761,28 @@ processor network.
 \fill [black!5] (-3.5,-3.5) rectangle (-1.5,-1.5);
 \draw [black!95] (-3.5,-3.5) rectangle (-1.5,-1.5);
 \node [font=\scriptsize,anchor=center,align=center,xshift=1pt] at (-2.5,-2.5) {
-    \textsf{router}
+    \textsf{\fontsize{6.5pt}{8pt}\selectfont router}
 };
 \draw[black!95, <->, >={Stealth}] (-4.5,-2.5) -- (-3.5,-2.5);
 
 \fill [black!5] (-3.5,1.5) rectangle (-1.5,3.5);
 \draw [black!95] (-3.5,1.5) rectangle (-1.5,3.5);
 \node [font=\scriptsize,anchor=center,align=center,xshift=1pt] at (-2.5,2.5) {
-    \textsf{router}
+    \textsf{\fontsize{6.5pt}{8pt}\selectfont router}
 };
 \draw[black!95, <->, >={Stealth}] (-4.5,2.5) -- (-3.5,2.5);
 
 \fill [black!5] (1.5,-3.5) rectangle (3.5,-1.5);
 \draw [black!95] (1.5,-3.5) rectangle (3.5,-1.5);
 \node [font=\scriptsize,anchor=center,align=center,xshift=1pt] at (2.5,-2.5) {
-    \textsf{router}
+    \textsf{\fontsize{6.5pt}{8pt}\selectfont router}
 };
 \draw[black!95, <->, >={Stealth}] (4.5,-2.5) -- (3.5,-2.5);
 
 \fill [black!5] (1.5,1.5) rectangle (3.5,3.5);
 \draw [black!95] (1.5,1.5) rectangle (3.5,3.5);
 \node [font=\scriptsize,anchor=center,align=center,xshift=1pt] at (2.5,2.5) {
-    \textsf{router}
+    \textsf{\fontsize{6.5pt}{8pt}\selectfont router}
 };
 \draw[black!95, <->, >={Stealth}] (4.5,2.5) -- (3.5,2.5);
 
