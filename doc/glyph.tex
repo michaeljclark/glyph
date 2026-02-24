@@ -5436,11 +5436,32 @@ or globally. inter-domain messages are grouped into two categories.
 \end{itemize}
 
 \par\noindent
-\textbf{locally-scoped inter-domain messages:} use the \emph{domain trap
-routing tables} to route synchronous exceptions to the default domain
-for a specific role on the local processor.
-\\
-\par\noindent
+the following table shows inter-domain trap routing table keys for
+\emph{domain context switching}.
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{capability} & \textbf{domain call} & \textbf{domain return} \\
+\hline
+\emph{system}      & \texttt{domsys[domcurr]} & \texttt{domsys[domnext]} \\
+\emph{domain}      & \texttt{domdom[domcurr]} & \texttt{domdom[domnext]} \\
+\emph{capability}  & \texttt{domcap[domcurr]} & \texttt{domcap[domnext]} \\
+\emph{machine}     & \texttt{dommac[domcurr]} & \texttt{dommac[domnext]} \\
+\emph{message}     & \texttt{dommsg[domcurr]} & \texttt{dommsg[domnext]} \\
+\hline
+\end{tabular}
+\caption{inter-domain trap routing table keys}
+\label{tab:inter-domain-trap-routing-table-keys}
+\end{table}
+
+\vspace{-1em}
+
+\subsubsection{locally-scoped inter-domain messages}
+\emph{locally-scoped inter-domain messages} route synchronous
+exceptions to the default domain of roles on the local processor.
 the following table shows the inter-domain message instructions.
 
 \begin{table}[h]
@@ -5461,46 +5482,28 @@ the following table shows the inter-domain message instructions.
 \label{tab:inter-domain-message-instructions}
 \end{table}
 
-\par\noindent
-the following table shows the inter-domain trap routing table keys.
-
-\begin{table}[h]
-\centering
-\small
-\begin{tabular}{|l|l|l|}
-\hline
-\textbf{capability} & \textbf{domain call} & \textbf{domain return} \\
-\hline
-\emph{system}      & \texttt{domsys[domcurr]} & \texttt{domsys[domnext]} \\
-\emph{domain}      & \texttt{domdom[domcurr]} & \texttt{domdom[domnext]} \\
-\emph{capability}  & \texttt{domcap[domcurr]} & \texttt{domcap[domnext]} \\
-\emph{machine}     & \texttt{dommac[domcurr]} & \texttt{dommac[domnext]} \\
-\emph{message}     & \texttt{dommsg[domcurr]} & \texttt{dommsg[domnext]} \\
-\hline
-\end{tabular}
-\caption{inter-domain trap routing table keys}
-\label{tab:inter-domain-trap-routing-table-keys}
-\end{table}
+\vspace{-1em}
 
 \par\noindent
-\textbf{globally-scoped inter-domain messages:} use the \texttt{starget},
-\texttt{smask}, and \texttt{smessage} system registers to multicast
-asynchronous message interrupts over the processor network. interrupts are
-delivered to the message role of processors matching the advertised target
-topological or domain addresses after applying the address mask.
-\texttt{sstatus.E} signals message interrupt queuing exceptions due
-to \emph{head-of-line blocking} or other transport faults.
-\\
-\par\noindent
-globally-scoped inter-domain messages can target unique
-\emph{topological addresses}, \emph{domain addresses}, or masked
-sets selecting multiple addresses for reliable multicast delivery:
+\subsubsection{globally-scoped inter-domain messages}
+\emph{globally-scoped inter-domain messages} route asynchronous
+exceptions to the default domain of the message role on remote
+processors. the \texttt{starget}, \texttt{smask}, and \texttt{smessage}
+system registers are used to multicast asynchronous message interrupts
+over the processor network. interrupts are delivered to processors
+matching the advertised topological or domain addresses after applying
+an address mask. \texttt{sstatus.E} signals message interrupt queuing
+exceptions due to \emph{head-of-line blocking} or other transport
+faults. \emph{topological addresses} are unique to one processor.
+\emph{domain addresses} may be advertised by multiple processors.
+either address type may use masked comparison to select multiple
+destinations for reliable multicast delivery:
 
 \begin{itemize}[itemsep=0pt]
-\item \textbf{topological addresses:} identify a unique hardware
-thread and domain number.
-\item \textbf{domain addresses:} identify a set of threads that
-share the same domain address.
+\item \textbf{topological addresses:} physically identify a unique thread
+and domain number.
+\item \textbf{domain addresses:} logically identify threads sharing the
+same domain address.
 \end{itemize}
 
 \newpage
