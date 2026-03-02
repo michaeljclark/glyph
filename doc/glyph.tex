@@ -3445,9 +3445,9 @@ registers:
 \texttt{0x27} & starget   & system target address \\
 \texttt{0x28} & smask     & system target mask \\
 \texttt{0x29} & smessage  & system target message \\
-\texttt{0x2a} & stimer    & system deadline timer \\
-\texttt{0x2b} & sie       & system interrupt enable \\
-\texttt{0x2c} & sip       & system interrupt pending \\
+\texttt{0x2A} & stimer    & system deadline timer \\
+\texttt{0x2B} & sie       & system interrupt enable \\
+\texttt{0x2C} & sip       & system interrupt pending \\
 \hline
 \multicolumn{3}{|l|}{\textbf{privileged debug registers}} \\
 \hline
@@ -4143,9 +4143,9 @@ the following tables list the privileged capability system registers:
 \hline
 \multicolumn{4}{|l|}{\textbf{capability matrix registers}} \\
 \hline
-\texttt{0x100...0x10f} & colormatread$[n]$   & color matrix read permissions & \\
-\texttt{0x200...0x20f} & colormatwrite$[n]$   & color matrix write permissions & \\
-%\texttt{0x300...0x30f} & colormatexec$[n]$   & color matrix exec permissions & \\
+\texttt{0x100...0x10F} & colormatread$[n]$   & color matrix read permissions & \\
+\texttt{0x200...0x20F} & colormatwrite$[n]$   & color matrix write permissions & \\
+%\texttt{0x300...0x30F} & colormatexec$[n]$   & color matrix exec permissions & \\
 \hline
 \end{tabularx}
 \caption{capability registers}
@@ -4406,23 +4406,23 @@ the following tables list the privileged domain system registers:
 \texttt{0x53} & domlast  & domain number last & \\
 \texttt{0x54} & domcurr  & domain number current & \\
 \texttt{0x55} & domnext  & domain number next & \\
-\texttt{0x400...0x40f} & dommatrix$[n]$ & domain matrix & \\
+\texttt{0x400...0x40F} & dommatrix$[n]$ & domain matrix & \\
 \hline
 \multicolumn{4}{|l|}{\textbf{domain routing registers}} \\
 \hline
-\texttt{0x500...0x50f} & domsys$[n]$    & domain system default domain & \\
-\texttt{0x600...0x60f} & domdom$[n]$    & domain domain default domain & \\
-\texttt{0x700...0x70f} & domcap$[n]$    & domain capability default domain & capability \\
-\texttt{0x800...0x80f} & dommac$[n]$    & domain machine default domain & machine \\
-\texttt{0x900...0x90f} & dommsg$[n]$    & domain message default domain & \\
+\texttt{0x500...0x50F} & domsys$[n]$    & domain system default domain & \\
+\texttt{0x600...0x60F} & domdom$[n]$    & domain domain default domain & \\
+\texttt{0x700...0x70F} & domcap$[n]$    & domain capability default domain & capability \\
+\texttt{0x800...0x80F} & dommac$[n]$    & domain machine default domain & machine \\
+\texttt{0x900...0x90F} & dommsg$[n]$    & domain message default domain & \\
 \hline
 \multicolumn{4}{|l|}{\textbf{domain context registers}} \\
 \hline
-\texttt{0xa00...0xa0f} & domscratch$[n]$& domain scratch & \\
-\texttt{0xb00...0xb0f} & domaddr$[n]$   & domain address & \\
-\texttt{0xc00...0xc0f} & domptr$[n]$    & domain page table root & \\
-\texttt{0xd00...0xd0f} & domthpc$[n]$   & domain trap handler program counter & \\
-\texttt{0xe00...0xe0f} & domthib$[n]$   & domain trap handler immediate base & \\
+\texttt{0xA00...0xA0F} & domscratch$[n]$& domain scratch & \\
+\texttt{0xB00...0xB0F} & domaddr$[n]$   & domain address & \\
+\texttt{0xC00...0xC0F} & domptr$[n]$    & domain page table root & \\
+\texttt{0xD00...0xD0F} & domthpc$[n]$   & domain trap handler program counter & \\
+\texttt{0xE00...0xE0F} & domthib$[n]$   & domain trap handler immediate base & \\
 \hline
 \end{tabularx}
 \caption{domain registers}
@@ -4700,7 +4700,7 @@ the following tables list the privileged machine registers:
 \hline
 \multicolumn{4}{|l|}{\textbf{machine address vectors}} \\
 \hline
-\texttt{0xf00...0xf0f} & macaddr$[n]$   & machine address & domain \\
+\texttt{0xF00...0xF0F} & macaddr$[n]$   & machine address & domain \\
 \hline
 \multicolumn{4}{|l|}{\textbf{machine memory registers}} \\
 \hline
