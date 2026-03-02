@@ -4146,7 +4146,7 @@ the following tables list the privileged capability system registers:
 \hline
 \texttt{0x100...0x10f} & colormatread$[n]$   & color matrix read permissions & \\
 \texttt{0x200...0x20f} & colormatwrite$[n]$   & color matrix write permissions & \\
-\texttt{0x300...0x30f} & colormatexec$[n]$   & color matrix exec permissions & \\
+%\texttt{0x300...0x30f} & colormatexec$[n]$   & color matrix exec permissions & \\
 \hline
 \end{tabularx}
 \caption{capability registers}
@@ -4313,11 +4313,10 @@ executable pages with a matching page table color.
 this section describes the color matrix registers. the \emph{capability
 matrix registers} are permission registers that protect access to
 memory based on a combination of \emph{source} and \emph{destination}
-page table color and \emph{read}, \emph{write}, or \emph{execute}
-permissions. when \texttt{ccontrol.C} is set, memory accesses and
-branches to memory addresses in pages with matching \emph{source} and
-\emph{destination} page table colors, and wider permissions, will cause
-capability traps.
+page table color and \emph{read}, or \emph{write} permissions.
+when \texttt{ccontrol.C} is set, memory accesses and branches to memory
+addresses in pages with matching \emph{source} and \emph{destination}
+page table colors, and wider permissions, will cause capability traps.
 
 \subsubsection{color matrix read permissions (\texttt{colormatread}$[\mathit{ncol}]$)}
 \texttt{colormatread}$[\mathit{ncol}]$ are \textbf{\emph{ncol}} read-write
@@ -4351,21 +4350,21 @@ memory pages with a matching \emph{page table color} index.
 \node [font=\small,anchor=base] at (28.0,0.25)  {\emph{write perms}};
 \end{tikzpicture}
 
-\subsubsection{color matrix exec permissions (\texttt{colormatexec}$[\mathit{ncol}]$)}
-\texttt{colormatexec}$[\mathit{ncol}]$ are \textbf{\emph{ncol}} read-write
-registers containing an array of \textbf{\emph{ncol}} bits with exec
-permissions, used to check branches from executable pages with a
-matching register \emph{page table color} to branch addresses in
-executable pages with a matching \emph{page table color} index.
-\\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black!95] (0,0)    rectangle (32,1);
-\draw [black!95] (24,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{exec perms}};
-\end{tikzpicture}
+%\subsubsection{color matrix exec permissions (\texttt{colormatexec}$[\mathit{ncol}]$)}
+%\texttt{colormatexec}$[\mathit{ncol}]$ are \textbf{\emph{ncol}} read-write
+%registers containing an array of \textbf{\emph{ncol}} bits with exec
+%permissions, used to check branches from executable pages with a
+%matching register \emph{page table color} to branch addresses in
+%executable pages with a matching \emph{page table color} index.
+%\\
+%\par\noindent
+%\begin{tikzpicture}[scale=0.45]
+%\draw [black!95] (0,0)    rectangle (32,1);
+%\draw [black!95] (24,0)    rectangle (32,1);
+%\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
+%\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
+%\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{exec perms}};
+%\end{tikzpicture}
 
 \newpage
 \section{Domain extension}
