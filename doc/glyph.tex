@@ -4407,23 +4407,23 @@ the following tables list the privileged domain system registers:
 \texttt{0x53} & domlast  & domain number last & \\
 \texttt{0x54} & domcurr  & domain number current & \\
 \texttt{0x55} & domnext  & domain number next & \\
-\texttt{0x500...0x50f} & dommatrix$[n]$ & domain matrix & \\
+\texttt{0x400...0x40f} & dommatrix$[n]$ & domain matrix & \\
 \hline
 \multicolumn{4}{|l|}{\textbf{domain routing registers}} \\
 \hline
-\texttt{0x600...0x60f} & domsys$[n]$    & domain system default domain & \\
-\texttt{0x700...0x70f} & domdom$[n]$    & domain domain default domain & \\
-\texttt{0x800...0x80f} & domcap$[n]$    & domain capability default domain & capability \\
-\texttt{0x900...0x90f} & dommac$[n]$    & domain machine default domain & machine \\
-\texttt{0xa00...0xa0f} & dommsg$[n]$    & domain message default domain & \\
+\texttt{0x500...0x50f} & domsys$[n]$    & domain system default domain & \\
+\texttt{0x600...0x60f} & domdom$[n]$    & domain domain default domain & \\
+\texttt{0x700...0x70f} & domcap$[n]$    & domain capability default domain & capability \\
+\texttt{0x800...0x80f} & dommac$[n]$    & domain machine default domain & machine \\
+\texttt{0x900...0x90f} & dommsg$[n]$    & domain message default domain & \\
 \hline
 \multicolumn{4}{|l|}{\textbf{domain context registers}} \\
 \hline
-\texttt{0xb00...0xb0f} & domscratch$[n]$& domain scratch & \\
-\texttt{0xc00...0xc0f} & domaddr$[n]$   & domain address & \\
-\texttt{0xd00...0xd0f} & domptr$[n]$    & domain page table root & \\
-\texttt{0xe00...0xe0f} & domthpc$[n]$   & domain trap handler program counter & \\
-\texttt{0xf00...0xf0f} & domthib$[n]$   & domain trap handler immediate base & \\
+\texttt{0xa00...0xa0f} & domscratch$[n]$& domain scratch & \\
+\texttt{0xb00...0xb0f} & domaddr$[n]$   & domain address & \\
+\texttt{0xc00...0xc0f} & domptr$[n]$    & domain page table root & \\
+\texttt{0xd00...0xd0f} & domthpc$[n]$   & domain trap handler program counter & \\
+\texttt{0xe00...0xe0f} & domthib$[n]$   & domain trap handler immediate base & \\
 \hline
 \end{tabularx}
 \caption{domain registers}
