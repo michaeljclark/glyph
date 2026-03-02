@@ -3191,7 +3191,7 @@ this example omits hazard detection and forwarding logic for the sake of simplic
 \section{User-level registers}
 the architecture provides several user-level status and control registers
 for floating-point status and control, clock time, clock frequency,
-thread address and domain.
+machine address and domain.
 \\
 \par\noindent
 user-level status and control registers can be read and written using the
@@ -3221,8 +3221,8 @@ the following table lists the user-level registers:
 \hline
 \multicolumn{3}{|l|}{\textbf{thread address registers}} \\
 \hline
-\texttt{0x04} & addr      & user thread address \\
-\texttt{0x05} & domain    & user thread domain \\
+\texttt{0x04} & address   & user machine address \\
+\texttt{0x05} & domain    & user domain address \\
 \hline
 \end{tabularx}
 \caption{user-level registers}
@@ -3367,22 +3367,22 @@ this register is visible if \texttt{scontrol.T} is enabled.
 \subsection{thread address registers}
 the section describes the user-level thread address registers.
 
-\subsubsection{thread address (\texttt{addr})}
-\texttt{addr} is a read-only register containing an alias of the unique
-system-wide topological address for this thread from \texttt{saddr}.
+\subsubsection{user machine address (\texttt{address})}
+\texttt{address} is a read-only register containing an alias of the unique
+system-wide machine address for this thread from \texttt{saddress}.
 this register is visible if \texttt{scontrol.D} is enabled.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
-\draw [black!95] (0.5,0)    rectangle (32,1);
+\draw [black!95] (2,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
 \node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread address}};
-\node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{0}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{machine address}};
+\node [font=\small,anchor=base] at (1,0.25)  {\texttt{0\ldots}};
 \end{tikzpicture}
 
-\subsubsection{thread domain (\texttt{domain})}
+\subsubsection{user domain address (\texttt{domain})}
 \texttt{domain} is a read-only register containing an alias of the
 system-wide domain address for this thread from \texttt{sdomain}.
 this register is visible if \texttt{scontrol.D} is enabled.
@@ -3390,11 +3390,11 @@ this register is visible if \texttt{scontrol.D} is enabled.
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
-\draw [black!95] (0.5,0)    rectangle (32,1);
+\draw [black!95] (2,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
 \node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread domain}};
-\node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{1}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{domain address}};
+\node [font=\small,anchor=base] at (1,0.25)  {\texttt{1110}};
 \end{tikzpicture}
 
 \newpage
@@ -3440,8 +3440,8 @@ registers:
 \texttt{0x22} & sfeature  & system feature \\
 \texttt{0x23} & sversion  & system version \\
 \texttt{0x24} & sptr      & system page table root \\
-\texttt{0x25} & saddr     & system thread address \\
-\texttt{0x26} & sdomain   & system thread domain \\
+\texttt{0x25} & saddress  & system machine address \\
+\texttt{0x26} & sdomain   & system domain address \\
 \texttt{0x27} & starget   & system target address \\
 \texttt{0x28} & smask     & system target mask \\
 \texttt{0x29} & smessage  & system target message \\
@@ -3838,42 +3838,41 @@ field contains the address space identifier for this thread.
 \node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
 \end{tikzpicture}
 
-\subsubsection{system thread address (\texttt{saddr})}
-\texttt{saddr} is a read-only register containing the unique system-wide
-topological address for this thread. the system-wide topological
-address is used as a target for inter-thread message interrupts. this
-address is uniquely assigned during system initialization. if the domain
-extension is present, the least significant bits of the address encode
-the current domain number; otherwise, the structure of the topological
-address is implementation-defined.
+\subsubsection{system machine address (\texttt{saddress})}
+\texttt{saddress} is a read-only register containing the unique system-wide
+machine address for this thread. the system-wide machine
+address is used as a target for inter-thread message interrupts.
+this address must not alias across processors.
+this address is assigned during context switching.
+these addresses must be unique per-domain on all processors.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
-\draw [black!95] (0.5,0)    rectangle (28,1);
+\draw [black!95] (2,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (14.25,0.25)  {\emph{thread address}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{machine address}};
 \node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
-\node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{0}};
-\node [font=\tiny,anchor=base west] at (28,1.25)  {$log_2(\mathit{ndom})$};
-\node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
+\node [font=\small,anchor=base] at (1,0.25)  {\texttt{0\ldots}};
 
 \end{tikzpicture}
 
-\subsubsection{system thread domain (\texttt{sdomain})}
+\subsubsection{system domain address (\texttt{sdomain})}
 \texttt{sdomain} is a read-only register containing the system-wide
 domain address for this thread. the system-wide domain address
-is used as a target for inter-thread message interrupts. this address
-can alias. this address is assigned during context switching.
+is used as a target for inter-thread message interrupts.
+this address may alias across processors.
+this address is assigned during context switching.
+these addresses must be unique per-domain on one processor.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
-\draw [black!95] (0.5,0)    rectangle (32,1);
+\draw [black!95] (2,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{thread domain}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{domain address}};
 \node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
-\node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{1}};
+\node [font=\small,anchor=base] at (1,0.25)  {\texttt{1110}};
 \end{tikzpicture}
 
 \newpage
@@ -3885,18 +3884,18 @@ this register must be set before writing to \texttt{smessage}.
 \begin{itemize}[itemsep=0pt]
 \item all-zeros is the \emph{boot processor}.
 \item all-ones is the \emph{broadcast address}.
-\item zero in the \emph{A} field is a \emph{topological address}.
-\item one in the \emph{A} field is a \emph{domain address}.
+\item \texttt{0?\ldots} prefix is a \emph{machine address}.
+\item \texttt{1110?} prefix is a \emph{domain address}.
 \end{itemize}
 
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
-\draw [black!95] (0.5,0)    rectangle (32,1);
+\draw [black!95] (2,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{target address}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{target address}};
 \node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
-\node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{A}};
+\node [font=\small,anchor=base] at (1,0.25)  {\texttt{AS}};
 \end{tikzpicture}
 
 \subsubsection{system target mask (\texttt{smask})}
@@ -4608,23 +4607,25 @@ domain.
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{domain scratch}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{domain scratch}};
 \node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{XLEN-1}};
 \end{tikzpicture}
 
 \subsubsection{domain address (\texttt{domaddr}$[\mathit{ndom}]$)}
 \texttt{domaddr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the domain addresses associated with each
-domain.
+domain. these addresses must be unique per-domain on one processor;
+otherwise, behavior is implementation-defined.
+domain address prefix is unary \texttt{1110}.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black!95] (0,0)    rectangle (32,1);
-\draw [black!95] (0.5,0)    rectangle (32,1);
+\draw [black!95] (2,0)    rectangle (32,1);
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (16.25,0.25)  {\emph{domain address}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{XLEN-1}};
-\node [font=\small,anchor=base] at (0.25,0.25)  {\texttt{1}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{domain address}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
+\node [font=\small,anchor=base] at (1,0.25)  {\texttt{1110}};
 \end{tikzpicture}
 
 \subsubsection{domain page table root (\texttt{domptr}$[\mathit{ndom}]$)}
@@ -4679,7 +4680,7 @@ constants in each domain.
 \section{Machine extension}
 
 the architecture provides an optional machine extension that includes
-machine-level registers for physical memory protection and
+registers for physical memory protection, machine address vectors, and
 software-defined memory management.
 
 \subsubsection{machine registers}
@@ -4688,20 +4689,24 @@ the following tables list the privileged machine registers:
 \begin{table}[H]
 \centering
 \footnotesize
-\begin{tabularx}{125mm}{|l|l|X|}
+\begin{tabularx}{125mm}{|l|l|X|l|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
+\textbf{no.} & \textbf{name} & \textbf{description} & \textbf{depends} \\
 \hline
-\multicolumn{3}{|l|}{\textbf{machine control registers}} \\
+\multicolumn{4}{|l|}{\textbf{machine control registers}} \\
 \hline
-\texttt{0x61} & mcontrol  & machine control \\
-\texttt{0x62} & mfeature  & machine feature \\
+\texttt{0x61} & mcontrol  & machine control & \\
+\texttt{0x62} & mfeature  & machine feature & \\
 \hline
-\multicolumn{3}{|l|}{\textbf{machine memory registers}} \\
+\multicolumn{4}{|l|}{\textbf{machine address vectors}} \\
 \hline
-\texttt{0x63} & mtlbkey   & machine translation lookaside buffer key \\
-\texttt{0x64} & mtlbfmt   & machine translation lookaside buffer format \\
-\texttt{0x65} & mtlbent   & machine translation lookaside buffer entry \\
+\texttt{0xf00...0xf0f} & macaddr$[n]$   & machine address & domain \\
+\hline
+\multicolumn{4}{|l|}{\textbf{machine memory registers}} \\
+\hline
+\texttt{0x63} & mtlbkey   & machine tlb key & \\
+\texttt{0x64} & mtlbfmt   & machine tlb format & \\
+\texttt{0x65} & mtlbent   & machine tlb entry & \\
 \hline
 \end{tabularx}
 \caption{machine registers}
@@ -4778,6 +4783,27 @@ control and features.
 \caption{machine feature fields}
 \label{tab:machine-feature-fields}
 \end{table}
+
+\subsection{machine address vectors}
+the section describes the privileged machine registers for domain
+machine addresses.
+
+\subsubsection{machine address (\texttt{macaddr}$[\mathit{ndom}]$)}
+\texttt{macaddr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
+registers containing an array of the machine addresses associated with each
+domain. these addresses must be unique per-domain on all processors;
+otherwise, behavior is implementation-defined.
+machine address prefix is unary \texttt{0}.
+\\
+\par\noindent
+\begin{tikzpicture}[scale=0.45]
+\draw [black!95] (0,0)    rectangle (32,1);
+\draw [black!95] (2,0)    rectangle (32,1);
+\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
+\node [font=\small,anchor=base] at (16,0.25)  {\emph{machine address}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
+\node [font=\small,anchor=base] at (1,0.25)  {\texttt{0\ldots}};
+\end{tikzpicture}
 
 \newpage
 \subsection{machine memory registers}
@@ -5490,16 +5516,16 @@ exceptions to the default domain of the message role on remote
 processors. the \texttt{starget}, \texttt{smask}, and \texttt{smessage}
 system registers are used to multicast asynchronous message interrupts
 over the processor network. interrupts are delivered to processors
-matching the advertised topological or domain addresses after applying
+matching the advertised machine or domain addresses after applying
 an address mask. \texttt{sstatus.E} signals message interrupt queuing
 exceptions due to \emph{head-of-line blocking} or other transport
-faults. \emph{topological addresses} are unique to one processor.
+faults. \emph{machine addresses} are unique to one processor.
 \emph{domain addresses} may be advertised by multiple processors.
 either address type may use masked comparison to select multiple
 destinations for reliable multicast delivery:
 
 \begin{itemize}[itemsep=0pt]
-\item \textbf{topological addresses:} physically identify a unique thread
+\item \textbf{machine addresses:} physically identify a unique thread
 and domain number.
 \item \textbf{domain addresses:} logically identify threads sharing the
 same domain address.
@@ -5540,7 +5566,7 @@ thread or domain address after applying a mask.
 \par\noindent
 the \emph{system} role of the initiating processor first disables
 interrupts, then sets the \texttt{starget} and \texttt{smask} registers
-with a target topological or domain address and mask, followed by writing to
+with a target machine or domain address and mask, followed by writing to
 the \texttt{smessage} register. a \emph{message interrupt} is then multicast
 to the set of threads matching the thread or domain address applying the mask.
 \texttt{sstatus.E} is set if an exception occurs.
@@ -5557,8 +5583,8 @@ the following special addresses can be used.
 \hline
 \texttt{0\ldots0}& all-zeros & \emph{boot processor} \\
 \texttt{1\ldots1} & all-ones & \emph{broadcast address} \\
-\texttt{0?\ldots} & MSB-zero & \emph{topological address} \\
-\texttt{1?\ldots} & MSB-one & \emph{domain address} \\
+\texttt{0?\ldots} & physical & \emph{machine address} \\
+\texttt{1110?} & group & \emph{domain address} \\
 \hline
 \end{tabular}
 \caption{special inter-domain message addresses}
@@ -5603,6 +5629,7 @@ the following domain vectors hold state for a domain context switch.
 \texttt{domscratch[n]} & \texttt{tscratch} & trap scratch value \\
 \texttt{domthpc[n]} & \texttt{thpc} & trap handler program counter \\
 \texttt{domthib[n]} & \texttt{thib} & trap handler immediate base \\
+\texttt{macaddr[n]} & \texttt{saddress} & system machine address \\
 \texttt{domaddr[n]} & \texttt{sdomain} & system domain address \\
 \texttt{domptr[n]} & \texttt{sptr} & system page table root pointer \\
 \hline
@@ -5644,6 +5671,8 @@ the following procedure is used to perform a domain context switch.
     \Comment{restore trap handler program counter}
     \State $\mathit{thib} \gets \mathit{domthib[domain]}$
     \Comment{restore trap handler immediate base}
+    \State $\mathit{saddress} \gets \mathit{macaddr[domain]}$
+    \Comment{restore system machine address}
     \State $\mathit{sdomain} \gets \mathit{domaddr[domain]}$
     \Comment{restore system domain address}
     \State $\mathit{sptr} \gets \mathit{domptr[domain]}$
@@ -5660,16 +5689,16 @@ the following procedure is used to perform a domain context switch.
 \subsection{domain message router}
 
 asynchronous interrupt messages are routed across the processor network
-using route tables that aggregate domain address advertisements.
+using route tables that aggregate address advertisements.
 globally-scoped inter-domain messages carry an address and mask.
-the address may be either a \emph{topological address} or a
-\emph{domain address}. the use of a mask allows multiple addresses
-to be targeted with a single message.
+the address may be either a \emph{machine address} or a \emph{domain address}.
+the use of a mask allows targeting multiple addresses with a single message.
 \\
 \par\noindent
-topological addresses are unique across the processor network. domain
-addresses may alias across processors. both address types support
-multicast. multicast to topological addresses uses an address mask.
+machine addresses are unique across all processors.
+domain addresses may alias across processors.
+both address types support multicast.
+multicast to multiple machine addresses uses masked comparison.
 domain addresses are intrinsically multicast and may additionally use
 masked comparison to select multiple domains. at most one domain is
 matched per processor. if multiple domains match on one processor,
@@ -5692,109 +5721,135 @@ processor network.
 \\
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=0.4]
+\begin{tikzpicture}[scale=0.43]
 \begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
 
-\draw [black!95] (-13.5,-10.5) rectangle (-3.5,-5.5);
+% processor 2
+
+\draw [black!95] (-13.5,-11) rectangle (-3.5,-5.5);
+\node [font=\scriptsize,anchor=center,align=center] at (-8.5,-10) {
+    \textsf{processor 2}
+};
 \fill [black!5] (-12.5,-7.5) rectangle (-4.5,-6.5);
 \draw [black!95] (-12.5,-7.5) rectangle (-4.5,-6.5);
 \node [font=\scriptsize,anchor=center,align=center] at (-8.5,-7) {
-    \texttt{domaddr} \textsf{(16-entry)}
+    \texttt{macaddr} \textsf{(16-entry)}
 };
-\node [font=\scriptsize,anchor=center,align=center] at (-8.5,-9) {
-    \textsf{processor 2}
+\fill [black!5] (-12.5,-9) rectangle (-4.5,-8);
+\draw [black!95] (-12.5,-9) rectangle (-4.5,-8);
+\node [font=\scriptsize,anchor=center,align=center] at (-8.5,-8.5) {
+    \texttt{domaddr} \textsf{(16-entry)}
 };
 \fill [black!5] (-12.5,-4.5) rectangle (-4.5,-0.5);
 \draw [black!95] (-12.5,-4.5) rectangle (-4.5,-0.5);
 \node [font=\scriptsize,anchor=center,align=center] at (-8.5,-2.5) {
-    \textsf{64-entry CAM} \\ \emph{(comparand-masked)}
+    \textsf{2 \texttimes \; 64-entry CAM} \\ \emph{(comparand-masked)}
 };
 \draw[black!95, ->, -{Stealth}] (-8.5,-6.5) -- (-8.5,-4.5);
+\draw[black!95] (-8.5,-7.5) -- (-8.5,-8);
 
-\draw [black!95] (-13.5,5.5) rectangle (-3.5,10.5);
+% processor 0
+
+\draw [black!95] (-13.5,5.5) rectangle (-3.5,11);
+\node [font=\scriptsize,anchor=center,align=center] at (-8.5,10) {
+    \textsf{processor 0}
+};
 \fill [black!5] (-12.5,6.5) rectangle (-4.5,7.5);
 \draw [black!95] (-12.5,6.5) rectangle (-4.5,7.5);
 \node [font=\scriptsize,anchor=center,align=center] at (-8.5,7) {
-    \texttt{domaddr} \textsf{(16-entry)}
+    \texttt{macaddr} \textsf{(16-entry)}
 };
-\node [font=\scriptsize,anchor=center,align=center] at (-8.5,9) {
-    \textsf{processor 0}
+\fill [black!5] (-12.5,8) rectangle (-4.5,9);
+\draw [black!95] (-12.5,8) rectangle (-4.5,9);
+\node [font=\scriptsize,anchor=center,align=center] at (-8.5,8.5) {
+    \texttt{domaddr} \textsf{(16-entry)}
 };
 \fill [black!5] (-12.5,0.5) rectangle (-4.5,4.5);
 \draw [black!95] (-12.5,0.5) rectangle (-4.5,4.5);
 \node [font=\scriptsize,anchor=center,align=center] at (-8.5,2.5) {
-    \textsf{64-entry CAM} \\ \emph{(comparand-masked)}
+    \textsf{2 \texttimes \; 64-entry CAM} \\ \emph{(comparand-masked)}
 };
 \draw[black!95, ->, -{Stealth}] (-8.5,6.5) -- (-8.5,4.5);
+\draw[black!95] (-8.5,8) -- (-8.5,7.5);
 
-\draw [black!95] (3.5,-10.5) rectangle (13.5,-5.5);
+% processor 3
+
+\draw [black!95] (3.5,-11) rectangle (13.5,-5.5);
+\node [font=\scriptsize,anchor=center,align=center] at (8.5,-10) {
+    \textsf{processor 3}
+};
 \fill [black!5] (4.5,-7.5) rectangle (12.5,-6.5);
 \draw [black!95] (4.5,-7.5) rectangle (12.5,-6.5);
 \node [font=\scriptsize,anchor=center,align=center] at (8.5,-7) {
-    \texttt{domaddr} \textsf{(16-entry)}
+    \texttt{macaddr} \textsf{(16-entry)}
 };
-\node [font=\scriptsize,anchor=center,align=center] at (8.5,-9) {
-    \textsf{processor 3}
+\fill [black!5] (4.5,-9) rectangle (12.5,-8);
+\draw [black!95] (4.5,-9) rectangle (12.5,-8);
+\node [font=\scriptsize,anchor=center,align=center] at (8.5,-8.5) {
+    \texttt{domaddr} \textsf{(16-entry)}
 };
 \fill [black!5] (4.5,-4.5) rectangle (12.5,-0.5);
 \draw [black!95] (4.5,-4.5) rectangle (12.5,-0.5);
 \node [font=\scriptsize,anchor=center,align=center] at (8.5,-2.5) {
-    \textsf{64-entry CAM} \\ \emph{(comparand-masked)}
+    \textsf{2 \texttimes \; 64-entry CAM} \\ \emph{(comparand-masked)}
 };
 \draw[black!95, ->, -{Stealth}] (8.5,-6.5) -- (8.5,-4.5);
+\draw[black!95] (8.5,-7.5) -- (8.5,-8);
 
-\draw [black!95] (3.5,5.5) rectangle (13.5,10.5);
+% processor 1
+
+\draw [black!95] (3.5,5.5) rectangle (13.5,11);
+\node [font=\scriptsize,anchor=center,align=center] at (8.5,10) {
+    \textsf{processor 1}
+};
 \fill [black!5] (4.5,6.5) rectangle (12.5,7.5);
 \draw [black!95] (4.5,6.5) rectangle (12.5,7.5);
 \node [font=\scriptsize,anchor=center,align=center] at (8.5,7) {
-    \texttt{domaddr} \textsf{(16-entry)}
+    \texttt{macaddr} \textsf{(16-entry)}
 };
-\node [font=\scriptsize,anchor=center,align=center] at (8.5,9) {
-    \textsf{processor 1}
+\fill [black!5] (4.5,8) rectangle (12.5,9);
+\draw [black!95] (4.5,8) rectangle (12.5,9);
+\node [font=\scriptsize,anchor=center,align=center] at (8.5,8.5) {
+    \texttt{domaddr} \textsf{(16-entry)}
 };
 \fill [black!5] (4.5,0.5) rectangle (12.5,4.5);
 \draw [black!95] (4.5,0.5) rectangle (12.5,4.5);
 \node [font=\scriptsize,anchor=center,align=center] at (8.5,2.5) {
-    \textsf{64-entry CAM} \\ \emph{(comparand-masked)}
+    \textsf{2 \texttimes \; 64-entry CAM} \\ \emph{(comparand-masked)}
 };
 \draw[black!95, ->, -{Stealth}] (8.5,6.5) -- (8.5,4.5);
+\draw[black!95] (8.5,8) -- (8.5,7.5);
 
-\fill [black!5] (-3.5,-3.5) rectangle (-1.5,-1.5);
-\draw [black!95] (-3.5,-3.5) rectangle (-1.5,-1.5);
-\node [font=\scriptsize,anchor=center,align=center,xshift=1pt] at (-2.5,-2.5) {
-    \textsf{\fontsize{6.5pt}{8pt}\selectfont router}
-};
+% network
+
+\fill [black!5] (-3.5,-3.5) rectangle (-1.25,-1.25);
+\draw [black!95] (-3.5,-3.5) rectangle (-1.25,-1.25);
+\node [font=\scriptsize,anchor=center] at (-2.375,-2.375) {\textsf{router}};
 \draw[black!95, <->, >={Stealth}] (-4.5,-2.5) -- (-3.5,-2.5);
 
-\fill [black!5] (-3.5,1.5) rectangle (-1.5,3.5);
-\draw [black!95] (-3.5,1.5) rectangle (-1.5,3.5);
-\node [font=\scriptsize,anchor=center,align=center,xshift=1pt] at (-2.5,2.5) {
-    \textsf{\fontsize{6.5pt}{8pt}\selectfont router}
-};
+\fill [black!5] (-3.5,1.25) rectangle (-1.25,3.5);
+\draw [black!95] (-3.5,1.25) rectangle (-1.25,3.5);
+\node [font=\scriptsize,anchor=center] at (-2.375,2.375) {\textsf{router}};
 \draw[black!95, <->, >={Stealth}] (-4.5,2.5) -- (-3.5,2.5);
 
-\fill [black!5] (1.5,-3.5) rectangle (3.5,-1.5);
-\draw [black!95] (1.5,-3.5) rectangle (3.5,-1.5);
-\node [font=\scriptsize,anchor=center,align=center,xshift=1pt] at (2.5,-2.5) {
-    \textsf{\fontsize{6.5pt}{8pt}\selectfont router}
-};
+\fill [black!5] (1.25,-3.5) rectangle (3.5,-1.25);
+\draw [black!95] (1.25,-3.5) rectangle (3.5,-1.25);
+\node [font=\scriptsize,anchor=center] at (2.375,-2.375) {\textsf{router}};
 \draw[black!95, <->, >={Stealth}] (4.5,-2.5) -- (3.5,-2.5);
 
-\fill [black!5] (1.5,1.5) rectangle (3.5,3.5);
-\draw [black!95] (1.5,1.5) rectangle (3.5,3.5);
-\node [font=\scriptsize,anchor=center,align=center,xshift=1pt] at (2.5,2.5) {
-    \textsf{\fontsize{6.5pt}{8pt}\selectfont router}
-};
+\fill [black!5] (1.25,1.25) rectangle (3.5,3.5);
+\draw [black!95] (1.25,1.25) rectangle (3.5,3.5);
+\node [font=\scriptsize,anchor=center] at (2.375,2.375) {\textsf{router}};
 \draw[black!95, <->, >={Stealth}] (4.5,2.5) -- (3.5,2.5);
 
-\draw [black!95] (-1.5,-1.5) rectangle (1.5,1.5);
-\draw [black!95] (-1.5,-1.5) -- (1.5,1.5);
-\draw [black!95] (-1.5,1.5) -- (1.5,-1.5);
+\draw [black!95] (-1.25,-1.25) rectangle (1.25,1.25);
+\draw [black!95] (-1.25,-1.25) -- (1.25,1.25);
+\draw [black!95] (-1.25,1.25) -- (1.25,-1.25);
 
-\fill[black!95] (-1.5,-1.5) circle (1.5mm);
-\fill[black!95] (1.5,1.5)   circle (1.5mm);
-\fill[black!95] (-1.5,1.5)  circle (1.5mm);
-\fill[black!95] (1.5,-1.5)  circle (1.5mm);
+\fill[black!95] (-1.25,-1.25) circle (1.5mm);
+\fill[black!95] (1.25,1.25)   circle (1.5mm);
+\fill[black!95] (-1.25,1.25)  circle (1.5mm);
+\fill[black!95] (1.25,-1.25)  circle (1.5mm);
 
 \end{scope}
 \end{tikzpicture}
