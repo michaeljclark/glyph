@@ -949,12 +949,12 @@ to function entry.
 to the \emph{immediate base} register.
 \item \texttt{mov} --- \emph{move-word-immediate-block} uses a displacement
 to access a constant.
-\item \texttt{jalib} --- \emph{jump-and-link-immediate-block} or
+\item \texttt{jal} --- \emph{jump-and-link-immediate-block} or
 \emph{link-function-call} copies the address vector into the link register
 and adds constants to \emph{(pc,ib)}. it is used to branch the \emph{program
 counter} and \emph{immediate base} register at the same time for calling
 procedures.
-\item \texttt{jtlib} --- \emph{jump-to-link-immediate-block} or
+\item \texttt{jtl} --- \emph{jump-to-link-immediate-block} or
 \emph{link-function-return} subtracts link vector from and adds constants
 to \emph{(pc,ib)}. it is used to branch the \emph{program counter} and the
 \emph{immediate base} register at the same time for returning from called
@@ -6061,14 +6061,14 @@ value of \emph{fun3}. the type of linkage in \emph{fun3} can be one of:
 \textbf{value} & \textbf{mnemonic} & \textbf{description} &
 \textbf{link-type} & \textbf{dst-link} & \textbf{src-link} \\
 \hline
-0     & jib      & jump               & jump & -  & -  \\
-1     & -        & -                  & -    & -  & -  \\
-2     & jalib    & jump-and-link      & call & r6 & -  \\
-3     & jalib    & jump-and-link      & call & r7 & -  \\
-4     & jtlib    & jump-to-link       & ret  & -  & r6 \\
-5     & jtlib    & jump-to-link       & ret  & -  & r7 \\
-6     & jalaib   & jump-and-link-add  & tail & r6 & -  \\
-7     & jalaib   & jump-and-link-add  & tail & r7 & -  \\
+0     & j      & jump               & jump & -  & -  \\
+1     & -      & -                  & -    & -  & -  \\
+2     & jal    & jump-and-link      & call & r6 & -  \\
+3     & jal    & jump-and-link      & call & r7 & -  \\
+4     & jtl    & jump-to-link       & ret  & -  & r6 \\
+5     & jtl    & jump-to-link       & ret  & -  & r7 \\
+6     & jala   & jump-and-link-add  & tail & r6 & -  \\
+7     & jala   & jump-and-link-add  & tail & r7 & -  \\
 \hline
 \end{tabular}
 \caption{Link instruction functions}
@@ -6077,15 +6077,15 @@ value of \emph{fun3}. the type of linkage in \emph{fun3} can be one of:
 
 \begin{Verbatim}
     lr = 0b110 + (fun3 & 1)
-    cval = const-mem<i32x2>[ib + uimm6 * 8]
-    dval = fun3 == jalaib ? cval + auth-decrypt(reg<i32x2>[lr]) : cval
-    lval = fun3 == jtlib  ?        auth-decrypt(reg<i32x2>[lr]) : 0
-    (dpc,dib) = dval
-    (lpc,lib) = lval
+    cvec = const-mem<i32x2>[ib + uimm6 * 8]
+    dvec = fun3 == jala ? auth-decrypt(reg<i32x2>[lr]) : 0
+    lvec = fun3 == jtl  ? auth-decrypt(reg<i32x2>[lr]) : 0
+    (dpc,dib) = dvec + cvec
+    (lpc,lib) = lvec
     pc = pc + dpc - lpc
     ib = ib + dib - lib
-    if fun3 == jalib or fun3 == jalaib:
-        reg[lr] = auth-encrypt(reg<i32x2>(dpc,dib))
+    if fun3 == jal or fun3 == jala:
+        reg[lr] = auth-encrypt(<i32x2>(dpc,dib))
 \end{Verbatim}
 
 \par\noindent
@@ -6650,16 +6650,18 @@ the following table lists glyph assembler pseudo-instruction aliases:
 \textbf{Pseudo-instruction} & \textbf{Expansion} & \textbf{Description}   \\
 \texttt{nop}   & \texttt{or.i64 r0,r0,r0} & no-operation                     \\
 \texttt{li} \emph{rc, expression} & (several expansions) & load immediate  \\
-\texttt{la} \emph{rc, symbol}     & (several expansions) & load address    \\
-\texttt{call} \emph{symbol}     & \texttt{jalib.i64} \emph{ibcall(text-label,const-label)} & procedure call \\
-\texttt{ret}                    & \texttt{jtlib.i64} \emph{ibret(text-label,const-label)} & procedure return \\
-\texttt{jib.i64} \emph{ib64(uimm6)} & \texttt{link.i64} \emph{ib64(uimm6),} \texttt{jib}
+\texttt{la} \emph{rc, sym}     & (several expansions) & load address    \\
+\texttt{j} \emph{sym}        & \texttt{j.i64} \emph{ibjmp(sym.text, sym.const)} & procedure call \\
+\texttt{call} \emph{sym}     & \texttt{jal.i64} \emph{r7, ibcall(sym.text, sym.const)} & procedure call \\
+\texttt{ret}  \emph{sym}     & \texttt{jtl.i64} \emph{r7, ibret(sym.text, sym.const)} & procedure return \\
+\texttt{tail} \emph{sym}     & \texttt{jala.i64} \emph{r7, ibtail(sym.text, sym.const)} & tail call \\
+\texttt{j.i64} \emph{ib64(uimm6)} & \texttt{link.i64} \emph{0, ib64(uimm6),} \texttt{j}
  & jump-immmediate-block \\
-\texttt{jalib.i64} \emph{rc, ib64(uimm6)} & \texttt{link.i64} \emph{rc, ib64(uimm6),} \texttt{jalib}
+\texttt{jal.i64} \emph{rc, ib64(uimm6)} & \texttt{link.i64} \emph{rc, ib64(uimm6),} \texttt{jal}
  & jump-and-link-immmediate-block \\
-\texttt{jtlib.i64} \emph{rc, ib64(uimm6)} & \texttt{link.i64} \emph{rc, ib64(uimm6),} \texttt{jtlib}
+\texttt{jtl.i64} \emph{rc, ib64(uimm6)} & \texttt{link.i64} \emph{rc, ib64(uimm6),} \texttt{jtl}
  & jump-to-link-immmediate-block \\
-\texttt{jalaib.i64} \emph{rc, ib64(uimm6)} & \texttt{link.i64} \emph{rc, ib64(uimm6),} \texttt{jalaib}
+\texttt{jala.i64} \emph{rc, ib64(uimm6)} & \texttt{link.i64} \emph{rc, ib64(uimm6),} \texttt{jala}
  & jump-and-link-add-immmediate-block \\
 \texttt{cmp.lt.i64} \emph{rc, rb} & \texttt{compare.i64} \emph{rc, rb,}
 \texttt{lt} & compare less than (signed) \\

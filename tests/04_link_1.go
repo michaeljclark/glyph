@@ -16,11 +16,11 @@ func t() {
         0xffffffffffffffff,
     }
     i := []uint16{
-        CPU_encode_op_jalib_i64(7,0),
+        CPU_encode_op_jal_i64(7,0),
         CPU_encode_op_break(0),
         CPU_encode_op_movq_i64(0,1),
         CPU_encode_op_or_i64(0,0,0),
-        CPU_encode_op_jtlib_i64(7,0),
+        CPU_encode_op_jtl_i64(7,0),
     }
     CPU_test("link_1", c, i);
 }

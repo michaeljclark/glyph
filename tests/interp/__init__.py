@@ -83,14 +83,14 @@ cpu_logic_sext      = 0b111
 # jlrib op fun3
 #
 
-cpu_link_jib        = 0b000
+cpu_link_j        = 0b000
 cpu_link_rsrv       = 0b001
-cpu_link_jalib_r6   = 0b010
-cpu_link_jalib_r7   = 0b011
-cpu_link_jtlib_r6   = 0b100
-cpu_link_jtlib_r7   = 0b101
-cpu_link_jalaib_r6  = 0b110
-cpu_link_jalaib_r7  = 0b111
+cpu_link_jal_r6   = 0b010
+cpu_link_jal_r7   = 0b011
+cpu_link_jtl_r6   = 0b100
+cpu_link_jtl_r7   = 0b101
+cpu_link_jala_r6  = 0b110
+cpu_link_jala_r7  = 0b111
 
 #
 # op arg
@@ -307,7 +307,7 @@ def cpu_exec_op_link_i64(cpu,inst):
 
     dpc, dib, lpc, lib = 0, 0, 0, 0
 
-    if fun3 == cpu_link_jalaib_r6 or fun3 == cpu_link_jalaib_r7:
+    if fun3 == cpu_link_jala_r6 or fun3 == cpu_link_jala_r7:
         l = auth_decrypt_i64(cpu, cpu.r[reg])
         dpc = us32(c      ) + us32(l      )
         dib = us32(c >> 32) + us32(l >> 32)
@@ -315,7 +315,7 @@ def cpu_exec_op_link_i64(cpu,inst):
         dpc = us32(c      )
         dib = us32(c >> 32)
 
-    if fun3 == cpu_link_jtlib_r6 or fun3 == cpu_link_jtlib_r7:
+    if fun3 == cpu_link_jtl_r6 or fun3 == cpu_link_jtl_r7:
         l = auth_decrypt_i64(cpu, cpu.r[reg])
         lpc = us32(l      )
         lib = us32(l >> 32)
@@ -323,8 +323,8 @@ def cpu_exec_op_link_i64(cpu,inst):
     cpu.pc = sux(cpu.pc + dpc - lpc)
     cpu.ib = sux(cpu.ib + dib - lib)
 
-    if fun3 == cpu_link_jalib_r6 or fun3 == cpu_link_jalib_r7 or \
-       fun3 == cpu_link_jalaib_r6 or fun3 == cpu_link_jalaib_r7:
+    if fun3 == cpu_link_jal_r6 or fun3 == cpu_link_jal_r7 or \
+       fun3 == cpu_link_jala_r6 or fun3 == cpu_link_jala_r7:
         cpu.r[reg] = auth_encrypt_i64(cpu, su32(dpc) | (su32(dib) << 32))
 
     return 0
@@ -563,14 +563,14 @@ cpu_fun3_logic_str = {
 
 
 cpu_fun3_link_str = {
-    cpu_link_jib:          "jib.i64",
+    cpu_link_j:            "j.i64",
     cpu_link_rsrv:         "link.rsrv",
-    cpu_link_jalib_r6:     "jalib.i64",
-    cpu_link_jalib_r7:     "jalib.i64",
-    cpu_link_jtlib_r6:     "jtlib.i64",
-    cpu_link_jtlib_r7:     "jtlib.i64",
-    cpu_link_jalaib_r6:    "jalaib.i64",
-    cpu_link_jalaib_r7:    "jalaib.i64",
+    cpu_link_jal_r6:       "jal.i64",
+    cpu_link_jal_r7:       "jal.i64",
+    cpu_link_jtl_r6:       "jtl.i64",
+    cpu_link_jtl_r7:       "jtl.i64",
+    cpu_link_jala_r6:      "jala.i64",
+    cpu_link_jala_r7:      "jala.i64",
 }
 
 cpu_op_out = {
@@ -678,13 +678,13 @@ def cpu_encode_op_b(pcrel9):
 def cpu_encode_op_ibj(pcrel9):
     return op0ri9_enc(cpu_op_ibj, pcrel9 >> 6)
 def cpu_encode_op_jf_i64(ibrel6):
-    return op1ri6_enc(cpu_op_link_i64, cpu_link_jib, ibrel6)
-def cpu_encode_op_jalib_i64(rc, ibrel6):
-    return op1ri6_enc(cpu_op_link_i64, cpu_link_jalib_r6 | (rc & 1), ibrel6)
-def cpu_encode_op_jtlib_i64(rc, ibrel6):
-    return op1ri6_enc(cpu_op_link_i64, cpu_link_jtlib_r6 | (rc & 1), ibrel6)
-def cpu_encode_op_jalaib_i64(rc, ibrel6):
-    return op1ri6_enc(cpu_op_link_i64, cpu_link_jalaib_r6 | (rc & 1), ibrel6)
+    return op1ri6_enc(cpu_op_link_i64, cpu_link_j, ibrel6)
+def cpu_encode_op_jal_i64(rc, ibrel6):
+    return op1ri6_enc(cpu_op_link_i64, cpu_link_jal_r6 | (rc & 1), ibrel6)
+def cpu_encode_op_jtl_i64(rc, ibrel6):
+    return op1ri6_enc(cpu_op_link_i64, cpu_link_jtl_r6 | (rc & 1), ibrel6)
+def cpu_encode_op_jala_i64(rc, ibrel6):
+    return op1ri6_enc(cpu_op_link_i64, cpu_link_jala_r6 | (rc & 1), ibrel6)
 def cpu_encode_op_movd_i64(rc, ibrel6):
     return op1ri6_enc(cpu_op_movd_i64, rc, ibrel6)
 def cpu_encode_op_movq_i64(rc, ibrel6):

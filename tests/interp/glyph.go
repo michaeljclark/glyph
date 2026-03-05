@@ -86,14 +86,14 @@ const (
  */
 
 const (
-    CPU_link_jib        Fun3Jump = 0b000
-    CPU_link_rsrv       Fun3Jump = 0b001
-    CPU_link_jalib_r6   Fun3Jump = 0b010
-    CPU_link_jalib_r7   Fun3Jump = 0b011
-    CPU_link_jtlib_r6   Fun3Jump = 0b100
-    CPU_link_jtlib_r7   Fun3Jump = 0b101
-    CPU_link_jalaib_r6  Fun3Jump = 0b110
-    CPU_link_jalaib_r7  Fun3Jump = 0b111
+    CPU_link_j        Fun3Jump = 0b000
+    CPU_link_rsrv     Fun3Jump = 0b001
+    CPU_link_jal_r6   Fun3Jump = 0b010
+    CPU_link_jal_r7   Fun3Jump = 0b011
+    CPU_link_jtl_r6   Fun3Jump = 0b100
+    CPU_link_jtl_r7   Fun3Jump = 0b101
+    CPU_link_jala_r6  Fun3Jump = 0b110
+    CPU_link_jala_r7  Fun3Jump = 0b111
 )
 
 /*
@@ -256,7 +256,7 @@ func CPU_exec_op_link_i64(cpu *CPUState, inst uint64) int {
     var dpc, dib, lpc, lib int32 = 0, 0, 0, 0
 
     switch fun3 {
-    case CPU_link_jalaib_r6, CPU_link_jalaib_r7:
+    case CPU_link_jala_r6, CPU_link_jala_r7:
         l = auth_decrypt_i64(cpu, cpu.R[reg])
         dpc = int32(c      ) + int32(l      )
         dib = int32(c >> 32) + int32(l >> 32)
@@ -266,7 +266,7 @@ func CPU_exec_op_link_i64(cpu *CPUState, inst uint64) int {
     }
 
     switch fun3 {
-    case CPU_link_jtlib_r6, CPU_link_jtlib_r7:
+    case CPU_link_jtl_r6, CPU_link_jtl_r7:
         l = auth_decrypt_i64(cpu, cpu.R[reg])
         lpc = int32(l      )
         lib = int32(l >> 32)
@@ -276,8 +276,8 @@ func CPU_exec_op_link_i64(cpu *CPUState, inst uint64) int {
     cpu.IB = cpu.IB + uint64(dib - lib)
 
     switch fun3 {
-    case CPU_link_jalib_r6, CPU_link_jalib_r7,
-         CPU_link_jalaib_r6, CPU_link_jalaib_r7:
+    case CPU_link_jal_r6, CPU_link_jal_r7,
+         CPU_link_jala_r6, CPU_link_jala_r7:
         cpu.R[reg] = auth_encrypt_i64(cpu,
             uint64(uint32(dpc)) | (uint64(dib) << 32))
     }
@@ -599,14 +599,14 @@ var cpu_fun3_logic_str = [8]string{
 
 
 var cpu_fun3_link_str = [8]string{
-    CPU_link_jib:          "jib.i64",
+    CPU_link_j:            "j.i64",
     CPU_link_rsrv:         "link.rsrv",
-    CPU_link_jalib_r6:     "jalib.i64",
-    CPU_link_jalib_r7:     "jalib.i64",
-    CPU_link_jtlib_r6:     "jtlib.i64",
-    CPU_link_jtlib_r7:     "jtlib.i64",
-    CPU_link_jalaib_r6:    "jalaib.i64",
-    CPU_link_jalaib_r7:    "jalaib.i64",
+    CPU_link_jal_r6:       "jal.i64",
+    CPU_link_jal_r7:       "jal.i64",
+    CPU_link_jtl_r6:       "jtl.i64",
+    CPU_link_jtl_r7:       "jtl.i64",
+    CPU_link_jala_r6:      "jala.i64",
+    CPU_link_jala_r7:      "jala.i64",
 }
 
 var cpu_op_out = []OpOutFn{
@@ -728,16 +728,16 @@ func CPU_encode_op_ibj(pcrel9 int) uint16 {
     return op0ri9_enc(CPU_op_ibj, pcrel9 >> 6)
 }
 func CPU_encode_op_jf_i64(ibrel6 int) uint16 {
-    return op1ri6_enc(CPU_op_link_i64, int(CPU_link_jib), ibrel6)
+    return op1ri6_enc(CPU_op_link_i64, int(CPU_link_j), ibrel6)
 }
-func CPU_encode_op_jalib_i64(rc, ibrel6 int) uint16 {
-    return op1ri6_enc(CPU_op_link_i64, int(CPU_link_jalib_r6) | (rc & 1), ibrel6)
+func CPU_encode_op_jal_i64(rc, ibrel6 int) uint16 {
+    return op1ri6_enc(CPU_op_link_i64, int(CPU_link_jal_r6) | (rc & 1), ibrel6)
 }
-func CPU_encode_op_jtlib_i64(rc, ibrel6 int) uint16 {
-    return op1ri6_enc(CPU_op_link_i64, int(CPU_link_jtlib_r6) | (rc & 1), ibrel6)
+func CPU_encode_op_jtl_i64(rc, ibrel6 int) uint16 {
+    return op1ri6_enc(CPU_op_link_i64, int(CPU_link_jtl_r6) | (rc & 1), ibrel6)
 }
-func CPU_encode_op_jalaib_i64(rc, ibrel6 int) uint16 {
-    return op1ri6_enc(CPU_op_link_i64, int(CPU_link_jalaib_r6) | (rc & 1), ibrel6)
+func CPU_encode_op_jala_i64(rc, ibrel6 int) uint16 {
+    return op1ri6_enc(CPU_op_link_i64, int(CPU_link_jala_r6) | (rc & 1), ibrel6)
 }
 func CPU_encode_op_movd_i64(rc, ibrel6 int) uint16 {
     return op1ri6_enc(CPU_op_movd_i64, rc, ibrel6)

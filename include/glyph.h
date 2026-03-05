@@ -100,14 +100,14 @@ enum
 
 enum
 {
-    cpu_link_jib        = 0b000,
+    cpu_link_j          = 0b000,
     cpu_link_rsrv       = 0b001,
-    cpu_link_jalib_r6   = 0b010,
-    cpu_link_jalib_r7   = 0b011,
-    cpu_link_jtlib_r6   = 0b100,
-    cpu_link_jtlib_r7   = 0b101,
-    cpu_link_jalaib_r6  = 0b110,
-    cpu_link_jalaib_r7  = 0b111,
+    cpu_link_jal_r6     = 0b010,
+    cpu_link_jal_r7     = 0b011,
+    cpu_link_jtl_r6     = 0b100,
+    cpu_link_jtl_r7     = 0b101,
+    cpu_link_jala_r6    = 0b110,
+    cpu_link_jala_r7    = 0b111,
 };
 
 /*
@@ -330,7 +330,7 @@ __glyph_func__ int cpu_exec_op_link_i64(cpu_state *cpu, u64 inst)
     i32 dpc = 0, dib = 0, lpc = 0, lib = 0;
 
     switch (fun3) {
-    case cpu_link_jalaib_r6: case cpu_link_jalaib_r7:
+    case cpu_link_jala_r6: case cpu_link_jala_r7:
         l = auth_decrypt_i64(cpu, cpu->r[reg]);
         dpc = (i32)(c      ) + (i32)(l      );
         dib = (i32)(c >> 32) + (i32)(l >> 32);
@@ -342,7 +342,7 @@ __glyph_func__ int cpu_exec_op_link_i64(cpu_state *cpu, u64 inst)
     }
 
     switch (fun3) {
-    case cpu_link_jtlib_r6: case cpu_link_jtlib_r7:
+    case cpu_link_jtl_r6: case cpu_link_jtl_r7:
         l = auth_decrypt_i64(cpu, cpu->r[reg]);
         lpc = (i32)(l      );
         lib = (i32)(l >> 32);
@@ -354,8 +354,8 @@ __glyph_func__ int cpu_exec_op_link_i64(cpu_state *cpu, u64 inst)
 
     i32 rpc, rib;
     switch (fun3) {
-    case cpu_link_jalib_r6: case cpu_link_jalib_r7:
-    case cpu_link_jalaib_r6: case cpu_link_jalaib_r7:
+    case cpu_link_jal_r6: case cpu_link_jal_r7:
+    case cpu_link_jala_r6: case cpu_link_jala_r7:
         cpu->r[reg] = auth_encrypt_i64(cpu,
             (u64)(u32)dpc | ((u64)dib << 32));
         break;
@@ -711,14 +711,14 @@ static const char* cpu_fun3_logic_str[8] =
 
 static const char* cpu_fun3_link_str[8] =
 {
-    [cpu_link_jib]          = "jib.i64",
-    [cpu_link_rsrv]         = "link.rsrv",
-    [cpu_link_jalib_r6]     = "jalib.i64",
-    [cpu_link_jalib_r7]     = "jalib.i64",
-    [cpu_link_jtlib_r6]     = "jtlib.i64",
-    [cpu_link_jtlib_r7]     = "jtlib.i64",
-    [cpu_link_jalaib_r6]    = "jalaib.i64",
-    [cpu_link_jalaib_r7]    = "jalaib.i64",
+    [cpu_link_j]          = "j.i64",
+    [cpu_link_rsrv]       = "link.rsrv",
+    [cpu_link_jal_r6]     = "jal.i64",
+    [cpu_link_jal_r7]     = "jal.i64",
+    [cpu_link_jtl_r6]     = "jtl.i64",
+    [cpu_link_jtl_r7]     = "jtl.i64",
+    [cpu_link_jala_r6]    = "jala.i64",
+    [cpu_link_jala_r7]    = "jala.i64",
 };
 
 static const op_out_fn cpu_op_out[] =
@@ -844,16 +844,16 @@ __glyph_func__ u16 cpu_encode_op_ibj(int pcrel9) {
     return op0ri9_enc(cpu_op_ibj, pcrel9 >> 6);
 }
 __glyph_func__ u16 cpu_encode_op_jf_i64(int ibrel6) {
-    return op1ri6_enc(cpu_op_link_i64, cpu_link_jib, ibrel6);
+    return op1ri6_enc(cpu_op_link_i64, cpu_link_j, ibrel6);
 }
-__glyph_func__ u16 cpu_encode_op_jalib_i64(int rc, int ibrel6) {
-    return op1ri6_enc(cpu_op_link_i64, cpu_link_jalib_r6 | (rc & 1), ibrel6);
+__glyph_func__ u16 cpu_encode_op_jal_i64(int rc, int ibrel6) {
+    return op1ri6_enc(cpu_op_link_i64, cpu_link_jal_r6 | (rc & 1), ibrel6);
 }
-__glyph_func__ u16 cpu_encode_op_jtlib_i64(int rc, int ibrel6) {
-    return op1ri6_enc(cpu_op_link_i64, cpu_link_jtlib_r6 | (rc & 1), ibrel6);
+__glyph_func__ u16 cpu_encode_op_jtl_i64(int rc, int ibrel6) {
+    return op1ri6_enc(cpu_op_link_i64, cpu_link_jtl_r6 | (rc & 1), ibrel6);
 }
-__glyph_func__ u16 cpu_encode_op_jalaib_i64(int rc, int ibrel6) {
-    return op1ri6_enc(cpu_op_link_i64, cpu_link_jalaib_r6 | (rc & 1), ibrel6);
+__glyph_func__ u16 cpu_encode_op_jala_i64(int rc, int ibrel6) {
+    return op1ri6_enc(cpu_op_link_i64, cpu_link_jala_r6 | (rc & 1), ibrel6);
 }
 __glyph_func__ u16 cpu_encode_op_movd_i64(int rc, int ibrel6) {
     return op1ri6_enc(cpu_op_movd_i64, rc, ibrel6);

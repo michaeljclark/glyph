@@ -18,7 +18,7 @@ func t() {
         CPU_encode_op_movq_i64(0,0),
         CPU_encode_op_movq_i64(1,1),
         CPU_encode_op_pin_i64(7,0,1),
-        CPU_encode_op_jtlib_i64(7,2),
+        CPU_encode_op_jtl_i64(7,2),
         CPU_encode_op_or_i64(0,0,0),
         CPU_encode_op_movq_i64(3,0),
         CPU_encode_op_break(0),
