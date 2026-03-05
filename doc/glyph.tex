@@ -6189,21 +6189,20 @@ and carry is saved to the \emph{flag} register.
 
 \needspace{8\baselineskip}
 \subsection{leapc}
-\insrcimmsix{rc}{uimm}{01101}{\textbf{leapc.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}
+\insrcimmsix{rc}{uimm}{01101}{\textbf{lea.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}
 \\
-the \emph{leapc} or \emph{load-effective-address-pc} instruction
-loads a 32-bit constant addressed by \emph{$[ib + uimm6 \times 4]$},
-which it sign-extends to 64-bits, adds it to the \emph{program counter},
-and saves the result in the \emph{rc} register.
+the \emph{lea-pc} instruction loads a 32-bit constant addressed by
+\emph{$[ib + uimm6 \times 4]$}, which it sign-extends to 64-bits, adds it to
+the \emph{program counter}, and saves the result in the \emph{rc} register.
 \begin{Verbatim}
     reg[rc] = pc + const-mem<i32>[ib + uimm6 * 4]
 \end{Verbatim}
 
 \needspace{8\baselineskip}
 \subsection{loadpc}
-\insrcimmsix{rc}{uimm}{01110}{\textbf{loadpc.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}
+\insrcimmsix{rc}{uimm}{01110}{\textbf{load.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}
 \\
-the \emph{loadpc} instruction loads a 32-bit constant addressed by
+the \emph{load-pc} instruction loads a 32-bit constant addressed by
 \emph{$[ib + uimm6 \times 4]$} which it sign-extends to 64-bit, adds it to
 the \emph{program counter} to form an address, then loads a 64-bit value
 from memory at that address and saves the result in the \emph{rc} register.
@@ -6213,9 +6212,9 @@ from memory at that address and saves the result in the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{storepc}
-\insrcimmsix{rc}{uimm}{01111}{\textbf{storepc.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}
+\insrcimmsix{rc}{uimm}{01111}{\textbf{store.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}
 \\
-the \emph{storepc} instruction loads a 32-bit constant addressed by
+the \emph{store-pc} instruction loads a 32-bit constant addressed by
 \emph{$[ib + uimm6 \times 4]$} which it sign-extends to 64-bit, adds it to the
 \emph{program counter} to form an address, then stores to memory at that
 address a 64-bit value from the \emph{rc} register.
@@ -6890,9 +6889,9 @@ r7    & ra    & return address / (pc,ib) link vector        & caller \\
 \ainsrcimmsix{10}{rc}{uimm}{01010}{\textbf{srai.i64}\: \mathit{rc}, \mathit{uimm6}}
 \ainsrcimmsix{11}{rc}{uimm}{01011}{\textbf{slli.i64}\: \mathit{rc}, \mathit{uimm6}}
 \ainsrcimmsix{12}{rc}{uimm}{01100}{\textbf{addd.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6}); \mathit{flag}}
-\ainsrcimmsix{13}{rc}{uimm}{01101}{\textbf{leapc.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}
-\ainsrcimmsix{14}{rc}{uimm}{01110}{\textbf{loadpc.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}
-\ainsrcimmsix{15}{rc}{uimm}{01111}{\textbf{storepc.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}
+\ainsrcimmsix{13}{rc}{uimm}{01101}{\textbf{lea.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}
+\ainsrcimmsix{14}{rc}{uimm}{01110}{\textbf{load.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}
+\ainsrcimmsix{15}{rc}{uimm}{01111}{\textbf{store.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}
 \ainsrcrbimmthree{16}{rc}{rb}{uimm}{10000}{\textbf{load.i64}\: \mathit{rc}, (\mathit{uimm3} \times 8)(\mathit{rb})}
 \ainsrcrbimmthree{17}{rc}{rb}{uimm}{10001}{\textbf{store.i64}\: \mathit{rc}, (\mathit{uimm3} \times 8)(\mathit{rb})}
 \ainsrcrbimmthree{18}{rc}{rb}{fun}{10010}{\textbf{compare.i64}\: \mathit{rc}, \mathit{rb}, \mathit{fun3}}

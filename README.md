@@ -88,9 +88,9 @@ this list outlines instructions, opcodes, and descriptions used in the
 | 10 | srai.i64     | op1r_imm6_16 | 01010 | **shift-right-arith-imm** rc,uimm6          |
 | 11 | slli.i64     | op1r_imm6_16 | 01011 | **shift-left-logical-imm** rc,uimm6         |
 | 12 | addd.i64     | op1r_imm6_16 | 01100 | **add-dword** rc,ib32(uimm6*4)              |
-| 13 | leapc.i64    | op1r_imm6_16 | 01101 | **lea-pc** rc,ib32(uimm6*4)(pc)             |
-| 14 | loadpc.i64   | op1r_imm6_16 | 01110 | **load-pc** rc,ib32(uimm6*4)(pc)            |
-| 15 | storepc.i64  | op1r_imm6_16 | 01111 | **store-pc** rc,ib32(uimm6*4)(pc)           |
+| 13 | leapc.i64    | op1r_imm6_16 | 01101 | **lea** rc,ib32(uimm6*4)(pc)                |
+| 14 | loadpc.i64   | op1r_imm6_16 | 01110 | **load** rc,ib32(uimm6*4)(pc)               |
+| 15 | storepc.i64  | op1r_imm6_16 | 01111 | **store** rc,ib32(uimm6*4)(pc)              |
 | 16 | load.i64     | op2r_imm3_16 | 10000 | **load** rc,(uimm3*8)(rb)                   |
 | 17 | store.i64    | op2r_imm3_16 | 10001 | **store** rc,(uimm3*8)(rb)                  |
 | 18 | compare.i64  | op2r_fun3_16 | 10010 | **compare** rc,rb                           |
