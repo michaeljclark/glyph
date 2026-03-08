@@ -3379,7 +3379,7 @@ this register is visible if \texttt{scontrol.D} is enabled.
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
 \node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
 \node [font=\small,anchor=base] at (16,0.25)  {\emph{machine address}};
-\node [font=\small,anchor=base] at (1,0.25)  {\texttt{0\ldots}};
+\node [font=\small,anchor=base] at (1,0.25)  {\texttt{0001}};
 \end{tikzpicture}
 
 \subsubsection{user domain address (\texttt{domain})}
@@ -3853,7 +3853,7 @@ these addresses must be unique per-domain on all processors.
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
 \node [font=\small,anchor=base] at (16,0.25)  {\emph{machine address}};
 \node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
-\node [font=\small,anchor=base] at (1,0.25)  {\texttt{0\ldots}};
+\node [font=\small,anchor=base] at (1,0.25)  {\texttt{0001}};
 
 \end{tikzpicture}
 
@@ -4793,7 +4793,7 @@ machine addresses.
 registers containing an array of the machine addresses associated with each
 domain. these addresses must be unique per-domain on all processors;
 otherwise, behavior is implementation-defined.
-machine address prefix is unary \texttt{0}.
+machine address prefix is unary \texttt{0001}.
 \\
 \par\noindent
 \begin{tikzpicture}[scale=0.45]
@@ -4802,7 +4802,7 @@ machine address prefix is unary \texttt{0}.
 \node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
 \node [font=\small,anchor=base] at (16,0.25)  {\emph{machine address}};
 \node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
-\node [font=\small,anchor=base] at (1,0.25)  {\texttt{0\ldots}};
+\node [font=\small,anchor=base] at (1,0.25)  {\texttt{0001}};
 \end{tikzpicture}
 
 \newpage
@@ -5583,8 +5583,8 @@ the following special addresses can be used.
 \hline
 \texttt{0\ldots0}& all-zeros & \emph{boot processor} \\
 \texttt{1\ldots1} & all-ones & \emph{broadcast address} \\
-\texttt{0?\ldots} & link-layer & \emph{machine address} \\
-\texttt{1110?} & group & \emph{domain address} \\
+\texttt{0001?} & link-layer & \emph{machine address} \\
+\texttt{1110?} & group-layer & \emph{domain address} \\
 \hline
 \end{tabular}
 \caption{special inter-domain message addresses}
