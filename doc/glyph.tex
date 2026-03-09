@@ -974,15 +974,15 @@ borrow.
 to function entry.
 \item \texttt{ibj} --- \emph{immediate-block-jump} adds a relative address
 to the \emph{immediate base} register.
-\item \texttt{mov} --- \emph{move-word-immediate-block} uses a displacement
-to access a constant.
-\item \texttt{jal} --- \emph{jump-and-link-immediate-block} or
-\emph{link-function-call} copies the address vector into the link register
-and adds constants to \emph{(pc,ib)}. it is used to branch the \emph{program
+\item \texttt{mov} --- \emph{move-word} uses a displacement to access an
+\emph{immediate block constant}.
+\item \texttt{jal} --- \emph{jump-and-link} or \emph{link-function-call}
+copies the address vector into the link register and adds \emph{immediate
+block constants} to \emph{(pc,ib)}. it is used to branch the \emph{program
 counter} and \emph{immediate base} register at the same time for calling
 procedures.
-\item \texttt{jtl} --- \emph{jump-to-link-immediate-block} or
-\emph{link-function-return} subtracts link vector from and adds constants
+\item \texttt{jtl} --- \emph{jump-to-link} or \emph{link-function-return}
+subtracts link vector from and adds \emph{immediate block constants}
 to \emph{(pc,ib)}. it is used to branch the \emph{program counter} and the
 \emph{immediate base} register at the same time for returning from called
 procedures.
