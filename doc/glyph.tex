@@ -1,6 +1,13 @@
+\begin{filecontents}[force]{\jobname.xmpdata}
+\Title{GLYPH – a super regular RISC architecture}
+\Copyright{Copyright (c) 2024-2025 Michael Clark <michaeljclark@mac.com>}
+\Language{en-US}
+\end{filecontents}
 \documentclass{scrreprt}
+\usepackage[x-1a]{pdfx}
 \usepackage[utf8]{inputenc}
 \usepackage{tikz}
+\usepackage{xcolor}
 \usepackage{minitoc}
 \usepackage{fancyvrb}
 \usepackage{needspace}
@@ -16,10 +23,10 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage[bitstream-charter]{mathdesign}
+\usepackage{montserrat}
 \usepackage[backend=biber,style=numeric-comp]{biblatex}
 \addbibresource{doc/glyph.bib}
 \usetikzlibrary{decorations.pathreplacing, arrows.meta, positioning}
-\title{Instructions}
 
 \AtBeginBibliography{\footnotesize}
 
@@ -37,34 +44,54 @@
 \begin{document}
 \begin{titlepage}
 \vspace*{0.10\textheight}
-\begin{minipage}{0.48\linewidth}
-\begin{flushright}
-{\titlefont\Huge\textsf{GLYPH}} \\[3mm]
-{\normalsize\textsf{\textbf{a super regular RISC architecture}}} \\[2mm]
-{\footnotesize\textsf{\today \, -- v0.6.0-current}} \\[20mm]
-{\quad}
-\end{flushright}
-\end{minipage}
-\hfill
-\begin{minipage}{0.02\linewidth}
-\centering\rule{8pt}{60mm}
-\end{minipage}
-\hfill
-\begin{minipage}{0.38\linewidth}
-\begin{flushleft}
-{\quad} \\[35mm]
-{\titlefont\normalsize\printauthor}
-\end{flushleft}
-\end{minipage}
-\vspace{22mm}
-\begin{center}
-\begin{minipage}{0.88\textwidth}
+
+\definecolor{glyph_navy}{cmyk}{1.0,0.8,0.0,0.2}
+\definecolor{glyph_green}{cmyk}{0.5,0.0,0.9,0.0}
+
+\noindent
 \centering
-\includegraphics[width=\textwidth]{doc/glyph.jpg}
-{\small Maya glyphs in stucco on display at the Museo de Sitio in Palenque,
-Mexico.\\ \emph{Image courtesy of Wikipedia. Public domain.}}
+\begin{minipage}[t]{0.48\linewidth}
+\raisebox{40mm}{%
+  \colorbox{glyph_navy}{%
+    \parbox{\dimexpr\linewidth-1.2\fboxsep\relax}{%
+      \vspace{3mm}
+      \raggedleft
+      \setlength{\rightskip}{2mm}
+      \sffamily\titlefont
+      \Huge\color{white}GLYPH \\[3mm]
+      \small\color{white}a super regular RISC architecture \\[2.5mm]
+      \scriptsize\color{white}\today \, -- v0.6.0-current
+      \vspace{3mm}
+    }%
+  }%
+}
+\end{minipage}%
+{\hspace{6.5mm}\color{black!55}\rule{8pt}{60mm}\hspace{5.5mm}}%
+\begin{minipage}[t]{0.38\linewidth}
+\raisebox{12mm}{%
+  \colorbox{glyph_green}{%
+    \parbox{\dimexpr\linewidth-1.2\fboxsep\relax}{%
+      \vspace{3mm}
+      \raggedright
+      \setlength{\leftskip}{2mm}
+      \sffamily\titlefont
+      \normalsize \printauthor
+      \vspace{3mm}
+    }%
+  }%
+}
 \end{minipage}
-\end{center}
+
+\vspace{27mm}
+
+\begin{minipage}{\textwidth}
+\centering
+\makebox[\textwidth][c]{
+\includegraphics[width=0.97\textwidth]{doc/maya.jpg}} \\[2mm]
+{\small Maya glyphs in stucco at the Museo de Sitio in Palenque, Mexico. \\
+\tiny \texttt{https://www.languagejones.com/blog-1/2014/11/10/language-jones-and-the-temple-ofburritos}}
+\end{minipage}
+
 \end{titlepage}
 
 \clearpage
