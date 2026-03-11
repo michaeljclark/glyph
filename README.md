@@ -115,53 +115,6 @@ this list outlines instructions, opcodes, and descriptions used in the
 | 30 | div.i64      | op3r_16      | 11110 | **div** rc,rb,ra; flag                      |
 | 31 | illegal      | op0r_imm9_16 | 11111 | **illegal** uimm9                           |
 
-## calling convention
-
-### 16-bit calling convention
-
-the 16-bit instruction packet, while intended to be used in conjunction
-with the 32-bit opcodes, is designed as a complete subset, so there is
-an ABI variant that targets a subset using only the 16-bit opcodes.
-
-the register assignment for the 16-bit subset was chosen with this rationale:
-
-- 2 blocks of 4 contiguous non-volatile _callee-save_ and volatile
-  _caller-save_ registers.
-- 3 special registers, 2 argument registers, 1 temporary register,
-  and 3 save registers.
-- 3 save registers to avoid excessive spilling around function calls.
-- 1 temporary register to avoid spilling arguments to free a temporary.
-
-the calling convention for the 16-bit subset is as follows:
-
-- _immediate base_ `ib` is set by `call` instructions and must point to
-a valid immediate block on function entry. function symbols are exported
-with two labels; one in the `.text` section, and one in the `.const` section.
-_immediate base_ must be restored to the entry value in the function
-epilogue before it can be restored by `ret`.
-- _argument registers_ `a0` and `a1` are used for the first two arguments,
-and the remaining arguments are passed on the stack. _return value_ is
-places in `a0` and `a1`, _temporary register_ `t0` is a volatile register,
-and _frame pointer_ (if enabled) uses `s0`. there are two more non-volatile
-_callee-save_ registers, `s1` and `s2`.
-
-### 16-bit register assignment
-
-the following table outlines the 16-bit register assignment, showing
-register name alias, description, and non-volatile _callee-save_ or
-volatile _caller-save_ status.
-
-| name  | alias | description                                 | save   |
-|:------|:------|:--------------------------------------------|:-------|
-| r0    | sp    | stack pointer                               | callee |
-| r1    | s0/fp | saved register 0 / frame pointer            | callee |
-| r2    | s1    | saved register 1                            | callee |
-| r3    | s2    | saved register 2                            | callee |
-| r4    | t0    | temporary register 0                        | caller |
-| r5    | a0    | argument register 0                         | caller |
-| r6    | a1    | argument register 1                         | caller |
-| r7    | ra    | return address / _(pc,ib)_ link vector      | caller |
-
 ## instructions formats
 
 glyph uses a super regular RISC encoding designed for vectorized decoders.
