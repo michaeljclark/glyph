@@ -36,28 +36,27 @@ to be word-sized, following C-style packing and alignment rules.
 
 ## architecture
 
-this list of points outlines the primary differentiating elements of
-the super regular RISC architecture:
+this list of points outlines differentiating elements of the super
+regular RISC architecture:
 
-- variable length instruction format supporting 16, 32, 64, and 128-bit
+- variable length instruction format supporting 16, 32, and 64-bit
   instructions.
-- 1-bit predicate for compare, branch, add with carry, and subtract with
-  borrow.
-- 16-bit compressed instruction packets that can access 8x64-bit registers.
-- (pc,ib) is a special program counter and immediate base register address
-  vector.
-- link register contains packed i32x2 relative address vector to function
-  entry.
+- 16-bit compressed instruction packets that can access 8 registers.
+- 1-bit predicate for compare, branch, divide-by-zero, and add or subtract
+  with carry.
+- _(pc,ib)_ is a program counter and immediate base register address vector.
+- link register contains a packed relative _(pc,ib)_ address vector to
+  function entry.
 - `ibj` _(immediate-block-jump)_ adds a relative address to the immediate
   base register.
-- `movq` _(move-word-immediate-block)_ uses unsigned displacement to access
-  constants.
-- `jalib` _(jump-and-link-immediate-block)_ or _(call)_ links address
-  vector and adds constants to (pc,ib).
-- `jtlib` _(jump-to-link-immediate-block)_ or _(ret)_ subtracts link
-  vector from and adds constants to (pc,ib).
+- `mov` _(move-word)_ uses a displacement to access an immediate block
+  constant.
+- `jal` _(jump-and-link)_ links address and adds immediate block
+  constants to _(pc,ib)_.
+- `jtl` _(jump-to-link)_ subtracts link vector and adds immediate block
+  constants to _(pc,ib)_.
 - `pin` _(pack-indirect)_ packs two absolute addresses as relative address
-  vector from (pc,ib).
+  vector from _(pc,ib)_.
 
 compiled versions of the architecture specification are available from the
 following URLs:
