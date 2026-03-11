@@ -6401,7 +6401,7 @@ from the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{compare}
-\insrcrbimmthree{rc}{rb}{fun}{10010}{\textbf{cmp.i64}\: \mathit{rc}, \mathit{rb}, \mathit{fun3}}
+\insrcrbimmthree{rc}{rb}{fun}{10010}{\textbf{cmp.i64}\: \mathit{rc}, \mathit{rb}, \mathit{fun3}; \mathit{flag}}
 \\
 the \emph{compare} instruction performs a comparison between the value in
 \emph{rb} and \emph{rc} then saves the result in the \emph{flag} register.
@@ -6617,7 +6617,7 @@ result in the \emph{rc} register.
 
 \needspace{8\baselineskip}
 \subsection{div}
-\insrcrbrc{rc}{rb}{ra}{11110}{\textbf{div.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
+\insrcrbrc{rc}{rb}{ra}{11110}{\textbf{div.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}; \mathit{flag}}
 \\
 the \emph{div} instruction performs signed division of the
 \emph{rb} register by the \emph{ra} register and saves the
@@ -7065,7 +7065,7 @@ r7    & ra    & return address / (pc,ib) link vector        & caller \\
 \ainsrcimmsix{15}{rc}{uimm}{01111}{\textbf{store.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6})(\mathit{pc})}
 \ainsrcrbimmthree{16}{rc}{rb}{uimm}{10000}{\textbf{load.i64}\: \mathit{rc}, (\mathit{uimm3} \times 8)(\mathit{rb})}
 \ainsrcrbimmthree{17}{rc}{rb}{uimm}{10001}{\textbf{store.i64}\: \mathit{rc}, (\mathit{uimm3} \times 8)(\mathit{rb})}
-\ainsrcrbimmthree{18}{rc}{rb}{fun}{10010}{\textbf{compare.i64}\: \mathit{rc}, \mathit{rb}, \mathit{fun3}}
+\ainsrcrbimmthree{18}{rc}{rb}{fun}{10010}{\textbf{compare.i64}\: \mathit{rc}, \mathit{rb}, \mathit{fun3}; \mathit{flag}}
 \ainsrcrbimmthree{19}{rc}{rb}{fun}{10011}{\textbf{logic.i64}\: \mathit{rc}, \mathit{rb}, \mathit{fun3}}
 \ainsrcrbrc{20}{rc}{rb}{ra}{10100}{\textbf{pin.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
 \ainsrcrbrc{21}{rc}{rb}{ra}{10101}{\textbf{and.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
@@ -7077,7 +7077,7 @@ r7    & ra    & return address / (pc,ib) link vector        & caller \\
 \ainsrcrbrc{27}{rc}{rb}{ra}{11011}{\textbf{sll.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
 \ainsrcrbrc{28}{rc}{rb}{ra}{11100}{\textbf{sub.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}; \mathit{flag}}
 \ainsrcrbrc{29}{rc}{rb}{ra}{11101}{\textbf{mul.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
-\ainsrcrbrc{30}{rc}{rb}{ra}{11110}{\textbf{div.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}}
+\ainsrcrbrc{30}{rc}{rb}{ra}{11110}{\textbf{div.i64}\: \mathit{rc}, \mathit{rb}, \mathit{ra}; \mathit{flag}}
 \ainsnimmnine{31}{uimm}{11111}{\textbf{illegal}\: \mathit{uimm9}}
 \ainshdr{-1}{operand}{opcode}{size}
 
