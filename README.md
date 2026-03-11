@@ -15,7 +15,27 @@ to execute. it uses a compact, regular instruction format and a small
 'predicate' register for control flow. the design carefully considers
 how a processor reads, interprets, and executes instructions.
 
-## background
+## highlights
+
+this list outlines architectural highlights of the glyph architecture:
+
+- *simplified decode* - instruction decode is dramatically simpler than CISC architectures.
+- *constant blocks* - increase fetch bandwidth and speed up dynamic linking.
+- *true carry* - simplifies big integer carry-add arithmetic used for cryptography.
+- *divide-by-zero branch* - eliminates conditional branch instructions before divisions.
+- *simplified vector SIMD* - 64-bit instruction packets support AVX10-like vector SIMD.
+- *arithmetic vector swizzle* - speeds up subgroup shuffle operations for vector arithmetic.
+- *capabilities and domains* - provide context switching and page-table color permissions.
+- *privilege level free* - uses capabilities and domains to abstract privilege levels.
+- *message-signaled interrupts* - support globally-scoped inter-domain message interrupts.
+- *multicast network-on-chip* - enables synchronized messaging for thread groups.
+- *deadline timer interrupts* - use the processor high-precision clock for deadline timers.
+- *software-defined MMU* - accelerates address translation for foreign page-table formats.
+- *address-space prefixes* - enable OpenCL group-shared and private local memory.
+- *virtual machine definition* - provides EFI firmware, device-tree, and VirtIO device support.
+- *comprehensible specification* - uses semantic normalization aligned with ARPA conventions.
+
+## architecture
 
 glyph is a super-regular RISC architecture that encodes constants in a
 secondary constant stream accessed via an immediate base _(ib)_ register
@@ -34,29 +54,18 @@ switched via the constant branch instruction. unlike typical RISC
 architectures, immediate blocks containing constants allow relocations
 to be word-sized, following C-style packing and alignment rules.
 
-## architecture
+this list outlines some differentiating elements of the super regular RISC architecture:
 
-this list of points outlines differentiating elements of the super
-regular RISC architecture:
-
-- variable length instruction format supporting 16, 32, and 64-bit
-  instructions.
+- variable length instruction format supporting 16, 32, and 64-bit instructions.
 - 16-bit compressed instruction packets that can access 8 registers.
-- 1-bit predicate for compare, branch, divide-by-zero, and add or subtract
-  with carry.
+- 1-bit predicate for compare, branch, divide-by-zero, and add or subtract with carry.
 - _(pc,ib)_ is a program counter and immediate base register address vector.
-- link register contains a packed relative _(pc,ib)_ address vector to
-  function entry.
-- `ibj` _(immediate-block-jump)_ adds a relative address to the immediate
-  base register.
-- `mov` _(move-word)_ uses a displacement to access an immediate block
-  constant.
-- `jal` _(jump-and-link)_ links address and adds immediate block
-  constants to _(pc,ib)_.
-- `jtl` _(jump-to-link)_ subtracts link vector and adds immediate block
-  constants to _(pc,ib)_.
-- `pin` _(pack-indirect)_ packs two absolute addresses as relative address
-  vector from _(pc,ib)_.
+- link register contains a packed relative _(pc,ib)_ address vector to function entry.
+- `ibj` _(immediate-block-jump)_ adds a relative address to the immediate base register.
+- `mov` _(move-word)_ uses a displacement to access an immediate block constant.
+- `jal` _(jump-and-link)_ links address and adds immediate block constants to _(pc,ib)_.
+- `jtl` _(jump-to-link)_ subtracts link vector and adds immediate block constants to _(pc,ib)_.
+- `pin` _(pack-indirect)_ packs two absolute addresses as relative address vector from _(pc,ib)_.
 
 compiled versions of the architecture specification are available from the
 following URLs:
