@@ -7,7 +7,7 @@
 \usepackage[x-1a]{pdfx}
 \usepackage[utf8]{inputenc}
 \usepackage{tikz}
-\usepackage{xcolor}
+\usepackage[table]{xcolor}
 \usepackage{minitoc}
 \usepackage{fancyvrb}
 \usepackage{needspace}
@@ -27,6 +27,12 @@
 \usepackage[backend=biber,style=numeric-comp]{biblatex}
 \addbibresource{doc/glyph.bib}
 \usetikzlibrary{decorations.pathreplacing, arrows.meta, positioning}
+
+\newcommand{\thead}[1]{\sffamily #1}
+\newcommand{\tsub}[1]{\sffamily\itshape #1}
+\colorlet{thcol}{black!8}
+\colorlet{tscol}{white}
+\colorlet{tbcol}{black!3}
 
 \AtBeginBibliography{\footnotesize}
 
@@ -1029,9 +1035,11 @@ glyph architectural parameters are as follows:
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{Parameter} & \textbf{Value}& \textbf{Description} \\
+\rowcolor{thcol}
+\thead{Parameter} & \thead{Value}& \thead{Description} \\
 \hline
 SREG & 8, 64      & number of scalar registers \\
 VREG & --, 64     & number of vector registers \\
@@ -1063,11 +1071,13 @@ contains packed-SIMD instruction on vector registers.
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|}
 \hline
-\textbf{profile} &
-\textbf{SREG} & \textbf{VREG} & \textbf{NDOM} & \textbf{NCOL} & \textbf{MLEN} &
-\textbf{ILEN} & \textbf{ALEN} & \textbf{XLEN} & \textbf{VLEN} & \textbf{GLEN} \\
+\rowcolor{thcol}
+\thead{profile} &
+\thead{SREG} & \thead{VREG} & \thead{NDOM} & \thead{NCOL} & \thead{MLEN} &
+\thead{ILEN} & \thead{ALEN} & \thead{XLEN} & \thead{VLEN} & \thead{GLEN} \\
 \hline
 \emph{scalar-min} & 8  & -  & -  & -  & 32  & 16 & 64  & 64  & -    & -   \\
 \emph{scalar-max} & 64 & -  & 16 & 16 & 32  & 32 & 64  & 128 & -    & -   \\
@@ -1103,9 +1113,11 @@ this table shows the size fields for the different instruction sizes:
 \begin{table}[h]
 \centering
 \small
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|c|l|}
 \hline
-\textbf{Instruction size} & \textbf{Size vector} \\
+\rowcolor{thcol}
+\thead{Instruction size} & \thead{Size vector} \\
 \hline
 16-bit   & \texttt{\{00}\}                       \\
 32-bit   & \texttt{\{01,11\}}                    \\
@@ -1126,9 +1138,11 @@ various width parallel instruction decoders.
 \begin{table}[h]
 \centering
 \small
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|c|c|c|c|c|}
 \hline
-\textbf{Packets} & \textbf{Bits} & \textbf{Bytes} & $\bm{n_{combos}}$ & $\bm{\log_2(n)}$ \\
+\rowcolor{thcol}
+\thead{Packets} & \thead{Bits} & \thead{Bytes} & $\bm{n_{combos}}$ & $\bm{\log_2(n)}$ \\
 \hline
 1-wide  & 16-bit   & 2  & 1     & \fmtlogtwo{1} \\
 2-wide  & 32-bit   & 4  & 16    & \fmtlogtwo{16} \\
@@ -2557,9 +2571,11 @@ the following unsigned fixed-width integer formats are supported.
 \begin{table}[H]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{type} & \textbf{bits} & \textbf{format} \\
+\rowcolor{thcol}
+\thead{type} & \thead{bits} & \thead{format} \\
 \hline
 uint8 & 8 & unsigned 8-bit integer \\
 uint16 & 16 & unsigned 16-bit integer \\
@@ -2654,9 +2670,11 @@ the following signed fixed-width two's complement integer formats are supported.
 \begin{table}[H]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{type} & \textbf{bits} & \textbf{format} \\
+\rowcolor{thcol}
+\thead{type} & \thead{bits} & \thead{format} \\
 \hline
 int8 & 8 & signed 8-bit two's complement integer \\
 int16 & 16 & signed 16-bit ttwo's complement integer \\
@@ -2761,9 +2779,11 @@ the following binary floating-point number formats are supported.
 \begin{table}[H]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|l|}
 \hline
-\textbf{type} & \textbf{exponent} & \textbf{fraction} & \textbf{format} \\
+\rowcolor{thcol}
+\thead{type} & \thead{exponent} & \thead{fraction} & \thead{format} \\
 \hline
 binary8p4 & 4 & 3 & IEEE 754-draft 8-bit floating-point \emph{p4} \\
 binary8p5 & 5 & 2 &  IEEE 754-draft 8-bit floating-point \emph{p5} \\
@@ -3005,9 +3025,11 @@ the following table lists scalar types, their symbols, mnemonics and description
 \begin{table}[H]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|l|}
 \hline
-\textbf{type} & \textbf{symbol} & \textbf{mnemonic} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{type} & \thead{symbol} & \thead{mnemonic} & \thead{description} \\
 \hline
 \texttt{i8}   & \texttt{b}  & \emph{byte}   & 8-bit signed integer (byte) \\
 \texttt{i16}  & \texttt{w}  & \emph{word}   & 16-bit signed integer (word) \\
@@ -3055,9 +3077,11 @@ the following table lists \width-bit vector types, their symbols, mnemonics and 
 \begin{table}[H]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|l|}
 \hline
-\textbf{type}    & \textbf{symbol} & \textbf{mnemonic} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{type}    & \thead{symbol} & \thead{mnemonic} & \thead{description} \\
 \hline
 \texttt{b\width}  & \texttt{\sym}    & \emph{\name}         & \width-bit opaque vector type \\
 \texttt{i8x\nb}   & \texttt{\nb{}b}  & \emph{\nb\ * byte}   & \nb\ \texttimes\ 8-bit signed integer (byte) \\
@@ -3237,21 +3261,26 @@ the following table lists the user-level registers:
 \begin{table}[H]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabularx}{125mm}{|l|l|X|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
 \hline
-\multicolumn{3}{|l|}{\textbf{floating-point unit registers}} \\
+\rowcolor{tscol}
+\multicolumn{3}{|l|}{\tsub{floating-point unit registers}} \\
 \hline
 \texttt{0x00} & fpstatus  & floating-point status \\
 \texttt{0x01} & fpcontrol & floating-point control \\
 \hline
-\multicolumn{3}{|l|}{\textbf{clock and frequency registers}} \\
+\rowcolor{tscol}
+\multicolumn{3}{|l|}{\tsub{clock and frequency registers}} \\
 \hline
 \texttt{0x02} & ctime     & clock time \\
 \texttt{0x03} & cfreq     & clock frequency \\
 \hline
-\multicolumn{3}{|l|}{\textbf{thread address registers}} \\
+\rowcolor{tscol}
+\multicolumn{3}{|l|}{\tsub{thread address registers}} \\
 \hline
 \texttt{0x04} & address   & user machine address \\
 \texttt{0x05} & domain    & user domain address \\
@@ -3294,9 +3323,11 @@ this register is visible if \texttt{scontrol.F} is enabled.
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
 \hline
 \verb|1 << 0| & I   & invalid operation \\
 \verb|1 << 1| & X   & inexact result \\
@@ -3336,9 +3367,11 @@ precision. this register is visible if \texttt{scontrol.F} is enabled.
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
 \hline
 \verb|1 << 0| & Z   & \emph{flush-to-zero} and \emph{denormals-are-zero} \\
 \verb|1 << 1| & N   & \emph{not-strict-ieee754} \\
@@ -3351,9 +3384,11 @@ precision. this register is visible if \texttt{scontrol.F} is enabled.
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
 \hline
 \verb|0| & RN   & round to nearest (even) \\
 \verb|1| & RD   & round down (towards $-\infty$) \\
@@ -3448,11 +3483,14 @@ registers:
 \begin{table}[H]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabularx}{125mm}{|l|l|X|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
 \hline
-\multicolumn{3}{|l|}{\textbf{privileged trap registers}} \\
+\rowcolor{tscol}
+\multicolumn{3}{|l|}{\tsub{privileged trap registers}} \\
 \hline
 \texttt{0x10} & tstatus   & trap status \\
 \texttt{0x11} & tcontrol  & trap control \\
@@ -3465,7 +3503,8 @@ registers:
 \texttt{0x18} & thpc      & trap handler program counter  \\
 \texttt{0x19} & thib      & trap handler immediate base \\
 \hline
-\multicolumn{3}{|l|}{\textbf{privileged system registers}} \\
+\rowcolor{tscol}
+\multicolumn{3}{|l|}{\tsub{privileged system registers}} \\
 \hline
 \texttt{0x20} & sstatus   & system status \\
 \texttt{0x21} & scontrol  & system control \\
@@ -3481,7 +3520,8 @@ registers:
 \texttt{0x2B} & sie       & system interrupt enable \\
 \texttt{0x2C} & sip       & system interrupt pending \\
 \hline
-\multicolumn{3}{|l|}{\textbf{privileged debug registers}} \\
+\rowcolor{tscol}
+\multicolumn{3}{|l|}{\tsub{privileged debug registers}} \\
 \hline
 \texttt{0x30} & dstatus    & debug status \\
 \texttt{0x32} & dcycle     & debug cycle counter \\
@@ -3519,9 +3559,11 @@ the \texttt{M} field indicates whether a message interrupt is pending.
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
 \hline
 \verb|1 << 0| & T   & timer interrupt pending \\
 \verb|1 << 1| & M   & message interrupt pending \\
@@ -3547,9 +3589,11 @@ are enabled.
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
 \hline
 \verb|1 << 0| & I   & system interrupt enable \\
 \hline
@@ -3586,11 +3630,14 @@ current trap.
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
 \hline
-\multicolumn{3}{|l|}{\textbf{system exceptions}} \\ \hline
+\rowcolor{tscol}
+\multicolumn{3}{|l|}{\tsub{system exceptions}} \\ \hline
 \verb|1| & break-instruction   & break instruction exception \\
 \verb|2| & illegal-instruction & illegal instruction exception \\
 \verb|3| & debug-monitor       & debug monitor exception \\
@@ -3607,7 +3654,8 @@ current trap.
 \verb|14| & domain-fault       & domain fault \\
 \verb|15| & machine-fault      & machine fault \\
 \hline
-\multicolumn{3}{|l|}{\textbf{system interrupts}} \\ \hline
+\rowcolor{tscol}
+\multicolumn{3}{|l|}{\tsub{system interrupts}} \\ \hline
 \verb|30| & timer-interrupt     & timer interrupt \\
 \verb|31| & message-interrupt   & message interrupt \\
 \hline
@@ -3718,9 +3766,11 @@ the section describes the privileged system registers.
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
 \hline
 \verb|1 << 0| & E   & system message exception \\
 \hline
@@ -3755,9 +3805,11 @@ the section describes the privileged system registers.
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
 \hline
 \verb|1 << 0| & F   & floating-point unit enabled \\
 \verb|1 << 1| & T   & user clock and frequency enabled \\
@@ -3796,9 +3848,11 @@ the section describes the privileged system registers.
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
 \hline
 \verb|1 << 0| & F   & floating-point unit feature \\
 \verb|1 << 1| & T   & user clock and frequency feature \\
@@ -3837,9 +3891,11 @@ fields. the allowable values are specified in the following table.
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|l|}
 \hline
-\textbf{major} & \textbf{minor} & \textbf{patch} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{major} & \thead{minor} & \thead{patch} & \thead{description} \\
 \hline
 \verb|0| & \verb|6| & \verb|0| & pre-release current \\
 \hline
@@ -4029,9 +4085,11 @@ monitor exceptions.
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
 \hline
 \verb|1 << 0| & S   & stopping instruction \\
 \verb|1 << 1| & F   & fetch monitor address \\
@@ -4135,9 +4193,11 @@ the following tables list the privileged capability system parameters:
 \begin{table}[H]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabularx}{95mm}{|l|X|}
 \hline
-\textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{name} & \thead{description} \\
 \hline
 $\mathit{ncol}$      & the number of architectural colors \\
 \hline
@@ -4152,28 +4212,34 @@ the following tables list the privileged capability system registers:
 \begin{table}[H]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabularx}{125mm}{|l|l|X|l|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} & \textbf{depends} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} & \thead{depends} \\
 \hline
-\multicolumn{4}{|l|}{\textbf{capability control registers}} \\
+\rowcolor{tscol}
+\multicolumn{4}{|l|}{\tsub{capability control registers}} \\
 \hline
 \texttt{0x41} & ccontrol       & capability control & \\
 \hline
-\multicolumn{4}{|l|}{\textbf{capability permission registers}} \\
+\rowcolor{tscol}
+\multicolumn{4}{|l|}{\tsub{capability permission registers}} \\
 \hline
 \texttt{0x43} & colorread      & color read permissions & \\
 \texttt{0x44} & colorwrite     & color write permissions & \\
 \texttt{0x45} & colorexec      & color exec permissions & \\
 \hline
-\multicolumn{4}{|l|}{\textbf{capability role registers}} \\
+\rowcolor{tscol}
+\multicolumn{4}{|l|}{\tsub{capability role registers}} \\
 \hline
 \texttt{0x46} & colorsys       & color system role & \\
 \texttt{0x47} & colordom       & color domain role & domain \\
 \texttt{0x48} & colorcap       & color capability role & \\
 \texttt{0x49} & colormac       & color machine role & machine \\
 \hline
-\multicolumn{4}{|l|}{\textbf{capability matrix registers}} \\
+\rowcolor{tscol}
+\multicolumn{4}{|l|}{\tsub{capability matrix registers}} \\
 \hline
 \texttt{0x100...0x10F} & colormatread$[n]$   & color matrix read permissions & \\
 \texttt{0x200...0x20F} & colormatwrite$[n]$   & color matrix write permissions & \\
@@ -4204,9 +4270,11 @@ the capability extension.
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
 \hline
 \verb|1 << 0| & C   & capability check enable \\
 \hline
@@ -4411,9 +4479,11 @@ the following tables list the privileged domain system parameters:
 \begin{table}[H]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabularx}{95mm}{|l|X|}
 \hline
-\textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{name} & \thead{description} \\
 \hline
 $\mathit{ndom}$      & the number of architectural domains \\
 \hline
@@ -4428,11 +4498,14 @@ the following tables list the privileged domain system registers:
 \begin{table}[H]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabularx}{125mm}{|l|l|X|l|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} & \textbf{depends} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} & \thead{depends} \\
 \hline
-\multicolumn{4}{|l|}{\textbf{domain control registers}} \\
+\rowcolor{tscol}
+\multicolumn{4}{|l|}{\tsub{domain control registers}} \\
 \hline
 \texttt{0x51} & domcontrol & domain control & \\
 \texttt{0x53} & domlast  & domain number last & \\
@@ -4440,7 +4513,8 @@ the following tables list the privileged domain system registers:
 \texttt{0x55} & domnext  & domain number next & \\
 \texttt{0x400...0x40F} & dommatrix$[n]$ & domain matrix & \\
 \hline
-\multicolumn{4}{|l|}{\textbf{domain routing registers}} \\
+\rowcolor{tscol}
+\multicolumn{4}{|l|}{\tsub{domain routing registers}} \\
 \hline
 \texttt{0x500...0x50F} & domsys$[n]$    & domain system default domain & \\
 \texttt{0x600...0x60F} & domdom$[n]$    & domain domain default domain & \\
@@ -4448,7 +4522,8 @@ the following tables list the privileged domain system registers:
 \texttt{0x800...0x80F} & dommac$[n]$    & domain machine default domain & machine \\
 \texttt{0x900...0x90F} & dommsg$[n]$    & domain message default domain & \\
 \hline
-\multicolumn{4}{|l|}{\textbf{domain context registers}} \\
+\rowcolor{tscol}
+\multicolumn{4}{|l|}{\tsub{domain context registers}} \\
 \hline
 \texttt{0xA00...0xA0F} & domscratch$[n]$& domain scratch & \\
 \texttt{0xB00...0xB0F} & domaddr$[n]$   & domain address & \\
@@ -4482,9 +4557,11 @@ control the next domain number, and control valid domain transitions.
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
 \hline
 \verb|1 << 0| & V   & virtual domains enable \\
 \hline
@@ -4721,20 +4798,25 @@ the following tables list the privileged machine registers:
 \begin{table}[H]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabularx}{125mm}{|l|l|X|l|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} & \textbf{depends} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} & \thead{depends} \\
 \hline
-\multicolumn{4}{|l|}{\textbf{machine control registers}} \\
+\rowcolor{tscol}
+\multicolumn{4}{|l|}{\tsub{machine control registers}} \\
 \hline
 \texttt{0x61} & mcontrol  & machine control & \\
 \texttt{0x62} & mfeature  & machine feature & \\
 \hline
-\multicolumn{4}{|l|}{\textbf{machine address vectors}} \\
+\rowcolor{tscol}
+\multicolumn{4}{|l|}{\tsub{machine address vectors}} \\
 \hline
 \texttt{0xF00...0xF0F} & macaddr$[n]$   & machine address & domain \\
 \hline
-\multicolumn{4}{|l|}{\textbf{machine memory registers}} \\
+\rowcolor{tscol}
+\multicolumn{4}{|l|}{\tsub{machine memory registers}} \\
 \hline
 \texttt{0x63} & mtlbkey   & machine tlb key & \\
 \texttt{0x64} & mtlbfmt   & machine tlb format & \\
@@ -4770,9 +4852,11 @@ control and features.
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
 \hline
 \verb|1 << 0| & V   & virtual address translation enable \\
 \verb|1 << 1| & P   & physical permissions check enable \\
@@ -4803,9 +4887,11 @@ control and features.
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
 \hline
 \verb|1 << 0| & V   & virtual address translation feature \\
 \verb|1 << 1| & P   & physical permissions check feature \\
@@ -4896,9 +4982,11 @@ translation miss fault.
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{no.} & \textbf{size}& \textbf{description} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{size}& \thead{description} \\
 \hline
 \verb|0| & $2^{12}$ & v48 page table entry 4KiB page \\
 \verb|1| & $2^{21}$ & v48 page table entry 2MiB page \\
@@ -4973,11 +5061,14 @@ the following tables list the privileged environment registers:
 \begin{table}[H]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabularx}{125mm}{|l|l|X|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
 \hline
-\multicolumn{3}{|l|}{\textbf{environment control registers}} \\
+\rowcolor{tscol}
+\multicolumn{3}{|l|}{\tsub{environment control registers}} \\
 \hline
 \texttt{0x71} & econtrol  & environment control \\
 \hline
@@ -5012,9 +5103,11 @@ environment log.
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{no.} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{description} \\
 \hline
 \verb|0| & diagnostic \\
 \verb|1| & warm reset \\
@@ -5047,14 +5140,18 @@ and the \emph{trie-based} page table structure pointed to by the
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|l|l|l|l|}
 \hline
-\textbf{Page} & \textbf{Page} & \textbf{Page} & \textbf{Virtual} &
-\textbf{Page} & \\
-\textbf{Table} & \textbf{Number} & \textbf{Offset} & \textbf{Address} &
-\textbf{Index} & \textbf{Page} \\
-\textbf{Levels} & \textbf{Bits} & \textbf{Bits} & \textbf{Bits} &
-\textbf{Entries} & \textbf{Sizes} \\
+\rowcolor{thcol}
+\thead{Page} & \thead{Page} & \thead{Page} & \thead{Virtual} &
+\thead{Page} & \\
+\rowcolor{thcol}
+\thead{Table} & \thead{Number} & \thead{Offset} & \thead{Address} &
+\thead{Index} & \thead{Page} \\
+\rowcolor{thcol}
+\thead{Levels} & \thead{Bits} & \thead{Bits} & \thead{Bits} &
+\thead{Entries} & \thead{Sizes} \\
 \hline
 4 & 9 & 12 & 44 --- 48 & 512 & 4KiB, 2Mib, 1GiB \\
 \hline
@@ -5118,9 +5215,11 @@ for \emph{leaf} entries.
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{no.} & \textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
 \hline
 \verb|1 << 0| & V   & valid \\
 \verb|1 << 1| & R   & read \\
@@ -5181,9 +5280,11 @@ address structure is as follows:
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|}
 \hline
-\textbf{no.} & \textbf{name} \\
+\rowcolor{thcol}
+\thead{no.} & \thead{name} \\
 \hline
 \texttt{0b0.} & user \\
 \texttt{0b10.} & system \\
@@ -5499,9 +5600,11 @@ the following table shows inter-domain trap routing table keys for
 \begin{table}[h]
 \centering
 \small
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{capability} & \textbf{domain call} & \textbf{domain return} \\
+\rowcolor{thcol}
+\thead{capability} & \thead{domain call} & \thead{domain return} \\
 \hline
 \emph{system}      & \texttt{domsys[domcurr]} & \texttt{domsys[domnext]} \\
 \emph{domain}      & \texttt{domdom[domcurr]} & \texttt{domdom[domnext]} \\
@@ -5524,9 +5627,11 @@ the following table shows the inter-domain message instructions.
 \begin{table}[h]
 \centering
 \small
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{capability} & \textbf{synchronous call} & \textbf{synchronous return} \\
+\rowcolor{thcol}
+\thead{capability} & \thead{synchronous call} & \thead{synchronous return} \\
 \hline
 \emph{system}      & \texttt{syscall} & \texttt{sysret} \\
 \emph{domain}      & \texttt{domcall} & \texttt{domret} \\
@@ -5609,9 +5714,11 @@ the following special addresses can be used.
 \begin{table}[h]
 \centering
 \small
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{address} & \textbf{type} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{address} & \thead{type} & \thead{description} \\
 \hline
 \texttt{0\ldots0}& all-zeros & \emph{boot processor} \\
 \texttt{1\ldots1} & all-ones & \emph{broadcast address} \\
@@ -5654,9 +5761,11 @@ the following domain vectors hold state for a domain context switch.
 \begin{table}[h]
 \centering
 \small
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{domain register} & \textbf{system register} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{domain register} & \thead{system register} & \thead{description} \\
 \hline
 \texttt{domscratch[n]} & \texttt{tscratch} & trap scratch value \\
 \texttt{domthpc[n]} & \texttt{thpc} & trap handler program counter \\
@@ -5910,9 +6019,11 @@ permissions and software-defined page-based virtual address translation.
 \begin{table}[h]
 \centering
 \small
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{symbol} & \textbf{role} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{symbol} & \thead{role} & \thead{description} \\
 \hline
 \texttt{usr} & user       & execution of user-level programs \\
 \texttt{sys} & system     & operating system software \\
@@ -5942,9 +6053,11 @@ virtual machine model.
 \begin{table}[h]
 \centering
 \small
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|}
 \hline
-\textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{name} & \thead{description} \\
 \hline
 \texttt{EFI\_LOADED\_IMAGE\_PROTOCOL}        & image context and load parameters \\
 \texttt{EFI\_DEVICE\_PATH\_PROTOCOL}         & device and image location encoding \\
@@ -5976,9 +6089,11 @@ other configuration parameters.
 \begin{table}[h]
 \centering
 \small
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{symbol} & \textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{symbol} & \thead{name} & \thead{description} \\
 \hline
 \textbf{DTS} & device tree source & the hardware description format \\
 \textbf{DTB} & device tree binary & the compiled binary object \\
@@ -6008,9 +6123,11 @@ base virtual machine model.
 \begin{table}[h]
 \centering
 \small
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|}
 \hline
-\textbf{name} & \textbf{description} \\
+\rowcolor{thcol}
+\thead{name} & \thead{description} \\
 \hline
 \texttt{virtio-net}     & network device \\
 \texttt{virtio-block}   & block device \\
@@ -6093,10 +6210,12 @@ value of \emph{fun3}. the type of linkage in \emph{fun3} can be one of:
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|l|l|l|}
 \hline
-\textbf{value} & \textbf{mnemonic} & \textbf{description} &
-\textbf{link-type} & \textbf{dst-link} & \textbf{src-link} \\
+\rowcolor{thcol}
+\thead{value} & \thead{mnemonic} & \thead{description} &
+\thead{link-type} & \thead{dst-link} & \thead{src-link} \\
 \hline
 0     & j      & jump               & jump & -  & -  \\
 1     & -      & -                  & -    & -  & -  \\
@@ -6294,9 +6413,11 @@ register is set. the type of comparison in \emph{fun3} can be one of:
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{value} & \textbf{mnemonic}& \textbf{description} \\
+\rowcolor{thcol}
+\thead{value} & \thead{mnemonic}& \thead{description} \\
 \hline
 0     & \emph{lt}    & \emph{less than (signed)}          \\
 1     & \emph{ge}    & \emph{greather or equal (signed)}  \\
@@ -6337,9 +6458,11 @@ register. the type of logic operations in \emph{fun3} can be one of:
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{value} & \textbf{mnemonic}& \textbf{description} \\
+\rowcolor{thcol}
+\thead{value} & \thead{mnemonic}& \thead{description} \\
 \hline
 0     & \emph{mv}    & \emph{move}                 \\
 1     & \emph{not}   & \emph{logical not}          \\
@@ -6625,11 +6748,14 @@ the following table lists glyph assembler directives:
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{Directive} & \textbf{Arguments} & \textbf{Description} \\
+\rowcolor{thcol}
+\thead{Directive} & \thead{Arguments} & \thead{Description} \\
 \hline
-\multicolumn{3}{|l|}{\textbf{Data directives}} \\ \hline
+\rowcolor{tscol}
+\multicolumn{3}{|l|}{\tsub{Data directives}} \\ \hline
 \texttt{.byte}   & \emph{expression-list}    & 8-bit comma separated words   \\
 \texttt{.short}  & \emph{expression-list}    & 16-bit comma separated words  \\
 \texttt{.long}   & \emph{expression-list}    & 32-bit comma separated words  \\
@@ -6638,15 +6764,18 @@ the following table lists glyph assembler directives:
 \texttt{.string} & \emph{“string”}           & emit string                   \\
 \texttt{.zero}   & \emph{integer}            & emit zeroes                   \\
 \hline
-\multicolumn{3}{|l|}{\textbf{Alignment directives}} \\ \hline
+\rowcolor{tscol}
+\multicolumn{3}{|l|}{\tsub{Alignment directives}} \\ \hline
 \texttt{.align}  & \emph{pow2 [,pad\_val=0] [,max]} & align to power of 2    \\
 \texttt{.balign} & \emph{bytes [,pad\_val=0]}       & byte align             \\
 \hline
-\multicolumn{3}{|l|}{\textbf{Symbol directives}} \\ \hline
+\rowcolor{tscol}
+\multicolumn{3}{|l|}{\tsub{Symbol directives}} \\ \hline
 \texttt{.globl}  & \emph{symbol\_name,const\_name}  & emit symbol \emph{(global scope)}  \\
 \texttt{.local}  & \emph{symbol\_name,const\_name}  & emit symbol \emph{(local scope)}   \\
 \hline
-\multicolumn{3}{|l|}{\textbf{Section directives}} \\ \hline
+\rowcolor{tscol}
+\multicolumn{3}{|l|}{\tsub{Section directives}} \\ \hline
 \texttt{.text}    &         & emit \texttt{.text} section or make current    \\
 \texttt{.const}   &         & emit \texttt{.const} section or make current   \\
 \texttt{.data}    &         & emit \texttt{.data} section or make current    \\
@@ -6657,7 +6786,8 @@ the following table lists glyph assembler directives:
 \texttt{.section} & \emph{section\_name}    & emit section (default
 \texttt{.text}) or make current \\
 \hline
-\multicolumn{3}{|l|}{\textbf{Miscellaneous directives}} \\ \hline
+\rowcolor{tscol}
+\multicolumn{3}{|l|}{\tsub{Miscellaneous directives}} \\ \hline
 \texttt{.equ}    & \emph{name, value}       & constant definition            \\
 \texttt{.file}   & \emph{“filename”}        & emit filename symbol           \\
 \texttt{.ident}  & \emph{“string”}          & emit identification string     \\
@@ -6681,9 +6811,11 @@ the following table lists glyph assembler pseudo-instruction aliases:
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
-\textbf{Pseudo-instruction} & \textbf{Expansion} & \textbf{Description}   \\
+\rowcolor{thcol}
+\thead{Pseudo-instruction} & \thead{Expansion} & \thead{Description}   \\
 \hline
 \texttt{nop}   & \texttt{or.i64 r0,r0,r0} & no-operation                     \\
 \texttt{li} \emph{rc, expression} & (several expansions) & load immediate  \\
@@ -6793,9 +6925,11 @@ volatile \emph{caller-save} status.
 \begin{table}[h]
 \centering
 \footnotesize
+\rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|l|l|}
 \hline
-\textbf{name} & \textbf{alias} & \textbf{description} & \textbf{save} \\
+\rowcolor{thcol}
+\thead{name} & \thead{alias} & \thead{description} & \thead{save} \\
 \hline
 ib    &       & immediate base                              & callee \\
 r0    & sp    & stack pointer                               & callee \\
