@@ -452,7 +452,7 @@ specifiess the width of registers in bits.
   \draw [black!95] (0,\x)    rectangle (8,\x+1);
 \foreach \x in {0,...,3} {
   \pgfmathsetmacro{\z}{int(3-\x)}
-  \node [font=\scriptsize,anchor=base] at (4,\x+0.25)  {\textsf{register \z}};
+  \node [font=\footnotesize,anchor=base] at (4,\x+0.25) {$\mathsf{register\;\z}$};
 }
 
 \draw [black!95,dashed] (0,-1)      rectangle (8,0);
@@ -500,7 +500,7 @@ specifies the width of addresses in bits.
   \draw [black!95] (0,\x)    rectangle (8,\x+1);
 \foreach \x in {0,...,3} {
   \pgfmathsetmacro{\z}{int((3-\x)*8)}
-  \node [font=\scriptsize,anchor=base] at (4,\x+0.25)  {\textsf{address \z}};
+  \node [font=\footnotesize,anchor=base] at (4,\x+0.25) {$\mathsf{address\;\z}$};
 }
 \node [font=\tiny,anchor=base west] at (0,4.2)  {\textsf{ALEN}};
 \node [font=\tiny,anchor=base east] at (8,4.2)  {\textsf{0}};
@@ -627,7 +627,7 @@ counter} called \emph{pc-relative} addresses.
   \draw [black!95] (0,\x)    rectangle (8,\x+1);
   \pgfmathsetmacro{\y}{int((1-\x)*4)}
   \pgfmathsetmacro{\z}{int((1-\x)*4+3)}
-  \node [font=\scriptsize,anchor=base] at (4,\x+0.25)  {\textsf{instruction \y--\z}};
+  \node [font=\footnotesize,anchor=base] at (4,\x+0.25) {$\mathsf{instruction\;\y-\z}$};
   \foreach \y in {0,2} {
     \fill [black!5]  (8+\y*4,\x)    rectangle (12+\y*4,\x+1);
     \draw [black!95] (8+\y*4,\x)    rectangle (12+\y*4,\x+1);
@@ -654,7 +654,7 @@ counter} called \emph{pc-relative} addresses.
 
 \fill [black!5] (0,0)    rectangle (8,1);
 \draw [black!95] (0,0)    rectangle (8,1);
-\node [font=\scriptsize,anchor=base] at (4,0.25)  {\textsf{instruction 4--7}};
+\node [font=\footnotesize,anchor=base] at (4,0.25) {$\mathsf{instruction\;4-7}$};
 \fill [black!5] (8,0)    rectangle (12,1);
 \fill [black!9] (12,0)    rectangle (16,1);
 \fill [black!5] (16,0)    rectangle (24,1);
@@ -665,7 +665,7 @@ counter} called \emph{pc-relative} addresses.
 
 \fill [black!5] (0,1)    rectangle (8,2);
 \draw [black!95] (0,1)    rectangle (8,2);
-\node [font=\scriptsize,anchor=base] at (4,1.25)  {\textsf{instruction 0--3}};
+\node [font=\footnotesize,anchor=base] at (4,1.25) {$\mathsf{instruction\;0-3}$};
 \fill [black!5] (8,1)    rectangle (16,2);
 \fill [black!9] (16,1)    rectangle (20,2);
 \fill [black!5] (20,1)    rectangle (24,2);
@@ -714,7 +714,9 @@ storage space containing all types.}
   \draw [black!95] (0,\x)    rectangle (8,\x+1);
   \pgfmathsetmacro{\y}{int((1-\x)*8)}
   \pgfmathsetmacro{\z}{int((1-\x)*8+7)}
-  \node [font=\scriptsize,anchor=base] at (4,\x+0.25)  {\textsf{constant \y--\z}};
+  \edef\yy{\y}
+  \edef\zz{\z}
+  \node [font=\footnotesize,anchor=base] at (4,\x+0.25) {$\mathsf{constant\;\yy-\zz}$};
   \foreach \y in {0,2,...,6} {
     \fill [black!5]  (8+\y*2,\x)    rectangle (10+\y*2,\x+1);
     \draw [black!95] (8+\y*2,\x)    rectangle (10+\y*2,\x+1);
@@ -743,7 +745,9 @@ storage space containing all types.}
   \draw [black!95] (0,\x)    rectangle (8,\x+1);
   \pgfmathsetmacro{\y}{int((1-\x)*4)}
   \pgfmathsetmacro{\z}{int((1-\x)*4+3)}
-  \node [font=\scriptsize,anchor=base] at (4,\x+0.25)  {\textsf{constant \y--\z}};
+  \edef\yy{\y}
+  \edef\zz{\z}
+  \node [font=\footnotesize,anchor=base] at (4,\x+0.25) {$\mathsf{constant\;\yy-\zz}$};
   \foreach \y in {0,2} {
     \fill [black!5]  (8+\y*4,\x)    rectangle (12+\y*4,\x+1);
     \draw [black!95] (8+\y*4,\x)    rectangle (12+\y*4,\x+1);
@@ -772,7 +776,9 @@ storage space containing all types.}
   \draw [black!95] (0,\x)    rectangle (8,\x+1);
   \pgfmathsetmacro{\y}{int((1-\x)*2)}
   \pgfmathsetmacro{\z}{int((1-\x)*2+1)}
-  \node [font=\scriptsize,anchor=base] at (4,\x+0.25)  {\textsf{constant \y--\z}};
+  \edef\yy{\y}
+  \edef\zz{\z}
+  \node [font=\footnotesize,anchor=base] at (4,\x+0.25) {$\mathsf{constant\;\yy-\zz}$};
   \foreach \y in {0} {
     \fill [black!5]  (8+\y*8,\x)    rectangle (16+\y*8,\x+1);
     \draw [black!95] (8+\y*8,\x)    rectangle (16+\y*8,\x+1);
@@ -800,7 +806,7 @@ storage space containing all types.}
   \fill [black!5] (0,\x)    rectangle (8,\x+1);
   \draw [black!95] (0,\x)    rectangle (8,\x+1);
   \pgfmathsetmacro{\y}{int(1-\x)}
-  \node [font=\scriptsize,anchor=base] at (4,\x+0.25)  {\textsf{constant \y}};
+  \node [font=\footnotesize,anchor=base] at (4,\x+0.25) {$\mathsf{constant\;\y}$};
   \fill [black!5] (8,\x)    rectangle (24,\x+1);
   \foreach \y in {0,...,0} {
     \draw [black!95] (8+\y*16,\x)    rectangle (24+\y*16,\x+1);
@@ -832,7 +838,7 @@ referred to as split program stream Harvard architecture.
 
 \node [above,scale=0.9,anchor=south] at (16,3)  {\textbf{instruction stream (pc-relative)}};
 \node [font=\scriptsize,above,scale=0.9,anchor=south] at (4,1.5)  {\textsf{\textbf{instruction packet}}};
-\node [font=\tiny,below,scale=0.9,anchor=base] at (-0.75,0.3)  {\textsf{pc}};
+\node [font=\scriptsize,below,scale=0.9,anchor=base] at (-0.75,0.3)  {$\mathsf{pc}$};
 \node [font=\tiny,below,scale=0.9,anchor=base] at (33.0,0.3)  {\textsf{\ldots}};
 
 \fill [black!15]                   (0.0,0.0)   rectangle (4.5,1.0);
@@ -868,7 +874,7 @@ referred to as split program stream Harvard architecture.
 
 \node [font=\tiny,below,scale=0.9,anchor=base] at (33.0,-8.0)  {\textsf{\ldots}};
 
-\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-6.75)  {\textsf{ib8}};
+\node [font=\scriptsize,below,scale=0.9,anchor=base] at (-1.0,-6.75)  {$\mathsf{ib8}$};
 \foreach \x in {0,1,2,3,4,5,6,7}
   \fill [black!5]                   (\x*4,-6)     rectangle (\x*4+4,-7);
 \foreach \x in {0,1,2,3,4,5,6,7}
@@ -876,7 +882,7 @@ referred to as split program stream Harvard architecture.
 \foreach \x in {0,1,2,3,4,5,6,7}
   \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*4 + 2,-6.7)  {\textsf{\x}};
 
-\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-7.75)  {\textsf{ib16}};
+\node [font=\scriptsize,below,scale=0.9,anchor=base] at (-1.0,-7.75)  {$\mathsf{ib16}$};
 \foreach \x in {0,1,2,3}
   \fill [black!10]                   (\x*8,-7)     rectangle (\x*8+8,-8);
 \foreach \x in {0,1,2,3}
@@ -884,7 +890,7 @@ referred to as split program stream Harvard architecture.
 \foreach \x in {0,1,2,3}
   \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*8 + 4,-7.7)  {\textsf{\x}};
 
-\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-8.75)  {\textsf{ib32}};
+\node [font=\scriptsize,below,scale=0.9,anchor=base] at (-1.0,-8.75)  {$\mathsf{ib32}$};
 \foreach \x in {0,1}
   \fill [black!15]                   (\x*16,-8)     rectangle (\x*16+16,-9);
 \foreach \x in {0,1}
@@ -892,7 +898,7 @@ referred to as split program stream Harvard architecture.
 \foreach \x in {0,1}
   \node [font=\tiny,below,scale=0.9,anchor=base] at (\x*16 + 8,-8.7)  {\textsf{\x}};
 
-\node [font=\tiny,below,scale=0.9,anchor=base] at (-1.0,-9.75)  {\textsf{ib64}};
+\node [font=\scriptsize,below,scale=0.9,anchor=base] at (-1.0,-9.75)  {$\mathsf{ib64}$};
 \foreach \x in {0}
   \fill [black!20]                   (\x*32,-9)     rectangle (\x*32+32,-10);
 \foreach \x in {0}
