@@ -87,7 +87,6 @@ this list outlines instructions, opcodes, and descriptions used in the
 | 02 | b            | op0r_imm9_16 | 00010 | **branch** simm9*2                          |
 | 03 | ibj          | op0r_imm9_16 | 00011 | **ib-jump** simm9*64                        |
 | 04 | link.i64     | op1r_imm6_16 | 00100 | **link** fun3,ib64(uimm6*8)                 |
-|    |              |              |       |   fun3[2:1]=j,jal,jtl,jala                  |
 | 05 | movd.i64     | op1r_imm6_16 | 00101 | **move-dword** rc,ib32(uimm6*8)             |
 | 06 | movq.i64     | op1r_imm6_16 | 00110 | **move-qword** rc,ib64(uimm6*8)             |
 | 07 | movi.i64     | op1r_imm6_16 | 00111 | **mov-imm6** rc,simm6                       |
@@ -102,11 +101,8 @@ this list outlines instructions, opcodes, and descriptions used in the
 | 16 | load.i64     | op2r_imm3_16 | 10000 | **load** rc,(uimm3*8)(rb)                   |
 | 17 | store.i64    | op2r_imm3_16 | 10001 | **store** rc,(uimm3*8)(rb)                  |
 | 18 | compare.i64  | op2r_fun3_16 | 10010 | **compare** rc,rb                           |
-|    |              |              |       |   fun3=lt,ge,eq,ne,ltu,geu,cmov,ncmov       |
 | 19 | logic.i64    | op2r_fun3_16 | 10011 | **logic** rc,rb                             |
-|    |              |              |       |   fun3=mov,not,neg,bswap,ctz,clz,ctpop,sext |
 | 20 | pin.i64      | op3r_16      | 10100 | **pack-indirect** rc,rb,ra                  |
-|    |              |              |       |   i32x2(rc) = (pc-ra+2,ib-rb);              |
 | 21 | and.i64      | op3r_16      | 10101 | **and** rc,rb,ra                            |
 | 22 | or.i64       | op3r_16      | 10110 | **or** rc,rb,ra                             |
 | 23 | xor.i64      | op3r_16      | 10111 | **xor** rc,rb,ra                            |
