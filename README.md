@@ -54,7 +54,7 @@ switched via the constant branch instruction. unlike typical RISC
 architectures, immediate blocks containing constants allow relocations
 to be word-sized, following C-style packing and alignment rules.
 
-this list outlines some differentiating elements of the super regular RISC architecture:
+this list outlines differentiating features of the glyph architecture:
 
 - variable length instruction format supporting 16, 32, and 64-bit instructions.
 - 16-bit compressed instruction packets that can access 8 registers.
