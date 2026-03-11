@@ -6684,7 +6684,7 @@ the following table lists glyph assembler pseudo-instruction aliases:
 \texttt{nop}   & \texttt{or.i64 r0,r0,r0} & no-operation                     \\
 \texttt{li} \emph{rc, expression} & (several expansions) & load immediate  \\
 \texttt{la} \emph{rc, sym}     & (several expansions) & load address    \\
-\texttt{j} \emph{sym}        & \texttt{j.i64} \emph{ibjmp(sym.text, sym.const)} & procedure call \\
+\texttt{j} \emph{sym}        & \texttt{j.i64} \emph{ibjmp(sym.text, sym.const)} & unconditional branch \\
 \texttt{call} \emph{sym}     & \texttt{jal.i64} \emph{r7, ibcall(sym.text, sym.const)} & procedure call \\
 \texttt{ret}  \emph{sym}     & \texttt{jtl.i64} \emph{r7, ibret(sym.text, sym.const)} & procedure return \\
 \texttt{tail} \emph{sym}     & \texttt{jala.i64} \emph{r7, ibtail(sym.text, sym.const)} & tail call \\
