@@ -90,29 +90,29 @@ this list outlines instructions, opcodes, and descriptions used in the
 | 05 | movd.i64     | op1r_imm6_16 | 00101 | **move-dword** rc,ib32(uimm6*8)             |
 | 06 | movq.i64     | op1r_imm6_16 | 00110 | **move-qword** rc,ib64(uimm6*8)             |
 | 07 | movi.i64     | op1r_imm6_16 | 00111 | **mov-imm6** rc,simm6                       |
-| 08 | addi.i64     | op1r_imm6_16 | 01000 | **add-imm6** rc,simm6                       |
+| 08 | addi.i64     | op1r_imm6_16 | 01000 | **add-imm6** rc,simm6; flag                 |
 | 09 | srli.i64     | op1r_imm6_16 | 01001 | **shift-right-logical-imm** rc,uimm6        |
 | 10 | srai.i64     | op1r_imm6_16 | 01010 | **shift-right-arith-imm** rc,uimm6          |
 | 11 | slli.i64     | op1r_imm6_16 | 01011 | **shift-left-logical-imm** rc,uimm6         |
-| 12 | addd.i64     | op1r_imm6_16 | 01100 | **add-dword** rc,ib32(uimm6*4)              |
+| 12 | addd.i64     | op1r_imm6_16 | 01100 | **add-dword** rc,ib32(uimm6*4); flag        |
 | 13 | leapc.i64    | op1r_imm6_16 | 01101 | **lea** rc,ib32(uimm6*4)(pc)                |
 | 14 | loadpc.i64   | op1r_imm6_16 | 01110 | **load** rc,ib32(uimm6*4)(pc)               |
 | 15 | storepc.i64  | op1r_imm6_16 | 01111 | **store** rc,ib32(uimm6*4)(pc)              |
 | 16 | load.i64     | op2r_imm3_16 | 10000 | **load** rc,(uimm3*8)(rb)                   |
 | 17 | store.i64    | op2r_imm3_16 | 10001 | **store** rc,(uimm3*8)(rb)                  |
-| 18 | compare.i64  | op2r_fun3_16 | 10010 | **compare** rc,rb                           |
+| 18 | compare.i64  | op2r_fun3_16 | 10010 | **compare** rc,rb; flag                     |
 | 19 | logic.i64    | op2r_fun3_16 | 10011 | **logic** rc,rb                             |
 | 20 | pin.i64      | op3r_16      | 10100 | **pack-indirect** rc,rb,ra                  |
 | 21 | and.i64      | op3r_16      | 10101 | **and** rc,rb,ra                            |
 | 22 | or.i64       | op3r_16      | 10110 | **or** rc,rb,ra                             |
 | 23 | xor.i64      | op3r_16      | 10111 | **xor** rc,rb,ra                            |
-| 24 | add.i64      | op3r_16      | 11000 | **add** rc,rb,ra                            |
+| 24 | add.i64      | op3r_16      | 11000 | **add** rc,rb,ra; flag                      |
 | 25 | srl.i64      | op3r_16      | 11001 | **shift-right-logical** rc,rb,ra            |
 | 26 | sra.i64      | op3r_16      | 11010 | **shift-right-arith** rc,rb,ra              |
 | 27 | sll.i64      | op3r_16      | 11011 | **shift-left-logical** rc,rb,ra             |
-| 28 | sub.i64      | op3r_16      | 11100 | **sub** rc,rb,ra                            |
+| 28 | sub.i64      | op3r_16      | 11100 | **sub** rc,rb,ra; flag                      |
 | 29 | mul.i64      | op3r_16      | 11101 | **mul** rc,rb,ra                            |
-| 30 | div.i64      | op3r_16      | 11110 | **div** rc,rb,ra                            |
+| 30 | div.i64      | op3r_16      | 11110 | **div** rc,rb,ra; flag                      |
 | 31 | illegal      | op0r_imm9_16 | 11111 | **illegal** uimm9                           |
 
 ## calling convention
