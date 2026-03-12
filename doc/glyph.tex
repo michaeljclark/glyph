@@ -6162,7 +6162,7 @@ the virtual devices to perform I/O in a platform-independent way.
 
 \needspace{8\baselineskip}
 \subsection{break}
-\insnimmnine{uimm}{}{\textbf{break}\: \mathit{uimm9}}
+\insnimmnine{uimm}{00000}{\textbf{break}\: \mathit{uimm9}}
 \\
 the \emph{break} instruction causes a debugger trap.
 \emph{program counter} and trap cause are saved to privileged
@@ -7057,7 +7057,7 @@ r7    & ra    & return address / (pc,ib) link vector        & caller \\
 \node [font=\tiny,anchor=base] at (14.5,2.2)  {\textsf{1}};
 \node [font=\tiny,anchor=base] at (15.5,2.2)  {\textsf{0}};
 
-\ainsnimmnine{0}{uimm}{}{\textbf{break}\: \mathit{uimm9}}
+\ainsnimmnine{0}{uimm}{00000}{\textbf{break}\: \mathit{uimm9}}
 \ainsnimmnine{1}{simm}{00001}{\textbf{j}\: \mathit{simm9} \times 2}
 \ainsnimmnine{2}{simm}{00010}{\textbf{b}\: \mathit{simm9} \times 2}
 \ainsnimmnine{3}{simm}{00011}{\textbf{ibj}\: \mathit{simm9} \times 64}
