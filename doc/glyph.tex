@@ -140,186 +140,6 @@ software-defined MMU\sep message-signaled interrupts\sep virtual machine}
 \tableofcontents
 \pagestyle{headings}
 
-\newcommand{\insnimmnine}[3]{
-\begin{minipage}[c]{\textwidth}
-\begin{tikzpicture}[scale=0.5]
-\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
-
-\fill [black!10] (0,0)    rectangle (9,1);
-\draw [line width=0.2mm]           (0,0)    rectangle (9,1);
-\draw [line width=0.2mm]           (0,-1)   rectangle (9,0);
-\node [font=\tiny,anchor=base] at (0.5,1.2)  {\textsf{15}};
-\node [font=\tiny,anchor=base] at (8.5,1.2)  {\textsf{7}};
-\node [font=\small,anchor=base] at (4.5,0.25)  {\textsf{imm}};
-\node [font=\small,anchor=base] at (4.5,-0.8)  {\textbf{#1}};
-
-\fill [black!10] (9,0)     rectangle (14,1);
-\draw [line width=0.2mm]           (9,0)     rectangle (14,1);
-\draw [line width=0.2mm]           (9,-1)    rectangle (14,0);
-\node [font=\tiny,anchor=base] at (9.5,1.2)  {\textsf{6}};
-\node [font=\tiny,anchor=base] at (13.5,1.2)  {\textsf{2}};
-\node [font=\small,anchor=base] at (11.5,0.25)  {\textsf{opcode}};
-\node [font=\small,anchor=base] at (11.5,-0.8)  {\textbf{#2}};
-
-\fill [black!10] (14,0)     rectangle (16,1);
-\draw [line width=0.2mm]           (14,0)     rectangle (16,1);
-\draw [line width=0.2mm]           (14,-1)    rectangle (16,0);
-\node [font=\tiny,anchor=base] at (14.5,1.2)  {\textsf{1}};
-\node [font=\tiny,anchor=base] at (15.5,1.2)  {\textsf{0}};
-\node [font=\small,anchor=base] at (15.0,0.25)  {\textsf{size}};
-\node [font=\small,anchor=base] at (15.0,-0.8)  {\textbf{00}};
-
-\node [font=\small,anchor=base west] at (17.0,-0.8)  {$#3$};
-
-\end{scope}
-\end{tikzpicture}
-\end{minipage}
-}
-
-\newcommand{\insrcimmsix}[4]{
-\begin{minipage}[c]{\textwidth}
-\begin{tikzpicture}[scale=0.5]
-\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
-
-\fill [black!10] (0,0)    rectangle (3,1);
-\draw [line width=0.2mm]           (0,0)    rectangle (3,1);
-\draw [line width=0.2mm]           (0,-1)   rectangle (3,0);
-\node [font=\tiny,anchor=base] at (0.5,1.2)  {\textsf{15}};
-\node [font=\tiny,anchor=base] at (2.5,1.2)  {\textsf{13}};
-\node [font=\small,anchor=base] at (1.5,0.25)  {\textsf{rc}};
-\node [font=\small,anchor=base] at (1.5,-0.8)  {\textbf{#1}};
-
-\fill [black!10] (3,0)    rectangle (9,1);
-\draw [line width=0.2mm]           (3,0)    rectangle (9,1);
-\draw [line width=0.2mm]           (3,-1)   rectangle (9,0);
-\node [font=\tiny,anchor=base] at (3.5,1.2)  {\textsf{12}};
-\node [font=\tiny,anchor=base] at (8.5,1.2)  {\textsf{7}};
-\node [font=\small,anchor=base] at (6.0,0.25)  {\textsf{imm}};
-\node [font=\small,anchor=base] at (6.0,-0.8)  {\textbf{#2}};
-
-\fill [black!10] (9,0)     rectangle (14,1);
-\draw [line width=0.2mm]           (9,0)     rectangle (14,1);
-\draw [line width=0.2mm]           (9,-1)    rectangle (14,0);
-\node [font=\tiny,anchor=base] at (9.5,1.2)  {\textsf{6}};
-\node [font=\tiny,anchor=base] at (13.5,1.2)  {\textsf{2}};
-\node [font=\small,anchor=base] at (11.5,0.25)  {\textsf{opcode}};
-\node [font=\small,anchor=base] at (11.5,-0.8)  {\textbf{#3}};
-
-\fill [black!10] (14,0)     rectangle (16,1);
-\draw [line width=0.2mm]           (14,0)     rectangle (16,1);
-\draw [line width=0.2mm]           (14,-1)    rectangle (16,0);
-\node [font=\tiny,anchor=base] at (14.5,1.2)  {\textsf{1}};
-\node [font=\tiny,anchor=base] at (15.5,1.2)  {\textsf{0}};
-\node [font=\small,anchor=base] at (15.0,0.25)  {\textsf{size}};
-\node [font=\small,anchor=base] at (15.0,-0.8)  {\textbf{00}};
-
-\node [font=\small,anchor=base west] at (17.0,-0.8)  {$#4$};
-
-\end{scope}
-\end{tikzpicture}
-\end{minipage}
-}
-
-\newcommand{\insrcrbimmthree}[5]{
-\begin{tikzpicture}[scale=0.5]
-\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
-
-\fill [black!10] (0,0)    rectangle (3,1);
-\draw [line width=0.2mm]           (0,0)    rectangle (3,1);
-\draw [line width=0.2mm]           (0,-1)   rectangle (3,0);
-\node [font=\tiny,anchor=base] at (0.5,1.2)  {\textsf{15}};
-\node [font=\tiny,anchor=base] at (2.5,1.2)  {\textsf{13}};
-\node [font=\small,anchor=base] at (1.5,0.25)  {\textsf{rc}};
-\node [font=\small,anchor=south,] at (1.5,-0.8)  {\textbf{#1}};
-
-\fill [black!10] (3,0)    rectangle (6,1);
-\draw [line width=0.2mm]           (3,0)    rectangle (6,1);
-\draw [line width=0.2mm]           (3,-1)   rectangle (6,0);
-\node [font=\tiny,anchor=base] at (3.5,1.2)  {\textsf{12}};
-\node [font=\tiny,anchor=base] at (5.5,1.2)  {\textsf{10}};
-\node [font=\small,anchor=base] at (4.5,0.25)  {\textsf{rb}};
-\node [font=\small,anchor=base] at (4.5,-0.8)  {\textbf{#2}};
-
-\fill [black!10] (6,0)    rectangle (9,1);
-\draw [line width=0.2mm]           (6,0)    rectangle (9,1);
-\draw [line width=0.2mm]           (6,-1)   rectangle (9,0);
-\node [font=\tiny,anchor=base] at (6.5,1.2)  {\textsf{9}};
-\node [font=\tiny,anchor=base] at (8.5,1.2)  {\textsf{7}};
-\node [font=\small,anchor=base] at (7.5,0.25)  {\textsf{imm}};
-\node [font=\small,anchor=base] at (7.5,-0.8)  {\textbf{#3}};
-
-\fill [black!10] (9,0)     rectangle (14,1);
-\draw [line width=0.2mm]           (9,0)     rectangle (14,1);
-\draw [line width=0.2mm]           (9,-1)    rectangle (14,0);
-\node [font=\tiny,anchor=base] at (9.5,1.2)  {\textsf{6}};
-\node [font=\tiny,anchor=base] at (13.5,1.2)  {\textsf{2}};
-\node [font=\small,anchor=base] at (11.5,0.25)  {\textsf{opcode}};
-\node [font=\small,anchor=base] at (11.5,-0.8)  {\textbf{#4}};
-
-\fill [black!10] (14,0)     rectangle (16,1);
-\draw [line width=0.2mm]           (14,0)     rectangle (16,1);
-\draw [line width=0.2mm]           (14,-1)    rectangle (16,0);
-\node [font=\tiny,anchor=base] at (14.5,1.2)  {\textsf{1}};
-\node [font=\tiny,anchor=base] at (15.5,1.2)  {\textsf{0}};
-\node [font=\small,anchor=base] at (15.0,0.25)  {\textsf{size}};
-\node [font=\small,anchor=base] at (15.0,-0.8)  {\textbf{00}};
-
-\node [font=\small,anchor=base west] at (17.0,-0.8)  {$#5$};
-
-\end{scope}
-\end{tikzpicture}
-}
-
-\newcommand{\insrcrbrc}[5]{
-\begin{tikzpicture}[scale=0.5]
-\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
-
-\fill [black!10] (0,0)    rectangle (3,1);
-\draw [line width=0.2mm]           (0,0)    rectangle (3,1);
-\draw [line width=0.2mm]           (0,-1)   rectangle (3,0);
-\node [font=\tiny,anchor=base] at (0.5,1.2)  {\textsf{15}};
-\node [font=\tiny,anchor=base] at (2.5,1.2)  {\textsf{13}};
-\node [font=\small,anchor=base] at (1.5,0.25)  {\textsf{rc}};
-\node [font=\small,anchor=south,] at (1.5,-0.8)  {\textbf{#1}};
-
-\fill [black!10] (3,0)    rectangle (6,1);
-\draw [line width=0.2mm]           (3,0)    rectangle (6,1);
-\draw [line width=0.2mm]           (3,-1)   rectangle (6,0);
-\node [font=\tiny,anchor=base] at (3.5,1.2)  {\textsf{12}};
-\node [font=\tiny,anchor=base] at (5.5,1.2)  {\textsf{10}};
-\node [font=\small,anchor=base] at (4.5,0.25)  {\textsf{rb}};
-\node [font=\small,anchor=base] at (4.5,-0.8)  {\textbf{#2}};
-
-\fill [black!10] (6,0)    rectangle (9,1);
-\draw [line width=0.2mm]           (6,0)    rectangle (9,1);
-\draw [line width=0.2mm]           (6,-1)   rectangle (9,0);
-\node [font=\tiny,anchor=base] at (6.5,1.2)  {\textsf{9}};
-\node [font=\tiny,anchor=base] at (8.5,1.2)  {\textsf{7}};
-\node [font=\small,anchor=base] at (7.5,0.25)  {\textsf{ra}};
-\node [font=\small,anchor=base] at (7.5,-0.8)  {\textbf{#3}};
-
-\fill [black!10] (9,0)     rectangle (14,1);
-\draw [line width=0.2mm]           (9,0)     rectangle (14,1);
-\draw [line width=0.2mm]           (9,-1)    rectangle (14,0);
-\node [font=\tiny,anchor=base] at (9.5,1.2)  {\textsf{6}};
-\node [font=\tiny,anchor=base] at (13.5,1.2)  {\textsf{2}};
-\node [font=\small,anchor=base] at (11.5,0.25)  {\textsf{opcode}};
-\node [font=\small,anchor=base] at (11.5,-0.8)  {\textbf{#4}};
-
-\fill [black!10] (14,0)     rectangle (16,1);
-\draw [line width=0.2mm]           (14,0)     rectangle (16,1);
-\draw [line width=0.2mm]           (14,-1)    rectangle (16,0);
-\node [font=\tiny,anchor=base] at (14.5,1.2)  {\textsf{1}};
-\node [font=\tiny,anchor=base] at (15.5,1.2)  {\textsf{0}};
-\node [font=\small,anchor=base] at (15.0,0.25)  {\textsf{size}};
-\node [font=\small,anchor=base] at (15.0,-0.8)  {\textbf{00}};
-
-\node [font=\small,anchor=base west] at (17.0,-0.8)  {$#5$};
-
-\end{scope}
-\end{tikzpicture}
-}
-
 \chapter*{Preface}
 \addcontentsline{toc}{chapter}{Preface}
 
@@ -6160,6 +5980,186 @@ interrupt signaling. the firmware and system software device drivers use
 the virtual devices to perform I/O in a platform-independent way.
 
 \chapter{Instructions} \label{sec:instructions}
+
+\newcommand{\insnimmnine}[3]{
+\begin{minipage}[c]{\textwidth}
+\begin{tikzpicture}[scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+
+\fill [black!10] (0,0)    rectangle (9,1);
+\draw [line width=0.2mm]           (0,0)    rectangle (9,1);
+\draw [line width=0.2mm]           (0,-1)   rectangle (9,0);
+\node [font=\tiny,anchor=base] at (0.5,1.2)  {\textsf{15}};
+\node [font=\tiny,anchor=base] at (8.5,1.2)  {\textsf{7}};
+\node [font=\small,anchor=base] at (4.5,0.25)  {\textsf{imm}};
+\node [font=\small,anchor=base] at (4.5,-0.8)  {\textbf{#1}};
+
+\fill [black!10] (9,0)     rectangle (14,1);
+\draw [line width=0.2mm]           (9,0)     rectangle (14,1);
+\draw [line width=0.2mm]           (9,-1)    rectangle (14,0);
+\node [font=\tiny,anchor=base] at (9.5,1.2)  {\textsf{6}};
+\node [font=\tiny,anchor=base] at (13.5,1.2)  {\textsf{2}};
+\node [font=\small,anchor=base] at (11.5,0.25)  {\textsf{opcode}};
+\node [font=\small,anchor=base] at (11.5,-0.8)  {\textbf{#2}};
+
+\fill [black!10] (14,0)     rectangle (16,1);
+\draw [line width=0.2mm]           (14,0)     rectangle (16,1);
+\draw [line width=0.2mm]           (14,-1)    rectangle (16,0);
+\node [font=\tiny,anchor=base] at (14.5,1.2)  {\textsf{1}};
+\node [font=\tiny,anchor=base] at (15.5,1.2)  {\textsf{0}};
+\node [font=\small,anchor=base] at (15.0,0.25)  {\textsf{size}};
+\node [font=\small,anchor=base] at (15.0,-0.8)  {\textbf{00}};
+
+\node [font=\small,anchor=base west] at (17.0,-0.8)  {$#3$};
+
+\end{scope}
+\end{tikzpicture}
+\end{minipage}
+}
+
+\newcommand{\insrcimmsix}[4]{
+\begin{minipage}[c]{\textwidth}
+\begin{tikzpicture}[scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+
+\fill [black!10] (0,0)    rectangle (3,1);
+\draw [line width=0.2mm]           (0,0)    rectangle (3,1);
+\draw [line width=0.2mm]           (0,-1)   rectangle (3,0);
+\node [font=\tiny,anchor=base] at (0.5,1.2)  {\textsf{15}};
+\node [font=\tiny,anchor=base] at (2.5,1.2)  {\textsf{13}};
+\node [font=\small,anchor=base] at (1.5,0.25)  {\textsf{rc}};
+\node [font=\small,anchor=base] at (1.5,-0.8)  {\textbf{#1}};
+
+\fill [black!10] (3,0)    rectangle (9,1);
+\draw [line width=0.2mm]           (3,0)    rectangle (9,1);
+\draw [line width=0.2mm]           (3,-1)   rectangle (9,0);
+\node [font=\tiny,anchor=base] at (3.5,1.2)  {\textsf{12}};
+\node [font=\tiny,anchor=base] at (8.5,1.2)  {\textsf{7}};
+\node [font=\small,anchor=base] at (6.0,0.25)  {\textsf{imm}};
+\node [font=\small,anchor=base] at (6.0,-0.8)  {\textbf{#2}};
+
+\fill [black!10] (9,0)     rectangle (14,1);
+\draw [line width=0.2mm]           (9,0)     rectangle (14,1);
+\draw [line width=0.2mm]           (9,-1)    rectangle (14,0);
+\node [font=\tiny,anchor=base] at (9.5,1.2)  {\textsf{6}};
+\node [font=\tiny,anchor=base] at (13.5,1.2)  {\textsf{2}};
+\node [font=\small,anchor=base] at (11.5,0.25)  {\textsf{opcode}};
+\node [font=\small,anchor=base] at (11.5,-0.8)  {\textbf{#3}};
+
+\fill [black!10] (14,0)     rectangle (16,1);
+\draw [line width=0.2mm]           (14,0)     rectangle (16,1);
+\draw [line width=0.2mm]           (14,-1)    rectangle (16,0);
+\node [font=\tiny,anchor=base] at (14.5,1.2)  {\textsf{1}};
+\node [font=\tiny,anchor=base] at (15.5,1.2)  {\textsf{0}};
+\node [font=\small,anchor=base] at (15.0,0.25)  {\textsf{size}};
+\node [font=\small,anchor=base] at (15.0,-0.8)  {\textbf{00}};
+
+\node [font=\small,anchor=base west] at (17.0,-0.8)  {$#4$};
+
+\end{scope}
+\end{tikzpicture}
+\end{minipage}
+}
+
+\newcommand{\insrcrbimmthree}[5]{
+\begin{tikzpicture}[scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+
+\fill [black!10] (0,0)    rectangle (3,1);
+\draw [line width=0.2mm]           (0,0)    rectangle (3,1);
+\draw [line width=0.2mm]           (0,-1)   rectangle (3,0);
+\node [font=\tiny,anchor=base] at (0.5,1.2)  {\textsf{15}};
+\node [font=\tiny,anchor=base] at (2.5,1.2)  {\textsf{13}};
+\node [font=\small,anchor=base] at (1.5,0.25)  {\textsf{rc}};
+\node [font=\small,anchor=south,] at (1.5,-0.8)  {\textbf{#1}};
+
+\fill [black!10] (3,0)    rectangle (6,1);
+\draw [line width=0.2mm]           (3,0)    rectangle (6,1);
+\draw [line width=0.2mm]           (3,-1)   rectangle (6,0);
+\node [font=\tiny,anchor=base] at (3.5,1.2)  {\textsf{12}};
+\node [font=\tiny,anchor=base] at (5.5,1.2)  {\textsf{10}};
+\node [font=\small,anchor=base] at (4.5,0.25)  {\textsf{rb}};
+\node [font=\small,anchor=base] at (4.5,-0.8)  {\textbf{#2}};
+
+\fill [black!10] (6,0)    rectangle (9,1);
+\draw [line width=0.2mm]           (6,0)    rectangle (9,1);
+\draw [line width=0.2mm]           (6,-1)   rectangle (9,0);
+\node [font=\tiny,anchor=base] at (6.5,1.2)  {\textsf{9}};
+\node [font=\tiny,anchor=base] at (8.5,1.2)  {\textsf{7}};
+\node [font=\small,anchor=base] at (7.5,0.25)  {\textsf{imm}};
+\node [font=\small,anchor=base] at (7.5,-0.8)  {\textbf{#3}};
+
+\fill [black!10] (9,0)     rectangle (14,1);
+\draw [line width=0.2mm]           (9,0)     rectangle (14,1);
+\draw [line width=0.2mm]           (9,-1)    rectangle (14,0);
+\node [font=\tiny,anchor=base] at (9.5,1.2)  {\textsf{6}};
+\node [font=\tiny,anchor=base] at (13.5,1.2)  {\textsf{2}};
+\node [font=\small,anchor=base] at (11.5,0.25)  {\textsf{opcode}};
+\node [font=\small,anchor=base] at (11.5,-0.8)  {\textbf{#4}};
+
+\fill [black!10] (14,0)     rectangle (16,1);
+\draw [line width=0.2mm]           (14,0)     rectangle (16,1);
+\draw [line width=0.2mm]           (14,-1)    rectangle (16,0);
+\node [font=\tiny,anchor=base] at (14.5,1.2)  {\textsf{1}};
+\node [font=\tiny,anchor=base] at (15.5,1.2)  {\textsf{0}};
+\node [font=\small,anchor=base] at (15.0,0.25)  {\textsf{size}};
+\node [font=\small,anchor=base] at (15.0,-0.8)  {\textbf{00}};
+
+\node [font=\small,anchor=base west] at (17.0,-0.8)  {$#5$};
+
+\end{scope}
+\end{tikzpicture}
+}
+
+\newcommand{\insrcrbrc}[5]{
+\begin{tikzpicture}[scale=0.5]
+\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+
+\fill [black!10] (0,0)    rectangle (3,1);
+\draw [line width=0.2mm]           (0,0)    rectangle (3,1);
+\draw [line width=0.2mm]           (0,-1)   rectangle (3,0);
+\node [font=\tiny,anchor=base] at (0.5,1.2)  {\textsf{15}};
+\node [font=\tiny,anchor=base] at (2.5,1.2)  {\textsf{13}};
+\node [font=\small,anchor=base] at (1.5,0.25)  {\textsf{rc}};
+\node [font=\small,anchor=south,] at (1.5,-0.8)  {\textbf{#1}};
+
+\fill [black!10] (3,0)    rectangle (6,1);
+\draw [line width=0.2mm]           (3,0)    rectangle (6,1);
+\draw [line width=0.2mm]           (3,-1)   rectangle (6,0);
+\node [font=\tiny,anchor=base] at (3.5,1.2)  {\textsf{12}};
+\node [font=\tiny,anchor=base] at (5.5,1.2)  {\textsf{10}};
+\node [font=\small,anchor=base] at (4.5,0.25)  {\textsf{rb}};
+\node [font=\small,anchor=base] at (4.5,-0.8)  {\textbf{#2}};
+
+\fill [black!10] (6,0)    rectangle (9,1);
+\draw [line width=0.2mm]           (6,0)    rectangle (9,1);
+\draw [line width=0.2mm]           (6,-1)   rectangle (9,0);
+\node [font=\tiny,anchor=base] at (6.5,1.2)  {\textsf{9}};
+\node [font=\tiny,anchor=base] at (8.5,1.2)  {\textsf{7}};
+\node [font=\small,anchor=base] at (7.5,0.25)  {\textsf{ra}};
+\node [font=\small,anchor=base] at (7.5,-0.8)  {\textbf{#3}};
+
+\fill [black!10] (9,0)     rectangle (14,1);
+\draw [line width=0.2mm]           (9,0)     rectangle (14,1);
+\draw [line width=0.2mm]           (9,-1)    rectangle (14,0);
+\node [font=\tiny,anchor=base] at (9.5,1.2)  {\textsf{6}};
+\node [font=\tiny,anchor=base] at (13.5,1.2)  {\textsf{2}};
+\node [font=\small,anchor=base] at (11.5,0.25)  {\textsf{opcode}};
+\node [font=\small,anchor=base] at (11.5,-0.8)  {\textbf{#4}};
+
+\fill [black!10] (14,0)     rectangle (16,1);
+\draw [line width=0.2mm]           (14,0)     rectangle (16,1);
+\draw [line width=0.2mm]           (14,-1)    rectangle (16,0);
+\node [font=\tiny,anchor=base] at (14.5,1.2)  {\textsf{1}};
+\node [font=\tiny,anchor=base] at (15.5,1.2)  {\textsf{0}};
+\node [font=\small,anchor=base] at (15.0,0.25)  {\textsf{size}};
+\node [font=\small,anchor=base] at (15.0,-0.8)  {\textbf{00}};
+
+\node [font=\small,anchor=base west] at (17.0,-0.8)  {$#5$};
+
+\end{scope}
+\end{tikzpicture}
+}
 
 \section{Instruction listing --- 16-bit}
 
