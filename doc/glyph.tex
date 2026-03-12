@@ -537,9 +537,7 @@ storage space containing all types.}
   \draw [black] (0,\x)    rectangle (8,\x+1);
   \pgfmathsetmacro{\y}{int((1-\x)*8)}
   \pgfmathsetmacro{\z}{int((1-\x)*8+7)}
-  \edef\yy{\y}
-  \edef\zz{\z}
-  \node [font=\footnotesize,anchor=base] at (4,\x+0.25) {$\mathsf{constant\;\yy-\zz}$};
+  \node [font=\footnotesize,anchor=base] at (4,\x+0.25) {$\mathsf{constant\;{\y}-{\z}}$};
   \foreach \y in {0,2,...,6} {
     \fill [black!5]  (8+\y*2,\x)    rectangle (10+\y*2,\x+1);
     \draw [black] (8+\y*2,\x)    rectangle (10+\y*2,\x+1);
@@ -568,9 +566,7 @@ storage space containing all types.}
   \draw [black] (0,\x)    rectangle (8,\x+1);
   \pgfmathsetmacro{\y}{int((1-\x)*4)}
   \pgfmathsetmacro{\z}{int((1-\x)*4+3)}
-  \edef\yy{\y}
-  \edef\zz{\z}
-  \node [font=\footnotesize,anchor=base] at (4,\x+0.25) {$\mathsf{constant\;\yy-\zz}$};
+  \node [font=\footnotesize,anchor=base] at (4,\x+0.25) {$\mathsf{constant\;{\y}-{\z}}$};
   \foreach \y in {0,2} {
     \fill [black!5]  (8+\y*4,\x)    rectangle (12+\y*4,\x+1);
     \draw [black] (8+\y*4,\x)    rectangle (12+\y*4,\x+1);
@@ -599,9 +595,7 @@ storage space containing all types.}
   \draw [black] (0,\x)    rectangle (8,\x+1);
   \pgfmathsetmacro{\y}{int((1-\x)*2)}
   \pgfmathsetmacro{\z}{int((1-\x)*2+1)}
-  \edef\yy{\y}
-  \edef\zz{\z}
-  \node [font=\footnotesize,anchor=base] at (4,\x+0.25) {$\mathsf{constant\;\yy-\zz}$};
+  \node [font=\footnotesize,anchor=base] at (4,\x+0.25) {$\mathsf{constant\;{\y}-{\z}}$};
   \foreach \y in {0} {
     \fill [black!5]  (8+\y*8,\x)    rectangle (16+\y*8,\x+1);
     \draw [black] (8+\y*8,\x)    rectangle (16+\y*8,\x+1);
