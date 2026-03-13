@@ -1059,713 +1059,126 @@ this section details the layout of the variable sized instructions:
 \label{fig:glyph-template-iform-layout}
 \end{figure}
 
-\subsubsection{16-bit instruction forms}
+% instruction headings
 
-this section details the layout of the 16-bit instruction forms:
+\newcommand{\hdrbase}{%
+  \node at (15.5,1.3)[font=\tiny]{\textsf{1}};
+  \node at (16.5,1.3)[font=\tiny]{\textsf{0}};
+  \node at (14.5,1.3)[font=\tiny]{\textsf{2}};
+  \node at (10.5,1.3)[font=\tiny]{\textsf{6}};
+  \node at (9.5,1.3) [font=\tiny]{\textsf{7}};
+  \node at (1.5,1.3) [font=\tiny]{\textsf{15}};
+  \draw(17,1)--(17,1.5); \draw(15,1)--(15,1.5);
+  \draw(10,1)--(10,1.5); \draw(1,1)--(1,1.5);
+}
+\newcommand{\hdri}  {\hdrbase}
+\newcommand{\hdrri} {\hdrbase
+  \node at (4.5,1.3)[font=\tiny]{\textsf{12}};
+  \node at (3.5,1.3)[font=\tiny]{\textsf{13}};
+  \draw(4,1)--(4,1.5);
+}
+\newcommand{\hdrrr} {\hdrri
+  \node at (7.5,1.3)[font=\tiny]{\textsf{9}};
+  \node at (6.5,1.3)[font=\tiny]{\textsf{10}};
+  \draw(7,1)--(7,1.5);
+}
 
-\begin{figure}[H]
-\centering
-\begin{minipage}[c]{1.0\textwidth}
+% instruction fields
 
-\noindent
-\begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[xscale=0.5, yscale=0.45]
-\node at (15.5,1.3) [font=\tiny] {\textsf{1}};
-\node at (16.5,1.3) [font=\tiny] {\textsf{0}};
-\node at (10.5,1.3) [font=\tiny] {\textsf{6}};
-\node at (14.5,1.3) [font=\tiny] {\textsf{2}};
-\node at (9.5,1.3) [font=\tiny] {\textsf{7}};
-\node at (1.5,1.3) [font=\tiny] {\textsf{15}};
-\draw (15.0,1.0) -- (15.0,1.5);
-\draw (10.0,1.0) -- (10.0,1.5);
-\draw (1.0,1.0) -- (1.0,1.5);
-\draw (17.0,1.0) -- (17.0,1.5);
-\fill [black!5]  (15.0,0.0) rectangle (17.0,1.0);
-\draw [black!90]  (15.0,0.0) rectangle (17.0,1.0);
-\node at (16.0,0.5) [font=\scriptsize] {$\boldsymbol{\mathsf{00}}$};
-\fill [black!5]  (10.0,0.0) rectangle (15.0,1.0);
-\draw [black!90]  (10.0,0.0) rectangle (15.0,1.0);
-\node at (12.5,0.5) [font=\footnotesize] {$\mathsf{opcode_{[4:0]}}$};
-\fill [black!5]  (1.0,0.0) rectangle (10.0,1.0);
-\draw [black!90]  (1.0,0.0) rectangle (10.0,1.0);
-\node at (5.5,0.5) [font=\footnotesize] {$\mathsf{imm_{[5:0]}}$};
-\end{tikzpicture}
-\end{minipage}\hfill
-\begin{minipage}[c]{0.42\linewidth}
-\small
-\textbi{op16i} \\ 16-bit large immediate
-\end{minipage}
+\newcommand{\fieldcell}[5]{%
+  \fill[black!5] (#2,\py)rectangle(#3,{\py+1});
+  \draw[black!90](#2,\py)rectangle(#3,{\py+1});
+  \node at(#4,{\py+0.5})[font=\footnotesize]{$\mathsf{#1_{#5}}$};
+}
 
-\vspace{0.44em}
+\newcommand{\formfieldsI}  [6]{\fieldcell{#3}{1}{10}{5.5}{#6}}
+\newcommand{\formfieldsRI} [6]{\fieldcell{#3}{4}{10}{7}  {#6}
+                               \fieldcell{#2}{1}{4} {2.5}{#5}}
+\newcommand{\formfieldsRRI}[6]{\fieldcell{#3}{7}{10}{8.5}{#6}
+                               \fieldcell{#2}{4}{7} {5.5}{#5}
+                               \fieldcell{#1}{1}{4} {2.5}{#4}}
 
-\noindent
-\begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[xscale=0.5, yscale=0.45]
-\node at (15.5,1.3) [font=\tiny] {\textsf{1}};
-\node at (16.5,1.3) [font=\tiny] {\textsf{0}};
-\node at (10.5,1.3) [font=\tiny] {\textsf{6}};
-\node at (14.5,1.3) [font=\tiny] {\textsf{2}};
-\node at (4.5,1.3) [font=\tiny] {\textsf{12}};
-\node at (9.5,1.3) [font=\tiny] {\textsf{7}};
-\node at (1.5,1.3) [font=\tiny] {\textsf{15}};
-\node at (3.5,1.3) [font=\tiny] {\textsf{13}};
-\draw (15.0,1.0) -- (15.0,1.5);
-\draw (10.0,1.0) -- (10.0,1.5);
-\draw (4.0,1.0) -- (4.0,1.5);
-\draw (1.0,1.0) -- (1.0,1.5);
-\draw (17.0,1.0) -- (17.0,1.5);
-\fill [black!5]  (15.0,0.0) rectangle (17.0,1.0);
-\draw [black!90]  (15.0,0.0) rectangle (17.0,1.0);
-\node at (16.0,0.5) [font=\scriptsize] {$\boldsymbol{\mathsf{00}}$};
-\fill [black!5]  (10.0,0.0) rectangle (15.0,1.0);
-\draw [black!90]  (10.0,0.0) rectangle (15.0,1.0);
-\node at (12.5,0.5) [font=\footnotesize] {$\mathsf{opcode_{[4:0]}}$};
-\fill [black!5]  (4.0,0.0) rectangle (10.0,1.0);
-\draw [black!90]  (4.0,0.0) rectangle (10.0,1.0);
-\node at (7.0,0.5) [font=\footnotesize] {$\mathsf{imm_{[5:0]}}$};
-\fill [black!5]  (1.0,0.0) rectangle (4.0,1.0);
-\draw [black!90]  (1.0,0.0) rectangle (4.0,1.0);
-\node at (2.5,0.5) [font=\footnotesize] {$\mathsf{rc_{[2:0]}}$};
-\end{tikzpicture}
-\end{minipage}\hfill
-\begin{minipage}[c]{0.42\linewidth}
-\small
-\textbi{op16ri} \\ 16-bit one operand with immediate
-\end{minipage}
+% instruction forms
 
-\vspace{0.44em}
+\foreach \packets/\isize/\szfirst/\vertsp/\fmta/\fmtb/\fmtc/\fmtd/\cntb/\cntc/\cntd in
+  {1/16/00/0em/i/ri/rri/r3/one/two/three,
+   2/32/01/1.5em/i/ri/rri/r3/one/two/three,
+   4/64/10/4.5em/i/rri/r4i/r6/two/four/six} {
 
-\noindent
-\begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[xscale=0.5, yscale=0.45]
-\node at (15.5,1.3) [font=\tiny] {\textsf{1}};
-\node at (16.5,1.3) [font=\tiny] {\textsf{0}};
-\node at (10.5,1.3) [font=\tiny] {\textsf{6}};
-\node at (14.5,1.3) [font=\tiny] {\textsf{2}};
-\node at (7.5,1.3) [font=\tiny] {\textsf{9}};
-\node at (9.5,1.3) [font=\tiny] {\textsf{7}};
-\node at (4.5,1.3) [font=\tiny] {\textsf{12}};
-\node at (6.5,1.3) [font=\tiny] {\textsf{10}};
-\node at (1.5,1.3) [font=\tiny] {\textsf{15}};
-\node at (3.5,1.3) [font=\tiny] {\textsf{13}};
-\draw (15.0,1.0) -- (15.0,1.5);
-\draw (10.0,1.0) -- (10.0,1.5);
-\draw (7.0,1.0) -- (7.0,1.5);
-\draw (4.0,1.0) -- (4.0,1.5);
-\draw (1.0,1.0) -- (1.0,1.5);
-\draw (17.0,1.0) -- (17.0,1.5);
-\fill [black!5]  (15.0,0.0) rectangle (17.0,1.0);
-\draw [black!90]  (15.0,0.0) rectangle (17.0,1.0);
-\node at (16.0,0.5) [font=\scriptsize] {$\boldsymbol{\mathsf{00}}$};
-\fill [black!5]  (10.0,0.0) rectangle (15.0,1.0);
-\draw [black!90]  (10.0,0.0) rectangle (15.0,1.0);
-\node at (12.5,0.5) [font=\footnotesize] {$\mathsf{opcode_{[4:0]}}$};
-\fill [black!5]  (7.0,0.0) rectangle (10.0,1.0);
-\draw [black!90]  (7.0,0.0) rectangle (10.0,1.0);
-\node at (8.5,0.5) [font=\footnotesize] {$\mathsf{imm_{[2:0]}}$};
-\fill [black!5]  (4.0,0.0) rectangle (7.0,1.0);
-\draw [black!90]  (4.0,0.0) rectangle (7.0,1.0);
-\node at (5.5,0.5) [font=\footnotesize] {$\mathsf{rb_{[2:0]}}$};
-\fill [black!5]  (1.0,0.0) rectangle (4.0,1.0);
-\draw [black!90]  (1.0,0.0) rectangle (4.0,1.0);
-\node at (2.5,0.5) [font=\footnotesize] {$\mathsf{rc_{[2:0]}}$};
-\end{tikzpicture}
-\end{minipage}\hfill
-\begin{minipage}[c]{0.42\linewidth}
-\small
-\textbi{op16rri} \\ 16-bit two operand with immediate
-\end{minipage}
+\subsubsection{\isize-bit instruction forms}
 
-\vspace{0.44em}
-
-\noindent
-\begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[xscale=0.5, yscale=0.45]
-\node at (15.5,1.3) [font=\tiny] {\textsf{1}};
-\node at (16.5,1.3) [font=\tiny] {\textsf{0}};
-\node at (10.5,1.3) [font=\tiny] {\textsf{6}};
-\node at (14.5,1.3) [font=\tiny] {\textsf{2}};
-\node at (7.5,1.3) [font=\tiny] {\textsf{9}};
-\node at (9.5,1.3) [font=\tiny] {\textsf{7}};
-\node at (4.5,1.3) [font=\tiny] {\textsf{12}};
-\node at (6.5,1.3) [font=\tiny] {\textsf{10}};
-\node at (1.5,1.3) [font=\tiny] {\textsf{15}};
-\node at (3.5,1.3) [font=\tiny] {\textsf{13}};
-\draw (15.0,1.0) -- (15.0,1.5);
-\draw (10.0,1.0) -- (10.0,1.5);
-\draw (7.0,1.0) -- (7.0,1.5);
-\draw (4.0,1.0) -- (4.0,1.5);
-\draw (1.0,1.0) -- (1.0,1.5);
-\draw (17.0,1.0) -- (17.0,1.5);
-\fill [black!5]  (15.0,0.0) rectangle (17.0,1.0);
-\draw [black!90]  (15.0,0.0) rectangle (17.0,1.0);
-\node at (16.0,0.5) [font=\scriptsize] {$\boldsymbol{\mathsf{00}}$};
-\fill [black!5]  (10.0,0.0) rectangle (15.0,1.0);
-\draw [black!90]  (10.0,0.0) rectangle (15.0,1.0);
-\node at (12.5,0.5) [font=\footnotesize] {$\mathsf{opcode_{[4:0]}}$};
-\fill [black!5]  (7.0,0.0) rectangle (10.0,1.0);
-\draw [black!90]  (7.0,0.0) rectangle (10.0,1.0);
-\node at (8.5,0.5) [font=\footnotesize] {$\mathsf{ra_{[2:0]}}$};
-\fill [black!5]  (4.0,0.0) rectangle (7.0,1.0);
-\draw [black!90]  (4.0,0.0) rectangle (7.0,1.0);
-\node at (5.5,0.5) [font=\footnotesize] {$\mathsf{rb_{[2:0]}}$};
-\fill [black!5]  (1.0,0.0) rectangle (4.0,1.0);
-\draw [black!90]  (1.0,0.0) rectangle (4.0,1.0);
-\node at (2.5,0.5) [font=\footnotesize] {$\mathsf{rc_{[2:0]}}$};
-\end{tikzpicture}
-\end{minipage}\hfill
-\begin{minipage}[c]{0.42\linewidth}
-\small
-\textbi{op16r3} \\ 16-bit three operand
-\end{minipage}
-
-\end{minipage}
-\caption{layout of the 16-bit instruction forms.}
-\label{fig:glyph-16bit-iform-layout}
-\end{figure}
-
-\newpage
-\subsubsection{32-bit instruction forms}
-
-this section details the layout of the 32-bit instruction forms:
+this section details the layout of the \isize-bit instruction forms:
 
 \begin{figure}[H]
 \centering
 \begin{minipage}[c]{1.0\textwidth}
 
-\noindent
-\begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[xscale=0.5, yscale=0.45]
-\node at (15.5,1.3) [font=\tiny] {\textsf{1}};
-\node at (16.5,1.3) [font=\tiny] {\textsf{0}};
-\node at (10.5,1.3) [font=\tiny] {\textsf{6}};
-\node at (14.5,1.3) [font=\tiny] {\textsf{2}};
-\node at (1.5,1.3) [font=\tiny] {\textsf{15}};
-\node at (9.5,1.3) [font=\tiny] {\textsf{7}};
-\draw (15.0,1.0) -- (15.0,1.5);
-\draw (10.0,1.0) -- (10.0,1.5);
-\draw (1.0,1.0) -- (1.0,1.5);
-\draw (17.0,1.0) -- (17.0,1.5);
-\fill [black!5]  (15.0,0.0) rectangle (17.0,1.0);
-\draw [black!90]  (15.0,0.0) rectangle (17.0,1.0);
-\node at (16.0,0.5) [font=\scriptsize] {$\boldsymbol{\mathsf{01}}$};
-\fill [black!5]  (10.0,0.0) rectangle (15.0,1.0);
-\draw [black!90]  (10.0,0.0) rectangle (15.0,1.0);
-\node at (12.5,0.5) [font=\footnotesize] {$\mathsf{opcode_{[4:0]}}$};
-\fill [black!5]  (1.0,0.0) rectangle (10.0,1.0);
-\draw [black!90]  (1.0,0.0) rectangle (10.0,1.0);
-\node at (5.5,0.5) [font=\footnotesize] {$\mathsf{imm_{[8:0]}}$};
-\fill [black!5]  (15.0,-1.0) rectangle (17.0,0.0);
-\draw [black!90]  (15.0,-1.0) rectangle (17.0,0.0);
-\node at (16.0,-0.5) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
-\fill [black!5]  (10.0,-1.0) rectangle (15.0,0.0);
-\draw [black!90]  (10.0,-1.0) rectangle (15.0,0.0);
-\node at (12.5,-0.5) [font=\footnotesize] {$\mathsf{opcode_{[9:5]}}$};
-\fill [black!5]  (1.0,-1.0) rectangle (10.0,0.0);
-\draw [black!90]  (1.0,-1.0) rectangle (10.0,0.0);
-\node at (5.5,-0.5) [font=\footnotesize] {$\mathsf{imm_{[17:9]}}$};
-\end{tikzpicture}
-\end{minipage}\hfill
-\begin{minipage}[c]{0.42\linewidth}
-\small
-\vspace{1.5em}
-\textbi{op32i} \\ 32-bit large immediate
-\end{minipage}
-
-\vspace{0.44em}
+\foreach \fname/\blA/\blB/\blC/\boA/\boB/\boC/\cAn/\cBn/\cCn/\cDn/\cEn/\cFn/\fdesc
+  [count=\fcount from 1]
+  in {
+  {op\isize{}\fmta} /0/0/9/0/0/0/{}  /{}  /{imm}/{}  /{}  /{imm}/{\isize-bit large immediate},
+  {op\isize{}\fmtb} /0/3/6/0/2/0/{}  /{rc}/{imm}/{}  /{rf}/{imm}/{\isize-bit \cntb{} operand with immediate},
+  {op\isize{}\fmtc} /3/3/3/2/2/0/{rc}/{rb}/{imm}/{rf}/{re}/{imm}/{\isize-bit \cntc{} operand with immediate},
+  {op\isize{}\fmtd} /3/3/3/2/2/2/{rc}/{rb}/{ra} /{rf}/{re}/{rd} /{\isize-bit \cntd{} operand}
+} {
 
 \noindent
 \begin{minipage}[c]{0.53\linewidth}
 \begin{tikzpicture}[xscale=0.5, yscale=0.45]
-\node at (15.5,1.3) [font=\tiny] {\textsf{1}};
-\node at (16.5,1.3) [font=\tiny] {\textsf{0}};
-\node at (10.5,1.3) [font=\tiny] {\textsf{6}};
-\node at (14.5,1.3) [font=\tiny] {\textsf{2}};
-\node at (4.5,1.3) [font=\tiny] {\textsf{12}};
-\node at (9.5,1.3) [font=\tiny] {\textsf{7}};
-\node at (1.5,1.3) [font=\tiny] {\textsf{15}};
-\node at (3.5,1.3) [font=\tiny] {\textsf{13}};
-\draw (15.0,1.0) -- (15.0,1.5);
-\draw (10.0,1.0) -- (10.0,1.5);
-\draw (4.0,1.0) -- (4.0,1.5);
-\draw (1.0,1.0) -- (1.0,1.5);
-\draw (17.0,1.0) -- (17.0,1.5);
-\fill [black!5]  (15.0,0.0) rectangle (17.0,1.0);
-\draw [black!90]  (15.0,0.0) rectangle (17.0,1.0);
-\node at (16.0,0.5) [font=\scriptsize] {$\boldsymbol{\mathsf{01}}$};
-\fill [black!5]  (10.0,0.0) rectangle (15.0,1.0);
-\draw [black!90]  (10.0,0.0) rectangle (15.0,1.0);
-\node at (12.5,0.5) [font=\footnotesize] {$\mathsf{opcode_{[4:0]}}$};
-\fill [black!5]  (4.0,0.0) rectangle (10.0,1.0);
-\draw [black!90]  (4.0,0.0) rectangle (10.0,1.0);
-\node at (7.0,0.5) [font=\footnotesize] {$\mathsf{imm_{[5:0]}}$};
-\fill [black!5]  (1.0,0.0) rectangle (4.0,1.0);
-\draw [black!90]  (1.0,0.0) rectangle (4.0,1.0);
-\node at (2.5,0.5) [font=\footnotesize] {$\mathsf{rc_{[2:0]}}$};
-\fill [black!5]  (15.0,-1.0) rectangle (17.0,0.0);
-\draw [black!90]  (15.0,-1.0) rectangle (17.0,0.0);
-\node at (16.0,-0.5) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
-\fill [black!5]  (10.0,-1.0) rectangle (15.0,0.0);
-\draw [black!90]  (10.0,-1.0) rectangle (15.0,0.0);
-\node at (12.5,-0.5) [font=\footnotesize] {$\mathsf{opcode_{[9:5]}}$};
-\fill [black!5]  (4.0,-1.0) rectangle (10.0,0.0);
-\draw [black!90]  (4.0,-1.0) rectangle (10.0,0.0);
-\node at (7.0,-0.5) [font=\footnotesize] {$\mathsf{imm_{[11:6]}}$};
-\fill [black!5]  (1.0,-1.0) rectangle (4.0,0.0);
-\draw [black!90]  (1.0,-1.0) rectangle (4.0,0.0);
-\node at (2.5,-0.5) [font=\footnotesize] {$\mathsf{rc_{[5:3]}}$};
+\ifcase\fcount \or \hdri \or \hdrri \or \hdrrr \or \hdrrr \fi
+\foreach \p in {0,...,\numexpr\packets-1\relax} {
+  \pgfmathsetmacro{\py}   {-\p}
+  \pgfmathsetmacro{\oplo} {int(5*\p)}
+  \pgfmathsetmacro{\ophi} {int(5*\p+4)}
+  \ifnum\p=0 \edef\szlit{\szfirst} \else \edef\szlit{11} \fi
+  % sz field
+  \fill[black!5] (15,\py)rectangle(17,{\py+1});
+  \draw[black!90](15,\py)rectangle(17,{\py+1});
+  \node at(16,{\py+0.5})[font=\scriptsize]{$\boldsymbol{\mathsf{\szlit}}$};
+  % opcode field
+  \fill[black!5] (10,\py)rectangle(15,{\py+1});
+  \draw[black!90](10,\py)rectangle(15,{\py+1});
+  \node at(12.5,{\py+0.5})[font=\footnotesize]{$\mathsf{opcode_{[\ophi:\oplo]}}$};
+  % operand fields: dispatched by form
+  \ifnum\p<2
+    \def\nA{\cAn}\def\nB{\cBn}\def\nC{\cCn}
+    \pgfmathsetmacro{\rlo}{int(\blA*\p)}        \pgfmathsetmacro{\rhi}{int(\blA*(\p+1)-1)}
+    \pgfmathsetmacro{\slo}{int(\blB*\p)}        \pgfmathsetmacro{\shi}{int(\blB*(\p+1)-1)}
+    \pgfmathsetmacro{\tlo}{int(\blC*\p)}        \pgfmathsetmacro{\thi}{int(\blC*(\p+1)-1)}
+  \else
+    \def\nA{\cDn}\def\nB{\cEn}\def\nC{\cFn}
+    \pgfmathsetmacro{\rlo}{int(\blA*(\p-\boA))}     \pgfmathsetmacro{\rhi}{int(\blA*(\p-\boA+1)-1)}
+    \pgfmathsetmacro{\slo}{int(\blB*(\p-\boB))}     \pgfmathsetmacro{\shi}{int(\blB*(\p-\boB+1)-1)}
+    \pgfmathsetmacro{\tlo}{int(\blC*(\p-\boC))}     \pgfmathsetmacro{\thi}{int(\blC*(\p-\boC+1)-1)}
+  \fi
+  \edef\brA{[\rhi:\rlo]}\edef\brB{[\shi:\slo]}\edef\brC{[\thi:\tlo]}
+  \ifcase\fcount
+    \or \formfieldsI  {\nA}{\nB}{\nC}{\brA}{\brB}{\brC}
+    \or \formfieldsRI {\nA}{\nB}{\nC}{\brA}{\brB}{\brC}
+    \or \formfieldsRRI{\nA}{\nB}{\nC}{\brA}{\brB}{\brC}
+    \or \formfieldsRRI{\nA}{\nB}{\nC}{\brA}{\brB}{\brC}
+  \fi
+}
 \end{tikzpicture}
 \end{minipage}\hfill
 \begin{minipage}[c]{0.42\linewidth}
 \small
-\vspace{1.5em}
-\textbi{op32ri} \\ 32-bit one operand with immediate
+\vspace{\vertsp}
+\textbi{\fname} \\ \fdesc
 \end{minipage}
 
-\vspace{0.44em}
+\ifnum\fcount<4\vspace{0.44em}\fi
 
-\noindent
-\begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[xscale=0.5, yscale=0.45]
-\node at (15.5,1.3) [font=\tiny] {\textsf{1}};
-\node at (16.5,1.3) [font=\tiny] {\textsf{0}};
-\node at (10.5,1.3) [font=\tiny] {\textsf{6}};
-\node at (14.5,1.3) [font=\tiny] {\textsf{2}};
-\node at (7.5,1.3) [font=\tiny] {\textsf{9}};
-\node at (9.5,1.3) [font=\tiny] {\textsf{7}};
-\node at (4.5,1.3) [font=\tiny] {\textsf{12}};
-\node at (6.5,1.3) [font=\tiny] {\textsf{10}};
-\node at (1.5,1.3) [font=\tiny] {\textsf{15}};
-\node at (3.5,1.3) [font=\tiny] {\textsf{13}};
-\draw (15.0,1.0) -- (15.0,1.5);
-\draw (10.0,1.0) -- (10.0,1.5);
-\draw (7.0,1.0) -- (7.0,1.5);
-\draw (4.0,1.0) -- (4.0,1.5);
-\draw (1.0,1.0) -- (1.0,1.5);
-\draw (17.0,1.0) -- (17.0,1.5);
-\fill [black!5]  (15.0,0.0) rectangle (17.0,1.0);
-\draw [black!90]  (15.0,0.0) rectangle (17.0,1.0);
-\node at (16.0,0.5) [font=\scriptsize] {$\boldsymbol{\mathsf{01}}$};
-\fill [black!5]  (10.0,0.0) rectangle (15.0,1.0);
-\draw [black!90]  (10.0,0.0) rectangle (15.0,1.0);
-\node at (12.5,0.5) [font=\footnotesize] {$\mathsf{opcode_{[4:0]}}$};
-\fill [black!5]  (7.0,0.0) rectangle (10.0,1.0);
-\draw [black!90]  (7.0,0.0) rectangle (10.0,1.0);
-\node at (8.5,0.5) [font=\footnotesize] {$\mathsf{imm_{[2:0]}}$};
-\fill [black!5]  (4.0,0.0) rectangle (7.0,1.0);
-\draw [black!90]  (4.0,0.0) rectangle (7.0,1.0);
-\node at (5.5,0.5) [font=\footnotesize] {$\mathsf{rb_{[2:0]}}$};
-\fill [black!5]  (1.0,0.0) rectangle (4.0,1.0);
-\draw [black!90]  (1.0,0.0) rectangle (4.0,1.0);
-\node at (2.5,0.5) [font=\footnotesize] {$\mathsf{rc_{[2:0]}}$};
-\fill [black!5]  (15.0,-1.0) rectangle (17.0,0.0);
-\draw [black!90]  (15.0,-1.0) rectangle (17.0,0.0);
-\node at (16.0,-0.5) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
-\fill [black!5]  (10.0,-1.0) rectangle (15.0,0.0);
-\draw [black!90]  (10.0,-1.0) rectangle (15.0,0.0);
-\node at (12.5,-0.5) [font=\footnotesize] {$\mathsf{opcode_{[9:5]}}$};
-\fill [black!5]  (7.0,-1.0) rectangle (10.0,0.0);
-\draw [black!90]  (7.0,-1.0) rectangle (10.0,0.0);
-\node at (8.5,-0.5) [font=\footnotesize] {$\mathsf{imm_{[5:3]}}$};
-\fill [black!5]  (4.0,-1.0) rectangle (7.0,0.0);
-\draw [black!90]  (4.0,-1.0) rectangle (7.0,0.0);
-\node at (5.5,-0.5) [font=\footnotesize] {$\mathsf{rb_{[5:3]}}$};
-\fill [black!5]  (1.0,-1.0) rectangle (4.0,0.0);
-\draw [black!90]  (1.0,-1.0) rectangle (4.0,0.0);
-\node at (2.5,-0.5) [font=\footnotesize] {$\mathsf{rc_{[5:3]}}$};
-\end{tikzpicture}
-\end{minipage}\hfill
-\begin{minipage}[c]{0.42\linewidth}
-\small
-\vspace{1.5em}
-\textbi{op32rri} \\ 32-bit two operand with immediate
-\end{minipage}
-
-\vspace{0.44em}
-
-\noindent
-\begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[xscale=0.5, yscale=0.45]
-\node at (15.5,1.3) [font=\tiny] {\textsf{1}};
-\node at (16.5,1.3) [font=\tiny] {\textsf{0}};
-\node at (10.5,1.3) [font=\tiny] {\textsf{6}};
-\node at (14.5,1.3) [font=\tiny] {\textsf{2}};
-\node at (7.5,1.3) [font=\tiny] {\textsf{9}};
-\node at (9.5,1.3) [font=\tiny] {\textsf{7}};
-\node at (4.5,1.3) [font=\tiny] {\textsf{12}};
-\node at (6.5,1.3) [font=\tiny] {\textsf{10}};
-\node at (1.5,1.3) [font=\tiny] {\textsf{15}};
-\node at (3.5,1.3) [font=\tiny] {\textsf{13}};
-\draw (15.0,1.0) -- (15.0,1.5);
-\draw (10.0,1.0) -- (10.0,1.5);
-\draw (7.0,1.0) -- (7.0,1.5);
-\draw (4.0,1.0) -- (4.0,1.5);
-\draw (1.0,1.0) -- (1.0,1.5);
-\draw (17.0,1.0) -- (17.0,1.5);
-\fill [black!5]  (15.0,0.0) rectangle (17.0,1.0);
-\draw [black!90]  (15.0,0.0) rectangle (17.0,1.0);
-\node at (16.0,0.5) [font=\scriptsize] {$\boldsymbol{\mathsf{01}}$};
-\fill [black!5]  (10.0,0.0) rectangle (15.0,1.0);
-\draw [black!90]  (10.0,0.0) rectangle (15.0,1.0);
-\node at (12.5,0.5) [font=\footnotesize] {$\mathsf{opcode_{[4:0]}}$};
-\fill [black!5]  (7.0,0.0) rectangle (10.0,1.0);
-\draw [black!90]  (7.0,0.0) rectangle (10.0,1.0);
-\node at (8.5,0.5) [font=\footnotesize] {$\mathsf{ra_{[2:0]}}$};
-\fill [black!5]  (4.0,0.0) rectangle (7.0,1.0);
-\draw [black!90]  (4.0,0.0) rectangle (7.0,1.0);
-\node at (5.5,0.5) [font=\footnotesize] {$\mathsf{rb_{[2:0]}}$};
-\fill [black!5]  (1.0,0.0) rectangle (4.0,1.0);
-\draw [black!90]  (1.0,0.0) rectangle (4.0,1.0);
-\node at (2.5,0.5) [font=\footnotesize] {$\mathsf{rc_{[2:0]}}$};
-\fill [black!5]  (15.0,-1.0) rectangle (17.0,0.0);
-\draw [black!90]  (15.0,-1.0) rectangle (17.0,0.0);
-\node at (16.0,-0.5) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
-\fill [black!5]  (10.0,-1.0) rectangle (15.0,0.0);
-\draw [black!90]  (10.0,-1.0) rectangle (15.0,0.0);
-\node at (12.5,-0.5) [font=\footnotesize] {$\mathsf{opcode_{[9:5]}}$};
-\fill [black!5]  (7.0,-1.0) rectangle (10.0,0.0);
-\draw [black!90]  (7.0,-1.0) rectangle (10.0,0.0);
-\node at (8.5,-0.5) [font=\footnotesize] {$\mathsf{ra_{[5:3]}}$};
-\fill [black!5]  (4.0,-1.0) rectangle (7.0,0.0);
-\draw [black!90]  (4.0,-1.0) rectangle (7.0,0.0);
-\node at (5.5,-0.5) [font=\footnotesize] {$\mathsf{rb_{[5:3]}}$};
-\fill [black!5]  (1.0,-1.0) rectangle (4.0,0.0);
-\draw [black!90]  (1.0,-1.0) rectangle (4.0,0.0);
-\node at (2.5,-0.5) [font=\footnotesize] {$\mathsf{rc_{[5:3]}}$};
-\end{tikzpicture}
-\end{minipage}\hfill
-\begin{minipage}[c]{0.42\linewidth}
-\small
-\vspace{1.5em}
-\textbi{op32r3} \\ 32-bit three operand
-\end{minipage}
+}% end inner \foreach over forms
 
 \end{minipage}
-\caption{layout of the 32-bit instruction forms.}
-\label{fig:glyph-32bit-iform-layout}
+\caption{layout of the \isize-bit instruction forms.}
+\label{fig:glyph-\isize{}bit-iform-layout}
 \end{figure}
 
-\subsubsection{64-bit instruction forms}
+\ifnum\packets=1\newpage\fi
 
-this section details the layout of the 64-bit instruction forms:
-
-\begin{figure}[H]
-\centering
-\begin{minipage}[c]{1.0\textwidth}
-
-\noindent
-\begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[xscale=0.5, yscale=0.45]
-\node at (15.5,1.3) [font=\tiny] {\textsf{1}};
-\node at (16.5,1.3) [font=\tiny] {\textsf{0}};
-\node at (10.5,1.3) [font=\tiny] {\textsf{6}};
-\node at (14.5,1.3) [font=\tiny] {\textsf{2}};
-\node at (9.5,1.3) [font=\tiny] {\textsf{7}};
-\node at (1.5,1.3) [font=\tiny] {\textsf{15}};
-\draw (15.0,1.0) -- (15.0,1.5);
-\draw (10.0,1.0) -- (10.0,1.5);
-\draw (1.0,1.0) -- (1.0,1.5);
-\draw (17.0,1.0) -- (17.0,1.5);
-\fill [black!5]  (15.0,0.0) rectangle (17.0,1.0);
-\draw [black!90]  (15.0,0.0) rectangle (17.0,1.0);
-\node at (16.0,0.5) [font=\scriptsize] {$\boldsymbol{\mathsf{10}}$};
-\fill [black!5]  (10.0,0.0) rectangle (15.0,1.0);
-\draw [black!90]  (10.0,0.0) rectangle (15.0,1.0);
-\node at (12.5,0.5) [font=\footnotesize] {$\mathsf{opcode_{[4:0]}}$};
-\fill [black!5]  (1.0,0.0) rectangle (10.0,1.0);
-\draw [black!90]  (1.0,0.0) rectangle (10.0,1.0);
-\node at (5.5,0.5) [font=\footnotesize] {$\mathsf{imm_{[5:0]}}$};
-\fill [black!5]  (15.0,-1.0) rectangle (17.0,0.0);
-\draw [black!90]  (15.0,-1.0) rectangle (17.0,0.0);
-\node at (16.0,-0.5) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
-\fill [black!5]  (10.0,-1.0) rectangle (15.0,0.0);
-\draw [black!90]  (10.0,-1.0) rectangle (15.0,0.0);
-\node at (12.5,-0.5) [font=\footnotesize] {$\mathsf{opcode_{[9:5]}}$};
-\fill [black!5]  (1.0,-1.0) rectangle (10.0,0.0);
-\draw [black!90]  (1.0,-1.0) rectangle (10.0,0.0);
-\node at (5.5,-0.5) [font=\footnotesize] {$\mathsf{imm_{[11:6]}}$};
-\fill [black!5]  (15.0,-2.0) rectangle (17.0,-1.0);
-\draw [black!90]  (15.0,-2.0) rectangle (17.0,-1.0);
-\node at (16.0,-1.5) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
-\fill [black!5]  (10.0,-2.0) rectangle (15.0,-1.0);
-\draw [black!90]  (10.0,-2.0) rectangle (15.0,-1.0);
-\node at (12.5,-1.5) [font=\footnotesize] {$\mathsf{opcode_{[14:10]}}$};
-\fill [black!5]  (1.0,-2.0) rectangle (10.0,-1.0);
-\draw [black!90]  (1.0,-2.0) rectangle (10.0,-1.0);
-\node at (5.5,-1.5) [font=\footnotesize] {$\mathsf{imm_{[17:12]}}$};
-\fill [black!5]  (15.0,-3.0) rectangle (17.0,-2.0);
-\draw [black!90]  (15.0,-3.0) rectangle (17.0,-2.0);
-\node at (16.0,-2.5) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
-\fill [black!5]  (10.0,-3.0) rectangle (15.0,-2.0);
-\draw [black!90]  (10.0,-3.0) rectangle (15.0,-2.0);
-\node at (12.5,-2.5) [font=\footnotesize] {$\mathsf{opcode_{[19:15]}}$};
-\fill [black!5]  (1.0,-3.0) rectangle (10.0,-2.0);
-\draw [black!90]  (1.0,-3.0) rectangle (10.0,-2.0);
-\node at (5.5,-2.5) [font=\footnotesize] {$\mathsf{imm_{[23:18]}}$};
-\end{tikzpicture}
-\end{minipage}\hfill
-\begin{minipage}[c]{0.42\linewidth}
-\small
-\vspace{4.5em}
-\textbi{op64i} \\ 64-bit large immediate
-\end{minipage}
-
-\vspace{0.44em}
-
-\noindent
-\begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[xscale=0.5, yscale=0.45]
-\node at (15.5,1.3) [font=\tiny] {\textsf{1}};
-\node at (16.5,1.3) [font=\tiny] {\textsf{0}};
-\node at (10.5,1.3) [font=\tiny] {\textsf{6}};
-\node at (14.5,1.3) [font=\tiny] {\textsf{2}};
-\node at (4.5,1.3) [font=\tiny] {\textsf{12}};
-\node at (9.5,1.3) [font=\tiny] {\textsf{7}};
-\node at (1.5,1.3) [font=\tiny] {\textsf{15}};
-\node at (3.5,1.3) [font=\tiny] {\textsf{13}};
-\draw (15.0,1.0) -- (15.0,1.5);
-\draw (10.0,1.0) -- (10.0,1.5);
-\draw (4.0,1.0) -- (4.0,1.5);
-\draw (1.0,1.0) -- (1.0,1.5);
-\draw (17.0,1.0) -- (17.0,1.5);
-\fill [black!5]  (15.0,0.0) rectangle (17.0,1.0);
-\draw [black!90]  (15.0,0.0) rectangle (17.0,1.0);
-\node at (16.0,0.5) [font=\scriptsize] {$\boldsymbol{\mathsf{10}}$};
-\fill [black!5]  (10.0,0.0) rectangle (15.0,1.0);
-\draw [black!90]  (10.0,0.0) rectangle (15.0,1.0);
-\node at (12.5,0.5) [font=\footnotesize] {$\mathsf{opcode_{[4:0]}}$};
-\fill [black!5]  (4.0,0.0) rectangle (10.0,1.0);
-\draw [black!90]  (4.0,0.0) rectangle (10.0,1.0);
-\node at (7.0,0.5) [font=\footnotesize] {$\mathsf{imm_{[5:0]}}$};
-\fill [black!5]  (1.0,0.0) rectangle (4.0,1.0);
-\draw [black!90]  (1.0,0.0) rectangle (4.0,1.0);
-\node at (2.5,0.5) [font=\footnotesize] {$\mathsf{rc_{[2:0]}}$};
-\fill [black!5]  (15.0,-1.0) rectangle (17.0,0.0);
-\draw [black!90]  (15.0,-1.0) rectangle (17.0,0.0);
-\node at (16.0,-0.5) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
-\fill [black!5]  (10.0,-1.0) rectangle (15.0,0.0);
-\draw [black!90]  (10.0,-1.0) rectangle (15.0,0.0);
-\node at (12.5,-0.5) [font=\footnotesize] {$\mathsf{opcode_{[9:5]}}$};
-\fill [black!5]  (4.0,-1.0) rectangle (10.0,0.0);
-\draw [black!90]  (4.0,-1.0) rectangle (10.0,0.0);
-\node at (7.0,-0.5) [font=\footnotesize] {$\mathsf{imm_{[11:6]}}$};
-\fill [black!5]  (1.0,-1.0) rectangle (4.0,0.0);
-\draw [black!90]  (1.0,-1.0) rectangle (4.0,0.0);
-\node at (2.5,-0.5) [font=\footnotesize] {$\mathsf{rc_{[5:3]}}$};
-\fill [black!5]  (15.0,-2.0) rectangle (17.0,-1.0);
-\draw [black!90]  (15.0,-2.0) rectangle (17.0,-1.0);
-\node at (16.0,-1.5) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
-\fill [black!5]  (10.0,-2.0) rectangle (15.0,-1.0);
-\draw [black!90]  (10.0,-2.0) rectangle (15.0,-1.0);
-\node at (12.5,-1.5) [font=\footnotesize] {$\mathsf{opcode_{[14:10]}}$};
-\fill [black!5]  (4.0,-2.0) rectangle (10.0,-1.0);
-\draw [black!90]  (4.0,-2.0) rectangle (10.0,-1.0);
-\node at (7.0,-1.5) [font=\footnotesize] {$\mathsf{imm_{[17:12]}}$};
-\fill [black!5]  (1.0,-2.0) rectangle (4.0,-1.0);
-\draw [black!90]  (1.0,-2.0) rectangle (4.0,-1.0);
-\node at (2.5,-1.5) [font=\footnotesize] {$\mathsf{rf_{[8:6]}}$};
-\fill [black!5]  (15.0,-3.0) rectangle (17.0,-2.0);
-\draw [black!90]  (15.0,-3.0) rectangle (17.0,-2.0);
-\node at (16.0,-2.5) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
-\fill [black!5]  (10.0,-3.0) rectangle (15.0,-2.0);
-\draw [black!90]  (10.0,-3.0) rectangle (15.0,-2.0);
-\node at (12.5,-2.5) [font=\footnotesize] {$\mathsf{opcode_{[19:15]}}$};
-\fill [black!5]  (4.0,-3.0) rectangle (10.0,-2.0);
-\draw [black!90]  (4.0,-3.0) rectangle (10.0,-2.0);
-\node at (7.0,-2.5) [font=\footnotesize] {$\mathsf{imm_{[23:18]}}$};
-\fill [black!5]  (1.0,-3.0) rectangle (4.0,-2.0);
-\draw [black!90]  (1.0,-3.0) rectangle (4.0,-2.0);
-\node at (2.5,-2.5) [font=\footnotesize] {$\mathsf{rf_{[11:9]}}$};
-\end{tikzpicture}
-\end{minipage}\hfill
-\begin{minipage}[c]{0.42\linewidth}
-\small
-\vspace{4.5em}
-\textbi{op64rri} \\ 64-bit two operand with immediate
-\end{minipage}
-
-\vspace{0.44em}
-
-\noindent
-\begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[xscale=0.5, yscale=0.45]
-\node at (15.5,1.3) [font=\tiny] {\textsf{1}};
-\node at (16.5,1.3) [font=\tiny] {\textsf{0}};
-\node at (10.5,1.3) [font=\tiny] {\textsf{6}};
-\node at (14.5,1.3) [font=\tiny] {\textsf{2}};
-\node at (7.5,1.3) [font=\tiny] {\textsf{9}};
-\node at (9.5,1.3) [font=\tiny] {\textsf{7}};
-\node at (4.5,1.3) [font=\tiny] {\textsf{12}};
-\node at (6.5,1.3) [font=\tiny] {\textsf{10}};
-\node at (1.5,1.3) [font=\tiny] {\textsf{15}};
-\node at (3.5,1.3) [font=\tiny] {\textsf{13}};
-\draw (15.0,1.0) -- (15.0,1.5);
-\draw (10.0,1.0) -- (10.0,1.5);
-\draw (7.0,1.0) -- (7.0,1.5);
-\draw (4.0,1.0) -- (4.0,1.5);
-\draw (1.0,1.0) -- (1.0,1.5);
-\draw (17.0,1.0) -- (17.0,1.5);
-\fill [black!5]  (15.0,0.0) rectangle (17.0,1.0);
-\draw [black!90]  (15.0,0.0) rectangle (17.0,1.0);
-\node at (16.0,0.5) [font=\scriptsize] {$\boldsymbol{\mathsf{10}}$};
-\fill [black!5]  (10.0,0.0) rectangle (15.0,1.0);
-\draw [black!90]  (10.0,0.0) rectangle (15.0,1.0);
-\node at (12.5,0.5) [font=\footnotesize] {$\mathsf{opcode_{[4:0]}}$};
-\fill [black!5]  (7.0,0.0) rectangle (10.0,1.0);
-\draw [black!90]  (7.0,0.0) rectangle (10.0,1.0);
-\node at (8.5,0.5) [font=\footnotesize] {$\mathsf{imm_{[2:0]}}$};
-\fill [black!5]  (4.0,0.0) rectangle (7.0,1.0);
-\draw [black!90]  (4.0,0.0) rectangle (7.0,1.0);
-\node at (5.5,0.5) [font=\footnotesize] {$\mathsf{rb_{[2:0]}}$};
-\fill [black!5]  (1.0,0.0) rectangle (4.0,1.0);
-\draw [black!90]  (1.0,0.0) rectangle (4.0,1.0);
-\node at (2.5,0.5) [font=\footnotesize] {$\mathsf{rc_{[2:0]}}$};
-\fill [black!5]  (15.0,-1.0) rectangle (17.0,0.0);
-\draw [black!90]  (15.0,-1.0) rectangle (17.0,0.0);
-\node at (16.0,-0.5) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
-\fill [black!5]  (10.0,-1.0) rectangle (15.0,0.0);
-\draw [black!90]  (10.0,-1.0) rectangle (15.0,0.0);
-\node at (12.5,-0.5) [font=\footnotesize] {$\mathsf{opcode_{[9:5]}}$};
-\fill [black!5]  (7.0,-1.0) rectangle (10.0,0.0);
-\draw [black!90]  (7.0,-1.0) rectangle (10.0,0.0);
-\node at (8.5,-0.5) [font=\footnotesize] {$\mathsf{imm_{[5:3]}}$};
-\fill [black!5]  (4.0,-1.0) rectangle (7.0,0.0);
-\draw [black!90]  (4.0,-1.0) rectangle (7.0,0.0);
-\node at (5.5,-0.5) [font=\footnotesize] {$\mathsf{rb_{[5:3]}}$};
-\fill [black!5]  (1.0,-1.0) rectangle (4.0,0.0);
-\draw [black!90]  (1.0,-1.0) rectangle (4.0,0.0);
-\node at (2.5,-0.5) [font=\footnotesize] {$\mathsf{rc_{[5:3]}}$};
-\fill [black!5]  (15.0,-2.0) rectangle (17.0,-1.0);
-\draw [black!90]  (15.0,-2.0) rectangle (17.0,-1.0);
-\node at (16.0,-1.5) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
-\fill [black!5]  (10.0,-2.0) rectangle (15.0,-1.0);
-\draw [black!90]  (10.0,-2.0) rectangle (15.0,-1.0);
-\node at (12.5,-1.5) [font=\footnotesize] {$\mathsf{opcode_{[14:10]}}$};
-\fill [black!5]  (7.0,-2.0) rectangle (10.0,-1.0);
-\draw [black!90]  (7.0,-2.0) rectangle (10.0,-1.0);
-\node at (8.5,-1.5) [font=\footnotesize] {$\mathsf{imm_{[8:6]}}$};
-\fill [black!5]  (4.0,-2.0) rectangle (7.0,-1.0);
-\draw [black!90]  (4.0,-2.0) rectangle (7.0,-1.0);
-\node at (5.5,-1.5) [font=\footnotesize] {$\mathsf{re_{[8:6]}}$};
-\fill [black!5]  (1.0,-2.0) rectangle (4.0,-1.0);
-\draw [black!90]  (1.0,-2.0) rectangle (4.0,-1.0);
-\node at (2.5,-1.5) [font=\footnotesize] {$\mathsf{rf_{[8:6]}}$};
-\fill [black!5]  (15.0,-3.0) rectangle (17.0,-2.0);
-\draw [black!90]  (15.0,-3.0) rectangle (17.0,-2.0);
-\node at (16.0,-2.5) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
-\fill [black!5]  (10.0,-3.0) rectangle (15.0,-2.0);
-\draw [black!90]  (10.0,-3.0) rectangle (15.0,-2.0);
-\node at (12.5,-2.5) [font=\footnotesize] {$\mathsf{opcode_{[19:15]}}$};
-\fill [black!5]  (7.0,-3.0) rectangle (10.0,-2.0);
-\draw [black!90]  (7.0,-3.0) rectangle (10.0,-2.0);
-\node at (8.5,-2.5) [font=\footnotesize] {$\mathsf{imm_{[11:9]}}$};
-\fill [black!5]  (4.0,-3.0) rectangle (7.0,-2.0);
-\draw [black!90]  (4.0,-3.0) rectangle (7.0,-2.0);
-\node at (5.5,-2.5) [font=\footnotesize] {$\mathsf{re_{[11:9]}}$};
-\fill [black!5]  (1.0,-3.0) rectangle (4.0,-2.0);
-\draw [black!90]  (1.0,-3.0) rectangle (4.0,-2.0);
-\node at (2.5,-2.5) [font=\footnotesize] {$\mathsf{rf_{[11:9]}}$};
-\end{tikzpicture}
-\end{minipage}\hfill
-\begin{minipage}[c]{0.42\linewidth}
-\small
-\vspace{4.5em}
-\textbi{op64r4i} \\ 64-bit four operand with immediate
-\end{minipage}
-
-\vspace{0.44em}
-
-\noindent
-\begin{minipage}[c]{0.53\linewidth}
-\begin{tikzpicture}[xscale=0.5, yscale=0.45]
-\node at (15.5,1.3) [font=\tiny] {\textsf{1}};
-\node at (16.5,1.3) [font=\tiny] {\textsf{0}};
-\node at (10.5,1.3) [font=\tiny] {\textsf{6}};
-\node at (14.5,1.3) [font=\tiny] {\textsf{2}};
-\node at (7.5,1.3) [font=\tiny] {\textsf{9}};
-\node at (9.5,1.3) [font=\tiny] {\textsf{7}};
-\node at (4.5,1.3) [font=\tiny] {\textsf{12}};
-\node at (6.5,1.3) [font=\tiny] {\textsf{10}};
-\node at (1.5,1.3) [font=\tiny] {\textsf{15}};
-\node at (3.5,1.3) [font=\tiny] {\textsf{13}};
-\draw (15.0,1.0) -- (15.0,1.5);
-\draw (10.0,1.0) -- (10.0,1.5);
-\draw (7.0,1.0) -- (7.0,1.5);
-\draw (4.0,1.0) -- (4.0,1.5);
-\draw (1.0,1.0) -- (1.0,1.5);
-\draw (17.0,1.0) -- (17.0,1.5);
-\fill [black!5]  (15.0,0.0) rectangle (17.0,1.0);
-\draw [black!90]  (15.0,0.0) rectangle (17.0,1.0);
-\node at (16.0,0.5) [font=\scriptsize] {$\boldsymbol{\mathsf{10}}$};
-\fill [black!5]  (10.0,0.0) rectangle (15.0,1.0);
-\draw [black!90]  (10.0,0.0) rectangle (15.0,1.0);
-\node at (12.5,0.5) [font=\footnotesize] {$\mathsf{opcode_{[4:0]}}$};
-\fill [black!5]  (7.0,0.0) rectangle (10.0,1.0);
-\draw [black!90]  (7.0,0.0) rectangle (10.0,1.0);
-\node at (8.5,0.5) [font=\footnotesize] {$\mathsf{ra_{[2:0]}}$};
-\fill [black!5]  (4.0,0.0) rectangle (7.0,1.0);
-\draw [black!90]  (4.0,0.0) rectangle (7.0,1.0);
-\node at (5.5,0.5) [font=\footnotesize] {$\mathsf{rb_{[2:0]}}$};
-\fill [black!5]  (1.0,0.0) rectangle (4.0,1.0);
-\draw [black!90]  (1.0,0.0) rectangle (4.0,1.0);
-\node at (2.5,0.5) [font=\footnotesize] {$\mathsf{rc_{[2:0]}}$};
-\fill [black!5]  (15.0,-1.0) rectangle (17.0,0.0);
-\draw [black!90]  (15.0,-1.0) rectangle (17.0,0.0);
-\node at (16.0,-0.5) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
-\fill [black!5]  (10.0,-1.0) rectangle (15.0,0.0);
-\draw [black!90]  (10.0,-1.0) rectangle (15.0,0.0);
-\node at (12.5,-0.5) [font=\footnotesize] {$\mathsf{opcode_{[9:5]}}$};
-\fill [black!5]  (7.0,-1.0) rectangle (10.0,0.0);
-\draw [black!90]  (7.0,-1.0) rectangle (10.0,0.0);
-\node at (8.5,-0.5) [font=\footnotesize] {$\mathsf{ra_{[5:3]}}$};
-\fill [black!5]  (4.0,-1.0) rectangle (7.0,0.0);
-\draw [black!90]  (4.0,-1.0) rectangle (7.0,0.0);
-\node at (5.5,-0.5) [font=\footnotesize] {$\mathsf{rb_{[5:3]}}$};
-\fill [black!5]  (1.0,-1.0) rectangle (4.0,0.0);
-\draw [black!90]  (1.0,-1.0) rectangle (4.0,0.0);
-\node at (2.5,-0.5) [font=\footnotesize] {$\mathsf{rc_{[5:3]}}$};
-\fill [black!5]  (15.0,-2.0) rectangle (17.0,-1.0);
-\draw [black!90]  (15.0,-2.0) rectangle (17.0,-1.0);
-\node at (16.0,-1.5) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
-\fill [black!5]  (10.0,-2.0) rectangle (15.0,-1.0);
-\draw [black!90]  (10.0,-2.0) rectangle (15.0,-1.0);
-\node at (12.5,-1.5) [font=\footnotesize] {$\mathsf{opcode_{[14:10]}}$};
-\fill [black!5]  (7.0,-2.0) rectangle (10.0,-1.0);
-\draw [black!90]  (7.0,-2.0) rectangle (10.0,-1.0);
-\node at (8.5,-1.5) [font=\footnotesize] {$\mathsf{rd_{[8:6]}}$};
-\fill [black!5]  (4.0,-2.0) rectangle (7.0,-1.0);
-\draw [black!90]  (4.0,-2.0) rectangle (7.0,-1.0);
-\node at (5.5,-1.5) [font=\footnotesize] {$\mathsf{re_{[8:6]}}$};
-\fill [black!5]  (1.0,-2.0) rectangle (4.0,-1.0);
-\draw [black!90]  (1.0,-2.0) rectangle (4.0,-1.0);
-\node at (2.5,-1.5) [font=\footnotesize] {$\mathsf{rf_{[8:6]}}$};
-\fill [black!5]  (15.0,-3.0) rectangle (17.0,-2.0);
-\draw [black!90]  (15.0,-3.0) rectangle (17.0,-2.0);
-\node at (16.0,-2.5) [font=\scriptsize] {$\boldsymbol{\mathsf{11}}$};
-\fill [black!5]  (10.0,-3.0) rectangle (15.0,-2.0);
-\draw [black!90]  (10.0,-3.0) rectangle (15.0,-2.0);
-\node at (12.5,-2.5) [font=\footnotesize] {$\mathsf{opcode_{[19:15]}}$};
-\fill [black!5]  (7.0,-3.0) rectangle (10.0,-2.0);
-\draw [black!90]  (7.0,-3.0) rectangle (10.0,-2.0);
-\node at (8.5,-2.5) [font=\footnotesize] {$\mathsf{rd_{[11:9]}}$};
-\fill [black!5]  (4.0,-3.0) rectangle (7.0,-2.0);
-\draw [black!90]  (4.0,-3.0) rectangle (7.0,-2.0);
-\node at (5.5,-2.5) [font=\footnotesize] {$\mathsf{re_{[11:9]}}$};
-\fill [black!5]  (1.0,-3.0) rectangle (4.0,-2.0);
-\draw [black!90]  (1.0,-3.0) rectangle (4.0,-2.0);
-\node at (2.5,-2.5) [font=\footnotesize] {$\mathsf{rf_{[11:9]}}$};
-\end{tikzpicture}
-\end{minipage}\hfill
-\begin{minipage}[c]{0.42\linewidth}
-\small
-\vspace{4.5em}
-\textbi{op64r6} \\ 64-bit six operand
-\end{minipage}
-
-\end{minipage}
-\caption{layout of the 64-bit instruction forms.}
-\label{fig:glyph-64bit-iform-layout}
-\end{figure}
+}% end outer \foreach over widths
 
 \newpage
 \section{Register file}
