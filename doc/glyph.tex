@@ -4168,9 +4168,8 @@ handler with a physical page number, a page color, plus several permission
 and metadata bits in the same format as the metadata bits defined for page
 table entries. table~\ref{tab:64-bit-page-table-entry-fields} in the address
 translation section describes the metadata bits.
-
-\begin{figure}[H]
-\centering
+\\
+\par\noindent
 \begin{tikzpicture}[scale=0.45]
 \draw [black] (0,0)    rectangle (32,1);
 \draw [black] (31.5,0)    rectangle (32,1);
@@ -4208,9 +4207,6 @@ translation section describes the metadata bits.
 \node [font=\tiny,anchor=base] at (7.5,1.25)  {\textsf{48}};
 \node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
 \end{tikzpicture}
-\caption{64-bit machine translation lookaside buffer entry structure.}
-\label{fig:64-machine-translation-lookaside-buffer-entry-structure}
-\end{figure}
 
 \newpage
 \section{Environment extension}
