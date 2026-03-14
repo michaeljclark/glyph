@@ -3871,14 +3871,13 @@ the section describes the privileged registers for environment control.
 
 \subsubsection{environment control (\texttt{econtrol})}
 \texttt{econtrol} is a read-write register used to issue machine-level
-environment control commands. the \texttt{OP} field contains an opcode
-with values for: \emph{diagnostic}, \emph{warm reset}, \emph{cold reset}
-and \emph{power off}. the \emph{cause code} field is recorded in an
-environment log.
+environment control commands. the \emph{opcode} field contains values for:
+\emph{diagnostic}, \emph{warm reset}, \emph{cold reset} and \emph{power off}.
+the \emph{cause code} field is recorded in an environment log.
 \\
 \registerspec{64}{32}{%
   56/{0}//{55}/\emph{cause code},%
-  8/{56}//{63}/\texttt{OP}%
+  8/{56}//{63}/\emph{opcode}%
 }
 
 \begin{table}[h]
