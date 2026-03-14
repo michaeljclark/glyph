@@ -1185,6 +1185,112 @@ this section details the layout of the \isize-bit instruction forms:
 \newpage
 \section{Register file}
 
+\newcommand{\registefile}[8]{
+  \pgfmathsetmacro{\zoffset}{#1}
+  \pgfmathsetmacro{\zwidth}{#2}
+  \pgfmathsetmacro{\zreg}{#3}
+  \pgfmathsetmacro{\zdiv}{#4}
+  \def\zpre{#5}
+  \def\zlast{#6}
+  \def\zlen{#7}
+  \def\zlabel{#8}
+
+  \foreach \z in {0,...,7} {
+    \pgfmathsetmacro{\za}{int((\z==6)*(\zreg>8))}
+    \pgfmathsetmacro{\zb}{int((\z==7)*(\zreg>8))}
+    \ifnum\za=1\relax
+      \node[black!50, font=\large] at (16-\zwidth/2,\zoffset-\z+0.7) {$\vdots$};
+    \else
+      \fill [black!5] (16-\zwidth,\zoffset-\z+1)    rectangle (16,\zoffset-\z);
+      \draw [black] (16-\zwidth,\zoffset-\z+1)    rectangle (16,\zoffset-\z);
+      \ifnum\zdiv>0\relax
+        \pgfmathtruncatemacro{\zmax}{\zdiv-1}
+        \foreach \x in {1,...,\zmax} {
+          \pgfmathsetmacro{\xo}{16-\zwidth+\x*\zwidth/\zdiv}
+          \draw[black!20] (\xo,\zoffset-\z+1) -- (\xo,\zoffset-\z);
+        }
+      \fi
+      \ifnum\zb=1\relax
+        \node [font=\scriptsize, anchor=base]
+           at (16-\zwidth/2,\zoffset-\z+0.25) {\textsf{\zpre\zlast}};
+      \else
+        \node [font=\scriptsize, anchor=base]
+           at (16-\zwidth/2,\zoffset-\z+0.25) {\textsf{\zpre\z}};
+      \fi
+    \fi
+  }
+
+  \node [font=\tiny,anchor=base west]
+     at (16-\zwidth,\zoffset+1.2) {\textsf{\zlen}};
+  \node [font=\tiny,anchor=base east]
+     at (16,\zoffset+1.2)  {\textsf{0}};
+
+  \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
+        (16,\zoffset-7) -- (16,\zoffset+1)
+        node[midway,xshift=3mm,align=center,font=\scriptsize,
+             text width=17mm,anchor=west]{\textsf{\shortstack{\zlabel}}};
+}
+
+\newcommand{\assignpair}[3]{%
+  \expandafter\assignpairaux#3\relax{#1}{#2}%
+}
+
+\def\assignpairaux#1,#2\relax#3#4{%
+  \expandafter\def\csname#3\endcsname{#1}%
+  \expandafter\def\csname#4\endcsname{#2}%
+}
+
+\newcommand{\registerstate}[7]{%
+  \begin{tikzpicture}[xscale=0.5, yscale=0.45]
+  \begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
+
+  \assignpair{alen}{awidth}{#1}
+  \assignpair{xlen}{xwidth}{#2}
+  \assignpair{vlen}{vwidth}{#3}
+  \pgfmathsetmacro{\aw}{\awidth}
+  \pgfmathsetmacro{\xw}{\xwidth}
+  \pgfmathsetmacro{\vw}{\vwidth}
+  \assignpair{xreg}{xlast}{#4}
+  \assignpair{vreg}{vlast}{#5}
+  \pgfmathsetmacro{\xr}{\xreg}
+  \pgfmathsetmacro{\vr}{\vreg}
+  \pgfmathsetmacro{\xdiv}{#6}
+  \pgfmathsetmacro{\vdiv}{#7}
+
+  \registefile{7}{\xw}{\xr}{\xdiv}{r}{\xlast}{\xlen}{scalar\\registers}
+
+  \ifnum\vr>0\relax
+    \registefile{-2}{\vw}{\vr}{\vdiv}{v}{\vlast}{\vlen}{vector\\registers}
+  \fi
+
+  \node [font=\tiny,anchor=base west] at (16-\aw,11.2)  {\textsf{\alen}};
+  \node [font=\tiny,anchor=base east] at (16,11.2)  {\textsf{0}};
+
+  \fill [black!15] (12,9)    rectangle (16,10);
+  \draw [black]    (12,9)    rectangle (16,10);
+
+  \fill [black!15] (12,10)    rectangle (16,11);
+  \draw [black]    (12,10)    rectangle (16,11);
+
+  \fill [black!15] (14,12)    rectangle (16,13);
+  \draw [black]    (14,12)    rectangle (16,13);
+
+  \node [font=\scriptsize,anchor=base] at (14,9.25)  {\textsf{ib}};
+  \node [font=\scriptsize,anchor=base] at (14,10.25)  {\textsf{pc}};
+  \node [font=\scriptsize,anchor=base] at (15,12.25)  {\textsf{flag}};
+
+  \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
+      (16,12) -- (16,13) node[midway,xshift=3mm,align=center,font=\scriptsize,
+          text width=17mm,anchor=west]{\textsf{\shortstack{predicate}}};
+
+  \draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
+      (16,9) -- (16,11) node[midway,xshift=3mm,align=center,font=\scriptsize,
+          text width=17mm,anchor=west]{\textsf{\shortstack{control\\registers}}};
+
+\end{scope}
+\end{tikzpicture}
+}
+
 glyph has register state comprised of a predicate register, program
 counter, and immediate base registers, a unified floating-point and integer
 scalar register file, and an optional unified floating-point and integer
@@ -1207,88 +1313,9 @@ profile is comprised of:
 the following diagram shows the template configuration
 register state:
 \\
-
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[xscale=0.5, yscale=0.45]
-\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
-\foreach \x in {0,...,7} {
-  \ifnum\x=6\relax
-    % skip r6
-  \else
-    \fill [black!5] (8,7-\x)    rectangle (16,8-\x);
-  \fi
-}
-\foreach \x in {0,...,7} {
-\ifnum\x=6\relax
-    % skip r6
-  \else
-    \draw [black] (8,7-\x)    rectangle (16,8-\x);
-  \fi
-}
-\foreach \x in {0,...,5}
-  \node [font=\scriptsize, anchor=base] at (12,{7.25-\x}) {\textsf{r\x}};
-\foreach \x in {0,...,7} {
-  \ifnum\x=6\relax
-    % skip r6
-  \else
-    \fill [black!5] (0,-1-\x)    rectangle (16,-2-\x);
-  \fi
-}
-\foreach \x in {0,...,7} {
-\ifnum\x=6\relax
-    % skip r6
-  \else
-    \draw [black] (0,-1-\x)    rectangle (16,-2-\x);
-  \fi
-}
-\foreach \x in {0,...,5}
-  \node [font=\scriptsize, anchor=base] at (8,{-1.75-\x}) {\textsf{v\x}};
-
-\node[black!50, font=\large] at (12,1.70) {$\vdots$};
-\node[black!50, font=\large] at (8,-7.30) {$\vdots$};
-
-\node [font=\scriptsize, anchor=base] at (12,0.25) {\textsf{r\textit{N}}};
-\node [font=\scriptsize, anchor=base] at (8,-8.75) {\textsf{v\textit{N}}};
-
-\node [font=\tiny,anchor=base west] at (12,11.2)  {\textsf{ALEN}};
-\node [font=\tiny,anchor=base east] at (16,11.2)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (8,8.2)  {\textsf{XLEN}};
-\node [font=\tiny,anchor=base east] at (16,8.2)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,-0.8)  {\textsf{VLEN}};
-\node [font=\tiny,anchor=base east] at (16,-0.8)  {\textsf{0}};
-
-\fill [black!15] (12,9)    rectangle (16,10);
-\draw [black]    (12,9)    rectangle (16,10);
-
-\fill [black!15] (12,10)    rectangle (16,11);
-\draw [black]    (12,10)    rectangle (16,11);
-
-\fill [black!15] (14,12)    rectangle (16,13);
-\draw [black]    (14,12)    rectangle (16,13);
-
-\node [font=\scriptsize,anchor=base] at (14,9.25)  {\textsf{ib}};
-\node [font=\scriptsize,anchor=base] at (14,10.25)  {\textsf{pc}};
-\node [font=\scriptsize,anchor=base] at (15,12.25)  {\textsf{flag}};
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
-    (16,12) -- (16,13) node[midway,xshift=3mm,align=center,font=\scriptsize,
-        text width=17mm,anchor=west]{\textsf{\shortstack{predicate}}};
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
-    (16,9) -- (16,11) node[midway,xshift=3mm,align=center,font=\scriptsize,
-        text width=17mm,anchor=west]{\textsf{\shortstack{control\\registers}}};
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
-    (16,0) -- (16,8) node[midway,xshift=3mm,align=center,font=\scriptsize,
-        text width=17mm,anchor=west]{\textsf{\shortstack{scalar\\registers}}};
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
-    (16,-9) -- (16,-1) node[midway,xshift=3mm,align=center,font=\scriptsize,
-        text width=17mm,anchor=west]{\textsf{\shortstack{vector\\registers}}};
-
-\end{scope}
-\end{tikzpicture}
+\registerstate{ALEN,4}{XLEN,8}{VLEN,16}{64,\textit{N}}{64,\textit{N}}{0}{0}
 \caption{template configuration register state.}
 \label{fig:glyph-register-state-template}
 \end{figure}
@@ -1310,50 +1337,9 @@ profile is comprised of:
 the following diagram shows the \emph{scalar-min} configuration
 register state:
 \\
-
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[xscale=0.5, yscale=0.45]
-\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
-\foreach \x in {0,...,7}
-  \fill [black!5] (12,\x)    rectangle (16,\x+1);
-\foreach \x in {0,...,7}
-  \draw [black] (12,\x)    rectangle (16,\x+1);
-\foreach \i in {0,...,7}
-  \node [font=\scriptsize, anchor=base] at (14,{7.25-\i}) {\textsf{r\i}};
-
-\node [font=\tiny,anchor=base west] at (12,11.2)  {\textsf{64}};
-\node [font=\tiny,anchor=base east] at (16,11.2)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (12,8.2)  {\textsf{64}};
-\node [font=\tiny,anchor=base east] at (16,8.2)  {\textsf{0}};
-
-\fill [black!15] (12,9)    rectangle (16,10);
-\draw [black]    (12,9)    rectangle (16,10);
-
-\fill [black!15] (12,10)    rectangle (16,11);
-\draw [black]    (12,10)    rectangle (16,11);
-
-\fill [black!15] (14,12)    rectangle (16,13);
-\draw [black]    (14,12)    rectangle (16,13);
-
-\node [font=\scriptsize,anchor=base] at (14,9.25)  {\textsf{ib}};
-\node [font=\scriptsize,anchor=base] at (14,10.25)  {\textsf{pc}};
-\node [font=\scriptsize,anchor=base] at (15,12.25)  {\textsf{flag}};
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
-    (16,12) -- (16,13) node[midway,xshift=3mm,align=center,font=\scriptsize,
-        text width=17mm,anchor=west]{\textsf{\shortstack{predicate}}};
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
-    (16,9) -- (16,11) node[midway,xshift=3mm,align=center,font=\scriptsize,
-        text width=17mm,anchor=west]{\textsf{\shortstack{control\\registers}}};
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
-    (16,0) -- (16,8) node[midway,xshift=3mm,align=center,font=\scriptsize,
-        text width=17mm,anchor=west]{\textsf{\shortstack{scalar\\registers}}};
-
-\end{scope}
-\end{tikzpicture}
+\registerstate{64,4}{64,4}{VLEN,0}{8,7}{0,0}{0}{0}
 \caption{\emph{scalar-min} configuration register state.}
 \label{fig:glyph-register-state-scalar-min}
 \end{figure}
@@ -1381,64 +1367,9 @@ profile is comprised of:
 the following diagram shows the \emph{scalar-max} configuration
 register state:
 \\
-
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[xscale=0.5, yscale=0.45]
-\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
-\foreach \x in {0,...,7} {
-  \ifnum\x=6\relax
-    % skip r6
-  \else
-    \fill [black!5] (8,7-\x)    rectangle (16,8-\x);
-  \fi
-}
-\foreach \x in {0,...,7} {
-\ifnum\x=6\relax
-    % skip r6
-  \else
-    \draw [black] (8,7-\x)    rectangle (16,8-\x);
-  \fi
-}
-\foreach \x in {0,...,5}
-  \node [font=\scriptsize, anchor=base] at (12,{7.25-\x}) {\textsf{r\x}};
-
-\node [font=\scriptsize, anchor=base] at (12,0.25) {\textsf{r63}};
-
-\node [font=\tiny,anchor=base west] at (12,11.2)  {\textsf{64}};
-\node [font=\tiny,anchor=base east] at (16,11.2)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (8,8.2)  {\textsf{128}};
-\node [font=\tiny,anchor=base east] at (16,8.2)  {\textsf{0}};
-
-\node[black!50, font=\large] at (12,1.70) {$\vdots$};
-
-\fill [black!15] (12,9)    rectangle (16,10);
-\draw [black]    (12,9)    rectangle (16,10);
-
-\fill [black!15] (12,10)    rectangle (16,11);
-\draw [black]    (12,10)    rectangle (16,11);
-
-\fill [black!15] (14,12)    rectangle (16,13);
-\draw [black]    (14,12)    rectangle (16,13);
-
-\node [font=\scriptsize,anchor=base] at (14,9.25)  {\textsf{ib}};
-\node [font=\scriptsize,anchor=base] at (14,10.25)  {\textsf{pc}};
-\node [font=\scriptsize,anchor=base] at (15,12.25)  {\textsf{flag}};
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
-    (16,12) -- (16,13) node[midway,xshift=3mm,align=center,font=\scriptsize,
-        text width=17mm,anchor=west]{\textsf{\shortstack{predicate}}};
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
-    (16,9) -- (16,11) node[midway,xshift=3mm,align=center,font=\scriptsize,
-        text width=17mm,anchor=west]{\textsf{\shortstack{control\\registers}}};
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
-    (16,0) -- (16,8) node[midway,xshift=3mm,align=center,font=\scriptsize,
-        text width=17mm,anchor=west]{\textsf{\shortstack{scalar\\registers}}};
-
-\end{scope}
-\end{tikzpicture}
+\registerstate{64,4}{128,8}{0,0}{64,63}{0,0}{0}{0}
 \caption{\emph{scalar-max} configuration register state.}
 \label{fig:glyph-register-state-scalar-max}
 \end{figure}
@@ -1467,93 +1398,9 @@ profile is comprised of:
 the following diagram shows the \emph{vector-min} configuration
 register state:
 \\
-
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[xscale=0.5, yscale=0.45]
-\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
-\foreach \x in {0,...,7} {
-  \ifnum\x=6\relax
-    % skip r6
-  \else
-    \fill [black!5] (8,7-\x)    rectangle (16,8-\x);
-  \fi
-}
-\foreach \x in {0,...,7} {
-\ifnum\x=6\relax
-    % skip r6
-  \else
-    \draw [black] (8,7-\x)    rectangle (16,8-\x);
-  \fi
-}
-\foreach \x in {0,...,5}
-  \node [font=\scriptsize, anchor=base] at (12,{7.25-\x}) {\textsf{r\x}};
-\foreach \x in {0,...,7} {
-  \ifnum\x=6\relax
-    % skip r6
-  \else
-    \fill [black!5] (0,-1-\x)    rectangle (16,-2-\x);
-  \fi
-}
-\foreach \x in {0,...,7} {
-\ifnum\x=6\relax
-    % skip r6
-  \else
-    \draw [black] (0,-1-\x)    rectangle (16,-2-\x);
-  \fi
-}
-\foreach \x in {0,...,5}
-  \node [font=\scriptsize, anchor=base] at (8,{-1.75-\x}) {\textsf{v\x}};
-
-\foreach \x in {1,...,3} {
-  \draw[black!20] (4*\x,-1) -- (4*\x,-7);
-  \draw[black!20] (4*\x,-8) -- (4*\x,-9);
-}
-
-\node[black!50, font=\large] at (12,1.70) {$\vdots$};
-\node[black!50, font=\large] at (8,-7.30) {$\vdots$};
-
-\node [font=\scriptsize, anchor=base] at (12,0.25) {\textsf{r63}};
-\node [font=\scriptsize, anchor=base] at (8,-8.75) {\textsf{v63}};
-
-\node [font=\tiny,anchor=base west] at (12,11.2)  {\textsf{64}};
-\node [font=\tiny,anchor=base east] at (16,11.2)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (8,8.2)  {\textsf{128}};
-\node [font=\tiny,anchor=base east] at (16,8.2)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,-0.8)  {\textsf{512}};
-\node [font=\tiny,anchor=base east] at (16,-0.8)  {\textsf{0}};
-
-\fill [black!15] (12,9)    rectangle (16,10);
-\draw [black]    (12,9)    rectangle (16,10);
-
-\fill [black!15] (12,10)    rectangle (16,11);
-\draw [black]    (12,10)    rectangle (16,11);
-
-\fill [black!15] (14,12)    rectangle (16,13);
-\draw [black]    (14,12)    rectangle (16,13);
-
-\node [font=\scriptsize,anchor=base] at (14,9.25)  {\textsf{ib}};
-\node [font=\scriptsize,anchor=base] at (14,10.25)  {\textsf{pc}};
-\node [font=\scriptsize,anchor=base] at (15,12.25)  {\textsf{flag}};
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
-    (16,12) -- (16,13) node[midway,xshift=3mm,align=center,font=\scriptsize,
-        text width=17mm,anchor=west]{\textsf{\shortstack{predicate}}};
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
-    (16,9) -- (16,11) node[midway,xshift=3mm,align=center,font=\scriptsize,
-        text width=17mm,anchor=west]{\textsf{\shortstack{control\\registers}}};
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
-    (16,0) -- (16,8) node[midway,xshift=3mm,align=center,font=\scriptsize,
-        text width=17mm,anchor=west]{\textsf{\shortstack{scalar\\registers}}};
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
-    (16,-9) -- (16,-1) node[midway,xshift=3mm,align=center,font=\scriptsize,
-        text width=17mm,anchor=west]{\textsf{\shortstack{vector\\registers}}};
-
-\end{scope}
-\end{tikzpicture}
+\registerstate{64,4}{128,8}{512,16}{64,63}{64,63}{0}{4}
 \caption{\emph{vector-min} configuration register state.}
 \label{fig:glyph-register-state-vector-min}
 \end{figure}
@@ -1576,93 +1423,9 @@ profile is comprised of:
 the following diagram shows the \emph{vector-max} configuration
 register state:
 \\
-
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[xscale=0.5, yscale=0.45]
-\begin{scope}[every node/.style={font=\small, inner sep=0pt, right}]
-\foreach \x in {0,...,7} {
-  \ifnum\x=6\relax
-    % skip r6
-  \else
-    \fill [black!5] (8,7-\x)    rectangle (16,8-\x);
-  \fi
-}
-\foreach \x in {0,...,7} {
-\ifnum\x=6\relax
-    % skip r6
-  \else
-    \draw [black] (8,7-\x)    rectangle (16,8-\x);
-  \fi
-}
-\foreach \x in {0,...,5}
-  \node [font=\scriptsize, anchor=base] at (12,{7.25-\x}) {\textsf{r\x}};
-\foreach \x in {0,...,7} {
-  \ifnum\x=6\relax
-    % skip r6
-  \else
-    \fill [black!5] (0,-1-\x)    rectangle (16,-2-\x);
-  \fi
-}
-\foreach \x in {0,...,7} {
-\ifnum\x=6\relax
-    % skip r6
-  \else
-    \draw [black] (0,-1-\x)    rectangle (16,-2-\x);
-  \fi
-}
-\foreach \x in {0,...,5}
-  \node [font=\scriptsize, anchor=base] at (8,{-1.75-\x}) {\textsf{v\x}};
-
-\foreach \x in {1,...,31} {
-  \draw[black!20] (0.5*\x,-1) -- (0.5*\x,-7);
-  \draw[black!20] (0.5*\x,-8) -- (0.5*\x,-9);
-}
-
-\node[black!50, font=\large] at (12,1.70) {$\vdots$};
-\node[black!50, font=\large] at (8,-7.30) {$\vdots$};
-
-\node [font=\scriptsize, anchor=base] at (12,0.25) {\textsf{r63}};
-\node [font=\scriptsize, anchor=base] at (8,-8.75) {\textsf{v63}};
-
-\node [font=\tiny,anchor=base west] at (12,11.2)  {\textsf{64}};
-\node [font=\tiny,anchor=base east] at (16,11.2)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (8,8.2)  {\textsf{128}};
-\node [font=\tiny,anchor=base east] at (16,8.2)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,-0.8)  {\textsf{4096}};
-\node [font=\tiny,anchor=base east] at (16,-0.8)  {\textsf{0}};
-
-\fill [black!15] (12,9)    rectangle (16,10);
-\draw [black]    (12,9)    rectangle (16,10);
-
-\fill [black!15] (12,10)    rectangle (16,11);
-\draw [black]    (12,10)    rectangle (16,11);
-
-\fill [black!15] (14,12)    rectangle (16,13);
-\draw [black]    (14,12)    rectangle (16,13);
-
-\node [font=\scriptsize,anchor=base] at (14,9.25)  {\textsf{ib}};
-\node [font=\scriptsize,anchor=base] at (14,10.25)  {\textsf{pc}};
-\node [font=\scriptsize,anchor=base] at (15,12.25)  {\textsf{flag}};
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
-    (16,12) -- (16,13) node[midway,xshift=3mm,align=center,font=\scriptsize,
-        text width=17mm,anchor=west]{\textsf{\shortstack{predicate}}};
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
-    (16,9) -- (16,11) node[midway,xshift=3mm,align=center,font=\scriptsize,
-        text width=17mm,anchor=west]{\textsf{\shortstack{control\\registers}}};
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
-    (16,0) -- (16,8) node[midway,xshift=3mm,align=center,font=\scriptsize,
-        text width=17mm,anchor=west]{\textsf{\shortstack{scalar\\registers}}};
-
-\draw [decorate,decoration={brace,amplitude=5pt,mirror,raise=2mm}]
-    (16,-9) -- (16,-1) node[midway,xshift=3mm,align=center,font=\scriptsize,
-        text width=17mm,anchor=west]{\textsf{\shortstack{vector\\registers}}};
-
-\end{scope}
-\end{tikzpicture}
+\registerstate{64,4}{124,8}{4096,16}{64,63}{64,63}{0}{32}
 \caption{\emph{vector-max} configuration register state.}
 \label{fig:glyph-register-state-vector-max}
 \end{figure}
