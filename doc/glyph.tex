@@ -1144,14 +1144,20 @@ this section details the layout of the \isize-bit instruction forms:
   % operand fields: dispatched by form
   \ifnum\p<2
     \def\nA{\cAn}\def\nB{\cBn}\def\nC{\cCn}
-    \pgfmathsetmacro{\rlo}{int(\blA*\p)}        \pgfmathsetmacro{\rhi}{int(\blA*(\p+1)-1)}
-    \pgfmathsetmacro{\slo}{int(\blB*\p)}        \pgfmathsetmacro{\shi}{int(\blB*(\p+1)-1)}
-    \pgfmathsetmacro{\tlo}{int(\blC*\p)}        \pgfmathsetmacro{\thi}{int(\blC*(\p+1)-1)}
+    \pgfmathsetmacro{\rlo}{int(\blA*\p)}
+    \pgfmathsetmacro{\rhi}{int(\blA*(\p+1)-1)}
+    \pgfmathsetmacro{\slo}{int(\blB*\p)}
+    \pgfmathsetmacro{\shi}{int(\blB*(\p+1)-1)}
+    \pgfmathsetmacro{\tlo}{int(\blC*\p)}
+    \pgfmathsetmacro{\thi}{int(\blC*(\p+1)-1)}
   \else
     \def\nA{\cDn}\def\nB{\cEn}\def\nC{\cFn}
-    \pgfmathsetmacro{\rlo}{int(\blA*(\p-\boA))}     \pgfmathsetmacro{\rhi}{int(\blA*(\p-\boA+1)-1)}
-    \pgfmathsetmacro{\slo}{int(\blB*(\p-\boB))}     \pgfmathsetmacro{\shi}{int(\blB*(\p-\boB+1)-1)}
-    \pgfmathsetmacro{\tlo}{int(\blC*(\p-\boC))}     \pgfmathsetmacro{\thi}{int(\blC*(\p-\boC+1)-1)}
+    \pgfmathsetmacro{\rlo}{int(\blA*(\p-\boA))}
+    \pgfmathsetmacro{\rhi}{int(\blA*(\p-\boA+1)-1)}
+    \pgfmathsetmacro{\slo}{int(\blB*(\p-\boB))}
+    \pgfmathsetmacro{\shi}{int(\blB*(\p-\boB+1)-1)}
+    \pgfmathsetmacro{\tlo}{int(\blC*(\p-\boC))}
+    \pgfmathsetmacro{\thi}{int(\blC*(\p-\boC+1)-1)}
   \fi
   \edef\brA{[\rhi:\rlo]}\edef\brB{[\shi:\slo]}\edef\brC{[\thi:\tlo]}
   \ifcase\fcount
