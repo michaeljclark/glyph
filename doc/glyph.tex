@@ -2407,6 +2407,43 @@ this example omits hazard detection and forwarding logic for the sake of simplic
 
 \chapter{System}
 
+\newcommand{\registerspec}[3]{%
+  \pgfmathsetmacro{\scl}{#2/#1}%
+  \edef\xinit{#2}%
+  \par\noindent%
+  \begin{tikzpicture}[scale=0.45]
+  \draw [black] (0,0)    rectangle (#2,1);
+  \foreach \bl/\rlt/\mlt/\llt/\lm
+    [remember=\xl as \xr (initially \xinit)]
+    in {#3} {
+    \pgfmathtruncatemacro{\isneg}{\bl<0 ? 1 : 0}%
+    \pgfmathtruncatemacro{\bl}{abs(\bl)}%
+    \pgfmathsetmacro{\xl}{\xr - \bl*\scl}%
+    \pgfmathsetmacro{\xm}{(\xr+\xl)/2}%
+    \ifnum\isneg=1
+      \foreach \b in {0,...,\numexpr\bl-1\relax} {
+        \pgfmathsetmacro{\bxl}{\xr - (\b+1)*\scl}%
+        \pgfmathsetmacro{\bxr}{\xr - \b*\scl}%
+        \draw[black!25,dashed] (\bxl,0) rectangle (\bxr,1);
+      }
+    \fi
+    \draw[black] (\xl,0) rectangle (\xr,1);
+    \ifx\rlt\empty\else
+      \node[font=\tiny,anchor=base east] at (\xr,1.25) {\textsf{\rlt}};
+    \fi
+    \ifx\mlt\empty\else
+      \node[font=\tiny,anchor=base]      at (\xm,1.25) {\textsf{\mlt}};
+    \fi
+    \ifx\llt\empty\else
+      \node[font=\tiny,anchor=base west] at (\xl,1.25) {\textsf{\llt}};
+    \fi
+    \ifx\lm\empty\else
+      \node[font=\small,anchor=base]     at (\xm,0.25) {\lm};
+    \fi
+  }
+  \end{tikzpicture}%
+}
+
 \section{User-level registers}
 the architecture provides several user-level status and control registers
 for floating-point status and control, clock time, clock frequency,
@@ -2463,25 +2500,13 @@ information for floating-point operations. the \texttt{Z, O, U, X,}
 and \texttt{I} fields contain accrued floating-point exceptions.
 this register is visible if \texttt{scontrol.F} is enabled.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{I}};
-\draw [black] (30,0)    rectangle (31,1);
-\node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
-\node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{X}};
-\draw [black] (29,0)    rectangle (30,1);
-\node [font=\tiny,anchor=base] at (29.5,1.25)  {\textsf{2}};
-\node [font=\small,anchor=base] at (29.5,0.25)  {\texttt{U}};
-\draw [black] (28,0)    rectangle (29,1);
-\node [font=\tiny,anchor=base] at (28.5,1.25)  {\textsf{3}};
-\node [font=\small,anchor=base] at (28.5,0.25)  {\texttt{O}};
-\draw [black] (27,0)    rectangle (28,1);
-\node [font=\tiny,anchor=base] at (27.5,1.25)  {\textsf{4}};
-\node [font=\small,anchor=base] at (27.5,0.25)  {\texttt{Z}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  1//{0}//\texttt{I},%
+  1//{1}//\texttt{X},%
+  1//{2}//\texttt{U},%
+  1//{3}//\texttt{O},%
+  1//{4}//\texttt{Z}%
+}
 
 \begin{table}[h]
 \centering
@@ -2512,20 +2537,11 @@ the \texttt{N} field enables \emph{not-strict-ieee754}, allowing
 \emph{fused-multiply-add} and other optimizations that may affect
 precision. this register is visible if \texttt{scontrol.F} is enabled.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{Z}};
-\draw [black] (30,0)    rectangle (31,1);
-\node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
-\node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{N}};
-\draw [black] (28,0)    rectangle (30,1);
-\node [font=\tiny,anchor=base] at (29.5,1.25)  {\textsf{2}};
-\node [font=\tiny,anchor=base] at (28.5,1.25)  {\textsf{3}};
-\node [font=\small,anchor=base] at (29,0.25)  {\texttt{RM}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  1//{0}//\texttt{Z},%
+  1//{1}//\texttt{N},%
+  2/{2}//{3}/\texttt{RM}%
+}
 
 \begin{table}[h]
 \centering
@@ -2572,13 +2588,9 @@ the section describes the user-level clock and frequency registers.
 tick counter since power on in clock tick units denoted by \texttt{cfreq}.
 this register is visible if \texttt{scontrol.T} is enabled.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{ALEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{clock time}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  64/{0}//{ALEN-1}/\emph{clock time}%
+}
 
 \subsubsection{clock frequency (\texttt{cfreq})}
 \texttt{cfreq} is a read-only register containing the wall-clock
@@ -2586,13 +2598,9 @@ tick interval in picoseconds; \(\frac{10^{12}}{f} \) where \( f \)
 is the frequency in Hertz (Hz).
 this register is visible if \texttt{scontrol.T} is enabled.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{ALEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{clock frequency}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  64/{0}//{ALEN-1}/\emph{clock frequency}%
+}
 
 \subsection{thread address registers}
 the section describes the user-level thread address registers.
@@ -2602,30 +2610,20 @@ the section describes the user-level thread address registers.
 system-wide machine address for this thread from \texttt{saddress}.
 this register is visible if \texttt{scontrol.D} is enabled.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (2,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{machine address}};
-\node [font=\small,anchor=base] at (1,0.25)  {\texttt{0001}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  60/{0}///\emph{machine address},%
+  4///{MLEN-1}/\texttt{0001}%
+}
 
 \subsubsection{user domain address (\texttt{domain})}
 \texttt{domain} is a read-only register containing an alias of the
 system-wide domain address for this thread from \texttt{sdomain}.
 this register is visible if \texttt{scontrol.D} is enabled.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (2,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{domain address}};
-\node [font=\small,anchor=base] at (1,0.25)  {\texttt{1110}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  60/{0}///\emph{domain address},%
+  4///{MLEN-1}/\texttt{1110}%
+}
 
 \newpage
 \section{System registers}
@@ -2708,16 +2706,10 @@ the section describes the privileged trap registers.
 the \texttt{T} field indicates whether a timer interrupt is pending.
 the \texttt{M} field indicates whether a message interrupt is pending.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{T}};
-\draw [black] (30,0)    rectangle (31,1);
-\node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
-\node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{M}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  1//{0}//\texttt{T},%
+  1//{1}//\texttt{M}%
+}
 
 \begin{table}[h]
 \centering
@@ -2741,13 +2733,9 @@ the \texttt{M} field indicates whether a message interrupt is pending.
 \texttt{I} field is read-write and controls whether system interrupts
 are enabled.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{I}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  1//{0}//\texttt{I}%
+}
 
 \begin{table}[h]
 \centering
@@ -2768,27 +2756,18 @@ are enabled.
 \subsubsection{trap scratch (\texttt{tscratch})}
 \texttt{tscratch} is a read-write save register for use during trap handling.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{XLEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{scratch value}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  64/{0}//{XLEN-1}/\emph{scratch value}%
+}
 
 \newpage
 \subsubsection{trap cause (\texttt{tcause})}
 \texttt{tcause} is a read-only register that contains the cause of the
 current trap.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (29,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (29,1.25)  {\textsf{5}};
-\node [font=\small,anchor=base] at (30.5,0.25)  {\emph{cause}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  6/{0}//{5}/\emph{cause}%
+}
 
 \begin{table}[h]
 \centering
@@ -2840,13 +2819,9 @@ and may contain:
 \item the system clock time for \emph{timer interrupts}.
 \end{itemize}
 
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{XLEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{trap value}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  64/{0}//{XLEN-1}/\emph{trap value}%
+}
 
 \newpage
 \subsubsection{trap acknowledge (\texttt{tack})}
@@ -2854,62 +2829,41 @@ and may contain:
 to acknowledge the trap so that interrupts are not delivered
 while state is being saved, and for double-faults to be detected.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (29,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (29,1.25)  {\textsf{5}};
-\node [font=\small,anchor=base] at (30.5,0.25)  {\emph{cause}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  6/{0}//{5}/\emph{cause}%
+}
 
 \subsubsection{trap exception program counter (\texttt{tepc})}
 \texttt{tepc} is a read-only register which contains the \emph{program
 counter} address before the trap.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{ALEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{program counter}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  64/{0}//{ALEN-1}/\emph{program counter}%
+}
 
 \subsubsection{trap exception immediate base (\texttt{teib})}
 \texttt{teib} is a read-only register which contains the \emph{immediate
 base} address before the trap.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{ALEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{immediate base}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  64/{0}//{ALEN-1}/\emph{immediate base}%
+}
 
 \subsubsection{trap handler program counter (\texttt{thpc})}
 \texttt{thpc} is a read-write register containing the address of the
 system trap handler routine.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{ALEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{program counter}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  64/{0}//{ALEN-1}/\emph{program counter}%
+}
 
 \subsubsection{trap handler immediate base (\texttt{thib})}
 \texttt{thib} is a read-write register containing the address of the
 system trap handler constants.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{ALEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{immediate base}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  64/{0}//{ALEN-1}/\emph{immediate base}%
+}
 
 \newpage
 \subsection{privileged system registers}
@@ -2918,13 +2872,9 @@ the section describes the privileged system registers.
 \subsubsection{system status (\texttt{sstatus})}
 \texttt{sstatus} is a read-only register containing system status bits.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{E}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  1//{0}//\texttt{E}
+}
 
 \begin{table}[h]
 \centering
@@ -2945,25 +2895,13 @@ the section describes the privileged system registers.
 \subsubsection{system control (\texttt{scontrol})}
 \texttt{scontrol} is a read-write register containing system control bits.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{F}};
-\draw [black] (30,0)    rectangle (31,1);
-\node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
-\node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{T}};
-\draw [black] (29,0)    rectangle (30,1);
-\node [font=\tiny,anchor=base] at (29.5,1.25)  {\textsf{2}};
-\node [font=\small,anchor=base] at (29.5,0.25)  {\texttt{D}};
-\draw [black] (28,0)    rectangle (29,1);
-\node [font=\tiny,anchor=base] at (28.5,1.25)  {\textsf{3}};
-\node [font=\small,anchor=base] at (28.5,0.25)  {\texttt{A}};
-\draw [black] (27,0)    rectangle (28,1);
-\node [font=\tiny,anchor=base] at (27.5,1.25)  {\textsf{4}};
-\node [font=\small,anchor=base] at (27.5,0.25)  {\texttt{E}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  1//{0}//\texttt{F},%
+  1//{1}//\texttt{T},%
+  1//{2}//\texttt{D},%
+  1//{3}//\texttt{A},%
+  1//{4}//\texttt{E}%
+}
 
 \begin{table}[h]
 \centering
@@ -2988,25 +2926,13 @@ the section describes the privileged system registers.
 \subsubsection{system feature (\texttt{sfeature})}
 \texttt{sfeature} is a read-only register containing system feature bits.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{F}};
-\draw [black] (30,0)    rectangle (31,1);
-\node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
-\node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{T}};
-\draw [black] (29,0)    rectangle (30,1);
-\node [font=\tiny,anchor=base] at (29.5,1.25)  {\textsf{2}};
-\node [font=\small,anchor=base] at (29.5,0.25)  {\texttt{D}};
-\draw [black] (28,0)    rectangle (29,1);
-\node [font=\tiny,anchor=base] at (28.5,1.25)  {\textsf{3}};
-\node [font=\small,anchor=base] at (28.5,0.25)  {\texttt{A}};
-\draw [black] (27,0)    rectangle (28,1);
-\node [font=\tiny,anchor=base] at (27.5,1.25)  {\textsf{4}};
-\node [font=\small,anchor=base] at (27.5,0.25)  {\texttt{E}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  1//{0}//\texttt{F},%
+  1//{1}//\texttt{T},%
+  1//{2}//\texttt{D},%
+  1//{3}//\texttt{A},%
+  1//{4}//\texttt{E}%
+}
 
 \begin{table}[h]
 \centering
@@ -3034,22 +2960,11 @@ the section describes the privileged system registers.
 version number described by its \emph{major}, \emph{minor}, and \emph{patch}
 fields. the allowable values are specified in the following table.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (28,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (28,1.25)  {\textsf{7}};
-\node [font=\small,anchor=base] at (30,0.25)  {\emph{patch}};
-\draw [black] (24.0,0)   rectangle (28,1);
-\node [font=\tiny,anchor=base east] at (28,1.25)  {\textsf{8}};
-\node [font=\tiny,anchor=base west] at (24,1.25)  {\textsf{15}};
-\node [font=\small,anchor=base] at (26.0,0.25)  {\emph{minor}};
-\draw [black] (20.0,0)   rectangle (24.0,1);
-\node [font=\tiny,anchor=base east] at (24,1.25)  {\textsf{16}};
-\node [font=\tiny,anchor=base west] at (20,1.25)  {\textsf{23}};
-\node [font=\small,anchor=base] at (22.0,0.25)  {\emph{major}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  8/{0}//{7}/\emph{patch},%
+  8/{8}//{15}/\emph{minor},%
+  8/{16}//{23}/\emph{major}%
+}
 
 \begin{table}[h]
 \centering
@@ -3072,22 +2987,11 @@ fields. the allowable values are specified in the following table.
 physical address for address translation on this thread. the \emph{ASID}
 field contains the address space identifier for this thread.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (26,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (26,1.25)  {\textsf{11}};
-\node [font=\small,anchor=base] at (29,0.25)  {\emph{ASID}};
-\draw [black] (8.0,0)   rectangle (26,1);
-\node [font=\tiny,anchor=base east] at (26,1.25)  {\textsf{12}};
-\node [font=\tiny,anchor=base west] at (8,1.25)  {\textsf{47}};
-\node [font=\small,anchor=base] at (17.0,0.25)  {\emph{physical page number}};
-\draw [black] (0.0,0)   rectangle (8.0,1);
-\node [font=\tiny,anchor=base east] at (8,1.25)  {\textsf{48}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{63}};
-\node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  12/{0}//{11}/\emph{ASID},%
+  36/{12}//{47}/\emph{physical page number},%
+  16/{48}//{63}/\emph{sign extended}%
+}
 
 \subsubsection{system machine address (\texttt{saddress})}
 \texttt{saddress} is a read-only register containing the unique system-wide
@@ -3097,16 +3001,10 @@ this address must not alias across processors.
 this address is assigned during context switching.
 these addresses must be unique per-domain on all processors.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (2,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{machine address}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
-\node [font=\small,anchor=base] at (1,0.25)  {\texttt{0001}};
-
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  60/{0}///\emph{machine address},%
+  4///{MLEN-1}/\texttt{0001}%
+}
 
 \subsubsection{system domain address (\texttt{sdomain})}
 \texttt{sdomain} is a read-only register containing the system-wide
@@ -3116,15 +3014,10 @@ this address may alias across processors.
 this address is assigned during context switching.
 these addresses must be unique per-domain on one processor.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (2,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{domain address}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
-\node [font=\small,anchor=base] at (1,0.25)  {\texttt{1110}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  60/{0}///\emph{domain address},%
+  4///{MLEN-1}/\texttt{1110}%
+}
 
 \newpage
 \subsubsection{system target address (\texttt{starget})}
@@ -3139,28 +3032,19 @@ this register must be set before writing to \texttt{smessage}.
 \item \texttt{1110?} prefix is a \emph{domain address}.
 \end{itemize}
 
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (2,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{target address}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
-\node [font=\small,anchor=base] at (1,0.25)  {\texttt{AS}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  60/{0}///\emph{target address},%
+  4///{MLEN-1}/\texttt{AS}%
+}
 
 \subsubsection{system target mask (\texttt{smask})}
 \texttt{smask} is a read-write register containing the system-wide
 address mask of a set of threads to send message interrupts to.
 this register must be set before writing to \texttt{smessage}.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{target mask}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  64/{0}//{MLEN-1}/\emph{target mask}%
+}
 
 \subsubsection{system target message (\texttt{smessage})}
 \texttt{smessage} is a write-only register that causes an edge-triggered
@@ -3171,13 +3055,9 @@ of the receiving threads. message interrupt queuing can fail due to
 \emph{head-of-line blocking} or other transport faults. \texttt{sstatus.E}
 is set if the most recent message was discarded due to an exception.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{message signal}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  64/{0}//{MLEN-1}/\emph{message signal}%
+}
 
 \subsubsection{system deadline timer (\texttt{stimer})}
 \texttt{stimer} is a read-write register containing the deadline timer
@@ -3186,40 +3066,26 @@ register, a \emph{timer interrupt} is triggered.
 timer interrupts are marked pending in the \texttt{T} field of the
 \texttt{tstatus} register.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{ALEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{clock time}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  64/{0}//{ALEN-1}/\emph{clock time}%
+}
 
 \newpage
 \subsubsection{system interrupt enable (\texttt{sie})}
 \texttt{sie} is a read-write register that contains interrupt enable flags
 for 32 wired interrupt pins.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (16,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (16,1.25)  {\textsf{31}};
-\node [font=\small,anchor=base] at (24,0.25)  {\emph{interrupt enable 0-31}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  32/{0}//{31}/\emph{interrupt enable 0-31}%
+}
 
 \subsubsection{system interrupt pending (\texttt{sip})}
 \texttt{sip} is a read-only register that contains interrupt pending flags
 for 32 wired interrupt pins.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (16,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (16,1.25)  {\textsf{31}};
-\node [font=\small,anchor=base] at (24,0.25)  {\emph{interrupt pending 0-31}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  32/{0}//{31}/\emph{interrupt pending 0-31}%
+}
 
 \newpage
 \subsection{privileged debug registers}
@@ -3229,21 +3095,12 @@ the section describes the privileged debug registers.
 \texttt{dstatus} is a read-only register containing status bits for debug
 monitor exceptions.
 \\
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{S}};
-\draw [black] (30,0)    rectangle (31,1);
-\node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
-\node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{F}};
-\draw [black] (29,0)    rectangle (30,1);
-\node [font=\tiny,anchor=base] at (29.5,1.25)  {\textsf{2}};
-\node [font=\small,anchor=base] at (29.5,0.25)  {\texttt{R}};
-\draw [black] (28,0)    rectangle (29,1);
-\node [font=\tiny,anchor=base] at (28.5,1.25)  {\textsf{3}};
-\node [font=\small,anchor=base] at (28.5,0.25)  {\texttt{W}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  1//{0}//\texttt{S},%
+  1//{1}//\texttt{F},%
+  1//{2}//\texttt{R},%
+  1//{3}//\texttt{W}%
+}
 
 \begin{table}[h]
 \centering
@@ -3268,37 +3125,25 @@ monitor exceptions.
 \texttt{dcycle} is a read-only register containing the number of cycles
 retired since power on.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{ALEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{cycle counter}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  64/{0}//{ALEN-1}/\emph{cycle counter}%
+}
 
 \subsubsection{debug instruction counter (\texttt{dinst})}
 \texttt{dinst} is a read-only register containing the number of instructions
 retired since power on.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{ALEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{instruction counter}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  64/{0}//{ALEN-1}/\emph{instruction counter}%
+}
 
 \subsubsection{debug stop instruction (\texttt{dstop})}
 \texttt{dstop} is a read-write register containing an instruction number
 to halt execution on and raise a \emph{debug monitor exception}.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{ALEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{stopping instruction}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  64/{0}//{ALEN-1}/\emph{stopping instruction}%
+}
 
 \newpage
 \subsubsection{debug monitor fetch address (\texttt{dfetch})}
@@ -3306,39 +3151,27 @@ to halt execution on and raise a \emph{debug monitor exception}.
 to monitor for and halt execution on and raise a \emph{debug monitor
 exception} for a matching memory fetch address.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{ALEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{fetch address}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  64/{0}//{ALEN-1}/\emph{fetch address}%
+}
 
 \subsubsection{debug monitor read address (\texttt{dread})}
 \texttt{dread} is a read-write register containing the memory load
 address to monitor for and halt execution on and raise a \emph{debug
 monitor exception} for a matching memory load address.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{ALEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{read address}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  64/{0}//{ALEN-1}/\emph{read address}%
+}
 
 \subsubsection{debug monitor write address (\texttt{dwrite})}
 \texttt{dwrite} is a read-write register containing the memory store
 address to monitor for and halt execution on and raise a \emph{debug
 monitor exception} for a matching memory store address.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{ALEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{write address}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  64/{0}//{ALEN-1}/\emph{write address}%
+}
 
 \newpage
 \section{Capability extension}
@@ -3422,13 +3255,9 @@ the capability extension.
 \subsubsection{capability control (\texttt{ccontrol})}
 \texttt{ccontrol} is a read-write register containing capability control bits.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{C}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  1//{0}//\texttt{C}%
+}
 
 \begin{table}[h]
 \centering
@@ -3459,42 +3288,27 @@ are combined with page table permissions to limit maximum \emph{read},
 of \textbf{\emph{ncol}} bits containing read permissions for \emph{color-x},
 used to check loads from pages with a matching page table color.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (24,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{read perms}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  8/{0}//$\mathit{ncol}$/\emph{read perms}%
+}
 
 \subsubsection{color write permission (\texttt{colorwrite})}
 \texttt{colorwrite} is a read-write register containing an array
 of \textbf{\emph{ncol}} bits containing write permissions for \emph{color-x},
 used to check stores to pages with a matching page table color.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (24,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{write perms}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  8/{0}//$\mathit{ncol}$/\emph{write perms}%
+}
 
 \subsubsection{color exec permission (\texttt{colorexec})}
 \texttt{colorexec} is a read-write register containing an array
 of \textbf{\emph{ncol}} bits containing execute permissions for \emph{color-x},
 used to check execution in pages with a matching page table color.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (24,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{exec perms}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  8/{0}//$\mathit{ncol}$/\emph{exec perms}%
+}
 
 \newpage
 \subsection{capability role registers}
@@ -3515,14 +3329,9 @@ and \emph{machine}.
 registers, privileged system registers and privileged debug registers
 from executable pages with a matching page table color.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (24,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{system role}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  8/{0}//$\mathit{ncol}$/\emph{system role}%
+}
 
 \subsubsection{color domain role (\texttt{colordom})}
 \texttt{colordom} is a read-write register containing an array
@@ -3530,14 +3339,9 @@ of \textbf{\emph{ncol}} bits containing domain role for \emph{color-x}
 that are used to check access to privileged domain registers from
 executable pages with a matching page table color.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (24,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{domain role}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  8/{0}//$\mathit{ncol}$/\emph{domain role}%
+}
 
 \subsubsection{color capability role (\texttt{colorcap})}
 \texttt{colorcap} is a read-write register containing an array
@@ -3545,14 +3349,9 @@ of \textbf{\emph{ncol}} bits containing capability role for \emph{color-x}
 that are used to check access to privileged capability registers from
 executable pages with a matching page table color.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (24,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{capability role}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  8/{0}//$\mathit{ncol}$/\emph{capability role}%
+}
 
 \subsubsection{color machine role (\texttt{colormac})}
 \texttt{colormac} is a read-write register containing an array
@@ -3560,14 +3359,9 @@ of \textbf{\emph{ncol}} bits containing machine role for \emph{color-x}
 that are used to check access to privileged machine registers from
 executable pages with a matching page table color.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (24,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{machine role}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  8/{0}//$\mathit{ncol}$/\emph{machine role}%
+}
 
 \newpage
 \subsection{capability matrix registers}
@@ -3587,14 +3381,9 @@ permissions, used to check loads from executable pages with a
 matching register \emph{page table color} to memory addresses in
 memory pages with a matching \emph{page table color} index.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (24,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{read perms}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  8/{0}//$\mathit{ncol}$/\emph{read perms}%
+}
 
 \subsubsection{color matrix write permissions (\texttt{colormatwrite}$[\mathit{ncol}]$)}
 \texttt{colormatwrite}$[\mathit{ncol}]$ are \textbf{\emph{ncol}} read-write
@@ -3603,14 +3392,9 @@ permissions, used to check stores from executable pages with a
 matching register \emph{page table color} to memory addresses in
 memory pages with a matching \emph{page table color} index.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (24,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{write perms}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  8/{0}//$\mathit{ncol}$/\emph{write perms}%
+}
 
 %\subsubsection{color matrix exec permissions (\texttt{colormatexec}$[\mathit{ncol}]$)}
 %\texttt{colormatexec}$[\mathit{ncol}]$ are \textbf{\emph{ncol}} read-write
@@ -3619,14 +3403,9 @@ memory pages with a matching \emph{page table color} index.
 %matching register \emph{page table color} to branch addresses in
 %executable pages with a matching \emph{page table color} index.
 %\\
-%\par\noindent
-%\begin{tikzpicture}[scale=0.45]
-%\draw [black] (0,0)    rectangle (32,1);
-%\draw [black] (24,0)    rectangle (32,1);
-%\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-%\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ncol}$};
-%\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{exec perms}};
-%\end{tikzpicture}
+%\registerspec{32}{32}{%
+%  8/{0}//$\mathit{ncol}$/\emph{exec perms}%
+%}
 
 \newpage
 \section{Domain extension}
@@ -3709,13 +3488,9 @@ control the next domain number, and control valid domain transitions.
 \subsubsection{domain control (\texttt{domcontrol})}
 \texttt{domcontrol} is a read-write register containing domain control bits.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{V}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  1//{0}//\texttt{V}%
+}
 
 \begin{table}[h]
 \centering
@@ -3737,54 +3512,34 @@ control the next domain number, and control valid domain transitions.
 \texttt{domlast} is a read-only register containing the domain number
 of the last domain.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (28,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (28,1.25)  {$log_2(\mathit{ndom})$};
-\node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  4/{0}//$log_2(\mathit{ndom})$/\emph{domain}%
+}
 
 \subsubsection{domain number current (\texttt{domcurr})}
 \texttt{domcurr} is a read-only register containing the domain number
 of the current domain.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (28,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (28,1.25)  {$log_2(\mathit{ndom})$};
-\node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  4/{0}//$log_2(\mathit{ndom})$/\emph{domain}%
+}
 
 \subsubsection{domain number next (\texttt{domnext})}
 \texttt{domnext} is a read-write register containing the domain number
 of the next domain.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (28,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (28,1.25)  {$log_2(\mathit{ndom})$};
-\node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  4/{0}//$log_2(\mathit{ndom})$/\emph{domain}%
+}
 
 \subsubsection{domain matrix (\texttt{dommatrix}$[\mathit{ndom}]$)}
 \texttt{dommatrix}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing a matrix of the domains that the current domain is
 allowed to transition to as the next domain.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (24,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (24,1.25)  {$\mathit{ndom}$};
-\node [font=\small,anchor=base] at (28.0,0.25)  {\emph{allowed domains}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  8/{0}//$\mathit{ndom}$/\emph{allowed domains}%
+}
 
 \newpage
 \subsection{domain routing registers}
@@ -3798,70 +3553,45 @@ and message traps.
 registers containing the domain number of the domain that system traps
 are routed to.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (28,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (28,1.25)  {$log_2(\mathit{ndom})$};
-\node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  4/{0}//$log_2(\mathit{ndom})$/\emph{domain}%
+}
 
 \subsubsection{domain domain default domain (\texttt{domdom}$[\mathit{ndom}]$)}
 \texttt{domdom}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing the domain number of the domain that domain traps
 are routed to.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (28,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (28,1.25)  {$log_2(\mathit{ndom})$};
-\node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  4/{0}//$log_2(\mathit{ndom})$/\emph{domain}%
+}
 
 \subsubsection{domain capability default domain (\texttt{domcap}$[\mathit{ndom}]$)}
 \texttt{domcap}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing the domain number of the domain that capability traps
 are routed to.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (28,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (28,1.25)  {$log_2(\mathit{ndom})$};
-\node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  4/{0}//$log_2(\mathit{ndom})$/\emph{domain}%
+}
 
 \subsubsection{domain machine default domain (\texttt{dommac}$[\mathit{ndom}]$)}
 \texttt{dommac}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing the domain number of the domain that machine traps
 are routed to.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (28,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (28,1.25)  {$log_2(\mathit{ndom})$};
-\node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  4/{0}//$log_2(\mathit{ndom})$/\emph{domain}%
+}
 
 \subsubsection{domain message default domain (\texttt{dommsg}$[\mathit{ndom}]$)}
 \texttt{dommsg}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing the domain number of the domain that asynchronous
 interrupts are routed to.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (28,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (28,1.25)  {$log_2(\mathit{ndom})$};
-\node [font=\small,anchor=base] at (30.0,0.25)  {\emph{domain}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  4/{0}//$log_2(\mathit{ndom})$/\emph{domain}%
+}
 
 \newpage
 \subsection{domain context registers}
@@ -3875,13 +3605,9 @@ functions for domain context switching.
 registers containing an array of the scratch values associated with each
 domain.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{domain scratch}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{XLEN-1}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  64/{0}//{XLEN-1}/\emph{domain scratch}%
+}
 
 \subsubsection{domain address (\texttt{domaddr}$[\mathit{ndom}]$)}
 \texttt{domaddr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
@@ -3890,63 +3616,39 @@ domain. these addresses must be unique per-domain on one processor;
 otherwise, behavior is implementation-defined.
 domain address prefix is unary \texttt{1110}.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (2,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{domain address}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
-\node [font=\small,anchor=base] at (1,0.25)  {\texttt{1110}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  60/{0}///\emph{domain address},%
+  4///{MLEN-1}/\texttt{1110}%
+}
 
 \subsubsection{domain page table root (\texttt{domptr}$[\mathit{ndom}]$)}
 \texttt{domptr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the page table root physical addresses for
 address translation in each domain.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (26,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (26,1.25)  {\textsf{11}};
-\node [font=\small,anchor=base] at (29,0.25)  {\emph{ASID}};
-\draw [black] (8.0,0)   rectangle (26,1);
-\node [font=\tiny,anchor=base east] at (26,1.25)  {\textsf{12}};
-\node [font=\tiny,anchor=base west] at (8,1.25)  {\textsf{47}};
-\node [font=\small,anchor=base] at (17.0,0.25)  {\emph{physical page number}};
-\draw [black] (0.0,0)   rectangle (8.0,1);
-\node [font=\tiny,anchor=base east] at (8,1.25)  {\textsf{48}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{63}};
-\node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  12/{0}//{11}/\emph{ASID},%
+  36/{12}//{47}/\emph{physical page number},%
+  16/{48}//{63}/\emph{sign extended}%
+}
 
 \subsubsection{domain trap handler program counter (\texttt{domthpc}$[\mathit{ndom}]$)}
 \texttt{domthpc}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the addresses for the domain trap handler
 routines in each domain.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{ALEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{program counter}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  64/{0}//{ALEN-1}/\emph{program counter}%
+}
 
 \subsubsection{domain trap handler immediate base (\texttt{domthib}$[\mathit{ndom}]$)}
 \texttt{domthib}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the addresses for the domain trap handler
 constants in each domain.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{ALEN-1}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{immediate base}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  64/{0}//{ALEN-1}/\emph{immediate base}%
+}
 
 \newpage
 \section{Machine extension}
@@ -3998,19 +3700,11 @@ control and features.
 \subsubsection{machine control (\texttt{mcontrol})}
 \texttt{mcontrol} is a read-write register containing machine control bits.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{V}};
-\draw [black] (30,0)    rectangle (31,1);
-\node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
-\node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{P}};
-\draw [black] (29,0)    rectangle (30,1);
-\node [font=\tiny,anchor=base] at (29.5,1.25)  {\textsf{2}};
-\node [font=\small,anchor=base] at (29.5,0.25)  {\texttt{S}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  1//{0}//\texttt{V},%
+  1//{1}//\texttt{P},%
+  1//{2}//\texttt{S}%
+}
 
 \begin{table}[h]
 \centering
@@ -4033,19 +3727,11 @@ control and features.
 \subsubsection{machine feature (\texttt{mfeature})}
 \texttt{mfeature} is a read-only register containing machine feature bits.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (31,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.5,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (31.5,0.25)  {\texttt{V}};
-\draw [black] (30,0)    rectangle (31,1);
-\node [font=\tiny,anchor=base] at (30.5,1.25)  {\textsf{1}};
-\node [font=\small,anchor=base] at (30.5,0.25)  {\texttt{P}};
-\draw [black] (29,0)    rectangle (30,1);
-\node [font=\tiny,anchor=base] at (29.5,1.25)  {\textsf{2}};
-\node [font=\small,anchor=base] at (29.5,0.25)  {\texttt{S}};
-\end{tikzpicture}
+\registerspec{32}{32}{%
+  1//{0}//\texttt{V},%
+  1//{1}//\texttt{P},%
+  1//{2}//\texttt{S}%
+}
 
 \begin{table}[h]
 \centering
@@ -4076,15 +3762,10 @@ domain. these addresses must be unique per-domain on all processors;
 otherwise, behavior is implementation-defined.
 machine address prefix is unary \texttt{0001}.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (2,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (16,0.25)  {\emph{machine address}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{MLEN-1}};
-\node [font=\small,anchor=base] at (1,0.25)  {\texttt{0001}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  60/{0}///\emph{machine address},%
+  4///{MLEN-1}/\texttt{0001}%
+}
 
 \newpage
 \subsection{machine memory registers}
@@ -4098,49 +3779,22 @@ as part of a software-defined MMU\footnote{Memory Management Unit}.
 \texttt{mtlbkey} is a read-only register containing the machine fault
 translation virtual address for the current page translation miss fault.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (26,0)   rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (26,1.25)  {\textsf{11}};
-\node [font=\small,anchor=base] at (29,0.25)  {\emph{page offset}};
-\draw [black] (8.0,0)   rectangle (26,1);
-\node [font=\tiny,anchor=base east] at (26,1.25)  {\textsf{12}};
-\node [font=\tiny,anchor=base west] at (10.5,1.25)  {\textsf{42}};
-\node [font=\small,anchor=base] at (18.0,0.25)  {\emph{page number}};
-\draw [black!25,dashed] (8.0,0)      rectangle (8.5,1);
-\draw [black!25,dashed] (8.5,0)      rectangle (9.0,1);
-\draw [black!25,dashed] (9.0,0)      rectangle (9.5,1);
-\draw [black!25,dashed] (9.5,0)      rectangle (10.0,1);
-\draw [black!25,dashed] (10.0,0)      rectangle (10.5,1);
-\draw [black] (8.0,0)   rectangle (10.5,1);
-\node [font=\tiny,anchor=base east]  at (10.5,1.25)   {\textsf{43}};
-\node [font=\tiny,anchor=base west]  at (8,1.25)  {\textsf{47}};
-\node [font=\small,anchor=base] at (9.25,0.25) {\texttt{AS}};
-\draw [black] (0.0,0)   rectangle (8.0,1);
-\node [font=\tiny,anchor=base east] at (8,1.25)  {\textsf{48}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{63}};
-\node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  12/{0}//{11}/\emph{ASID},%
+  31/{12}//{42}/\emph{page number},%
+  -5/{43}//{47}/\texttt{AS},%
+  16/{48}//{63}/\emph{sign extended}%
+}
 
 \subsubsection{machine translation lookaside buffer format (\texttt{mtlbfmt})}
 \texttt{mtlbfmt} is a read-write register containing the machine fault
 address space identifier and page table format for the current page
 translation miss fault.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (26,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (26,1.25)  {\textsf{11}};
-\node [font=\small,anchor=base] at (29,0.25)  {\emph{ASID}};
-\draw [black] (24,0)    rectangle (26,1);
-\node [font=\tiny,anchor=base east] at (26,1.25)  {\textsf{12}};
-\node [font=\tiny,anchor=base west] at (24,1.25)  {\textsf{15}};
-\node [font=\small,anchor=base] at (25,0.25)  {\emph{fmt}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  12/{0}//{11}/\emph{ASID},%
+  4/{12}//{15}/\emph{fmt}%
+}
 
 \begin{table}[h]
 \centering
@@ -4169,44 +3823,19 @@ and metadata bits in the same format as the metadata bits defined for page
 table entries. table~\ref{tab:64-bit-page-table-entry-fields} in the address
 translation section describes the metadata bits.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (31.5,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.75,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (31.75,0.3)  {\texttt{V}};
-\draw [black] (31.0,0)    rectangle (31.5,1);
-\node [font=\tiny,anchor=base] at (31.25,1.25)  {\textsf{1}};
-\node [font=\tiny,anchor=base] at (31.25,0.3)  {\texttt{R}};
-\draw [black] (30.5,0)    rectangle (31.0,1);
-\node [font=\tiny,anchor=base] at (30.75,1.25)  {\textsf{2}};
-\node [font=\tiny,anchor=base] at (30.75,0.3)  {\texttt{W}};
-\draw [black] (30.0,0)    rectangle (30.5,1);
-\node [font=\tiny,anchor=base] at (30.25,1.25)  {\textsf{3}};
-\node [font=\tiny,anchor=base] at (30.25,0.3)  {\texttt{X}};
-\draw [black] (29.5,0)    rectangle (30.0,1);
-\node [font=\tiny,anchor=base] at (29.75,1.25)  {\textsf{4}};
-\node [font=\tiny,anchor=base] at (29.75,0.3)  {\texttt{T}};
-\draw [black] (29.0,0)    rectangle (29.5,1);
-\node [font=\tiny,anchor=base] at (29.25,1.25)  {\textsf{5}};
-\node [font=\tiny,anchor=base] at (29.25,0.3)  {\texttt{G}};
-\draw [black] (28.5,0)    rectangle (29.0,1);
-\node [font=\tiny,anchor=base] at (28.75,1.25)  {\textsf{6}};
-\node [font=\tiny,anchor=base] at (28.75,0.3)  {\texttt{A}};
-\draw [black] (28.0,0)    rectangle (28.5,1);
-\node [font=\tiny,anchor=base] at (28.25,1.25)  {\textsf{7}};
-\node [font=\tiny,anchor=base] at (28.25,0.3)  {\texttt{D}};
-\node [font=\small,anchor=base] at (17,0.25)  {\emph{physical page number}};
-\draw [black] (0.0,0)   rectangle (26,1);
-\node [font=\tiny,anchor=base] at (27.5,1.25)  {\textsf{8}};
-\node [font=\tiny,anchor=base] at (26.5,1.25)  {\textsf{11}};
-\node [font=\small,anchor=base] at (27,0.25)  {\emph{color}};
-\node [font=\tiny,anchor=base] at (25.5,1.25)  {\textsf{12}};
-\draw [black] (0.0,0)   rectangle (8.0,1);
-\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
-\node [font=\tiny,anchor=base] at (7.5,1.25)  {\textsf{48}};
-\node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  1//{0}//\tiny\texttt{V},%
+  1//{1}//\tiny\texttt{R},%
+  1//{2}//\tiny\texttt{W},%
+  1//{3}//\tiny\texttt{X},%
+  1//{4}//\tiny\texttt{T},%
+  1//{5}//\tiny\texttt{G},%
+  1//{6}//\tiny\texttt{A},%
+  1//{7}//\tiny\texttt{D},%
+  4/{8}//{11}/\emph{color},%
+  36/{12}//{47}/\emph{physical page number},%
+  16/{48}//{63}/\emph{sign extended}%
+}
 
 \newpage
 \section{Environment extension}
@@ -4247,17 +3876,10 @@ with values for: \emph{diagnostic}, \emph{warm reset}, \emph{cold reset}
 and \emph{power off}. the \emph{cause code} field is recorded in an
 environment log.
 \\
-\par\noindent
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (0,0)    rectangle (4,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{63}};
-\node [font=\tiny,anchor=base east] at (4,1.25)  {\textsf{56}};
-\node [font=\tiny,anchor=base west] at (4,1.25)  {\textsf{55}};
-\node [font=\small,anchor=base] at (2,0.25)  {\texttt{OP}};
-\node [font=\small,anchor=base] at (16.5,0.25)  {\emph{cause code}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  56/{0}//{55}/\emph{cause code},%
+  8/{56}//{63}/\texttt{OP}%
+}
 
 \begin{table}[h]
 \centering
@@ -4329,44 +3951,19 @@ for \emph{leaf} entries.
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (31.5,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base] at (31.75,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base] at (31.75,0.3)  {\texttt{V}};
-\draw [black] (31.0,0)    rectangle (31.5,1);
-\node [font=\tiny,anchor=base] at (31.25,1.25)  {\textsf{1}};
-\node [font=\tiny,anchor=base] at (31.25,0.3)  {\texttt{R}};
-\draw [black] (30.5,0)    rectangle (31.0,1);
-\node [font=\tiny,anchor=base] at (30.75,1.25)  {\textsf{2}};
-\node [font=\tiny,anchor=base] at (30.75,0.3)  {\texttt{W}};
-\draw [black] (30.0,0)    rectangle (30.5,1);
-\node [font=\tiny,anchor=base] at (30.25,1.25)  {\textsf{3}};
-\node [font=\tiny,anchor=base] at (30.25,0.3)  {\texttt{X}};
-\draw [black] (29.5,0)    rectangle (30.0,1);
-\node [font=\tiny,anchor=base] at (29.75,1.25)  {\textsf{4}};
-\node [font=\tiny,anchor=base] at (29.75,0.3)  {\texttt{T}};
-\draw [black] (29.0,0)    rectangle (29.5,1);
-\node [font=\tiny,anchor=base] at (29.25,1.25)  {\textsf{5}};
-\node [font=\tiny,anchor=base] at (29.25,0.3)  {\texttt{G}};
-\draw [black] (28.5,0)    rectangle (29.0,1);
-\node [font=\tiny,anchor=base] at (28.75,1.25)  {\textsf{6}};
-\node [font=\tiny,anchor=base] at (28.75,0.3)  {\texttt{A}};
-\draw [black] (28.0,0)    rectangle (28.5,1);
-\node [font=\tiny,anchor=base] at (28.25,1.25)  {\textsf{7}};
-\node [font=\tiny,anchor=base] at (28.25,0.3)  {\texttt{D}};
-\node [font=\small,anchor=base] at (17,0.25)  {\emph{physical page number}};
-\draw [black] (0.0,0)   rectangle (26,1);
-\node [font=\tiny,anchor=base east] at (28,1.25)  {\textsf{8}};
-\node [font=\tiny,anchor=base west] at (26,1.25)  {\textsf{11}};
-\node [font=\small,anchor=base] at (27,0.25)  {\emph{color}};
-\node [font=\tiny,anchor=base east] at (26,1.25)  {\textsf{12}};
-\node [font=\tiny,anchor=base west] at (8,1.25)  {\textsf{47}};
-\draw [black] (0.0,0)   rectangle (8.0,1);
-\node [font=\tiny,anchor=base east] at (8,1.25)  {\textsf{48}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{63}};
-\node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  1//{0}//\tiny\texttt{V},%
+  1//{1}//\tiny\texttt{R},%
+  1//{2}//\tiny\texttt{W},%
+  1//{3}//\tiny\texttt{X},%
+  1//{4}//\tiny\texttt{T},%
+  1//{5}//\tiny\texttt{G},%
+  1//{6}//\tiny\texttt{A},%
+  1//{7}//\tiny\texttt{D},%
+  4/{8}//{11}/\emph{color},%
+  36/{12}//{47}/\emph{physical page number},%
+  16/{48}//{63}/\emph{sign extended}%
+}
 \caption{64-bit page table entry structure.}
 \label{fig:64-bit-pte-structure}
 \end{figure}
@@ -4406,30 +4003,12 @@ address structure is as follows:
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (26,0)   rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (26,1.25)  {\textsf{11}};
-\node [font=\small,anchor=base] at (29,0.25)  {\emph{page offset}};
-\draw [black] (8.0,0)   rectangle (26,1);
-\node [font=\tiny,anchor=base east] at (26,1.25)  {\textsf{12}};
-\node [font=\tiny,anchor=base west] at (10.5,1.25)  {\textsf{42}};
-\node [font=\small,anchor=base] at (18.0,0.25)  {\emph{page number}};
-\draw [black!25,dashed] (8.0,0)      rectangle (8.5,1);
-\draw [black!25,dashed] (8.5,0)      rectangle (9.0,1);
-\draw [black!25,dashed] (9.0,0)      rectangle (9.5,1);
-\draw [black!25,dashed] (9.5,0)      rectangle (10.0,1);
-\draw [black!25,dashed] (10.0,0)      rectangle (10.5,1);
-\draw [black] (8.0,0)   rectangle (10.5,1);
-\node [font=\tiny,anchor=base east]  at (10.5,1.25)   {\textsf{43}};
-\node [font=\tiny,anchor=base west]  at (8,1.25)  {\textsf{47}};
-\node [font=\small,anchor=base] at (9.25,0.25) {\texttt{AS}};
-\draw [black] (0.0,0)   rectangle (8.0,1);
-\node [font=\tiny,anchor=base east] at (8,1.25)  {\textsf{48}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{63}};
-\node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  12/{0}//{11}/\emph{page offset},%
+  31/{12}//{42}/\emph{page number},%
+  -5/{43}//{47}/\texttt{AS},%
+  16/{48}//{63}/\emph{sign extended}%
+}
 \caption{64-bit translation address structure.}
 \label{fig:64-bit-translation-address-structure}
 \end{figure}
@@ -4460,33 +4039,14 @@ address structure is as follows:
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=0.45]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (26,0)   rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (26,1.25)  {\textsf{11}};
-\node [font=\small,anchor=base] at (29,0.25)  {\emph{page offset}};
-\draw [black] (21.5,0)   rectangle (26,1);
-\node [font=\tiny,anchor=base east] at (26,1.25)  {\textsf{12}};
-\node [font=\tiny,anchor=base west] at (21.5,1.25)  {\textsf{20}};
-\node [font=\small,anchor=base] at (23.75,0.25)  {\emph{pn[0]}};
-\draw [black] (17.0,0)   rectangle (21.5,1);
-\node [font=\tiny,anchor=base east] at (21.5,1.25)  {\textsf{21}};
-\node [font=\tiny,anchor=base west] at (17,1.25)  {\textsf{29}};
-\node [font=\small,anchor=base] at (19.25,0.25)  {\emph{pn[1]}};
-\draw [black] (12.5,0)   rectangle (17.0,1);
-\node [font=\tiny,anchor=base east] at (17,1.25)  {\textsf{30}};
-\node [font=\tiny,anchor=base west] at (12.5,1.25)  {\textsf{38}};
-\node [font=\small,anchor=base] at (14.75,0.25)  {\emph{pn[2]}};
-\draw [black] (8.0,0)   rectangle (12.5,1);
-\node [font=\tiny,anchor=base east] at (12.5,1.25)  {\textsf{39}};
-\node [font=\tiny,anchor=base west] at (8,1.25)  {\textsf{47}};
-\node [font=\small,anchor=base] at (10.25,0.25)  {\emph{pn[3]}};
-\draw [black] (0.0,0)   rectangle (8.0,1);
-\node [font=\tiny,anchor=base east] at (8,1.25)  {\textsf{48}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{63}};
-\node [font=\small,anchor=base] at (4.0,0.25)  {\emph{sign extended}};
-\end{tikzpicture}
+\registerspec{64}{32}{%
+  12/{0}//{11}/\emph{page offset},%
+  9/{12}//{20}/\emph{pn[0]},%
+  9/{21}//{29}/\emph{pn[1]},%
+  9/{30}//{38}/\emph{pn[2]},%
+  9/{39}//{47}/\emph{pn[3]},%
+  16/{48}//{63}/\emph{sign extended}%
+}
 \caption{64-bit lookup virtual address structure.}
 \label{fig:64-bit-lookup-virtual-address-structure}
 \end{figure}
