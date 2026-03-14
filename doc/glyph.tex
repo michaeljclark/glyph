@@ -1176,7 +1176,7 @@ this section details the layout of the \isize-bit instruction forms:
 \newpage
 \section{Register file}
 
-\newcommand{\registefile}[8]{
+\newcommand{\registerfile}[8]{
   \pgfmathsetmacro{\zoffset}{#1}
   \pgfmathsetmacro{\zwidth}{#2}
   \pgfmathsetmacro{\zreg}{#3}
@@ -1248,10 +1248,10 @@ this section details the layout of the \isize-bit instruction forms:
   \pgfmathsetmacro{\xdiv}{#6}
   \pgfmathsetmacro{\vdiv}{#7}
 
-  \registefile{7}{\xw}{\xr}{\xdiv}{r}{\xlast}{\xlen}{scalar\\registers}
+  \registerfile{7}{\xw}{\xr}{\xdiv}{r}{\xlast}{\xlen}{scalar\\registers}
 
   \ifnum\vr>0\relax
-    \registefile{-2}{\vw}{\vr}{\vdiv}{v}{\vlast}{\vlen}{vector\\registers}
+    \registerfile{-2}{\vw}{\vr}{\vdiv}{v}{\vlast}{\vlen}{vector\\registers}
   \fi
 
   \node [font=\tiny,anchor=base west] at (16-\aw,11.2)  {\textsf{\alen}};
