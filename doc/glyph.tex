@@ -1,3 +1,4 @@
+% metadata
 \begin{filecontents}[force]{\jobname.xmpdata}
 \Title{GLYPH – a super regular RISC architecture}
 \Copyright{Copyright (c) 2024-2025 Michael Clark <michaeljclark@mac.com>}
@@ -6,105 +7,90 @@ decode\sep capabilities\sep virtual domains\sep address translation\sep
 software-defined MMU\sep message-signaled interrupts\sep virtual machine}
 \Language{en-US}
 \end{filecontents}
+
+% stylesheet
 \documentclass{scrreprt}
+
+% libraries
 \usepackage[x-1a]{pdfx}
 \usepackage[utf8]{inputenc}
-\usepackage{tikz}
 \usepackage[table]{xcolor}
+\usepackage{tikz}
 \usepackage{minitoc}
 \usepackage{fancyvrb}
 \usepackage{needspace}
 \usepackage{float}
 \usepackage{enumitem}
 \usepackage{caption}
-\usepackage{tgheros}
-\usepackage{bm}
-\usepackage{enumitem}
-\usepackage{cleveref}
 \usepackage{tabularx}
-\usepackage{tablefootnote}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{bm}
 \usepackage{montserrat}
 \usepackage[bitstream-charter]{mathdesign}
 \usepackage[backend=biber,style=numeric-comp]{biblatex}
-\addbibresource{doc/glyph.bib}
+
+% tikz libraries
 \usetikzlibrary{decorations.pathreplacing, arrows.meta, positioning}
 
+% bibliography
+\addbibresource{doc/glyph.bib}
+\AtBeginBibliography{\footnotesize}
+
+% table styles
 \newcommand{\thead}[1]{\sffamily #1}
 \newcommand{\tsub}[1]{\sffamily\itshape #1}
 \colorlet{thcol}{black!8}
 \colorlet{tscol}{white}
 \colorlet{tbcol}{black!3}
 
-\AtBeginBibliography{\footnotesize}
-
+% text styles
 \newcommand{\textbi}[1]{\textbf{\textit{#1}}}
 \newcommand{\fmtlogtwo}[1]{\fpeval{round(ln(#1)/ln(2), 2)}}
-
 \def\verbatim@font{\linespread{1}\normalfont\ttfamily}
 
+% author
 \makeatletter
 \def\printauthor{\@author}
 \makeatother
+\author{Michael Clark\\[1mm]{\small\textnormal{Independent Researcher}}}
 
-\author{Michael Clark\\[1mm]{\small \textnormal{Independent Researcher}}}
-
+% document
 \begin{document}
 \pagenumbering{gobble}
+
+% title
 \begin{titlepage}
-\vspace*{0.10\textheight}
-
-\definecolor{glyph_blue}{cmyk}{0.7,0.15,0.0,0.0}
-\definecolor{glyph_navy}{cmyk}{1.0,0.8,0.0,0.2}
+\definecolor{glyph_blue} {cmyk}{0.7,0.15,0.0,0.0}
+\definecolor{glyph_navy} {cmyk}{1.0,0.8,0.0,0.2}
 \definecolor{glyph_green}{cmyk}{0.5,0.0,0.9,0.0}
-
-\noindent
-\centering
+\vspace*{0.10\textheight}
+\noindent\centering
 \begin{minipage}[t]{0.48\linewidth}
-\raisebox{40mm}{%
-  \colorbox{glyph_navy}{%
-    \parbox{\dimexpr\linewidth-1.2\fboxsep\relax}{%
-      \vspace{3mm}
-      \raggedleft
-      \setlength{\rightskip}{2mm}
-      \sffamily\titlefont
-      \Huge\color{white}GLYPH \\[3mm]
-      \small\color{white}a super regular RISC architecture \\[2.5mm]
-      \scriptsize\color{white}\today \, -- v0.6.0-current
-      \vspace{3mm}
-    }%
-  }%
-}
+  \raisebox{40mm}{\colorbox{glyph_navy}{%
+    \parbox{\dimexpr\linewidth-1.2\fboxsep\relax}{\vspace{3mm}
+      \sffamily\titlefont\raggedleft\setlength{\rightskip}{2mm}
+      \Huge\color{white}GLYPH\\[3mm]
+      \small a super regular RISC architecture\\[2.5mm]
+      \scriptsize\today\,--\,v0.6.0-current\vspace{3mm}}}}
 \end{minipage}%
 {\hspace{6.5mm}\color{glyph_blue}\rule{8pt}{60mm}\hspace{5.5mm}}%
 \begin{minipage}[t]{0.38\linewidth}
-\raisebox{12mm}{%
-  \colorbox{glyph_green}{%
-    \parbox{\dimexpr\linewidth-1.2\fboxsep\relax}{%
-      \vspace{3mm}
-      \raggedright
-      \setlength{\leftskip}{2mm}
-      \sffamily\titlefont
-      \normalsize \printauthor
-      \vspace{3mm}
-    }%
-  }%
-}
+  \raisebox{12mm}{\colorbox{glyph_green}{%
+    \parbox{\dimexpr\linewidth-1.2\fboxsep\relax}{\vspace{3mm}
+      \sffamily\titlefont\raggedright\setlength{\leftskip}{2mm}
+      \normalsize\printauthor\vspace{3mm}}}}
 \end{minipage}
-
-\vspace{27mm}
-
-\begin{minipage}{\textwidth}
-\centering
-\makebox[\textwidth][c]{
-\includegraphics[width=0.97\textwidth]{doc/maya.jpg}} \\[2mm]
-{\small Maya glyphs in stucco at the Museo de Sitio in Palenque, Mexico. \\
-\tiny \texttt{https://www.languagejones.com/blog-1/2014/11/10/language-jones-and-the-temple-ofburritos}}
+\par\vspace{27mm}
+\begin{minipage}{\textwidth}\centering\makebox[\textwidth][c]{%
+  \includegraphics[width=0.97\textwidth]{doc/maya.jpg}}\\[2mm]
+  {\small Maya glyphs in stucco at the Museo de Sitio in Palenque, Mexico.\\
+   \tiny\texttt{https://www.languagejones.com/blog-1/2014/11/10/}%
+   \texttt{language-jones-and-the-temple-ofburritos}}
 \end{minipage}
-
 \end{titlepage}
 
+% dedication
 \clearpage
 \thispagestyle{empty}
 \vspace*{0.22\textheight}
@@ -112,12 +98,10 @@ software-defined MMU\sep message-signaled interrupts\sep virtual machine}
     \textbf{to my mentors, whose guidance and wisdom made this work possible.}
 \end{center}
 
-\newpage
-
+% epigraph
 \clearpage
 \thispagestyle{empty}
 \vspace*{0.13\textheight}
-
 \begin{center}
 \noindent\rule{\textwidth}{0.5pt}\\
 \begin{flushleft}
@@ -132,14 +116,15 @@ software-defined MMU\sep message-signaled interrupts\sep virtual machine}
 \noindent\rule{\textwidth}{0.5pt}
 \end{center}
 
+% table of contents
 \cleardoublepage
 \pagenumbering{roman}
 \setcounter{page}{1}
-
 \dominitoc
 \tableofcontents
-\pagestyle{headings}
 
+% preface
+\pagestyle{headings}
 \chapter*{Preface}
 \addcontentsline{toc}{chapter}{Preface}
 
