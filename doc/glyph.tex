@@ -45,6 +45,7 @@ software-defined MMU\sep message-signaled interrupts\sep virtual machine}
 \colorlet{tbcol}{black!3}
 
 % text styles
+\newcommand{\para}{\\\par\noindent}
 \newcommand{\textbi}[1]{\textbf{\textit{#1}}}
 \newcommand{\fmtlogtwo}[1]{\fpeval{round(ln(#1)/ln(2), 2)}}
 \def\verbatim@font{\linespread{1}\normalfont\ttfamily}
@@ -147,8 +148,7 @@ the proposed architecture, followed by sections on program streams, the
 variable-length instruction format, the register file, type formats,
 the memory model, the instruction set, the assembly syntax, and the
 programming language calling convention.
-\\
-\par\noindent
+\para
 this document does not simply present an architecture reimplementing
 existing ideas; rather, it introduces a novel architecture featuring an
 instruction coding scheme optimized for efficient parallel decoding in
@@ -156,8 +156,7 @@ hardware or software, combined with contemporary practices in instruction
 semantics, including the use of single-bit predicates for compare, divide,
 branch, plus arithmetic instructions with carry, to achieve an optimal
 mapping to vectors.
-\\
-\par\noindent
+\para
 in addition to the core instruction set, the architecture also defines
 extensions for capabilities, virtual domains, software-defined memory
 management and environment. the capability extension adds fine-grained
@@ -166,8 +165,7 @@ extension adds virtualization for trap routing, page translation,
 message-signaled interrupt delivery, and context switching. the machine
 extension provides for custom address translation schemes. finally,
 the environment extension adds controls for power and reset.
-\\
-\par\noindent
+\para
 this work is intended for computer architects, systems programmers,
 students of computing machinery, and anyone interested in the evolution
 of RISC design. by the end of the document, readers should be able to
@@ -181,8 +179,7 @@ to implement the architecture in hardware or software.
 \section{Introduction}
 
 this section gives a brief introduction to RISC architectures.
-\\
-\par\noindent
+\para
 A RISC\footnote{Reduced Instruction Set Computer} machine is a type of
 general-purpose computer with the characteristic that it has a reduced
 set of instructions in contrast to a CISC\footnote{Complex Instruction
@@ -190,8 +187,7 @@ Set Computer} machine. A RISC machine is Turing complete meaning it can
 perform any computation that a Turing machine can, given enough time and
 memory. a Turing machine~\cite{Turing1936} is a theoretical model of
 computation.
-\\
-\par\noindent
+\para
 a RISC machine has a set of instructions which comprise basic operations
 such as: \emph{load-from-memory}, \emph{store-to-memory}, \emph{add},
 \emph{subtract}, \emph{compare}, plus \emph{conditional branch} and
@@ -216,8 +212,7 @@ are addresses that point to values in \emph{main-memory} which is like a
 larger but slower filing cabinet. some of these values are \emph{immediate}
 values which are small numbers listed inside of the instructions on the
 paper tape.
-\\
-\par\noindent
+\para
 the paper tape is just a way conceptualize a list of instructions stored
 in \emph{main-memory}. there is a special register called \emph{PC} short
 for \emph{program counter}, which points to the current position on the
@@ -347,8 +342,7 @@ configuration is typically referred to as a Harvard architecture%
 ~\cite{aiken1946marki}, in contrast to a Von Neumann architecture%
 ~\cite{vonneumann1945edvac}, which uses a shared memory region for
 both program instructions and data.
-\\
-\par\noindent
+\para
 instruction words contain packets of 16-bits which are composed of
 size, opcode, and operand fields. instruction packets can be appended
 together to form larger instruction words with larger opcode and
@@ -502,8 +496,7 @@ but is read-only and restricted to constants. instructions can refer to
 constants using \emph{ib-relative} addresses inside instruction operands.
 section~\ref{sec:program-streams} provides more details on the split
 instruction and constant streams.
-\\
-\par\noindent
+\para
 constant memory is addressed with displacements from the \emph{immediate
 base} register called \emph{ib-relative} addresses which are stored inside
 instruction operand slots, are sized, scaled and aligned addresses computed
@@ -723,14 +716,12 @@ instruction blocks are aligned memory blocks addressed by the \emph{program
 counter}. instruction memory is addressed with \emph{pc-relative} addresses
 in instruction immediate values or indirectly with constants accessed using
 \emph{ib-relative} addresses stored inside instruction operand slots.
-\\
-\par\noindent
+\para
 immediate blocks are aligned memory blocks addressed by the \emph{immediate
 base} register. constant memory is addressed with \emph{ib-relative}
 addresses stored inside instruction operand slots, which are sized, scaled,
 and aligned relative to the \emph{immediate base} register.
-\\
-\par\noindent
+\para
 the constant stream branches independently using the
 \emph{immediate-block-jump} instruction to update the \emph{immediate base}
 register, or together with the \emph{program counter} in procedure call and
@@ -739,8 +730,7 @@ return instructions that branch instruction and constants at the same time;
 add and subtract address vectors to \emph{(pc,ib)}. the \emph{pack-indirect}
 instruction allows absolute \emph{(pc,ib)} addresses to be packed into an
 address vector for indirect calls.
-\\
-\par\noindent
+\para
 the instruction forms use bonded operand slots for immediate operands and
 operand bits do not overlap opcode bits. the use of immediate blocks means
 large immediate constants can all be accessed using short references encoded
@@ -758,8 +748,7 @@ immediate blocks containing constants accessed via a constant address
 mode. the \emph{immediate base} register branches like the
 \emph{program counter}, and procedure calls and returns set and restore
 \emph{(pc,ib)} together.
-\\
-\par\noindent
+\para
 glyph uses relative address vectors in its link register which is different
 to typical RISC architectures. glyph does this so that the branch instructions
 can fit \emph{(pc,ib)} into the a single link register for compatibility with
@@ -770,14 +759,12 @@ which respectively to refer to width of addresses and width of general
 purpose registers in bits. when $XLEN \ge ALEN \times 2$ it is possible to
 pack absolute addresses instead of relative addresses, as would be the case
 where \emph{ALEN=64} and \emph{XLEN=128}.}.
-\\
-\par\noindent
+\para
 immediate blocks can be switched using the immediate block branch
 instruction. immediate blocks, unlike typical RISC architectures, mean
 that most relocations are word sized like CISC architectures, and can
 use C-style structure packing and alignment rules.
-\\
-\par\noindent
+\para
 this list outlines differentiating features of the glyph architecture:
 
 \begin{itemize}[itemsep=0pt]
@@ -970,8 +957,7 @@ various width parallel instruction decoders.
 the variable length instruction format has a single base format
 where fields in the template instruction form are extended by
 successive instruction packets.
-\\
-\par\noindent
+\para
 the instructions forms are super regular in that operand and opcode
 bits do not overlap and the number and complexity of the formats is
 reduced so that vectorized instruction decoding is simple in both
@@ -2069,16 +2055,14 @@ glyph is designed to support translation to instruction sets with
 must enforce a \emph{total store order}. on \emph{weakly-ordered} systems,
 an implicit memory barrier must follow these writes to prevent subsequent
 reads from being reordered with respect to them.
-\\
-\par\noindent
+\para
 thus, \emph{weakly-ordered} systems with \emph{acquire-release} ordering
 require memory barriers after \emph{strongly-ordered} writes and atomic
 \emph{read–modify–write} operations to act as implicit synchronization
 points. \emph{acquire} loads are relaxed except for ordering enforced
 by prior \emph{strongly-ordered} stores, and constrain only subsequent
 memory operations.
-\\
-\par\noindent
+\para
 the addition of scoped \emph{group} and \emph{private} address spaces
 ameliorates the cost of maintaining a total store order on global memory.
 
@@ -2202,8 +2186,7 @@ this example omits hazard detection and forwarding logic for the sake of simplic
 the architecture provides several user-level status and control registers
 for floating-point status and control, clock time, clock frequency,
 machine address and domain.
-\\
-\par\noindent
+\para
 user-level status and control registers can be read and written using the
 \texttt{sysread}, \texttt{syswrite}, \texttt{sysset}, and \texttt{sysclear}
 instructions. user-level status and control registers are available in
@@ -2384,8 +2367,7 @@ this register is visible if \texttt{scontrol.D} is enabled.
 the architecture provides several privileged status and control
 registers for trap handling, system configuration, address translation,
 timers, interrupts, and debugging.
-\\
-\par\noindent
+\para
 privileged system-level status and control registers can be read and written
 using the \texttt{sysread}, \texttt{syswrite}, \texttt{sysset}, and
 \texttt{sysclear} instructions. privileged system registers are accessible
@@ -2936,8 +2918,7 @@ provides a capability check for permissions and capabilities enabled by
 page table permissions based on \emph{page table color}. color
 capabilities restrict access to system, domain, capability and machine
 registers based on \emph{page table color}.
-\\
-\par\noindent
+\para
 the following tables list the privileged capability system parameters:
 
 \begin{table}[H]
@@ -3168,8 +3149,7 @@ the architecture provides an optional domain~\cite{barham2003xen}
 extension for virtual machines. the extension adds registers for virtual
 domain addresses, trap routing, page translation, and context switching
 for system traps, domain traps, capability traps and machine traps.
-\\
-\par\noindent
+\para
 the following tables list the privileged domain system parameters:
 
 \begin{table}[H]
@@ -3809,8 +3789,7 @@ the page table walker performs page table lookup to translate virtual
 addresses into physical addresses. the page table walker reads the page
 table root pointer then walks the \emph{trie-based} page table structure
 to find a leaf entry containing a physical page address.
-\\
-\par\noindent
+\para
 page table entries with the \emph{read, write} and \emph{exec} permission
 bits clear are interpreted as \emph{pointer} entries and contain a pointer
 to the next-level index page, otherwise they are interpreted as \emph{leaf}
@@ -3820,8 +3799,7 @@ set will fault on read accesses. entries without the \emph{dirty} bit set
 will fault on write accesses. the \emph{global} bit prevents \emph{sptr.ASID}
 from being associated with TLB entries. the \emph{color} field is reserved
 for use by system software and the capabilities extension.
-\\
-\par\noindent
+\para
 if the physical permissions feature \emph{mfeature.P} is present and
 \emph{mcontrol.P} is enabled, then physical pages must be present in the
 page table with a self-mapping of their physical address prefixed with
@@ -3829,8 +3807,7 @@ $(\mathit{AS} = \mathit{physical})$ leading to a leaf page table entry
 containing its own address. this is to allow physical page permissions
 to be checked. in addition to this, the physical self-mappings for physical
 pages containing page table pages must have the \emph{translate} bit set.
-\\
-\par\noindent
+\para
 the page table lookup and virtual to physical address translation process
 are as follows:
 
@@ -4016,28 +3993,24 @@ synchronous exceptions are grouped into \emph{system}, \emph{domain},
 \emph{capability}, and \emph{machine} roles and are routed based on the
 \texttt{domsys}, \texttt{domdom}, \texttt{domcap}, and \texttt{dommac}
 vectors:
-\\
-\par\noindent
+\para
 \textbf{system exceptions:}
 arising from access to system registers, illegal instruction
 exceptions, break instruction exceptions, debug monitor exceptions,
 address alignment faults, memory access faults, page faults arising
 from page table entry configuration, and locally-scoped
 \emph{system role} messages, also known as system calls.
-\\
-\par\noindent
+\para
 \textbf{capability exceptions:}
 arising from access to capability registers, access checks due
 to the configuration of the capability permission registers, capability
 role registers, and the capability matrix, and locally-scoped
 \emph{capability role} messages, also known as capability calls.
-\\
-\par\noindent
+\para
 \textbf{domain exceptions:}
 arising from access to domain registers, domain matrix checks, and
 locally-scoped \emph{domain role} messages, also known as hyper calls.
-\\
-\par\noindent
+\para
 \textbf{machine exceptions:}
 faults arising from access to machine registers, translation lookaside
 buffer refill faults, and locally-scoped \emph{machine role} messages,
@@ -4047,8 +4020,7 @@ also known as machine calls.
 
 asynchronous exceptions use the \emph{message} role and are
 routed based on the \texttt{dommsg} vector:
-\\
-\par\noindent
+\para
 \textbf{message exceptions:}
 arising from interrupt pins, the deadline timer, and
 globally-scoped inter-domain messages, also known as message-signaled
@@ -4171,16 +4143,14 @@ message-signaled interrupts, also known as globally-scoped inter-domain
 messages, are multicast over the processor network to initiate asynchronous
 exceptions in the message role of all threads that advertise the target
 thread or domain address after applying a mask.
-\\
-\par\noindent
+\para
 the \emph{system} role of the initiating processor first disables
 interrupts, then sets the \texttt{starget} and \texttt{smask} registers
 with a target machine or domain address and mask, followed by writing to
 the \texttt{smessage} register. a \emph{message interrupt} is then multicast
 to the set of threads matching the thread or domain address applying the mask.
 \texttt{sstatus.E} is set if an exception occurs.
-\\
-\par\noindent
+\para
 the following special addresses can be used.
 
 \begin{table}[h]
@@ -4306,8 +4276,7 @@ using route tables that aggregate address advertisements.
 globally-scoped inter-domain messages carry an address and mask.
 the address may be either a \emph{machine address} or a \emph{domain address}.
 the use of a mask allows targeting multiple addresses with a single message.
-\\
-\par\noindent
+\para
 machine addresses are unique across all processors.
 domain addresses may alias across processors.
 both address types support multicast.
@@ -4316,8 +4285,7 @@ domain addresses are intrinsically multicast and may additionally use
 masked comparison to select multiple domains. at most one domain is
 matched per processor. if multiple domains match on one processor,
 the lowest-numbered domain is selected.
-\\
-\par\noindent
+\para
 the processor network must provide reliable multicast.
 output queues may experience \emph{head-of-line blocking}, which
 must be signaled to senders. receivers acknowledge each interrupt.
@@ -4327,8 +4295,7 @@ destinations and decremented on each acknowledgement; the message is
 dequeued when the count reaches zero.
 multicast delivery should be synchronized based on the maximum
 hop count, but is implementation-defined.
-\\
-\par\noindent
+\para
 the following diagram shows routing tables for an example four node
 processor network.
 \\
@@ -5397,8 +5364,7 @@ AT\&T System V assembler~\cite{att-svr4-asm} and the GNU assembler%
 ~\cite{gnu-as-manual}, with some additions. they provide the ability to
 include arbitrary data, align data, export symbols, switch sections,
 define constants, and emit metadata.
-\\
-\par\noindent
+\para
 the following table lists glyph assembler directives:
 
 \begin{table}[h]
@@ -5460,8 +5426,7 @@ the following table lists glyph assembler directives:
 
 the assembler implements a number of convenience pseudo-instruction aliases
 that are formed from regular instructions, but have implicit or deduced arguments.
-\\
-\par\noindent
+\para
 the following table lists glyph assembler pseudo-instruction aliases:
 
 \begin{table}[h]
@@ -5542,8 +5507,7 @@ the 16-bit instruction packet, while intended to be used in conjunction
 with the larger opcodes, is designed as a complete subset, so there is
 an ABI variant that targets a subset of the instruction set architecture
 that only uses the 16-bit opcodes.
-\\
-\par\noindent
+\para
 the register assignment for the 16-bit subset was chosen with this rationale:
 
 \begin{itemize}[itemsep=0pt]
