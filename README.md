@@ -27,6 +27,7 @@ this list outlines architectural highlights of the glyph architecture:
 - *arithmetic vector swizzle* - speeds up subgroup shuffle operations for vector arithmetic.
 - *capabilities and domains* - provide context switching and page-table color permissions.
 - *privilege level free* - uses capabilities and domains to abstract privilege levels.
+- *page table colors* - for zoned physical memory and address translation permissions.
 - *message-signaled interrupts* - support globally-scoped inter-domain message interrupts.
 - *multicast network-on-chip* - enables synchronized messaging for thread groups.
 - *deadline timer interrupts* - use the processor high-precision clock for deadline timers.
