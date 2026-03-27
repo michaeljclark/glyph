@@ -241,8 +241,8 @@ registers are temporary storage used to fill input and output
 operands for the \emph{ALU}\footnote{\emph{ALU}\,-- Arithmetic logic unit.}
 before and after execution of instructions. registers are
 organized as a word-addressable store where each register number refers
-to $XLEN \in \{64, 128\}$ bits of data. \emph{XLEN} is a parameter that
-specifiess the width of registers in bits.
+to $\mathit{XLEN} \in \{64, 128\}$ bits of data. \emph{XLEN} is a parameter
+that specifies the width of registers in bits.
 \\
 \begin{figure}[H]
 \centering
@@ -756,9 +756,9 @@ traditional RISC architectures. glyph achieves this by packing two relative
 \emph{(pc,ib)} displacements into a relative address vector\footnote{the
 architecture defines two parameters: \emph{ALEN} and \emph{XLEN},
 which respectively to refer to width of addresses and width of general
-purpose registers in bits. when $XLEN \ge ALEN \times 2$ it is possible to
-pack absolute addresses instead of relative addresses, as would be the case
-where \emph{ALEN=64} and \emph{XLEN=128}.}.
+purpose registers in bits. when $\mathit{XLEN} \ge \mathit{ALEN} \times 2$
+it is possible to pack absolute addresses instead of relative addresses,
+as would be the case where \emph{ALEN=64} and \emph{XLEN=128}.}.
 \para
 immediate blocks can be switched using the immediate block branch
 instruction. immediate blocks, unlike typical RISC architectures, mean
@@ -1322,10 +1322,11 @@ register state:
 \end{figure}
 
 \par\noindent
-when $XLEN < ALEN \times 2$ it is not possible to pack absolute addresses
-in the link register, so the \texttt{PIN} and \texttt{LINK} instructions
-save relative addresses in the link register. this increases latency in
-branch address calculation compared to absolute addresses.
+when $\mathit{XLEN} < \mathit{ALEN} \times 2$ it is not possible to pack
+absolute addresses in the link register, so the \texttt{PIN} and
+\texttt{LINK} instructions save relative addresses in the link register.
+this increases latency in branch address calculation compared to
+absolute addresses.
 
 \newpage
 \subsection{\emph{scalar-max} configuration}
@@ -1352,10 +1353,11 @@ register state:
 \end{figure}
 
 \par\noindent
-when $XLEN \ge ALEN \times 2$ it is possible to pack absolute addresses
-in the link register, so the \texttt{PIN} and \texttt{LINK} instructions
-save absolute addresses in the link register instead. this reduces latency
-in branch address calculation compared to relative addresses.
+when $\mathit{XLEN} \ge \mathit{ALEN} \times 2$ it is possible to pack
+absolute addresses in the link register, so the \texttt{PIN} and
+\texttt{LINK} instructions save absolute addresses in the link register.
+this reduces latency in branch address calculation compared to
+relative addresses.
 
 \newpage
 \subsection{\emph{vector-min} configuration}
