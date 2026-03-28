@@ -4122,11 +4122,6 @@ the array access address calculation using the array unit descriptor is as follo
             \mathit{d.tile}_y, \;
             \mathit{d.tile}_z \right\}$
   \Comment{get tile shift}
-  \State $o \gets
-    \left\{ \mathit{d.offset}_x, \;
-            \mathit{d.offset}_y, \;
-            0 \, \right\}$
-  \Comment{get tile offset}
   \State $p \gets
     \left\{ (\mathit{d.size}_x >> l) + 1, \;
             (\mathit{d.size}_y >> l) + 1, \;
@@ -4141,11 +4136,6 @@ the array access address calculation using the array unit descriptor is as follo
               s_x, \;
               s_z \right\}$
     \Comment{swap tile shift}
-    \State $o \gets
-      \left\{ o_y, \;
-              o_x, \;
-              o_z \right\}$
-    \Comment{swap tile offset}
     \State $p \gets
       \left\{ p_y, \;
               p_x, \;
@@ -4177,9 +4167,9 @@ the array access address calculation using the array unit descriptor is as follo
   \Comment{compute array stride}
 
   \State $f \gets
-    \left\{ (o_x + v_x) >> l, \;
-            (o_y + v_y) >> l, \;
-            (o_z + v_z) >> l \right\}$
+    \left\{ v_x >> l, \;
+            v_y >> l, \;
+            v_z >> l \right\}$
   \Comment{compute final offset}
   \State $t \gets
     \left\{ f_x \land m_x, \;
