@@ -3947,11 +3947,12 @@ a \emph{power-of-two} $(1 << \mathit{size})$.
 \newpage
 \subsection{array unit instructions}
 
-the array extension requires $\mathit{XLEN}=128$. an array unit descriptor
-is loaded into a register using a 128-bit constant load instruction, or to
-access descriptor arrays, a 128-bit memory load instruction. array unit
-instructions take a base address, an array unit descriptor in a register,
-and a coordinate vector. section~\ref{sec:array-address-calculation}
+the array extension requires $\mathit{XLEN}=128$. an array unit descriptor is
+loaded into a register using a 128-bit constant load instruction, or to access
+descriptor arrays, a 128-bit memory load instruction. the array unit must be
+configured with the descriptor before use to allow address computation.
+array unit instructions take a base address, an array unit descriptor
+register, and a coordinate vector. section~\ref{sec:array-address-calculation}
 contains the address computation algorithm. the following table describes
 the array unit instructions.
 
@@ -3964,6 +3965,7 @@ the array unit instructions.
 \rowcolor{thcol}
 \thead{operation name} & \thead{description} \\
 \hline
+configure-array-unit \texttt{rd} & configure array unit with dimensions in descriptor (\texttt{rd}) \\
 scalar-array-load \texttt{re} \texttt{rc} \texttt{rd} \texttt{rb} \texttt{ra} &
 load scalar with desc (\texttt{rd}), base (\texttt{rb}), and coordinate (\texttt{rc}) \\
 scalar-array-store \texttt{rd} \texttt{rc} \texttt{rb} \texttt{ra} &
