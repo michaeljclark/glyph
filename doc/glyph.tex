@@ -3636,6 +3636,576 @@ the \emph{cause code} field is recorded in an environment log.
 \end{table}
 
 \newpage
+\section{Array extension}
+
+the array extension defines a 128-bit \emph{array unit descriptor}
+constant format containing array fetch unit configuration and array
+fetch instructions for tiled array fetches.
+
+\subsection{array unit descriptor}
+
+the array unit descriptor contains the following fields:
+
+\begin{table}[H]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{field} & \thead{value} & \thead{bits} & \thead{description} \\
+\hline
+\texttt{$\mathsf{order}$}            & row, column   & $3$ & order of array dimensions \\
+\texttt{$\mathsf{format}$}           & 8, 16, 32, 64, 128 & $4$ & word size and component format \\
+\texttt{$\mathsf{levels}$}           & 0--15         & $4$ & number of \emph{mipmap} levels \\
+\texttt{$\mathsf{base}$}             & 0--15         & $4$ & base \emph{mipmap} level of detail \\
+\texttt{$\mathsf{swiz}_{[0,1,2,3]}$} & r, g, b, a, 0, 1, 2, -1 & $3 \times 4$ & component swizzle \\
+\texttt{$\mathsf{tile}_{[x,y,z]}$}   & 1, 2, 4, 8, ..., 128 & $3 \times 3$ & \emph{power-of-two} size of tiles \\
+\texttt{$\mathsf{size}_{[x,y,z]}$}   & 0--8192       & $13 \times 3$ & total number of tiles \\
+\texttt{$\mathsf{count}_{[x,y,z]}$}  & 0--8192       & $13 \times 3$ & visible number of tiles \\
+\texttt{$\mathsf{offset}_{[x,y]}$}   & 0--127        & $7 \times 2$ & tile coordinate offset \\
+\hline
+\end{tabular}
+\caption{array unit descriptor fields}
+\label{tab:array-unit-descriptor-fields}
+\end{table}
+
+\par\noindent
+the array unit descriptor limits are as follows.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|r|r|r|r|}
+\hline
+\rowcolor{thcol}
+\thead{dimension} & \thead{tile size} & \thead{minimum} & \thead{maximum} & \thead{bits} \\
+\hline
+\texttt{$\mathsf{x}$} &   1 &   1 &    8192 & 13 \\
+\texttt{$\mathsf{x}$} &  16 &  16 &  131072 & 17 \\
+\texttt{$\mathsf{x}$} & 128 & 128 & 1048576 & 20 \\
+\texttt{$\mathsf{y}$} &   1 &   1 &    8192 & 13 \\
+\texttt{$\mathsf{y}$} &  16 &  16 &  131072 & 17 \\
+\texttt{$\mathsf{y}$} & 128 & 128 & 1048576 & 20 \\
+\texttt{$\mathsf{z}$} &   1 &   1 &    8192 & 13 \\
+\texttt{$\mathsf{z}$} &  16 &  16 &  131072 & 17 \\
+\texttt{$\mathsf{z}$} & 128 & 128 & 1048576 & 20 \\
+\hline
+\end{tabular}
+\caption{array unit descriptor limits}
+\label{tab:array-unit-descriptor-limits}
+\end{table}
+
+\par\noindent
+the array unit descriptor layout is as follows.
+
+\vspace{0.5em}
+
+\par\noindent
+\begin{tikzpicture}[xscale=0.45,yscale=0.40]
+\draw [black] (0,-6)    rectangle (32,-5);
+\draw [black] (25,-6)    rectangle (32,-5);
+\draw [black] (18,-6)    rectangle (25,-5);
+\draw [black] (14,-6)    rectangle (18,-5);
+\draw [black] (10,-6)    rectangle (14,-5);
+\draw [black] (6,-6)    rectangle (10,-5);
+\draw [black] (3,-6)    rectangle (6,-5);
+\draw [black] (0,-6)    rectangle (3,-5);
+\node [font=\tiny,anchor=base east] at (32,-4.75)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (25,-4.75)  {\textsf{6}};
+\node [font=\tiny,anchor=base east] at (25,-4.75)  {\textsf{7}};
+\node [font=\tiny,anchor=base west] at (18,-4.75)  {\textsf{13}};
+\node [font=\tiny,anchor=base east] at (18,-4.75)  {\textsf{14}};
+\node [font=\tiny,anchor=base west] at (14,-4.75)  {\textsf{17}};
+\node [font=\tiny,anchor=base east] at (14,-4.75)  {\textsf{18}};
+\node [font=\tiny,anchor=base west] at (10,-4.75)  {\textsf{21}};
+\node [font=\tiny,anchor=base east] at (10,-4.75)  {\textsf{22}};
+\node [font=\tiny,anchor=base west] at (6,-4.75)  {\textsf{25}};
+\node [font=\tiny,anchor=base east] at (6,-4.75)  {\textsf{26}};
+\node [font=\tiny,anchor=base west] at (3,-4.75)  {\textsf{28}};
+\node [font=\tiny,anchor=base east] at (3,-4.75)  {\textsf{29}};
+\node [font=\tiny,anchor=base west] at (0,-4.75)  {\textsf{31}};
+\node [font=\scriptsize,anchor=base] at (28.5,-5.75)  {$\mathsf{offset_x}$};
+\node [font=\scriptsize,anchor=base] at (21.5,-5.75)  {$\mathsf{offset_y}$};
+\node [font=\scriptsize,anchor=base] at (16,-5.75)  {$\mathsf{base}$};
+\node [font=\scriptsize,anchor=base] at (12,-5.75)  {$\mathsf{levels}$};
+\node [font=\scriptsize,anchor=base] at (8,-5.75)  {$\mathsf{format}$};
+\node [font=\scriptsize,anchor=base] at (4.5,-5.75)  {$\mathsf{order}$};
+\node [font=\scriptsize,anchor=base] at (1.5,-5.75)  {$\mathsf{swiz_{[0]}}$};
+
+\draw [black] (0,-4)    rectangle (32,-3);
+\draw [black] (19,-4)   rectangle (32,-3);
+\draw [black] (16,-4)   rectangle (19,-3);
+\draw [black] (3,-4)    rectangle (16,-3);
+\draw [black] (0,-4)    rectangle (3,-3);
+\node [font=\tiny,anchor=base east] at (32,-2.75)  {\textsf{32}};
+\node [font=\tiny,anchor=base west] at (19,-2.75)  {\textsf{44}};
+\node [font=\tiny,anchor=base east] at (19,-2.75)  {\textsf{45}};
+\node [font=\tiny,anchor=base west] at (16,-2.75)  {\textsf{47}};
+\node [font=\tiny,anchor=base east] at (16,-2.75)  {\textsf{48}};
+\node [font=\tiny,anchor=base west] at (3,-2.75)  {\textsf{60}};
+\node [font=\tiny,anchor=base east] at (3,-2.75)  {\textsf{61}};
+\node [font=\tiny,anchor=base west] at (0,-2.75)  {\textsf{63}};
+\node [font=\footnotesize,anchor=base] at (25.5,-3.75)  {$\mathsf{count_x}$};
+\node [font=\footnotesize,anchor=base] at (17.5,-3.75)  {$\mathsf{tile_x}$};
+\node [font=\footnotesize,anchor=base] at (9.5,-3.75)  {$\mathsf{size_x}$};
+\node [font=\footnotesize,anchor=base] at (1.5,-3.75)  {$\mathsf{swiz_{[1]}}$};
+
+\draw [black] (0,-2)    rectangle (32,-1);
+\draw [black] (19,-2)   rectangle (32,-1);
+\draw [black] (16,-2)   rectangle (19,-1);
+\draw [black] (3,-2)    rectangle (16,-1);
+\draw [black] (0,-2)    rectangle (3,-1);
+\node [font=\tiny,anchor=base east] at (32,-0.75)  {\textsf{64}};
+\node [font=\tiny,anchor=base west] at (19,-0.75)  {\textsf{76}};
+\node [font=\tiny,anchor=base east] at (19,-0.75)  {\textsf{77}};
+\node [font=\tiny,anchor=base west] at (16,-0.75)  {\textsf{79}};
+\node [font=\tiny,anchor=base east] at (16,-0.75)  {\textsf{80}};
+\node [font=\tiny,anchor=base west] at (3,-0.75)  {\textsf{92}};
+\node [font=\tiny,anchor=base east] at (3,-0.75)  {\textsf{93}};
+\node [font=\tiny,anchor=base west] at (0,-0.75)  {\textsf{95}};
+\node [font=\footnotesize,anchor=base] at (25.5,-1.75)  {$\mathsf{count_y}$};
+\node [font=\footnotesize,anchor=base] at (17.5,-1.75)  {$\mathsf{tile_y}$};
+\node [font=\footnotesize,anchor=base] at (9.5,-1.75)  {$\mathsf{size_y}$};
+\node [font=\footnotesize,anchor=base] at (1.5,-1.75)  {$\mathsf{swiz_{[2]}}$};
+
+\draw [black] (0,0)    rectangle (32,1);
+\draw [black] (19,0)   rectangle (32,1);
+\draw [black] (16,0)   rectangle (19,1);
+\draw [black] (3,0)    rectangle (16,1);
+\draw [black] (0,0)    rectangle (3,1);
+\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{96}};
+\node [font=\tiny,anchor=base west] at (19,1.25)  {\textsf{108}};
+\node [font=\tiny,anchor=base east] at (19,1.25)  {\textsf{109}};
+\node [font=\tiny,anchor=base west] at (16,1.25)  {\textsf{111}};
+\node [font=\tiny,anchor=base east] at (16,1.25)  {\textsf{112}};
+\node [font=\tiny,anchor=base west] at (3,1.25)  {\textsf{124}};
+\node [font=\tiny,anchor=base east] at (3,1.25)  {\textsf{125}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{127}};
+\node [font=\footnotesize,anchor=base] at (25.5,0.25)  {$\mathsf{count_z}$};
+\node [font=\footnotesize,anchor=base] at (17.5,0.25)  {$\mathsf{tile_z}$};
+\node [font=\footnotesize,anchor=base] at (9.5,0.25)  {$\mathsf{size_z}$};
+\node [font=\footnotesize,anchor=base] at (1.5,0.25)  {$\mathsf{swiz_{[3]}}$};
+\end{tikzpicture}
+
+\newpage
+\subsection{array unit fields}
+
+the following section describes the array unit fields.
+
+\begin{samepage}
+\needspace{5\baselineskip}
+\subsubsection{order}
+
+\texttt{order} describes the order of array dimensions.
+\emph{row} and \emph{column} orders apply to the both the tile order
+and the order within tiles.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{no.} & \thead{layout} & \thead{description} & \thead{order} \\
+\hline
+\texttt{0b000} & row     & Linear $\{x,y,z\}$ & row-major \\
+\texttt{0b001} & column  & Linear $\{y,x,z\}$ & column-major \\
+\hline
+\end{tabular}
+\caption{array unit lay field}
+\label{tab:array-unit-lay-field}
+\end{table}
+\end{samepage}
+
+\begin{samepage}
+\needspace{5\baselineskip}
+\subsubsection{format}
+
+\texttt{format} describes the word size and component format of the array data.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{no.} & \thead{format} & \thead{type} & \thead{word size} & \thead{components} \\
+\hline
+\texttt{0b0000} & \texttt{RGBA2}  & \texttt{i2x4}  & 8-bit  & \texttt{2:2:2:2} \\
+\texttt{0b0001} & \texttt{RGBA4}  & \texttt{i4x4}  & 16-bit & \texttt{4:4:4:4} \\
+\texttt{0b0010} & \texttt{RGBA8}  & \texttt{i8x4}  & 32-bit & \texttt{8:8:8:8} \\
+\texttt{0b0011} & \texttt{RGBA16} & \texttt{i16x4} & 64-bit & \texttt{16:16:16:16} \\
+\texttt{0b0100} & \texttt{RGBA32} & \texttt{i32x4} & 128-bit & \texttt{32:32:32:32} \\
+\hline
+\end{tabular}
+\caption{array unit format field}
+\label{tab:array-unit-format-field}
+\end{table}
+\end{samepage}
+
+\begin{samepage}
+\needspace{5\baselineskip}
+\subsubsection{levels}
+
+\texttt{levels} contains the number of \emph{mipmap} levels.
+\\
+\registerspec{64}{32}{%
+  4/{0}//{3}/\emph{num}
+}
+\end{samepage}
+
+\begin{samepage}
+\needspace{5\baselineskip}
+\subsubsection{base}
+
+\texttt{base} contains the base \emph{mipmap} level of detail.
+\\
+\registerspec{64}{32}{%
+  4/{0}//{3}/\emph{num}
+}
+\end{samepage}
+
+\begin{samepage}
+\needspace{5\baselineskip}
+\subsubsection{swiz}
+
+\texttt{swiz\_[0,1,2,3]} contains the swizzle for each component.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{no.} & \thead{swizzle}  & \thead{description} \\
+\hline
+\texttt{0b000} & \texttt{r} & $\mathit{component}_0$ \\
+\texttt{0b001} & \texttt{g} & $\mathit{component}_1$ \\
+\texttt{0b010} & \texttt{b} & $\mathit{component}_2$ \\
+\texttt{0b011} & \texttt{a} & $\mathit{component}_3$ \\
+\texttt{0b100} & \texttt{j} & $0$ \\
+\texttt{0b101} & \texttt{k} & $1$ \\
+\texttt{0b110} & \texttt{l} & $2$ \\
+\texttt{0b111} & \texttt{m} & $-1$ \\
+\hline
+\end{tabular}
+\caption{array unit swiz field}
+\label{tab:array-unit-swiz-field}
+\end{table}
+\end{samepage}
+
+\begin{samepage}
+\needspace{5\baselineskip}
+\subsubsection{tile}
+
+\texttt{tile\_[x,y,z]} contains the tile size for each dimension as
+a \emph{power-of-two} $(1 << \mathit{size})$.
+\\
+\registerspec{64}{32}{%
+  3/{0}//{2}/\emph{size}
+}
+\end{samepage}
+
+\begin{samepage}
+\needspace{5\baselineskip}
+\subsubsection{size}
+
+\texttt{size\_[x,y,z]} contains the total number of tiles for each dimension.
+\\
+\registerspec{64}{32}{%
+  13/{0}//{12}/\emph{size}
+}
+\end{samepage}
+
+\begin{samepage}
+\needspace{5\baselineskip}
+\subsubsection{count}
+
+\texttt{count\_[x,y,z]} contains the visible number of tiles for each dimension.
+\\
+\registerspec{64}{32}{%
+  13/{0}//{12}/\emph{count}
+}
+\end{samepage}
+
+\begin{samepage}
+\needspace{5\baselineskip}
+\subsubsection{offset}
+
+\texttt{offset\_[x,y]} contains the tile coordinate offset.
+\\
+\registerspec{64}{32}{%
+  7/{0}//{6}/\emph{offset}
+}
+\end{samepage}
+
+\newpage
+\subsection{array unit instructions}
+
+the array extension requires $\mathit{XLEN}=128$. an array unit descriptor
+is loaded into a register using a 128-bit constant load instruction, or to
+access descriptor arrays, a 128-bit memory load instruction. array unit
+instructions take a base address, an array unit descriptor in a register,
+and an array address vector. section~\ref{sec:array-address-calculation}
+contains the address computation algorithm. the following table describes
+the array unit instructions.
+
+\begin{table}[h]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{operation name} & \thead{description} \\
+\hline
+scalar-array-load \texttt{re} \texttt{rc} \texttt{rd} \texttt{rb} \texttt{ra} &
+load scalar with desc (\texttt{rd}), base (\texttt{rb}), and coordinate (\texttt{rc}) \\
+scalar-array-store \texttt{rd} \texttt{rc} \texttt{rb} \texttt{ra} &
+store scalar with desc (\texttt{rd}), base (\texttt{rb}), and coordinate (\texttt{rc}) \\
+vector-array-load \texttt{ve} \texttt{rd} \texttt{vc} \texttt{rb} \texttt{va} &
+load vector with desc (\texttt{rd}), base (\texttt{rb}), and vector of coordinates (\texttt{vc}) \\
+vector-array-store \texttt{rd} \texttt{vc} \texttt{rb} \texttt{va} &
+store vector with desc (\texttt{rd}), base (\texttt{rb}, and vector of coordinates (\texttt{vc}) \\
+\hline
+\end{tabular}
+\caption{array fetch instructions}
+\label{tab:array-fetch-instructions}
+\end{table}
+
+\subsection{coordinate vector}
+
+the coordinate vector layout is as follows.
+\\
+\registerspec{64}{32}{%
+  20/{0}//{19}/\emph{x},%
+  20/{20}//{39}/\emph{y},%
+  20/{40}//{59}/\emph{z},%
+  4/{60}//{63}/\emph{level}%
+}
+
+\subsection{component swizzle}
+
+the component swizzle using the array unit descriptor is as follows.
+
+\begin{algorithm}[H]
+\footnotesize
+\caption{compute swizzle using array unit descriptor and word}
+\begin{algorithmic}[1]
+\Function{unit\_swizzle}{$s,u,w$}
+\Comment{$s$: swizzle component, $u$: unit shift, $w$: word}
+  \State $m \gets (1 << u) - 1$
+  \Comment{get unit mask}
+  \If {$s < 4$}
+    \State $\mathit{component} \gets w >> (s \times u)$
+    \State \Return $\mathit{component} \land m$
+  \Else
+    \State $\mathit{values} \gets \{ 0:0,\; 1:1,\; 2:2,\; 3:-1 \}$ 
+    \State \Return $\mathit{values}(s \land 3) \land m$
+  \EndIf
+\EndFunction
+
+\Function{compute\_swizzle}{$d,w$}
+\Comment{$d$: descriptor, $w$: word}
+
+  \State $\mathit{formats} \gets \{ 0b000:1,\; 0b001:2,\; 0b010:4,\; 0b011:8,\; 0b100:16 \}$ 
+  \Comment{define unit sizes}
+  \State $u \gets \mathit{formats}(\mathit{d.format}) << 1$
+  \Comment{compute unit shift}
+
+  \State \Return $
+  \begin{array}[t]{l}
+  \Call{unit\_swizzle}{\mathit{d.swiz}_0,u,w} << (u \times 0) \, \lor \\
+  \Call{unit\_swizzle}{\mathit{d.swiz}_1,u,w} << (u \times 1) \, \lor \\
+  \Call{unit\_swizzle}{\mathit{d.swiz}_2,u,w} << (u \times 2) \, \lor \\
+  \Call{unit\_swizzle}{\mathit{d.swiz}_3,u,w} << (u \times 3)
+  \end{array}
+  $
+  \Comment{swizzle word}
+
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\newpage
+\subsection{address calculation}
+\label{sec:array-address-calculation}
+
+the array dimensions are computed from the array unit descriptor as follows.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{dim} & \thead{total size} & \thead{visible size} \\
+\hline
+x & $(\mathit{d.size}_x + 1) \times (1 << \mathit{d.tile}_x)$ &
+    $(\mathit{d.count}_x + 1) \times (1 << \mathit{d.tile}_x) - \mathit{d.offset}_x$ \\
+y & $(\mathit{d.size}_y + 1) \times (1 << \mathit{d.tile}_y)$ &
+    $(\mathit{d.count}_y + 1) \times (1 << \mathit{d.tile}_y) - \mathit{d.offset}_y$ \\
+z & $(\mathit{d.size}_z + 1) \times (1 << \mathit{d.tile}_z)$ &
+    $(\mathit{d.count}_z + 1) \times (1 << \mathit{d.tile}_z)$ \\
+\hline
+\end{tabular}
+\end{table}
+
+\par\noindent
+the array access address calculation using the array unit descriptor is as follows.
+
+\begin{algorithm}[H]
+\footnotesize
+\caption{compute mipmap base address using array unit descriptor and level}
+\begin{algorithmic}[1]
+\Function{compute\_mipmap\_base}{$d,l,k=0$}
+\Comment{$d$: descriptor, $l$: mipmap level, $k$: current depth}
+
+  \If{$k = l \lor k \ge \mathit{d.levels}$}
+    \State \Return $0$
+  \EndIf
+
+  \State $s \gets
+    \left\{ \mathit{d.tile}_x, \;
+            \mathit{d.tile}_y, \;
+            \mathit{d.tile}_z \right\}$
+  \Comment{get tile shift}
+  \State $p \gets
+    \left\{ (\mathit{d.size}_x >> k) + 1, \;
+            (\mathit{d.size}_y >> k) + 1, \;
+            (\mathit{d.size}_z >> k) + 1 \right\}$
+  \Comment{get tile pitch}
+
+  \State $q \gets
+    \left\{ 1 << s_x, \;
+            1 << s_y, \;
+            1 << s_z \right\}$
+  \Comment{compute tile size}
+  \State $i_x \gets u,\;
+          i_y \gets q_x \times i_x,\;
+          i_z \gets q_y \times i_y$
+  \Comment{compute tile stride}
+  \State $j_x \gets i_z,\;
+          j_y \gets p_x \times j_x,\;
+          j_z \gets p_y \times j_y$
+  \Comment{compute array stride}
+
+  \State \Return $j_z + \Call{compute\_mipmap\_base}{d,l,k+1}$
+  \Comment{return base address}
+
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\footnotesize
+\caption{compute address using array unit descriptor and coordinate vector}
+\begin{algorithmic}[1]
+\Function{compute\_address}{$d,b,v$}
+\Comment{$d$: descriptor, $b$: base address, $v$: coordinates}
+
+  \State $\mathit{formats} \gets \{ 0b000:1,\; 0b001:2,\; 0b010:4,\; 0b011:8,\; 0b100:16 \}$ 
+  \Comment{define unit sizes}
+  \State $u \gets \mathit{formats}(\mathit{d.format})$
+  \Comment{get unit size}
+
+  \State $l \gets \mathit{desc.base} + (v_{level} \land 15)$
+  \Comment{get mipmap level}
+  \State $s \gets
+    \left\{ \mathit{d.tile}_x, \;
+            \mathit{d.tile}_y, \;
+            \mathit{d.tile}_z \right\}$
+  \Comment{get tile shift}
+  \State $o \gets
+    \left\{ \mathit{d.offset}_x, \;
+            \mathit{d.offset}_y, \;
+            0 \, \right\}$
+  \Comment{get tile offset}
+  \State $p \gets
+    \left\{ (\mathit{d.size}_x >> l) + 1, \;
+            (\mathit{d.size}_y >> l) + 1, \;
+            (\mathit{d.size}_z >> l) + 1 \right\}$
+  \Comment{get tile pitch}
+
+  \If{$\mathit{d.order} = \mathsf{column}$}
+    \State $v \gets \{v_y, v_x, v_z, v_{level} \}$
+    \Comment{swap coordinates}
+    \State $s \gets
+      \left\{ s_y, \;
+              s_x, \;
+              s_z \right\}$
+    \Comment{swap tile shift}
+    \State $o \gets
+      \left\{ o_y, \;
+              o_x, \;
+              o_z \right\}$
+    \Comment{swap tile offset}
+    \State $p \gets
+      \left\{ p_y, \;
+              p_x, \;
+              p_z \right\}$
+    \Comment{swap tile pitch}
+  \EndIf
+
+  \State $r \gets b + \Call{compute\_mipmap\_base}{d,l}$
+  \Comment{compute mipmap base}
+
+  \State $q \gets
+    \left\{ 1 << s_x, \;
+            1 << s_y, \;
+            1 << s_z \right\}$
+  \Comment{compute tile size}
+  \State $m \gets
+    \left\{ d_x - 1, \;
+            d_y - 1, \;
+            d_z - 1 \right\}$
+  \Comment{compute tile mask}
+
+  \State $i_x \gets u,\;
+          i_y \gets q_x \times i_x,\;
+          i_z \gets q_y \times i_y$
+  \Comment{compute tile stride}
+  \State $j_x \gets i_z,\;
+          j_y \gets p_x \times j_x,\;
+          j_z \gets p_y \times j_y$
+  \Comment{compute array stride}
+
+  \State $f \gets
+    \left\{ (o_x + v_x) >> l, \;
+            (o_y + v_y) >> l, \;
+            (o_z + v_z) >> l \right\}$
+  \Comment{compute final offset}
+  \State $t \gets
+    \left\{ f_x \land m_x, \;
+            f_y \land m_y, \;
+            f_z \land m_z \right\}$
+  \Comment{compute tile offset}
+  \State $a \gets
+    \left\{ f_x >> s_x, \;
+            f_y >> s_y, \;
+            f_z >> s_z \right\}$
+  \Comment{compute array offset}
+
+  \State \Return $r +
+    t_x \times i_x +
+    t_y \times i_y +
+    t_z \times i_z +
+    a_x \times j_x +
+    a_y \times j_y +
+    a_z \times j_z$
+  \Comment{return final address}
+
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\newpage
 \section{Address translation}
 
 the architecture provides for page-based virtual to physical address
@@ -4448,7 +5018,7 @@ processor network.
 \end{figure}
 
 \newpage
-\addtocontents{toc}{\protect\clearpage}
+%\addtocontents{toc}{\protect\clearpage}
 \section{Virtual machine}
 
 glyph defines a base virtual machine model with a well-defined minimum set of
