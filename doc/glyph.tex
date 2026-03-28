@@ -4129,12 +4129,12 @@ the array access address calculation using the array unit descriptor is as follo
   \Comment{get tile pitch}
 
   \If{$\mathit{d.order} = \mathsf{column}$}
-    \State $v \gets \left\{ v_y, \; v_x, \; v_z, \; v_{level} \right\}$
-    \Comment{swap coordinates}
     \State $s \gets \left\{ s_y, \; s_x, \; s_z \right\}$
     \Comment{swap tile shift}
     \State $p \gets \left\{ p_y, \; p_x, \; p_z \right\}$
     \Comment{swap tile pitch}
+    \State $v \gets \left\{ v_y, \; v_x, \; v_z, \; v_{level} \right\}$
+    \Comment{swap coordinates}
   \EndIf
 
   \State $r \gets b + \Call{compute\_mipmap\_base}{d,l}$
