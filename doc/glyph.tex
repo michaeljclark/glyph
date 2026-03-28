@@ -4129,32 +4129,20 @@ the array access address calculation using the array unit descriptor is as follo
   \Comment{get tile pitch}
 
   \If{$\mathit{d.order} = \mathsf{column}$}
-    \State $v \gets \{v_y, v_x, v_z, v_{level} \}$
+    \State $v \gets \left\{ v_y, \; v_x, \; v_z, \; v_{level} \right\}$
     \Comment{swap coordinates}
-    \State $s \gets
-      \left\{ s_y, \;
-              s_x, \;
-              s_z \right\}$
+    \State $s \gets \left\{ s_y, \; s_x, \; s_z \right\}$
     \Comment{swap tile shift}
-    \State $p \gets
-      \left\{ p_y, \;
-              p_x, \;
-              p_z \right\}$
+    \State $p \gets \left\{ p_y, \; p_x, \; p_z \right\}$
     \Comment{swap tile pitch}
   \EndIf
 
   \State $r \gets b + \Call{compute\_mipmap\_base}{d,l}$
   \Comment{compute mipmap base}
 
-  \State $q \gets
-    \left\{ 1 << s_x, \;
-            1 << s_y, \;
-            1 << s_z \right\}$
+  \State $q \gets \left\{ 1 << s_x, \; 1 << s_y, \; 1 << s_z \right\}$
   \Comment{compute tile size}
-  \State $m \gets
-    \left\{ q_x - 1, \;
-            q_y - 1, \;
-            q_z - 1 \right\}$
+  \State $m \gets \left\{  q_x - 1, \;  q_y - 1, \;  q_z - 1 \right\}$
   \Comment{compute tile mask}
 
   \State $i_x \gets u,\;
@@ -4166,10 +4154,7 @@ the array access address calculation using the array unit descriptor is as follo
           j_z \gets p_y \times j_y$
   \Comment{compute array stride}
 
-  \State $f \gets
-    \left\{ v_x >> l, \;
-            v_y >> l, \;
-            v_z >> l \right\}$
+  \State $f \gets \left\{ v_x >> l, \; v_y >> l, \; v_z >> l \right\}$
   \Comment{compute final offset}
   \State $t \gets
     \left\{ f_x \land m_x, \;
