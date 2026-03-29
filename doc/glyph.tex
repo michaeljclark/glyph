@@ -3999,37 +3999,28 @@ the component swizzle using the array unit descriptor is as follows.
 \footnotesize
 \caption{compute swizzle using array unit descriptor and word}
 \begin{algorithmic}[1]
-\Function{unit\_swizzle}{$s,u,w$}
-\Comment{$s$: swizzle component, $u$: unit shift, $w$: word}
-  \State $m \gets (1 << u) - 1$
-  \Comment{get unit mask}
-  \If {$s < 4$}
-    \State $\mathit{component} \gets w >> (s \times u)$
-    \State \Return $\mathit{component} \land m$
-  \Else
-    \State $\mathit{values} \gets \{ 0:0,\; 1:1,\; 2:2,\; 3:-1 \}$ 
-    \State \Return $\mathit{values}(s \land 3) \land m$
-  \EndIf
-\EndFunction
-
 \Function{compute\_swizzle}{$d,w$}
 \Comment{$d$: descriptor, $w$: word}
-
-  \State $\mathit{formats} \gets \{ 0b000:1,\; 0b001:2,\; 0b010:4,\; 0b011:8,\; 0b100:16 \}$ 
+  \State $\mathit{formats} \gets \{\;1,\;2,\;4,\;8,\;16\;\}$
   \Comment{define unit sizes}
-  \State $u \gets \mathit{formats}(\mathit{d.format}) << 1$
-  \Comment{compute unit shift}
-
-  \State \Return $
-  \begin{array}[t]{l}
-  \Call{unit\_swizzle}{\mathit{d.swiz}_0,u,w} << (u \times 0) \, \lor \\
-  \Call{unit\_swizzle}{\mathit{d.swiz}_1,u,w} << (u \times 1) \, \lor \\
-  \Call{unit\_swizzle}{\mathit{d.swiz}_2,u,w} << (u \times 2) \, \lor \\
-  \Call{unit\_swizzle}{\mathit{d.swiz}_3,u,w} << (u \times 3)
-  \end{array}
-  $
-  \Comment{swizzle word}
-
+  \State $\mathit{values} \gets \{\;0,\;1,\;2,\;-1\;\}$
+  \Comment{define substitutions}
+  \State $u \gets \mathit{formats}[d.\mathit{format}] << 1$
+  \Comment{get component unit size}
+  \State $m \gets (1 << u) - 1$
+  \Comment{compute component mask}
+  \State $r \gets 0$
+  \For{$i \gets 0$ to $3$}
+    \Comment{for each component}
+    \State $c \gets d.\mathit{swiz}_i$
+    \Comment{get component swizzle}
+    \State $v \gets (w >> (c \times u)) \land m \;\mathrm{if}\; c < 4\;
+       \mathrm{else}\; \mathit{values}[c \land 3] \land m$
+    \Comment{get component or substitution}
+    \State $r \gets r \lor (v << (i \times u))$
+    \Comment{accumulate result}
+  \EndFor
+  \State \Return $r$
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
@@ -4112,9 +4103,9 @@ the array access address calculation using the array unit descriptor is as follo
 \Function{compute\_address}{$d,b,v$}
 \Comment{$d$: descriptor, $b$: base address, $v$: coordinates}
 
-  \State $\mathit{formats} \gets \{ 0b000:1,\; 0b001:2,\; 0b010:4,\; 0b011:8,\; 0b100:16 \}$ 
+  \State $\mathit{formats} \gets \{\;1,\;2,\;4,\;8,\;16\;\}$
   \Comment{define unit sizes}
-  \State $u \gets \mathit{formats}(\mathit{d.format})$
+  \State $u \gets \mathit{formats}[\mathit{d.format}]$
   \Comment{get unit size}
 
   \State $l \gets \mathit{desc.base} + (v_{level} \land 15)$
