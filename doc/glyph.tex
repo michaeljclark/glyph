@@ -4014,10 +4014,10 @@ the component swizzle using the array unit descriptor is as follows.
     \Comment{for each component}
     \State $c \gets d.\mathit{swiz}_i$
     \Comment{get component swizzle}
-    \State $v \gets (w >> (c \times u)) \land m \;\mathrm{if}\; c < 4\;
-       \mathrm{else}\; \mathit{values}[c \land 3] \land m$
+    \State $v \gets (w >> (c \times u)) \;\mathrm{if}\; c < 4\;
+       \mathrm{else}\; \mathit{values}[c \land 3]$
     \Comment{get component or substitution}
-    \State $r \gets r \lor (v << (i \times u))$
+    \State $r \gets r \lor ((v \land m) << (i \times u))$
     \Comment{accumulate result}
   \EndFor
   \State \Return $r$
