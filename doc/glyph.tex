@@ -1268,6 +1268,49 @@ this section details the layout of the \isize-bit instruction forms:
 \end{tikzpicture}
 }
 
+% register specifications
+
+\newcommand{\registerspecrow}[4]{%
+  \pgfmathsetmacro{\scl}{#2/#1}%
+  \edef\xinit{#2}%
+  \edef\yinit{#3}%
+  \draw [black] (0,\yinit+0)    rectangle (\xinit,\yinit+1);
+  \foreach \bl/\rlt/\mlt/\llt/\lm
+    [remember=\xl as \xr (initially \xinit)]
+    in {#4} {
+    \pgfmathtruncatemacro{\isneg}{\bl<0 ? 1 : 0}%
+    \pgfmathtruncatemacro{\bl}{abs(\bl)}%
+    \pgfmathsetmacro{\xl}{\xr - \bl*\scl}%
+    \pgfmathsetmacro{\xm}{(\xr+\xl)/2}%
+    \ifnum\isneg=1
+      \foreach \b in {0,...,\numexpr\bl-1\relax} {
+        \pgfmathsetmacro{\bxl}{\xr - (\b+1)*\scl}%
+        \pgfmathsetmacro{\bxr}{\xr - \b*\scl}%
+        \draw[black!25,dashed] (\bxl,\yinit+0) rectangle (\bxr,\yinit+1);
+      }
+    \fi
+    \draw[black] (\xl,\yinit+0) rectangle (\xr,\yinit+1);
+    \ifx\rlt\empty\else
+      \node[font=\tiny,anchor=base east] at (\xr,\yinit+1.25) {\textsf{\rlt}};
+    \fi
+    \ifx\mlt\empty\else
+      \node[font=\tiny,anchor=base]      at (\xm,\yinit+1.25) {\textsf{\mlt}};
+    \fi
+    \ifx\llt\empty\else
+      \node[font=\tiny,anchor=base west] at (\xl,\yinit+1.25) {\textsf{\llt}};
+    \fi
+    \ifx\lm\empty\else
+      \node[font=\small,anchor=base]     at (\xm,\yinit+0.25) {\lm};
+    \fi
+  }
+}
+\newcommand{\registerspec}[3]{%
+  \par\noindent%
+  \begin{tikzpicture}[scale=0.45]
+  \registerspecrow{#1}{#2}{0.0}{#3}
+  \end{tikzpicture}%
+}
+
 glyph has register state comprised of a predicate register, program
 counter, and immediate base registers, a unified floating-point and integer
 scalar register file, and an optional unified floating-point and integer
@@ -1504,10 +1547,9 @@ the 8-bit unsigned integer has an 8-bit number ($n$) field.
 
 \par\noindent
 \begin{tikzpicture}[xscale=0.45,yscale=0.40]
-\draw [black] (0,0)   rectangle (8,1);
-\node [font=\tiny,anchor=base east] at (8,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{7}};
-\node [font=\small,anchor=base] at (4,0.25)  {$n_{[7:0]}$};
+\registerspecrow{8}{8}{0.0}{
+  8/{0}//{7}/$n_{[7:0]}$%
+}
 \end{tikzpicture}
 \end{samepage}
 
@@ -1521,10 +1563,9 @@ the 16-bit unsigned integer has a 16-bit number ($n$) field.
 
 \par\noindent
 \begin{tikzpicture}[xscale=0.45,yscale=0.40]
-\draw [black] (0,0)   rectangle (16,1);
-\node [font=\tiny,anchor=base east] at (16,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{15}};
-\node [font=\small,anchor=base] at (8,0.25)  {$n_{[15:0]}$};
+\registerspecrow{16}{16}{0.0}{
+  16/{0}//{15}/$n_{[15:0]}$%
+}
 \end{tikzpicture}
 \end{samepage}
 
@@ -1538,10 +1579,9 @@ the 32-bit unsigned integer has a 32-bit number ($n$) field.
 
 \par\noindent
 \begin{tikzpicture}[xscale=0.45,yscale=0.40]
-\draw [black] (0,0)   rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{31}};
-\node [font=\small,anchor=base] at (16,0.25)  {$n_{[31:0]}$};
+\registerspecrow{32}{32}{0.0}{
+  32/{0}//{31}/$n_{[31:0]}$%
+}
 \end{tikzpicture}
 \end{samepage}
 
@@ -1555,15 +1595,12 @@ the 64-bit unsigned integer has a 64-bit number ($n$) field.
 
 \par\noindent
 \begin{tikzpicture}[xscale=0.45,yscale=0.40]
-\draw [black] (0,-2)    rectangle (32,-1);
-\node [font=\tiny,anchor=base east] at (32,-0.75)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,-0.75)  {\textsf{31}};
-\node [font=\small,anchor=base] at (16,-1.75)  {$n_{[31:0]}$};
-
-\draw [black] (0,0)   rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{32}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{63}};
-\node [font=\small,anchor=base] at (16,0.25)  {$n_{[63:32]}$};
+\registerspecrow{32}{32}{0.0}{
+  32/{0}//{31}/$n_{[31:0]}$%
+}
+\registerspecrow{32}{32}{2.0}{
+  32/{32}//{63}/$n_{[63:32]}$%
+}
 \end{tikzpicture}
 \end{samepage}
 
@@ -1601,10 +1638,9 @@ the 8-bit signed integer has an 8-bit two's complement number ($n$) field.
 
 \par\noindent
 \begin{tikzpicture}[xscale=0.45,yscale=0.40]
-\draw [black] (0,0)   rectangle (8,1);
-\node [font=\tiny,anchor=base east] at (8,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (4,0.25)  {$n_{[7:0]}$};
-\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{7}};
+\registerspecrow{8}{8}{0.0}{
+  8/{0}//{7}/$n_{[7:0]}$%
+}
 \end{tikzpicture}
 \end{samepage}
 
@@ -1618,10 +1654,9 @@ the 16-bit signed integer has a 16-bit two's complement number ($n$) field.
 
 \par\noindent
 \begin{tikzpicture}[xscale=0.45,yscale=0.40]
-\draw [black] (0,0)   rectangle (16,1);
-\node [font=\tiny,anchor=base east] at (16,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (8,0.25)  {$n_{[15:0]}$};
-\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{15}};
+\registerspecrow{16}{16}{0.0}{
+  16/{0}//{15}/$n_{[15:0]}$%
+}
 \end{tikzpicture}
 \end{samepage}
 
@@ -1635,10 +1670,9 @@ the 32-bit signed integer has a 32-bit two's complement number ($n$) field.
 
 \par\noindent
 \begin{tikzpicture}[xscale=0.45,yscale=0.40]
-\draw [black] (0,0)   rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\small,anchor=base] at (16,0.25)  {$n_{[31:0]}$};
-\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{31}};
+\registerspecrow{32}{32}{0.0}{
+  32/{0}//{31}/$n_{[31:0]}$%
+}
 \end{tikzpicture}
 \end{samepage}
 
@@ -1652,15 +1686,12 @@ the 64-bit signed integer has a 64-bit two's complement number ($n$) field.
 
 \par\noindent
 \begin{tikzpicture}[xscale=0.45,yscale=0.40]
-\draw [black] (0,-2)    rectangle (32,-1);
-\node [font=\tiny,anchor=base east] at (32,-0.75)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,-0.75)  {\textsf{31}};
-\node [font=\small,anchor=base] at (16,-1.75)  {$n_{[31:0]}$};
-
-\draw [black] (0,0)   rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{32}};
-\node [font=\small,anchor=base] at (16,0.25)  {$n_{[63:32]}$};
-\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
+\registerspecrow{32}{32}{0.0}{
+  32/{0}//{31}/$n_{[31:0]}$%
+}
+\registerspecrow{32}{32}{2.0}{
+  32/{32}//{63}/$n_{[63:32]}$%
+}
 \end{tikzpicture}
 \end{samepage}
 
@@ -1700,18 +1731,11 @@ and 3-bit fraction ($f$) fields.
 
 \par\noindent
 \begin{tikzpicture}[xscale=0.45,yscale=0.40]
-\draw [black] (0,0)    rectangle (8,1);
-\draw [black] (5,0)    rectangle (8,1);
-\node [font=\tiny,anchor=base east] at (8,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (5,1.25)  {\textsf{2}};
-\node [font=\small,anchor=base] at (6.5,0.25)  {$f_{[2:0]}$};
-\draw [black] (1.0,0)   rectangle (5,1);
-\node [font=\tiny,anchor=base east] at (5,1.25)  {\textsf{3}};
-\node [font=\tiny,anchor=base west] at (1,1.25)  {\textsf{6}};
-\node [font=\small,anchor=base] at (3,0.25)  {$e_{[3:0]}$};
-\draw [black] (0.0,0)   rectangle (1.0,1);
-\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{7}};
-\node [font=\small,anchor=base] at (0.5,0.25)  {$\pm$};
+\registerspecrow{8}{8}{0.0}{
+  3/{0}//{2}/$f_{[2:0]}$,%
+  4/{3}//{6}/$e_{[3:0]}$,%
+  1//{7}//$\pm$%
+}
 \end{tikzpicture}
 \end{samepage}
 
@@ -1726,18 +1750,11 @@ and 2-bit fraction ($f$) fields.
 
 \par\noindent
 \begin{tikzpicture}[xscale=0.45,yscale=0.40]
-\draw [black] (0,0)    rectangle (8,1);
-\draw [black] (6,0)    rectangle (8,1);
-\node [font=\tiny,anchor=base east] at (8,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (6,1.25)  {\textsf{1}};
-\node [font=\small,anchor=base] at (7,0.25)  {$f_{[1:0]}$};
-\draw [black] (1.0,0)   rectangle (6,1);
-\node [font=\tiny,anchor=base east] at (6,1.25)  {\textsf{2}};
-\node [font=\tiny,anchor=base west] at (1,1.25)  {\textsf{6}};
-\node [font=\small,anchor=base] at (3.5,0.25)  {$e_{[4:0]}$};
-\draw [black] (0.0,0)   rectangle (1.0,1);
-\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{7}};
-\node [font=\small,anchor=base] at (0.5,0.25)  {$\pm$};
+\registerspecrow{8}{8}{0.0}{
+  2/{0}//{1}/$f_{[1:0]}$,%
+  5/{2}//{6}/$e_{[4:0]}$,%
+  1//{7}//$\pm$%
+}
 \end{tikzpicture}
 \end{samepage}
 
@@ -1752,18 +1769,11 @@ and 7-bit fraction ($f$) fields.
 
 \par\noindent
 \begin{tikzpicture}[xscale=0.45,yscale=0.40]
-\draw [black] (0,0)    rectangle (16,1);
-\draw [black] (9,0)    rectangle (16,1);
-\node [font=\tiny,anchor=base east] at (16,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (9,1.25)  {\textsf{6}};
-\node [font=\small,anchor=base] at (12.5,0.25)  {$f_{[6:0]}$};
-\draw [black] (1.0,0)   rectangle (9,1);
-\node [font=\tiny,anchor=base east] at (9,1.25)  {\textsf{7}};
-\node [font=\tiny,anchor=base west] at (1,1.25)  {\textsf{14}};
-\node [font=\small,anchor=base] at (5,0.25)  {$e_{[7:0]}$};
-\draw [black] (0.0,0)   rectangle (1.0,1);
-\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{15}};
-\node [font=\small,anchor=base] at (0.5,0.25)  {$\pm$};
+\registerspecrow{16}{16}{0.0}{
+  7/{0}//{6}/$f_{[6:0]}$,%
+  8/{7}//{14}/$e_{[7:0]}$,%
+  1//{15}//$\pm$%
+}
 \end{tikzpicture}
 \end{samepage}
 
@@ -1778,18 +1788,11 @@ and 10-bit fraction ($f$) fields.
 
 \par\noindent
 \begin{tikzpicture}[xscale=0.45,yscale=0.40]
-\draw [black] (0,0)    rectangle (16,1);
-\draw [black] (6,0)    rectangle (16,1);
-\node [font=\tiny,anchor=base east] at (16,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (6,1.25)  {\textsf{9}};
-\node [font=\small,anchor=base] at (11,0.25)  {$f_{[9:0]}$};
-\draw [black] (1.0,0)   rectangle (6,1);
-\node [font=\tiny,anchor=base east] at (6,1.25)  {\textsf{10}};
-\node [font=\tiny,anchor=base west] at (1,1.25)  {\textsf{14}};
-\node [font=\small,anchor=base] at (3.5,0.25)  {$e_{[4:0]}$};
-\draw [black] (0.0,0)   rectangle (1.0,1);
-\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{15}};
-\node [font=\small,anchor=base] at (0.5,0.25)  {$\pm$};
+\registerspecrow{16}{16}{0.0}{
+  10/{0}//{9}/$f_{[9:0]}$,%
+  5/{10}//{14}/$e_{[4:0]}$,%
+  1//{15}//$\pm$%
+}
 \end{tikzpicture}
 \end{samepage}
 
@@ -1804,18 +1807,11 @@ and 23-bit fraction ($f$) fields.
 
 \par\noindent
 \begin{tikzpicture}[xscale=0.45,yscale=0.40]
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (9,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (9,1.25)  {\textsf{22}};
-\node [font=\small,anchor=base] at (20.5,0.25)  {$f_{[22:0]}$};
-\draw [black] (1.0,0)   rectangle (9,1);
-\node [font=\tiny,anchor=base east] at (9,1.25)  {\textsf{23}};
-\node [font=\tiny,anchor=base west] at (1,1.25)  {\textsf{30}};
-\node [font=\small,anchor=base] at (5.0,0.25)  {$e_{[7:0]}$};
-\draw [black] (0.0,0)   rectangle (1.0,1);
-\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{31}};
-\node [font=\small,anchor=base] at (0.5,0.25)  {$\pm$};
+\registerspecrow{32}{32}{0.0}{
+  23/{0}//{22}/$f_{[22:0]}$,%
+  8/{23}//{30}/$e_{[7:0]}$,%
+  1//{31}//$\pm$%
+}
 \end{tikzpicture}
 \end{samepage}
 
@@ -1830,22 +1826,14 @@ and 52-bit fraction ($f$) fields.
 
 \par\noindent
 \begin{tikzpicture}[xscale=0.45,yscale=0.40]
-\draw [black] (0,-2)    rectangle (32,-1);
-\node [font=\tiny,anchor=base east] at (32,-0.75)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,-0.75)  {\textsf{31}};
-\node [font=\small,anchor=base] at (16,-1.75)  {$f_{[31:0]}$};
-
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{32}};
-\node [font=\tiny,anchor=base west] at (12,1.25)  {\textsf{51}};
-\node [font=\small,anchor=base] at (22,0.25)  {$f_{[51:32]}$};
-\draw [black] (12,0)   rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (12,1.25)  {\textsf{52}};
-\node [font=\tiny,anchor=base west] at (1,1.25)  {\textsf{62}};
-\node [font=\small,anchor=base] at (6.5,0.25)  {$e_{[10:0]}$};
-\draw [black] (0.0,0)   rectangle (1.0,1);
-\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{63}};
-\node [font=\small,anchor=base] at (0.5,0.25)  {$\pm$};
+\registerspecrow{32}{32}{0.0}{
+  32/{0}//{31}/$f_{[31:0]}$%
+}
+\registerspecrow{32}{32}{2.0}{
+  20/{32}//{51}/$f_{[51:32]}$,%
+  11/{52}//{62}/$e_{[10:0]}$,%
+  1//{63}//$\pm$%
+}
 \end{tikzpicture}
 \end{samepage}
 
@@ -1860,32 +1848,20 @@ and 112-bit fraction ($f$) fields.
 
 \par\noindent
 \begin{tikzpicture}[xscale=0.45,yscale=0.40]
-\draw [black] (0,-6)    rectangle (32,-5);
-\node [font=\tiny,anchor=base east] at (32,-4.75)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,-4.75)  {\textsf{31}};
-\node [font=\small,anchor=base] at (16,-5.75)  {$f_{[31:0]}$};
-
-\draw [black] (0,-4)    rectangle (32,-3);
-\node [font=\tiny,anchor=base east] at (32,-2.75)  {\textsf{32}};
-\node [font=\tiny,anchor=base west] at (0,-2.75)  {\textsf{63}};
-\node [font=\small,anchor=base] at (16,-3.75)  {$f_{[63:32]}$};
-
-\draw [black] (0,-2)    rectangle (32,-1);
-\node [font=\tiny,anchor=base east] at (32,-0.75)  {\textsf{64}};
-\node [font=\tiny,anchor=base west] at (0,-0.75)  {\textsf{95}};
-\node [font=\small,anchor=base] at (16,-1.75)  {$f_{[95:64]}$};
-
-\draw [black] (0,0)    rectangle (32,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{96}};
-\node [font=\tiny,anchor=base west] at (16,1.25)  {\textsf{111}};
-\node [font=\small,anchor=base] at (24,0.25)  {$f_{[111:96]}$};
-\draw [black] (1,0)   rectangle (16,1);
-\node [font=\tiny,anchor=base east] at (16,1.25)  {\textsf{112}};
-\node [font=\tiny,anchor=base west] at (1,1.25)  {\textsf{126}};
-\node [font=\small,anchor=base] at (8.5,0.25)  {$e_{[14:0]}$};
-\draw [black] (0.0,0)   rectangle (1.0,1);
-\node [font=\tiny,anchor=base] at (0.5,1.25)  {\textsf{127}};
-\node [font=\small,anchor=base] at (0.5,0.25)  {$\pm$};
+\registerspecrow{32}{32}{0.0}{
+  32/{0}//{31}/$f_{[31:0]}$%
+}
+\registerspecrow{32}{32}{2.0}{
+  32/{32}//{63}/$f_{[63:32]}$%
+}
+\registerspecrow{32}{32}{4.0}{
+  32/{64}//{95}/$f_{[95:64]}$%
+}
+\registerspecrow{32}{32}{6.0}{
+  16/{96}//{111}/$f_{[111:96]}$,%
+  15/{112}//{126}/$e_{[14:0]}$,%
+  1//{127}//$\pm$%
+}
 \end{tikzpicture}
 \end{samepage}
 
@@ -2134,43 +2110,6 @@ this example omits hazard detection and forwarding logic for the sake of simplic
 \end{figure}
 
 \chapter{System}
-
-\newcommand{\registerspec}[3]{%
-  \pgfmathsetmacro{\scl}{#2/#1}%
-  \edef\xinit{#2}%
-  \par\noindent%
-  \begin{tikzpicture}[scale=0.45]
-  \draw [black] (0,0)    rectangle (#2,1);
-  \foreach \bl/\rlt/\mlt/\llt/\lm
-    [remember=\xl as \xr (initially \xinit)]
-    in {#3} {
-    \pgfmathtruncatemacro{\isneg}{\bl<0 ? 1 : 0}%
-    \pgfmathtruncatemacro{\bl}{abs(\bl)}%
-    \pgfmathsetmacro{\xl}{\xr - \bl*\scl}%
-    \pgfmathsetmacro{\xm}{(\xr+\xl)/2}%
-    \ifnum\isneg=1
-      \foreach \b in {0,...,\numexpr\bl-1\relax} {
-        \pgfmathsetmacro{\bxl}{\xr - (\b+1)*\scl}%
-        \pgfmathsetmacro{\bxr}{\xr - \b*\scl}%
-        \draw[black!25,dashed] (\bxl,0) rectangle (\bxr,1);
-      }
-    \fi
-    \draw[black] (\xl,0) rectangle (\xr,1);
-    \ifx\rlt\empty\else
-      \node[font=\tiny,anchor=base east] at (\xr,1.25) {\textsf{\rlt}};
-    \fi
-    \ifx\mlt\empty\else
-      \node[font=\tiny,anchor=base]      at (\xm,1.25) {\textsf{\mlt}};
-    \fi
-    \ifx\llt\empty\else
-      \node[font=\tiny,anchor=base west] at (\xl,1.25) {\textsf{\llt}};
-    \fi
-    \ifx\lm\empty\else
-      \node[font=\small,anchor=base]     at (\xm,0.25) {\lm};
-    \fi
-  }
-  \end{tikzpicture}%
-}
 
 \section{User-level registers}
 the architecture provides several user-level status and control registers
@@ -4087,27 +4026,15 @@ the 64-bit and 128-bit coordinate vector layouts are as follows.
 
 \begin{figure}[H]
 \begin{tikzpicture}[xscale=0.45,yscale=0.40]
-\draw [black] (16,-2)    rectangle (32,-1);
-\draw [black] (0,-2)    rectangle (16,-1);
-\node [font=\tiny,anchor=base east] at (32,-0.75)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (16,-0.75)  {\textsf{15}};
-\node [font=\tiny,anchor=base east] at (16,-0.75)  {\textsf{16}};
-\node [font=\tiny,anchor=base west] at (0,-0.75)  {\textsf{31}};
-\node [font=\small,anchor=base] at (8,-1.75)  {$y_{[31:16]}$};
-\node [font=\small,anchor=base] at (24,-1.75)  {$x_{[15:0]}$};
-
-\draw [black] (16,0)    rectangle (32,1);
-\draw [black] (12,0)    rectangle (16,1);
-\draw [black] (0,0)    rectangle (12,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{32}};
-\node [font=\tiny,anchor=base west] at (16,1.25)  {\textsf{47}};
-\node [font=\tiny,anchor=base east] at (16,1.25)  {\textsf{48}};
-\node [font=\tiny,anchor=base west] at (12,1.25)  {\textsf{51}};
-\node [font=\tiny,anchor=base east] at (12,1.25)  {\textsf{52}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{63}};
-\node [font=\small,anchor=base] at (7,0.25)  {$\mathit{reserved}$};
-\node [font=\small,anchor=base] at (14,0.25)  {$\mathit{level}$};
-\node [font=\small,anchor=base] at (24,0.25)  {$z_{[47:32]}$};
+\registerspecrow{32}{32}{0.0}{
+  16/{0}//{15}/$x_{[15:0]}$,%
+  16/{16}//{31}/$y_{[31:16]}$%
+}
+\registerspecrow{32}{32}{2.0}{
+  16/{32}//{47}/$z_{[47:32]}$,%
+  4/{48}//{51}/$\mathit{level}$,%
+  12/{52}//{63}/$\mathit{reserved}$%
+}
 \end{tikzpicture}
 \caption{64-bit coordinate vector.}
 \label{fig:64-bit-coordinate-vector}
@@ -4115,29 +4042,19 @@ the 64-bit and 128-bit coordinate vector layouts are as follows.
 
 \begin{figure}[H]
 \begin{tikzpicture}[xscale=0.45,yscale=0.40]
-\draw [black] (0,-6)    rectangle (32,-5);
-\node [font=\tiny,anchor=base east] at (32,-4.75)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (0,-4.75)  {\textsf{31}};
-\node [font=\small,anchor=base] at (16,-5.75)  {$x_{[31:0]}$};
-
-\draw [black] (0,-4)    rectangle (32,-3);
-\node [font=\tiny,anchor=base east] at (32,-2.75)  {\textsf{32}};
-\node [font=\tiny,anchor=base west] at (0,-2.75)  {\textsf{63}};
-\node [font=\small,anchor=base] at (16,-3.75)  {$y_{[63:32]}$};
-
-\draw [black] (0,-2)    rectangle (32,-1);
-\node [font=\tiny,anchor=base east] at (32,-0.75)  {\textsf{64}};
-\node [font=\tiny,anchor=base west] at (0,-0.75)  {\textsf{95}};
-\node [font=\small,anchor=base] at (16,-1.75)  {$z_{[95:64]}$};
-
-\draw [black] (28,0)    rectangle (32,1);
-\draw [black] (0,0)    rectangle (28,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{96}};
-\node [font=\tiny,anchor=base west] at (28,1.25)  {\textsf{99}};
-\node [font=\tiny,anchor=base east] at (28,1.25)  {\textsf{100}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{127}};
-\node [font=\small,anchor=base] at (15,0.25)  {$\mathit{reserved}$};
-\node [font=\small,anchor=base] at (30,0.25)  {$\mathit{level}$};
+\registerspecrow{32}{32}{0.0}{
+  32/{0}//{31}/$x_{[31:0]}$%
+}
+\registerspecrow{32}{32}{2.0}{
+  32/{32}//{63}/$y_{[63:32]}$%
+}
+\registerspecrow{32}{32}{4.0}{
+  32/{64}//{95}/$z_{[95:64]}$%
+}
+\registerspecrow{32}{32}{6.0}{
+  4/{96}//{99}/$\mathit{level}$,%
+  28/{100}//{127}/$\mathit{reserved}$%
+}
 \end{tikzpicture}
 \caption{128-bit coordinate vector.}
 \label{fig:128-bit-coordinate-vector}
