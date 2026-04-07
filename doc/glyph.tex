@@ -2521,6 +2521,7 @@ current trap.
 \verb|13| & capability-fault   & capability fault \\
 \verb|14| & domain-fault       & domain fault \\
 \verb|15| & machine-fault      & machine fault \\
+\verb|16| & tlb-miss-fault     & TLB miss fault \\
 \hline
 \rowcolor{tscol}
 \multicolumn{3}{|l|}{\tsub{system interrupts}} \\ \hline
@@ -2710,13 +2711,11 @@ fields. the allowable values are specified in the following table.
 
 \subsubsection{system page table root (\texttt{sptr})}
 \texttt{sptr} is a read-write register containing the page table root
-physical address for address translation on this thread. the \emph{ASID}
-field contains the address space identifier for this thread.
+for address translation on this thread. section~\ref{sec:page-table-root}
+contains details on the page table root format.
 \\
 \registerspec{64}{32}{%
-  12/{0}//{11}/\emph{ASID},%
-  36/{12}//{47}/\emph{physical page number},%
-  16/{48}//{63}/\emph{sign extended}%
+  64/{0}//{63}/\emph{page table root}%
 }
 
 \subsubsection{system machine address (\texttt{saddress})}
@@ -3347,13 +3346,12 @@ domain address prefix is unary \texttt{1110}.
 
 \subsubsection{domain page table root (\texttt{domptr}$[\mathit{ndom}]$)}
 \texttt{domptr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
-registers containing an array of the page table root physical addresses for
-address translation in each domain.
+registers containing an array of the page table root pointers for
+address translation in each domain. section~\ref{sec:page-table-root}
+contains details on the page table root format.
 \\
 \registerspec{64}{32}{%
-  12/{0}//{11}/\emph{ASID},%
-  36/{12}//{47}/\emph{physical page number},%
-  16/{48}//{63}/\emph{sign extended}%
+  64/{0}//{63}/\emph{page table root}%
 }
 
 \subsubsection{domain trap handler program counter (\texttt{domthpc}$[\mathit{ndom}]$)}
@@ -3494,72 +3492,185 @@ machine address prefix is unary \texttt{0001}.
 \newpage
 \subsection{machine memory registers}
 the section describes the privileged machine registers for address
-translation. the registers in this section enable a \emph{machine-fault}
+translation. the registers in this section enable a \emph{tlb-miss-fault}
 trap handler to perform address translation by walking the page table
 structures and populating the TLB\footnote{Translation Lookaside Buffer}
 as part of a software-defined MMU\footnote{Memory Management Unit}.
 
 \subsubsection{machine translation lookaside buffer key (\texttt{mtlbkey})}
-\texttt{mtlbkey} is a read-only register containing the machine fault
-translation virtual address for the current page translation miss fault.
+\texttt{mtlbkey} is a read-only register containing the translation address
+for the current page translation lookaside buffer miss fault to be read by
+the TLB miss fault trap handler.
 \\
+\begin{figure}[H]
 \registerspec{64}{32}{%
-  12/{0}//{11}/\emph{ASID},%
-  31/{12}//{42}/\emph{page number},%
-  -5/{43}//{47}/\texttt{AS},%
-  16/{48}//{63}/\emph{sign extended}%
+  64/{0}//{63}/\footnotesize\emph{translation address}%
 }
+\caption{64-bit common translation lookaside buffer key.}
+\label{fig:64-bit-common-tlb-key-format}
+\end{figure}
+
+\par\noindent
+the \emph{vm12} and \emph{vm16} translation lookaside buffer key formats are as follows.
+\\
+\begin{figure}[H]
+\centering
+\registerspec{64}{32}{%
+  12/{0}//{11}/\emph{zeroes},%
+  31/{12}//{42}/\emph{virtual page number},%
+  -5/{43}//{47}/\texttt{AS},%
+  16/{48}//{63}/\emph{sext}%
+}
+\caption{64-bit vm12 translation lookaside buffer key.}
+\label{fig:64-bit-vm12-tlb-key-format}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\registerspec{64}{32}{%
+  16/{0}//{15}/\emph{zeroes},%
+  34/{16}//{49}/\footnotesize\emph{virtual page number},%
+  -5/{50}//{54}/\texttt{AS},%
+  9/{55}//{63}/\footnotesize\emph{sext}%
+}
+\caption{64-bit vm16 translation lookaside buffer key.}
+\label{fig:64-bit-vm16-tlb-key}
+\end{figure}
 
 \subsubsection{machine translation lookaside buffer format (\texttt{mtlbfmt})}
-\texttt{mtlbfmt} is a read-write register containing the machine fault
-address space identifier and page table format for the current page
-translation miss fault.
+\texttt{mtlbfmt} is a read-write register containing the TLB format for the
+current TLB miss fault. this register is populated by the TLB miss fault
+handler with a page table type, page size encoded using level, and an address
+space identifier.
 \\
+\begin{figure}[H]
+\centering
 \registerspec{64}{32}{%
-  12/{0}//{11}/\emph{ASID},%
-  4/{12}//{15}/\emph{fmt}%
+  16/{0}//{15}/\emph{ASID},%
+  40/{16}//{55}/\emph{reserved},%
+  4/{56}//{59}/\emph{level},%
+  4/{60}//{63}/\emph{type}%
 }
+\caption{64-bit translation lookaside buffer format.}
+\label{fig:64-bit-tlb-format}
+\end{figure}
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \footnotesize
 \rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
 \rowcolor{thcol}
-\thead{no.} & \thead{size}& \thead{description} \\
+\thead{no.} & \thead{type} & \thead{description} \\
 \hline
-\verb|0| & $2^{12}$ & v48 page table entry 4KiB page \\
-\verb|1| & $2^{21}$ & v48 page table entry 2MiB page \\
-\verb|2| & $2^{30}$ & v48 page table entry 1GiB page \\
+\texttt{0b0001} & vm12 & 4-level page tables with 4KiB leaf pages \\
+\texttt{0b0011} & vm16 & 3-level page tables with 64KiB leaf pages \\
 \hline
 \end{tabular}
-\caption{64-bit machine translation lookaside buffer format field}
-\label{tab:64-bit-machine-translation-lookaside-buffer-format-field}
+\caption{64-bit translation lookaside buffer format type field}
+\label{tab:64-bit-tlb-format-type-field}
+\end{table}
+
+\begin{table}[H]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{no.} & \thead{level}& \thead{description} \\
+\hline
+\verb|0| & $\mathsf{2^{12}}$ & vm12 page table entry 4KiB page \\
+\verb|1| & $\mathsf{2^{21}}$ & vm12 page table entry 2MiB page \\
+\verb|2| & $\mathsf{2^{30}}$ & vm12 page table entry 1GiB page \\
+\hline
+\end{tabular}
+\caption{64-bit vm12 translation lookaside buffer format level field}
+\label{tab:64-bit-vm12-tlb-format-level-field}
+\end{table}
+
+\begin{table}[H]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{no.} & \thead{level}& \thead{description} \\
+\hline
+\verb|0| & $\mathsf{2^{16}}$ & vm16 page table entry 64KiB page \\
+\verb|1| & $\mathsf{2^{29}}$ & vm16 page table entry 512GiB page \\
+\hline
+\end{tabular}
+\caption{64-bit vm16 translation lookaside buffer format level field}
+\label{tab:64-bit-vm16-tlb-format-level-field}
 \end{table}
 
 \subsubsection{machine translation lookaside buffer entry (\texttt{mtlbent})}
-\texttt{mtlbent} is a read-write register containing the machine fault
-translation lookaside buffer entry for the current page translation miss
-fault. this register is populated by the page translation miss fault
+\texttt{mtlbent} is a read-write register containing the TLB entry for the
+current TLB miss fault. this register is populated by the TLB miss fault
 handler with a physical page number, a page color, plus several permission
-and metadata bits in the same format as the metadata bits defined for page
-table entries. table~\ref{tab:64-bit-page-table-entry-fields} in the address
-translation section describes the metadata bits.
+and metadata bits in the same format as page table entries.
 \\
+\begin{figure}[H]
 \registerspec{64}{32}{%
-  1//{0}//\tiny\texttt{V},%
-  1//{1}//\tiny\texttt{R},%
-  1//{2}//\tiny\texttt{W},%
-  1//{3}//\tiny\texttt{X},%
-  1//{4}//\tiny\texttt{T},%
-  1//{5}//\tiny\texttt{G},%
-  1//{6}//\tiny\texttt{A},%
-  1//{7}//\tiny\texttt{D},%
-  4/{8}//{11}/\emph{color},%
-  36/{12}//{47}/\emph{physical page number},%
-  16/{48}//{63}/\emph{sign extended}%
+  1//{0}//\scriptsize\texttt{V},%
+  1//{1}//\scriptsize\texttt{R},%
+  1//{2}//\scriptsize\texttt{W},%
+  1//{3}//\scriptsize\texttt{X},%
+  1//{4}//\scriptsize\texttt{T},%
+  1//{5}//\scriptsize\texttt{G},%
+  1//{6}//\scriptsize\texttt{A},%
+  1//{7}//\scriptsize\texttt{D},%
+  4/{8}//{11}/\footnotesize\emph{color},%
+  52/{12}//{63}/\footnotesize\emph{physical page number}%
 }
+\caption{64-bit common translation lookaside buffer entry.}
+\label{fig:64-bit-common-tlb-entry}
+\end{figure}
+
+\par\noindent
+the \emph{vm12} and \emph{vm16} translation lookaside buffer entry formats are as follows.
+\\
+\begin{figure}[H]
+\centering
+\registerspec{64}{32}{%
+  1//{0}//\scriptsize\texttt{V},%
+  1//{1}//\scriptsize\texttt{R},%
+  1//{2}//\scriptsize\texttt{W},%
+  1//{3}//\scriptsize\texttt{X},%
+  1//{4}//\scriptsize\texttt{T},%
+  1//{5}//\scriptsize\texttt{G},%
+  1//{6}//\scriptsize\texttt{A},%
+  1//{7}//\scriptsize\texttt{D},%
+  4/{8}//{11}/\footnotesize\emph{color},%
+  36/{12}//{47}/\footnotesize\emph{physical page number},%
+  16/{48}//{63}/\footnotesize\emph{sext}%
+}
+\caption{64-bit vm12 translation lookaside buffer entry.}
+\label{fig:64-bit-vm12-tlb-entry}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\registerspec{64}{32}{%
+  1//{0}//\scriptsize\texttt{V},%
+  1//{1}//\scriptsize\texttt{R},%
+  1//{2}//\scriptsize\texttt{W},%
+  1//{3}//\scriptsize\texttt{X},%
+  1//{4}//\scriptsize\texttt{T},%
+  1//{5}//\scriptsize\texttt{G},%
+  1//{6}//\scriptsize\texttt{A},%
+  1//{7}//\scriptsize\texttt{D},%
+  4/{8}//{11}/\footnotesize\emph{color},%
+  4/{12}//{15}/\footnotesize\texttt{0000},%
+  39/{16}//{54}/\footnotesize\emph{physical page number},%
+  9/{55}//{63}/\footnotesize\emph{sext}%
+}
+\caption{64-bit vm16 translation lookaside buffer entry.}
+\label{fig:64-bit-vm16-tlb-entry}
+\end{figure}
 
 \newpage
 \section{Environment extension}
@@ -4173,62 +4284,183 @@ concept of a \emph{translation address} which is an address boxed with
 an \emph{address space prefix} (\texttt{AS}) designed to provide a
 canonical address form for user and system virtual addresses as
 well as physical addresses.
+\para
+the address translation system is designed to support the following use cases:
+\begin{itemize}[itemsep=0pt]
+\item logical partitioning of memory using page table colors and physical self-maps.
+\item zoning of page table pages using page table entry translate permissions.
+\item tagged translation lookaside buffers using address space identifiers.
+\item multiple pages sizes including 4 KiB and 64 KiB leaf page sizes.
+\end{itemize}
 
-\subsection{page table structure}
-the section describes the dimensions for memory address translation
-and the \emph{trie-based} page table structure pointed to by the
+\par\noindent
+the follow table describes the dimensions for memory address translation
+using the \emph{trie-based} page table structure pointed to by the
 \emph{system page table root} (\texttt{sptr}) register.
-
+the page table types \emph{vm12} and \emph{vm16} support 4 KiB and
+64 KiB leaf pages, respectively.
+\\
 \begin{table}[h]
 \centering
 \footnotesize
 \rowcolors{2}{tbcol}{tbcol}
-\begin{tabular}{|l|l|l|l|l|l|l|}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
 \hline
 \rowcolor{thcol}
-\thead{Page} & \thead{Page} & \thead{Page} & \thead{Virtual} &
-\thead{Page} & \\
+\thead{Page} & \thead{Page} & \thead{Page} & \thead{Page} & \thead{Virtual} &
+\thead{Page} & & \\
 \rowcolor{thcol}
-\thead{Table} & \thead{Number} & \thead{Offset} & \thead{Address} &
-\thead{Index} & \thead{Page} \\
+\thead{Table} & \thead{Table} & \thead{No.} & \thead{Offset} & \thead{Address} &
+\thead{Index} & \thead{Page} & \thead{Address}  \\
 \rowcolor{thcol}
-\thead{Levels} & \thead{Bits} & \thead{Bits} & \thead{Bits} &
-\thead{Entries} & \thead{Sizes} \\
+\thead{Type} & \thead{Levels} & \thead{Bits} & \thead{Bits} & \thead{Bits} &
+\thead{Entries} & \thead{Sizes} & \thead{Space} \\
 \hline
-4 & 9 & 12 & 44 --- 48 & 512 & 4KiB, 2Mib, 1GiB \\
+vm12 & 4 & 9 & 12 & 48 & 512 & 4KiB, 2Mib, 1GiB & 256TiB \\
+%vm14 & 4 & 11 & 14 & 58 & 2048 & 16KiB, 32MiB, 64GiB & 256PiB \\
+vm16 & 3 & 13 & 16 & 55 & 8192 & 64KiB, 512GiB & 32PiB \\
 \hline
 \end{tabular}
 \caption{64-bit page table dimensions}
 \label{tab:64-bit-page-table-dimensions}
 \end{table}
 
+\newpage
+\subsection{page table root}
+\label{sec:page-table-root}
+
+the page table root record is stored in the \texttt{sptr} register, and
+contains a \texttt{type} field indicating the page table type, a type
+specific page table root record containing a 1 --- 5 bit address space
+prefix, the page table root index page number, and an address space
+identifier used to index the translation lookaside buffer.
+\\
+\begin{figure}[H]
+\registerspec{64}{32}{%
+  60/{0}//{59}/\footnotesize\emph{page table root},%
+  4/{60}//{63}/\footnotesize\emph{type}%
+}
+\caption{64-bit common page table root format.}
+\label{fig:64-bit-common-page-table-root-format}
+\end{figure}
+
+\par\noindent
+the \emph{vm12} and \emph{vm16} page table root formats are as follows.
+\\
+\begin{figure}[H]
+\registerspec{64}{32}{%
+  12/{0}//{11}/\footnotesize\emph{ASID},%
+  36/{12}//{47}/\footnotesize\emph{page number},%
+  12/{48}//{59}/\footnotesize\emph{sext},%
+  4/{60}//{63}/\footnotesize\texttt{0001}%
+}
+\caption{64-bit vm12 page table root format.}
+\label{fig:64-bit-vm12-page-table-root-format}
+\end{figure}
+
+\begin{figure}[H]
+\registerspec{64}{32}{%
+  16/{0}//{16}/\footnotesize\emph{ASID},%
+  39/{16}//{54}/\footnotesize\emph{page number},%
+  5/{55}//{59}/\footnotesize\emph{sext},%
+  4/{60}//{63}/\footnotesize\texttt{0011}%
+}
+\caption{64-bit vm16 page table root format.}
+\label{fig:64-bit-vm16-page-table-root-format}
+\end{figure}
+
+\par\noindent
+the page table types used in the page table root \texttt{type} field are as follows.
+\\
+\begin{table}[h]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{no.} & \thead{type} & \thead{description} \\
+\hline
+\texttt{0b0001} & vm12 & 4-level page tables with 4KiB leaf pages \\
+\texttt{0b0011} & vm16 & 3-level page tables with 64KiB leaf pages \\
+\hline
+\end{tabular}
+\caption{64-bit page table types.}
+\label{tab:64-bit-page-table-types}
+\end{table}
+
+\newpage
 \subsection{page table entries}
+
 page table entries are grouped into arrays within index pages which are
-selected by an index derived from a portion of the virtual address. each
-entry contains a physical page number, a page color, plus several permission
-and metadata bits. the physical page number points to the next page
-table level for \emph{pointer} entries or the translated physical address
-for \emph{leaf} entries.
+selected by an index derived from a portion of the virtual address.
+each entry contains a physical page number, a page color, plus several
+permission and metadata bits. the physical page number points to the next
+page table level for \emph{pointer} entries or the translated physical
+address for \emph{leaf} entries.
+\\
+\begin{figure}[H]
+\registerspec{64}{32}{%
+  1//{0}//\scriptsize\texttt{V},%
+  1//{1}//\scriptsize\texttt{R},%
+  1//{2}//\scriptsize\texttt{W},%
+  1//{3}//\scriptsize\texttt{X},%
+  1//{4}//\scriptsize\texttt{T},%
+  1//{5}//\scriptsize\texttt{G},%
+  1//{6}//\scriptsize\texttt{A},%
+  1//{7}//\scriptsize\texttt{D},%
+  4/{8}//{11}/\footnotesize\emph{color},%
+  52/{12}//{63}/\footnotesize\emph{physical page number}%
+}
+\caption{64-bit common page table entry format.}
+\label{fig:64-bit-page-table-entry-format}
+\end{figure}
+
+\par\noindent
+the \emph{vm12} and \emph{vm16} page table entry formats are as follows.
+\\
+\begin{figure}[H]
+\centering
+\registerspec{64}{32}{%
+  1//{0}//\scriptsize\texttt{V},%
+  1//{1}//\scriptsize\texttt{R},%
+  1//{2}//\scriptsize\texttt{W},%
+  1//{3}//\scriptsize\texttt{X},%
+  1//{4}//\scriptsize\texttt{T},%
+  1//{5}//\scriptsize\texttt{G},%
+  1//{6}//\scriptsize\texttt{A},%
+  1//{7}//\scriptsize\texttt{D},%
+  4/{8}//{11}/\footnotesize\emph{color},%
+  36/{12}//{47}/\footnotesize\emph{physical page number},%
+  16/{48}//{63}/\footnotesize\emph{sext}%
+}
+\caption{64-bit vm12 page table entry format.}
+\label{fig:64-bit-vm12-pte-format}
+\end{figure}
 
 \begin{figure}[H]
 \centering
 \registerspec{64}{32}{%
-  1//{0}//\tiny\texttt{V},%
-  1//{1}//\tiny\texttt{R},%
-  1//{2}//\tiny\texttt{W},%
-  1//{3}//\tiny\texttt{X},%
-  1//{4}//\tiny\texttt{T},%
-  1//{5}//\tiny\texttt{G},%
-  1//{6}//\tiny\texttt{A},%
-  1//{7}//\tiny\texttt{D},%
-  4/{8}//{11}/\emph{color},%
-  36/{12}//{47}/\emph{physical page number},%
-  16/{48}//{63}/\emph{sign extended}%
+  1//{0}//\scriptsize\texttt{V},%
+  1//{1}//\scriptsize\texttt{R},%
+  1//{2}//\scriptsize\texttt{W},%
+  1//{3}//\scriptsize\texttt{X},%
+  1//{4}//\scriptsize\texttt{T},%
+  1//{5}//\scriptsize\texttt{G},%
+  1//{6}//\scriptsize\texttt{A},%
+  1//{7}//\scriptsize\texttt{D},%
+  4/{8}//{11}/\footnotesize\emph{color},%
+  4/{12}//{15}/\footnotesize\texttt{0000},%
+  39/{16}//{54}/\footnotesize\emph{physical page number},%
+  9/{55}//{63}/\footnotesize\emph{sext}%
 }
-\caption{64-bit page table entry structure.}
-\label{fig:64-bit-pte-structure}
+\caption{64-bit vm16 page table entry format.}
+\label{fig:64-bit-vm16-pte-format}
 \end{figure}
 
+\par\noindent
+the page table entry permission and metadata bits are as follows.
+\\
 \begin{table}[h]
 \centering
 \footnotesize
@@ -4253,80 +4485,110 @@ for \emph{leaf} entries.
 \end{table}
 
 \newpage
-\subsection{page table addresses}
-\label{sec:page-table-addresses}
-the page table translation system has three types of addresses:
-translation addresses, virtual addresses and physical addresses.
-page table translation addresses have a 1 --- 5 bit address space
-prefix to denote user, system, physical, group shared and thread
-private address spaces. the page table translation and lookup virtual
-address structure is as follows:
+\subsection{translation addresses}
+
+translation addresses are used by the address translation system to abstract
+virtual and physical addresses. translation addresses contain an address
+encoded with a page table type specific address format, where address is
+prefixed with a 1 --- 5 bit address space prefix to distinguish user and
+system virtual addresses from physical addresses.
+\\
+\begin{figure}[H]
+\registerspec{64}{32}{%
+  64/{0}//{63}/\footnotesize\emph{translation address}%
+}
+\caption{64-bit common translation address format.}
+\label{fig:64-bit-common-translation-address-format}
+\end{figure}
+
+\par\noindent
+the \emph{vm12} and \emph{vm16} translation address formats are as follows.
+\\
+\begin{figure}[H]
+\centering
+\registerspec{64}{32}{%
+  43/{0}//{42}/\footnotesize\emph{address},%
+  -5/{43}//{47}/\texttt{AS},%
+  16/{48}//{63}/\footnotesize\emph{sext}%
+}
+\caption{64-bit vm12 translation address format.}
+\label{fig:64-bit-vm12-translation-address-format}
+\end{figure}
 
 \begin{figure}[H]
 \centering
 \registerspec{64}{32}{%
-  12/{0}//{11}/\emph{page offset},%
-  31/{12}//{42}/\emph{page number},%
-  -5/{43}//{47}/\texttt{AS},%
-  16/{48}//{63}/\emph{sign extended}%
+  50/{0}//{49}/\footnotesize\emph{address},%
+  -5/{50}//{54}/\texttt{AS},%
+  9/{55}//{63}/\footnotesize\emph{sext}%
 }
-\caption{64-bit translation address structure.}
-\label{fig:64-bit-translation-address-structure}
+\caption{64-bit vm16 translation address format.}
+\label{fig:64-bit-vm16-translation-address-format}
 \end{figure}
 
-\vspace{-0.75em}
-
+\par\noindent
+the address space prefixes used in translation addresses are as follows.
+\\
 \begin{table}[h]
 \centering
 \footnotesize
 \rowcolors{2}{tbcol}{tbcol}
-\begin{tabular}{|l|l|}
+\begin{tabular}{|l|l|l|}
 \hline
 \rowcolor{thcol}
-\thead{no.} & \thead{name} \\
+\thead{no.} & \thead{name} & \thead{description} \\
 \hline
-\texttt{0b0.} & user \\
-\texttt{0b10.} & system \\
-\texttt{0b110.} & physical \\
-\texttt{0b1110.} & group \\
-\texttt{0b11110.} & private \\
+\texttt{0b0.} & user & user virtual addresses \\
+\texttt{0b10.} & system & system virtual addresses \\
+\texttt{0b110.} & physical & global memory \\
+\texttt{0b1110.} & group & group shared memory \\
+\texttt{0b11110.} & private & thread private memory \\
 \hline
 \end{tabular}
 \caption{1---5 bit translation address space prefixes.}
 \label{tab:1-5-bit-translation-address-space-prefixes}
 \end{table}
 
-\vspace{-0.75em}
+\newpage
+\subsection{page table walker}
+\label{sec:page-table-walker}
+
+the page table walker divides the page table number into
+page table trie indices.
 
 \begin{figure}[H]
 \centering
 \registerspec{64}{32}{%
-  12/{0}//{11}/\emph{page offset},%
-  9/{12}//{20}/\emph{pn[0]},%
-  9/{21}//{29}/\emph{pn[1]},%
-  9/{30}//{38}/\emph{pn[2]},%
-  9/{39}//{47}/\emph{pn[3]},%
-  16/{48}//{63}/\emph{sign extended}%
+  12/{0}//{11}/\footnotesize\emph{page offset},%
+  9/{12}//{20}/\footnotesize\emph{pn[0]},%
+  9/{21}//{29}/\footnotesize\emph{pn[1]},%
+  9/{30}//{38}/\footnotesize\emph{pn[2]},%
+  9/{39}//{47}/\footnotesize\emph{pn[3]},%
+  16/{48}//{63}/\footnotesize\emph{sext}%
 }
-\caption{64-bit lookup virtual address structure.}
-\label{fig:64-bit-lookup-virtual-address-structure}
+\caption{64-bit vm12 lookup virtual address structure.}
+\label{fig:64-bit-vm12-lookup-virtual-address-structure}
 \end{figure}
 
-\subsection{page table translation}
-the page table walker performs page table lookup to translate virtual
-addresses into physical addresses. the page table walker reads the page
-table root pointer then walks the \emph{trie-based} page table structure
-to find a leaf entry containing a physical page address.
-\para
+\begin{figure}[H]
+\centering
+\registerspec{64}{32}{%
+  16/{0}//{15}/\footnotesize\emph{page offset},%
+  13/{16}//{28}/\footnotesize\emph{pn[0]},%
+  13/{29}//{41}/\footnotesize\emph{pn[1]},%
+  13/{42}//{54}/\footnotesize\emph{pn[2]},%
+  9/{55}//{63}/\footnotesize\emph{sext}%
+}
+\caption{64-bit vm16 lookup virtual address structure.}
+\label{fig:64-bit-vm16-lookup-virtual-address-structure}
+\end{figure}
+
+\par\noindent
 page table entries with the \emph{read, write} and \emph{exec} permission
 bits clear are interpreted as \emph{pointer} entries and contain a pointer
 to the next-level index page, otherwise they are interpreted as \emph{leaf}
 entries with a final translation. entries with the \emph{write} bit set
-must have the \emph{read} bit set. entries without the \emph{accessed} bit
-set will fault on read accesses. entries without the \emph{dirty} bit set
-will fault on write accesses. the \emph{global} bit prevents \emph{sptr.ASID}
-from being associated with TLB entries. the \emph{color} field is reserved
-for use by system software and the capabilities extension.
+must have the \emph{read} bit set.
 \para
 if the physical permissions feature \emph{mfeature.P} is present and
 \emph{mcontrol.P} is enabled, then physical pages must be present in the
@@ -4336,8 +4598,7 @@ containing its own address. this is to allow physical page permissions
 to be checked. in addition to this, the physical self-mappings for physical
 pages containing page table pages must have the \emph{translate} bit set.
 \para
-the page table lookup and virtual to physical address translation process
-are as follows:
+the page table walker process is as follows.
 
 \begin{algorithm}[H]
 \footnotesize
@@ -4385,20 +4646,44 @@ are as follows:
 \end{algorithmic}
 \end{algorithm}
 
+\newpage
+\subsection{address translation process}
+
+the page table walker performs page table lookup to translate virtual
+addresses into physical addresses.
+the page table walker reads the page table root pointer then walks the
+\emph{trie-based} page table structure to find a leaf entry containing
+a physical page address.
+the translation address must be a virtual address.
+the page table root address must be a physical address.
+\para
+entries without the \emph{accessed} bit
+set will fault on read accesses. entries without the \emph{dirty} bit set
+will fault on write accesses. the \emph{global} bit prevents \emph{sptr.ASID}
+from being associated with TLB entries. the \emph{color} field is reserved
+for use by the capabilities extension.
+\para
+the virtual to physical address translation process is as follows.
+
 \begin{algorithm}[H]
 \footnotesize
 \caption{translate virtual address to physical address}
 \begin{algorithmic}[1]
-\Function{translate}{$\mathit{op}, \mathit{va}$}
-  \If {$\lnot\Call{check\_canonical}{\mathit{va}, \mathit{va\_bits}}$}
-    \Comment{check address is sign-extended}
+\Function{virtual\_to\_physical}{$\mathit{op}, \mathit{va}$}
+  \Comment{$\mathit{op}$: operation, $\mathit{va}$: virtual address}
+  \If {$\lnot (\mathit{sptr.as} = \mathit{physical} \lor
+               \mathit{sptr.as} = \mathit{group} \lor
+               \mathit{sptr.as} = \mathit{private})$}
     \State \textbf{raise} \textbf{fault}
+    \Comment{page table root is not physical}
   \EndIf
   \State $(\mathit{pte}, \mathit{sm}, \mathit{level}) \gets \Call{find\_page}{
     \mathit{virtual},\mathit{num\_levels}-1,\mathit{sptr.ppn},\mathit{va}}$
   \Comment{find page table entry}
-  \State $\mathit{mask} \gets
-    ((1 << (\mathit{level} \times \mathit{pn\_bits} + \mathit{po\_bits})) - 1)$
+  \State $\mathit{shift} \gets \mathit{level} \times
+    \mathit{pn\_bits} + \mathit{po\_bits}$
+  \Comment{calculate page number shift}
+  \State $\mathit{mask} \gets (1 << \mathit{shift}) - 1$
   \State $\mathit{caps} \gets
     (\mathit{R} \land \mathit{colorread[pte.color]}) \lor
     (\mathit{W} \land \mathit{colorwrite[pte.color]}) \lor
@@ -4432,12 +4717,19 @@ are as follows:
       \mathit{user} \land \mathit{op.(R \lor W})$}
     \State \textbf{raise} \textbf{fault}
     \Comment{invalid user page access}
-  \ElsIf {($\mathit{pte.ppn} << \mathit{po\_bits}) \land \mathit{mask} \ne 0$}
+  \ElsIf {($\mathit{pte.ppn} << \mathit{shift}) \land \mathit{mask} \ne 0$}
     \State \textbf{raise} \textbf{fault}
     \Comment{invalid superpage alignment}
   \EndIf
-  \State \Return $(\mathit{pte.ppn} << \mathit{po\_bits}) +
+  \State $\mathit{ta} \gets (\mathit{pte.ppn} << \mathit{shift}) +
     (\mathit{va} \land \mathit{mask})$
+  \If {$\lnot (\mathit{ta.as} = \mathit{physical} \lor
+               \mathit{ta.as} = \mathit{group} \lor
+               \mathit{ta.as} = \mathit{private})$}
+    \State \textbf{raise} \textbf{fault}
+    \Comment{translated address is not physical}
+  \EndIf
+  \State \Return $\mathit{ta}$
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
@@ -5672,7 +5964,7 @@ the \emph{illegal} instruction causes an illegal instruction trap.
 for the operating system to dispatch to an illegal instruction handler
 and the \emph{program counter} is set to a trap vector address.
 
-\addtocontents{toc}{\protect\clearpage}
+%\addtocontents{toc}{\protect\clearpage}
 \chapter{Assembly}
 
 \section{Introduction}
