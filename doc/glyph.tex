@@ -4022,42 +4022,45 @@ store vector with desc (\texttt{rd}), base (\texttt{rb}, and vector of coordinat
 
 \subsection{coordinate vector}
 
-the 64-bit and 128-bit coordinate vector layouts are as follows.
+the 64-bit and 128-bit integer coordinate vector layouts are as follows.
 
 \begin{figure}[H]
 \begin{tikzpicture}[xscale=0.45,yscale=0.40]
 \registerspecrow{32}{32}{0.0}{
   16/{0}//{15}/$x_{[15:0]}$,%
-  16/{16}//{31}/$y_{[31:16]}$%
+  16/{16}//{31}/$y_{[15:0]}$%
 }
 \registerspecrow{32}{32}{2.0}{
-  16/{32}//{47}/$z_{[47:32]}$,%
-  4/{48}//{51}/$\mathit{level}$,%
+  16/{32}//{47}/$z_{[15:0]}$,%
+  4/{48}//{51}/$\mathit{level}_{[3:0]}$,%
   12/{52}//{63}/$\mathit{reserved}$%
 }
 \end{tikzpicture}
-\caption{64-bit coordinate vector.}
-\label{fig:64-bit-coordinate-vector}
+\caption{64-bit integer coordinate vector.}
+\label{fig:64-bit-integer-coordinate-vector}
 \end{figure}
 
 \begin{figure}[H]
 \begin{tikzpicture}[xscale=0.45,yscale=0.40]
 \registerspecrow{32}{32}{0.0}{
-  32/{0}//{31}/$x_{[31:0]}$%
+  20/{0}//{19}/$x_{[19:0]}$,%
+  12/{20}//{31}/$\mathit{reserved}$%
 }
 \registerspecrow{32}{32}{2.0}{
-  32/{32}//{63}/$y_{[63:32]}$%
+  20/{32}//{51}/$y_{[19:0]}$,%
+  12/{52}//{63}/$\mathit{reserved}$%
 }
 \registerspecrow{32}{32}{4.0}{
-  32/{64}//{95}/$z_{[95:64]}$%
+  20/{64}//{83}/$z_{[19:0]}$,%
+  12/{84}//{95}/$\mathit{reserved}$%
 }
 \registerspecrow{32}{32}{6.0}{
-  4/{96}//{99}/$\mathit{level}$,%
+  4/{96}//{99}/$\mathit{level}_{[3:0]}$,%
   28/{100}//{127}/$\mathit{reserved}$%
 }
 \end{tikzpicture}
-\caption{128-bit coordinate vector.}
-\label{fig:128-bit-coordinate-vector}
+\caption{128-bit integer coordinate vector.}
+\label{fig:128-bit-integer-coordinate-vector}
 \end{figure}
 
 \newpage
