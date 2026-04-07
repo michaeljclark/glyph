@@ -3992,7 +3992,7 @@ configured with the descriptor before use to allow address computation.
 array unit instructions take a base address, an array unit descriptor
 register, and a coordinate vector. section~\ref{sec:array-address-calculation}
 contains the address computation algorithm. the following table describes
-the array unit instructions.
+the high-level templates for the array unit instructions.
 
 \begin{table}[h]
 \centering
@@ -4003,7 +4003,16 @@ the array unit instructions.
 \rowcolor{thcol}
 \thead{operation name} & \thead{description} \\
 \hline
-configure-array-unit \texttt{rd} & configure array unit with dimensions in descriptor (\texttt{rd}) \\
+configure-array-unit \texttt{rd} &
+configure array unit with dimensions in descriptor (\texttt{rd}) \\
+get-array-count \texttt{rc} \texttt{rd} &
+get array visible size coordinate (\texttt{rc}) from descriptor (\texttt{rd}) \\
+get-array-size \texttt{rc} \texttt{rd} &
+get array total size coordinate (\texttt{rc}) from descriptor (\texttt{rd}) \\
+broadcast-array-count \texttt{vc} \texttt{rd} &
+broadcast array visible size coordinate (\texttt{vc}) from descriptor (\texttt{rd}) \\
+broadcast-array-size \texttt{vc} \texttt{rd} &
+broadcast array total size coordinate (\texttt{vc}) from descriptor (\texttt{rd}) \\
 scalar-array-load \texttt{re} \texttt{rc} \texttt{rd} \texttt{rb} \texttt{ra} &
 load scalar with desc (\texttt{rd}), base (\texttt{rb}), and coordinate (\texttt{rc}) \\
 scalar-array-store \texttt{rd} \texttt{rc} \texttt{rb} \texttt{ra} &
@@ -4020,7 +4029,7 @@ store vector with desc (\texttt{rd}), base (\texttt{rb}, and vector of coordinat
 
 \vspace{-1em}
 
-\subsection{coordinate vector}
+\subsection{coordinate vectors}
 
 the 64-bit and 128-bit integer coordinate vector layouts are as follows.
 
@@ -4156,7 +4165,9 @@ the array dimensions are computed from the array unit descriptor as follows.
 \begin{tabular}{|l|l|l|}
 \hline
 \rowcolor{thcol}
-\thead{dim} & \thead{total size} & \thead{visible size} \\
+\thead{dim} &
+\thead{array total size} (\texttt{size}) &
+\thead{array visible size} (\texttt{count}) \\
 \hline
 x & $(\mathit{d.size}_x + 1) \times (1 << \mathit{d.tile}_x)$ &
     $(\mathit{d.count}_x + 1) \times (1 << \mathit{d.tile}_x) - \mathit{d.offset}_x$ \\
