@@ -31,6 +31,7 @@ this list outlines architectural highlights of the glyph architecture:
 - *message-signaled interrupts* - support globally-scoped inter-domain message interrupts.
 - *multicast network-on-chip* - enables synchronized messaging for thread groups.
 - *deadline timer interrupts* - use the processor high-precision clock for deadline timers.
+- *muliple page sizes* - supports 64KiB and 4KiB page sizes to makes emulation easier.
 - *software-defined MMU* - accelerates address translation for foreign page-table formats.
 - *address-space prefixes* - enable OpenCL group-shared and private local memory.
 - *virtual machine definition* - provides EFI firmware, device-tree, and VirtIO device support.
