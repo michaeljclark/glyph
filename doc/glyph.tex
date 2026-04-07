@@ -4079,17 +4079,71 @@ store vector with desc (\texttt{rd}), base (\texttt{rb}, and vector of coordinat
 \label{tab:array-unit-instructions}
 \end{table}
 
+\vspace{-1em}
+
 \subsection{coordinate vector}
 
-the coordinate vector layout is as follows.
-\\
-\registerspec{64}{32}{%
-  20/{0}//{19}/\emph{x},%
-  20/{20}//{39}/\emph{y},%
-  20/{40}//{59}/\emph{z},%
-  4/{60}//{63}/\emph{level}%
-}
+the 64-bit and 128-bit coordinate vector layouts are as follows.
 
+\begin{figure}[H]
+\begin{tikzpicture}[xscale=0.45,yscale=0.40]
+\draw [black] (16,-2)    rectangle (32,-1);
+\draw [black] (0,-2)    rectangle (16,-1);
+\node [font=\tiny,anchor=base east] at (32,-0.75)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (16,-0.75)  {\textsf{15}};
+\node [font=\tiny,anchor=base east] at (16,-0.75)  {\textsf{16}};
+\node [font=\tiny,anchor=base west] at (0,-0.75)  {\textsf{31}};
+\node [font=\small,anchor=base] at (8,-1.75)  {$y_{[31:16]}$};
+\node [font=\small,anchor=base] at (24,-1.75)  {$x_{[15:0]}$};
+
+\draw [black] (16,0)    rectangle (32,1);
+\draw [black] (12,0)    rectangle (16,1);
+\draw [black] (0,0)    rectangle (12,1);
+\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{32}};
+\node [font=\tiny,anchor=base west] at (16,1.25)  {\textsf{47}};
+\node [font=\tiny,anchor=base east] at (16,1.25)  {\textsf{48}};
+\node [font=\tiny,anchor=base west] at (12,1.25)  {\textsf{51}};
+\node [font=\tiny,anchor=base east] at (12,1.25)  {\textsf{52}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{63}};
+\node [font=\small,anchor=base] at (7,0.25)  {$\mathit{reserved}$};
+\node [font=\small,anchor=base] at (14,0.25)  {$\mathit{level}$};
+\node [font=\small,anchor=base] at (24,0.25)  {$z_{[47:32]}$};
+\end{tikzpicture}
+\caption{64-bit coordinate vector.}
+\label{fig:64-bit-coordinate-vector}
+\end{figure}
+
+\begin{figure}[H]
+\begin{tikzpicture}[xscale=0.45,yscale=0.40]
+\draw [black] (0,-6)    rectangle (32,-5);
+\node [font=\tiny,anchor=base east] at (32,-4.75)  {\textsf{0}};
+\node [font=\tiny,anchor=base west] at (0,-4.75)  {\textsf{31}};
+\node [font=\small,anchor=base] at (16,-5.75)  {$x_{[31:0]}$};
+
+\draw [black] (0,-4)    rectangle (32,-3);
+\node [font=\tiny,anchor=base east] at (32,-2.75)  {\textsf{32}};
+\node [font=\tiny,anchor=base west] at (0,-2.75)  {\textsf{63}};
+\node [font=\small,anchor=base] at (16,-3.75)  {$y_{[63:32]}$};
+
+\draw [black] (0,-2)    rectangle (32,-1);
+\node [font=\tiny,anchor=base east] at (32,-0.75)  {\textsf{64}};
+\node [font=\tiny,anchor=base west] at (0,-0.75)  {\textsf{95}};
+\node [font=\small,anchor=base] at (16,-1.75)  {$z_{[95:64]}$};
+
+\draw [black] (28,0)    rectangle (32,1);
+\draw [black] (0,0)    rectangle (28,1);
+\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{96}};
+\node [font=\tiny,anchor=base west] at (28,1.25)  {\textsf{99}};
+\node [font=\tiny,anchor=base east] at (28,1.25)  {\textsf{100}};
+\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{127}};
+\node [font=\small,anchor=base] at (15,0.25)  {$\mathit{reserved}$};
+\node [font=\small,anchor=base] at (30,0.25)  {$\mathit{level}$};
+\end{tikzpicture}
+\caption{128-bit coordinate vector.}
+\label{fig:128-bit-coordinate-vector}
+\end{figure}
+
+\newpage
 \subsection{component swizzle}
 
 the component swizzle using the array unit descriptor is as follows.
@@ -4124,33 +4178,8 @@ the component swizzle using the array unit descriptor is as follows.
 \end{algorithmic}
 \end{algorithm}
 
-\newpage
-\subsection{address calculation}
-\label{sec:array-address-calculation}
-
-the array dimensions are computed from the array unit descriptor as follows.
-
-\begin{table}[H]
-\centering
-\footnotesize
-\rowcolors{2}{tbcol}{tbcol}
-\begin{tabular}{|l|l|l|}
-\hline
-\rowcolor{thcol}
-\thead{dim} & \thead{total size} & \thead{visible size} \\
-\hline
-x & $(\mathit{d.size}_x + 1) \times (1 << \mathit{d.tile}_x)$ &
-    $(\mathit{d.count}_x + 1) \times (1 << \mathit{d.tile}_x) - \mathit{d.offset}_x$ \\
-y & $(\mathit{d.size}_y + 1) \times (1 << \mathit{d.tile}_y)$ &
-    $(\mathit{d.count}_y + 1) \times (1 << \mathit{d.tile}_y) - \mathit{d.offset}_y$ \\
-z & $(\mathit{d.size}_z + 1) \times (1 << \mathit{d.tile}_z)$ &
-    $(\mathit{d.count}_z + 1) \times (1 << \mathit{d.tile}_z)$ \\
-\hline
-\end{tabular}
-\end{table}
-
-\par\noindent
-the array access address calculation using the array unit descriptor is as follows.
+\subsection{mipmap base address}
+the mipmap base address calculation using the array unit descriptor is as follows.
 
 \begin{algorithm}[H]
 \footnotesize
@@ -4194,6 +4223,35 @@ the array access address calculation using the array unit descriptor is as follo
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
+
+\newpage
+\subsection{array dimensions}
+
+the array dimensions are computed from the array unit descriptor as follows.
+\\
+\begin{table}[H]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{dim} & \thead{total size} & \thead{visible size} \\
+\hline
+x & $(\mathit{d.size}_x + 1) \times (1 << \mathit{d.tile}_x)$ &
+    $(\mathit{d.count}_x + 1) \times (1 << \mathit{d.tile}_x) - \mathit{d.offset}_x$ \\
+y & $(\mathit{d.size}_y + 1) \times (1 << \mathit{d.tile}_y)$ &
+    $(\mathit{d.count}_y + 1) \times (1 << \mathit{d.tile}_y) - \mathit{d.offset}_y$ \\
+z & $(\mathit{d.size}_z + 1) \times (1 << \mathit{d.tile}_z)$ &
+    $(\mathit{d.count}_z + 1) \times (1 << \mathit{d.tile}_z)$ \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{address calculation}
+\label{sec:array-address-calculation}
+
+the array access address calculation using the array unit descriptor is as follows.
 
 \begin{algorithm}[H]
 \footnotesize
