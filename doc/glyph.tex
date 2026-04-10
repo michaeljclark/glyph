@@ -3743,30 +3743,30 @@ the array unit descriptor layout is as follows.
 \par\noindent
 \begin{tikzpicture}[xscale=0.45,yscale=0.40]
 \registerspecrow{32}{32}{0.0}{%
-  7/{0}//{6}/\scriptsize$\mathsf{offset_x}$,%
-  7/{7}//{13}/\scriptsize$\mathsf{offset_y}$,%
-  4/{14}//{17}/\scriptsize$\mathsf{base}$,%
-  4/{18}//{21}/\scriptsize$\mathsf{levels}$,%
-  4/{22}//{25}/\scriptsize$\mathsf{format}$,%
-  3/{26}//{28}/\scriptsize$\mathsf{order}$,%
+  13/{0}//{12}/\scriptsize$\mathsf{count_x}$,%
+  3/{13}//{15}/\scriptsize$\mathsf{tile_x}$,%
+  13/{16}//{28}/\scriptsize$\mathsf{size_x}$,%
   3/{29}//{31}/\scriptsize$\mathsf{swiz_{[0]}}$%
 }
 \registerspecrow{32}{32}{2.0}{%
-  13/{32}//{44}/\scriptsize$\mathsf{count_x}$,%
-  3/{45}//{47}/\scriptsize$\mathsf{tile_x}$,%
-  13/{48}//{60}/\scriptsize$\mathsf{size_x}$,%
+  13/{32}//{44}/\scriptsize$\mathsf{count_y}$,%
+  3/{45}//{47}/\scriptsize$\mathsf{tile_y}$,%
+  13/{48}//{60}/\scriptsize$\mathsf{size_y}$,%
   3/{61}//{63}/\scriptsize$\mathsf{swiz_{[1]}}$%
 }
 \registerspecrow{32}{32}{4.0}{%
-  13/{64}//{76}/\scriptsize$\mathsf{count_y}$,%
-  3/{77}//{79}/\scriptsize$\mathsf{tile_y}$,%
-  13/{80}//{92}/\scriptsize$\mathsf{size_y}$,%
+  13/{64}//{76}/\scriptsize$\mathsf{count_z}$,%
+  3/{77}//{79}/\scriptsize$\mathsf{tile_z}$,%
+  13/{80}//{92}/\scriptsize$\mathsf{size_z}$,%
   3/{93}//{95}/\scriptsize$\mathsf{swiz_{[2]}}$%
 }
 \registerspecrow{32}{32}{6.0}{%
-  13/{96}//{108}/\scriptsize$\mathsf{count_z}$,%
-  3/{109}//{111}/\scriptsize$\mathsf{tile_z}$,%
-  13/{112}//{124}/\scriptsize$\mathsf{size_z}$,%
+  7/{96}//{102}/\scriptsize$\mathsf{offset_x}$,%
+  7/{103}//{109}/\scriptsize$\mathsf{offset_y}$,%
+  4/{110}//{113}/\scriptsize$\mathsf{base}$,%
+  4/{114}//{117}/\scriptsize$\mathsf{levels}$,%
+  4/{118}//{121}/\scriptsize$\mathsf{format}$,%
+  3/{122}//{124}/\scriptsize$\mathsf{order}$,%
   3/{125}//{127}/\scriptsize$\mathsf{swiz_{[3]}}$%
 }
 \end{tikzpicture}
