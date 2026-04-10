@@ -3742,89 +3742,33 @@ the array unit descriptor layout is as follows.
 
 \par\noindent
 \begin{tikzpicture}[xscale=0.45,yscale=0.40]
-\draw [black] (0,-6)    rectangle (32,-5);
-\draw [black] (25,-6)    rectangle (32,-5);
-\draw [black] (18,-6)    rectangle (25,-5);
-\draw [black] (14,-6)    rectangle (18,-5);
-\draw [black] (10,-6)    rectangle (14,-5);
-\draw [black] (6,-6)    rectangle (10,-5);
-\draw [black] (3,-6)    rectangle (6,-5);
-\draw [black] (0,-6)    rectangle (3,-5);
-\node [font=\tiny,anchor=base east] at (32,-4.75)  {\textsf{0}};
-\node [font=\tiny,anchor=base west] at (25,-4.75)  {\textsf{6}};
-\node [font=\tiny,anchor=base east] at (25,-4.75)  {\textsf{7}};
-\node [font=\tiny,anchor=base west] at (18,-4.75)  {\textsf{13}};
-\node [font=\tiny,anchor=base east] at (18,-4.75)  {\textsf{14}};
-\node [font=\tiny,anchor=base west] at (14,-4.75)  {\textsf{17}};
-\node [font=\tiny,anchor=base east] at (14,-4.75)  {\textsf{18}};
-\node [font=\tiny,anchor=base west] at (10,-4.75)  {\textsf{21}};
-\node [font=\tiny,anchor=base east] at (10,-4.75)  {\textsf{22}};
-\node [font=\tiny,anchor=base west] at (6,-4.75)  {\textsf{25}};
-\node [font=\tiny,anchor=base east] at (6,-4.75)  {\textsf{26}};
-\node [font=\tiny,anchor=base west] at (3,-4.75)  {\textsf{28}};
-\node [font=\tiny,anchor=base east] at (3,-4.75)  {\textsf{29}};
-\node [font=\tiny,anchor=base west] at (0,-4.75)  {\textsf{31}};
-\node [font=\scriptsize,anchor=base] at (28.5,-5.75)  {$\mathsf{offset_x}$};
-\node [font=\scriptsize,anchor=base] at (21.5,-5.75)  {$\mathsf{offset_y}$};
-\node [font=\scriptsize,anchor=base] at (16,-5.75)  {$\mathsf{base}$};
-\node [font=\scriptsize,anchor=base] at (12,-5.75)  {$\mathsf{levels}$};
-\node [font=\scriptsize,anchor=base] at (8,-5.75)  {$\mathsf{format}$};
-\node [font=\scriptsize,anchor=base] at (4.5,-5.75)  {$\mathsf{order}$};
-\node [font=\scriptsize,anchor=base] at (1.5,-5.75)  {$\mathsf{swiz_{[0]}}$};
-
-\draw [black] (0,-4)    rectangle (32,-3);
-\draw [black] (19,-4)   rectangle (32,-3);
-\draw [black] (16,-4)   rectangle (19,-3);
-\draw [black] (3,-4)    rectangle (16,-3);
-\draw [black] (0,-4)    rectangle (3,-3);
-\node [font=\tiny,anchor=base east] at (32,-2.75)  {\textsf{32}};
-\node [font=\tiny,anchor=base west] at (19,-2.75)  {\textsf{44}};
-\node [font=\tiny,anchor=base east] at (19,-2.75)  {\textsf{45}};
-\node [font=\tiny,anchor=base west] at (16,-2.75)  {\textsf{47}};
-\node [font=\tiny,anchor=base east] at (16,-2.75)  {\textsf{48}};
-\node [font=\tiny,anchor=base west] at (3,-2.75)  {\textsf{60}};
-\node [font=\tiny,anchor=base east] at (3,-2.75)  {\textsf{61}};
-\node [font=\tiny,anchor=base west] at (0,-2.75)  {\textsf{63}};
-\node [font=\footnotesize,anchor=base] at (25.5,-3.75)  {$\mathsf{count_x}$};
-\node [font=\footnotesize,anchor=base] at (17.5,-3.75)  {$\mathsf{tile_x}$};
-\node [font=\footnotesize,anchor=base] at (9.5,-3.75)  {$\mathsf{size_x}$};
-\node [font=\footnotesize,anchor=base] at (1.5,-3.75)  {$\mathsf{swiz_{[1]}}$};
-
-\draw [black] (0,-2)    rectangle (32,-1);
-\draw [black] (19,-2)   rectangle (32,-1);
-\draw [black] (16,-2)   rectangle (19,-1);
-\draw [black] (3,-2)    rectangle (16,-1);
-\draw [black] (0,-2)    rectangle (3,-1);
-\node [font=\tiny,anchor=base east] at (32,-0.75)  {\textsf{64}};
-\node [font=\tiny,anchor=base west] at (19,-0.75)  {\textsf{76}};
-\node [font=\tiny,anchor=base east] at (19,-0.75)  {\textsf{77}};
-\node [font=\tiny,anchor=base west] at (16,-0.75)  {\textsf{79}};
-\node [font=\tiny,anchor=base east] at (16,-0.75)  {\textsf{80}};
-\node [font=\tiny,anchor=base west] at (3,-0.75)  {\textsf{92}};
-\node [font=\tiny,anchor=base east] at (3,-0.75)  {\textsf{93}};
-\node [font=\tiny,anchor=base west] at (0,-0.75)  {\textsf{95}};
-\node [font=\footnotesize,anchor=base] at (25.5,-1.75)  {$\mathsf{count_y}$};
-\node [font=\footnotesize,anchor=base] at (17.5,-1.75)  {$\mathsf{tile_y}$};
-\node [font=\footnotesize,anchor=base] at (9.5,-1.75)  {$\mathsf{size_y}$};
-\node [font=\footnotesize,anchor=base] at (1.5,-1.75)  {$\mathsf{swiz_{[2]}}$};
-
-\draw [black] (0,0)    rectangle (32,1);
-\draw [black] (19,0)   rectangle (32,1);
-\draw [black] (16,0)   rectangle (19,1);
-\draw [black] (3,0)    rectangle (16,1);
-\draw [black] (0,0)    rectangle (3,1);
-\node [font=\tiny,anchor=base east] at (32,1.25)  {\textsf{96}};
-\node [font=\tiny,anchor=base west] at (19,1.25)  {\textsf{108}};
-\node [font=\tiny,anchor=base east] at (19,1.25)  {\textsf{109}};
-\node [font=\tiny,anchor=base west] at (16,1.25)  {\textsf{111}};
-\node [font=\tiny,anchor=base east] at (16,1.25)  {\textsf{112}};
-\node [font=\tiny,anchor=base west] at (3,1.25)  {\textsf{124}};
-\node [font=\tiny,anchor=base east] at (3,1.25)  {\textsf{125}};
-\node [font=\tiny,anchor=base west] at (0,1.25)  {\textsf{127}};
-\node [font=\footnotesize,anchor=base] at (25.5,0.25)  {$\mathsf{count_z}$};
-\node [font=\footnotesize,anchor=base] at (17.5,0.25)  {$\mathsf{tile_z}$};
-\node [font=\footnotesize,anchor=base] at (9.5,0.25)  {$\mathsf{size_z}$};
-\node [font=\footnotesize,anchor=base] at (1.5,0.25)  {$\mathsf{swiz_{[3]}}$};
+\registerspecrow{32}{32}{0.0}{%
+  7/{0}//{6}/\scriptsize$\mathsf{offset_x}$,%
+  7/{7}//{13}/\scriptsize$\mathsf{offset_y}$,%
+  4/{14}//{17}/\scriptsize$\mathsf{base}$,%
+  4/{18}//{21}/\scriptsize$\mathsf{levels}$,%
+  4/{22}//{25}/\scriptsize$\mathsf{format}$,%
+  3/{26}//{28}/\scriptsize$\mathsf{order}$,%
+  3/{29}//{31}/\scriptsize$\mathsf{swiz_{[0]}}$%
+}
+\registerspecrow{32}{32}{2.0}{%
+  13/{32}//{44}/\scriptsize$\mathsf{count_x}$,%
+  3/{45}//{47}/\scriptsize$\mathsf{tile_x}$,%
+  13/{48}//{60}/\scriptsize$\mathsf{size_x}$,%
+  3/{61}//{63}/\scriptsize$\mathsf{swiz_{[1]}}$%
+}
+\registerspecrow{32}{32}{4.0}{%
+  13/{64}//{76}/\scriptsize$\mathsf{count_y}$,%
+  3/{77}//{79}/\scriptsize$\mathsf{tile_y}$,%
+  13/{80}//{92}/\scriptsize$\mathsf{size_y}$,%
+  3/{93}//{95}/\scriptsize$\mathsf{swiz_{[2]}}$%
+}
+\registerspecrow{32}{32}{6.0}{%
+  13/{96}//{108}/\scriptsize$\mathsf{count_z}$,%
+  3/{109}//{111}/\scriptsize$\mathsf{tile_z}$,%
+  13/{112}//{124}/\scriptsize$\mathsf{size_z}$,%
+  3/{125}//{127}/\scriptsize$\mathsf{swiz_{[3]}}$%
+}
 \end{tikzpicture}
 
 \newpage
