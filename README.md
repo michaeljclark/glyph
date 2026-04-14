@@ -102,8 +102,8 @@ this list outlines instructions, opcodes, and descriptions used in the
 | 15 | storepc.i64  | op1r_imm6_16 | 01111 | **store** rc,ib32(uimm6*4)(pc)              |
 | 16 | load.i64     | op2r_imm3_16 | 10000 | **load** rc,(uimm3*8)(rb)                   |
 | 17 | store.i64    | op2r_imm3_16 | 10001 | **store** rc,(uimm3*8)(rb)                  |
-| 18 | compare.i64  | op2r_fun3_16 | 10010 | **compare** rc,rb; flag                     |
-| 19 | logic.i64    | op2r_fun3_16 | 10011 | **logic** rc,rb                             |
+| 18 | cmp.i64      | op2r_fun3_16 | 10010 | **compare** rc,rb,fun3; flag                |
+| 19 | logic.i64    | op2r_fun3_16 | 10011 | **logic** rc,rb,fun3                        |
 | 20 | pin.i64      | op3r_16      | 10100 | **pack-indirect** rc,rb,ra                  |
 | 21 | and.i64      | op3r_16      | 10101 | **and** rc,rb,ra                            |
 | 22 | or.i64       | op3r_16      | 10110 | **or** rc,rb,ra                             |
