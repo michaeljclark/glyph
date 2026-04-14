@@ -3693,7 +3693,7 @@ the array unit descriptor contains the following fields:
 \rowcolor{thcol}
 \thead{field} & \thead{value} & \thead{bits} & \thead{description} \\
 \hline
-\texttt{$\mathsf{order}$}            & row, column   & $3$ & order of array dimensions \\
+\texttt{$\mathsf{order}$}            & row, column, ...  & $3$ & order of array dimensions \\
 \texttt{$\mathsf{format}$}           & 8, 16, 32, 64, 128 & $4$ & word size and component format \\
 \texttt{$\mathsf{levels}$}           & 0--15         & $4$ & number of \emph{mipmap} levels \\
 \texttt{$\mathsf{base}$}             & 0--15         & $4$ & base \emph{mipmap} level of detail \\
@@ -3781,7 +3781,7 @@ the following section describes the array unit fields.
 \subsubsection{order}
 
 \texttt{order} describes the order of array dimensions.
-\emph{row} and \emph{column} orders apply to the both the tile order
+the $\{x,y,z\}$ field orders apply to both the outer tile order
 and the order within tiles.
 
 \begin{table}[H]
@@ -3791,14 +3791,18 @@ and the order within tiles.
 \begin{tabular}{|l|l|l|l|}
 \hline
 \rowcolor{thcol}
-\thead{no.} & \thead{layout} & \thead{description} & \thead{order} \\
+\thead{no.} & \thead{name} & \thead{order} & \thead{mnemonic} \\
 \hline
-\texttt{0b000} & row     & Linear $\{x,y,z\}$ & row-major \\
-\texttt{0b001} & column  & Linear $\{y,x,z\}$ & column-major \\
+\texttt{0b000} & \texttt{xyz} & Linear $\{x,y,z\}$ & row-major \\
+\texttt{0b001} & \texttt{yxz} & Linear $\{y,x,z\}$ & column-major \\
+\texttt{0b010} & \texttt{xzy} & Linear $\{x,z,y\}$ & z-minor-row \\
+\texttt{0b011} & \texttt{yzx} & Linear $\{y,z,x\}$ & z-minor-column \\
+\texttt{0b100} & \texttt{zxy} & Linear $\{z,x,y\}$ & z-major-row \\
+\texttt{0b101} & \texttt{zyx} & Linear $\{z,y,x\}$ & z-major-column \\
 \hline
 \end{tabular}
-\caption{array unit lay field}
-\label{tab:array-unit-lay-field}
+\caption{array unit order field}
+\label{tab:array-unit-order-field}
 \end{table}
 \end{samepage}
 
@@ -4065,15 +4069,9 @@ the mipmap base address calculation using the array unit descriptor is as follow
     \State \Return $0$
   \EndIf
 
-  \State $s \gets
-    \left\{ \mathit{d.tile}_x, \;
-            \mathit{d.tile}_y, \;
-            \mathit{d.tile}_z \right\}$
+  \State $s \gets \mathit{d.tile}$
   \Comment{get tile shift}
-  \State $p \gets
-    \left\{ (\mathit{d.size}_x >> k) + 1, \;
-            (\mathit{d.size}_y >> k) + 1, \;
-            (\mathit{d.size}_z >> k) + 1 \right\}$
+  \State $p \gets (\mathit{d.size} >> k) + 1$
   \Comment{get tile pitch}
 
   \State $q \gets
@@ -4123,6 +4121,31 @@ z & $(\mathit{d.size}_z + 1) \times (1 << \mathit{d.tile}_z)$ &
 \end{tabular}
 \end{table}
 
+\par\noindent
+the coordinate field order is swapped using the array unit descriptor as follows.
+
+\begin{algorithm}[H]
+\footnotesize
+\caption{swap field order using array unit descriptor and coordinate vector}
+\begin{algorithmic}[1]
+\Function{swap\_fields}{$d,v$}
+\Comment{$d$: descriptor, $v$: coordinates}
+
+  \State \textbf{case} $\mathit{d.order}$ \textbf{of}
+  \State \hspace{1em} $\mathsf{xyz}$: $v \gets \{ v_x, v_y, v_z, v_w \}$
+  \State \hspace{1em} $\mathsf{yxz}$: $v \gets \{ v_y, v_x, v_z, v_w \}$
+  \State \hspace{1em} $\mathsf{xzy}$: $v \gets \{ v_x, v_z, v_y, v_w \}$
+  \State \hspace{1em} $\mathsf{yzx}$: $v \gets \{ v_y, v_z, v_x, v_w \}$
+  \State \hspace{1em} $\mathsf{zxy}$: $v \gets \{ v_z, v_x, v_y, v_w \}$
+  \State \hspace{1em} $\mathsf{zyx}$: $v \gets \{ v_z, v_y, v_x, v_w \}$
+  \State \textbf{end case}
+
+  \State \Return $v$
+
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
 \subsection{address calculation}
 \label{sec:array-address-calculation}
 
@@ -4142,25 +4165,12 @@ the array access address calculation using the array unit descriptor is as follo
 
   \State $l \gets \mathit{desc.base} + (v_{level} \land 15)$
   \Comment{get mipmap level}
-  \State $s \gets
-    \left\{ \mathit{d.tile}_x, \;
-            \mathit{d.tile}_y, \;
-            \mathit{d.tile}_z \right\}$
-  \Comment{get tile shift}
-  \State $p \gets
-    \left\{ (\mathit{d.size}_x >> l) + 1, \;
-            (\mathit{d.size}_y >> l) + 1, \;
-            (\mathit{d.size}_z >> l) + 1 \right\}$
-  \Comment{get tile pitch}
-
-  \If{$\mathit{d.order} = \mathsf{column}$}
-    \State $s \gets \left\{ s_y, \; s_x, \; s_z \right\}$
-    \Comment{swap tile shift}
-    \State $p \gets \left\{ p_y, \; p_x, \; p_z \right\}$
-    \Comment{swap tile pitch}
-    \State $v \gets \left\{ v_y, \; v_x, \; v_z, \; v_{level} \right\}$
-    \Comment{swap coordinates}
-  \EndIf
+  \State $s \gets \Call{swap\_fields}{d, \mathit{d.tile}}$
+  \Comment{get tile shift swapped}
+  \State $p \gets \Call{swap\_fields}{d, (\mathit{d.size} >> l) + 1}$
+  \Comment{get tile pitch swapped}
+  \State $v \gets \Call{swap\_fields}{d,v}$
+  \Comment{get coordinates swapped}
 
   \State $r \gets b + \Call{compute\_mipmap\_base}{d,l}$
   \Comment{compute mipmap base}
