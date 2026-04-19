@@ -1986,8 +1986,9 @@ the following table lists \width-bit vector types, their symbols, mnemonics and 
 
 glyph adopts a simple and pragmatic memory model designed for practical
 implementation in hardware or for translation to processors with
-\emph{weakly-ordered} \emph{acquire-release} memory models or processors with
-\emph{strongly-ordered} memory models possessing a \emph{total store order}.
+\emph{weakly-ordered} \emph{acquire-release} ordering primitives or
+processors with \emph{strongly-ordered} memory models providing a
+\emph{total store order}.
 
 \subsection{address spaces}
 
@@ -2011,17 +2012,19 @@ principles of OpenCL work-group shared memory.
 \subsection{atomic operations}
 
 glyph is designed to support translation to instruction sets with
-\emph{weakly-ordered} memory operations. \emph{strongly-ordered} writes
-must enforce a \emph{total store order}. on \emph{weakly-ordered} systems,
-an implicit memory barrier must follow these writes to prevent subsequent
-reads from being reordered with respect to them.
+\emph{weakly-ordered} memory operations. to achieve this,
+\emph{strongly-ordered} or \emph{synchronized} stores must enforce a
+\emph{total order} among such operations. on \emph{weakly-ordered} systems,
+a synchronizing memory barrier following these writes defines the
+synchronization point and prevents subsequent reads from being reordered
+before them.
 \para
 thus, \emph{weakly-ordered} systems with \emph{acquire-release} ordering
-require memory barriers after \emph{strongly-ordered} writes and atomic
-\emph{read–modify–write} operations to act as implicit synchronization
-points. \emph{acquire} loads are relaxed except for ordering enforced
-by prior \emph{strongly-ordered} stores, and constrain only subsequent
-memory operations.
+require synchronizing memory barriers after \emph{strongly-ordered} writes
+and atomic \emph{read–modify–write} operations to act as implicit
+synchronization points. loads observe ordering established by prior
+synchronization points. on architectures providing sufficient ordering
+guarantees, loads may be implemented as relaxed operations.
 \para
 the \emph{local} address space is not required to be coherent or
 globally ordered.
