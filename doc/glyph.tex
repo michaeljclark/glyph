@@ -1991,28 +1991,22 @@ implementation in hardware or for translation to processors with
 
 \subsection{address spaces}
 
-glyph divides the address space into five categories of memory
+glyph divides the address space into four categories of memory
 with different characteristics:
 
 \begin{itemize}[itemsep=0pt]
 \item \emph{user} --- virtual memory accessible to unprivileged software with \emph{user} role.
 \item \emph{system} --- virtual memory accessible to privileged software with \emph{system} role.
 \item \emph{physical} --- physical memory visible globally with well-defined ordering rules.
-\item \emph{group} --- high-speed physical memory visible to a group of shared threads.
-\item \emph{private} --- high-speed physical memory visible to only a single thread.
+\item \emph{local} --- high-speed physical scratchpad memory local to one processing unit.
 \end{itemize}
 
 \par\noindent
-the \emph{group} and \emph{private} address spaces are defined to align
-with the OpenCL\footnote{OpenCL -- \emph{The OpenCL Specification} (API,
-Platform, and Language Specifications), Khronos Group.} memory model.
-the \emph{group} address space corresponds to OpenCL work-group shared
-memory (\textsf{\_\_local}), while the \emph{private} address space
-corresponds to OpenCL per-thread memory (\textsf{\_\_private}). the
-visibility, lifetime, and synchronization semantics of these address
-spaces follow the principles of OpenCL work-group and private memory,
-including the requirement for explicit synchronization to establish
-ordering and visibility between threads.
+the \emph{local} address space is defined to align with OpenCL\footnote{OpenCL
+-- \emph{The OpenCL Specification} (API, Platform, and Language
+Specifications), Khronos Group.} work-group shared memory. the visibility,
+lifetime, and synchronization semantics of this address space follow the
+principles of OpenCL work-group shared memory.
 
 \subsection{atomic operations}
 
@@ -2029,13 +2023,8 @@ points. \emph{acquire} loads are relaxed except for ordering enforced
 by prior \emph{strongly-ordered} stores, and constrain only subsequent
 memory operations.
 \para
-the addition of scoped \emph{group} and \emph{private} address spaces
-ameliorates the cost of maintaining a total store order on global memory.
-
-\begin{itemize}[itemsep=0pt]
-\item \emph{group} --- shared memory with visibility scoped to a localized group of threads.
-\item \emph{private} --- per-thread memory with no inter-thread synchronization requirements.
-\end{itemize}
+the \emph{local} address space is not required to be coherent or
+globally ordered.
 
 \newpage
 \section{Example pipeline}
@@ -4450,8 +4439,8 @@ the \emph{vm12} and \emph{vm16} translation address formats are as follows.
 \begin{figure}[H]
 \centering
 \registerspec{64}{32}{%
-  43/{0}//{42}/\footnotesize\emph{address},%
-  -5/{43}//{47}/\texttt{AS},%
+  44/{0}//{43}/\footnotesize\emph{address},%
+  -4/{44}//{47}/\texttt{AS},%
   16/{48}//{63}/\footnotesize\emph{sext}%
 }
 \caption{64-bit vm12 translation address format.}
@@ -4461,8 +4450,8 @@ the \emph{vm12} and \emph{vm16} translation address formats are as follows.
 \begin{figure}[H]
 \centering
 \registerspec{64}{32}{%
-  50/{0}//{49}/\footnotesize\emph{address},%
-  -5/{50}//{54}/\texttt{AS},%
+  51/{0}//{50}/\footnotesize\emph{address},%
+  -4/{51}//{54}/\texttt{AS},%
   9/{55}//{63}/\footnotesize\emph{sext}%
 }
 \caption{64-bit vm16 translation address format.}
@@ -4483,13 +4472,12 @@ the address space prefixes used in translation addresses are as follows.
 \hline
 \texttt{0b0.} & user & user virtual addresses \\
 \texttt{0b10.} & system & system virtual addresses \\
-\texttt{0b110.} & physical & global memory \\
-\texttt{0b1110.} & group & group shared memory \\
-\texttt{0b11110.} & private & thread private memory \\
+\texttt{0b110.} & physical & global physical memory \\
+\texttt{0b1110.} & local & local scratchpad memory \\
 \hline
 \end{tabular}
-\caption{1---5 bit translation address space prefixes.}
-\label{tab:1-5-bit-translation-address-space-prefixes}
+\caption{1---4 bit translation address space prefixes.}
+\label{tab:1--bit-translation-address-space-prefixes}
 \end{table}
 
 \newpage
@@ -4615,8 +4603,7 @@ the virtual to physical address translation process is as follows.
 \Function{virtual\_to\_physical}{$\mathit{op}, \mathit{va}$}
   \Comment{$\mathit{op}$: operation, $\mathit{va}$: virtual address}
   \If {$\lnot (\mathit{sptr.as} = \mathit{physical} \lor
-               \mathit{sptr.as} = \mathit{group} \lor
-               \mathit{sptr.as} = \mathit{private})$}
+               \mathit{sptr.as} = \mathit{local})$}
     \State \textbf{raise} \textbf{fault}
     \Comment{page table root is not physical}
   \EndIf
@@ -4667,8 +4654,7 @@ the virtual to physical address translation process is as follows.
   \State $\mathit{ta} \gets (\mathit{pte.ppn} << \mathit{shift}) +
     (\mathit{va} \land \mathit{mask})$
   \If {$\lnot (\mathit{ta.as} = \mathit{physical} \lor
-               \mathit{ta.as} = \mathit{group} \lor
-               \mathit{ta.as} = \mathit{private})$}
+               \mathit{ta.as} = \mathit{local})$}
     \State \textbf{raise} \textbf{fault}
     \Comment{translated address is not physical}
   \EndIf
