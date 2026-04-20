@@ -2002,12 +2002,17 @@ with different characteristics:
 \item \emph{local} --- high-speed physical scratchpad memory local to one processing unit.
 \end{itemize}
 
-\par\noindent
-the \emph{local} address space is defined to align with OpenCL\footnote{OpenCL
--- \emph{The OpenCL Specification} (API, Platform, and Language
-Specifications), Khronos Group.} work-group shared memory. the visibility,
-lifetime, and synchronization semantics of this address space follow the
-principles of OpenCL work-group shared memory.
+\subsection{local memory}
+
+the \emph{local} address space is used to access local memory, and is defined
+to align with OpenCL\footnote{OpenCL -- \emph{The OpenCL Specification} (API,
+Platform, and Language Specifications), Khronos Group.} work-group shared
+memory. the visibility, lifetime, and synchronization semantics of this
+address space follow the principles of OpenCL work-group shared memory.
+local address space prefixes may be distinct for each processing unit,
+allowing local memory on each processing unit to be accessed from other
+processing units via uncached memory operations. such accesses are not
+required to be coherent or globally ordered.
 
 \subsection{atomic operations}
 
@@ -2025,9 +2030,6 @@ and atomic \emph{read–modify–write} operations to act as implicit
 synchronization points. loads observe ordering established by prior
 synchronization points. on architectures providing sufficient ordering
 guarantees, loads may be implemented as relaxed operations.
-\para
-the \emph{local} address space is not required to be coherent or
-globally ordered.
 
 \newpage
 \section{Example pipeline}
