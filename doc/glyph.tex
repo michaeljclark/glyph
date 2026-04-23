@@ -5308,7 +5308,24 @@ system software. it encodes memory regions, bus hierarchies, interrupt
 controllers, and device-specific configuration properties in device-tree
 format. the firmware parses it at boot to initialize devices, and exposes
 it to the bootloader and system software, ensuring a uniform view of
-virtual hardware.
+virtual hardware. the device tree binary data is made available via the
+EFI configuration table named \texttt{EFI\_FDT\_TABLE\_GUID}.
+
+\begin{table}[h]
+\centering
+\small
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{symbol} & \thead{GUID} \\
+\hline
+\texttt{EFI\_FDT\_TABLE\_GUID} & \texttt{B1B621D5-F19C-41A5-830B-D9152C69AAE0} \\
+\hline
+\end{tabular}
+\caption{EFI device tree binary GUID}
+\label{tab:efi-dtb-guid}
+\end{table}
 
 \subsection{virtual devices}
 
