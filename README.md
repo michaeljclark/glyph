@@ -33,7 +33,7 @@ this list outlines architectural highlights of the glyph architecture:
 - *deadline timer interrupts* - use the processor high-precision clock for deadline timers.
 - *muliple page sizes* - supports 64KiB and 4KiB page sizes to makes emulation easier.
 - *software-defined MMU* - accelerates address translation for foreign page-table formats.
-- *address-space prefixes* - enable OpenCL group-shared and private local memory.
+- *address-space prefixes* - enable support for OpenCL high-speed local scratchpad memory.
 - *virtual machine definition* - provides EFI firmware, device-tree, and VirtIO device support.
 - *comprehensible specification* - uses semantic normalization aligned with ARPA conventions.
 
