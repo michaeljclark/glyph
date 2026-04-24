@@ -4612,8 +4612,7 @@ the virtual to physical address translation process is as follows.
 \begin{algorithmic}[1]
 \Function{virtual\_to\_physical}{$\mathit{op}, \mathit{va}$}
   \Comment{$\mathit{op}$: operation, $\mathit{va}$: virtual address}
-  \If {$\lnot (\mathit{sptr.as} = \mathit{physical} \lor
-               \mathit{sptr.as} = \mathit{local})$}
+  \If {$\mathit{sptr.as} \ne \mathit{physical}$}
     \State \textbf{raise} \textbf{fault}
     \Comment{page table root is not physical}
   \EndIf
