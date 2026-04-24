@@ -4268,9 +4268,9 @@ vm16 & 3 & 13 & 16 & 55 & 8192 & 64KiB, 512GiB & 32PiB \\
 
 the page table root record is stored in the \texttt{sptr} register, and
 contains a \texttt{type} field indicating the page table type, a type
-specific page table root record containing a 1 --- 5 bit address space
-prefix, the page table root index page number, and an address space
-identifier used to index the translation lookaside buffer.
+specific page table root record containing a 1 --- 4 bit sign-extended
+address space prefix, the page table root index physical page number, and
+an address space identifier used to index the translation lookaside buffer.
 \\
 \begin{figure}[H]
 \registerspec{64}{32}{%
@@ -4287,7 +4287,8 @@ the \emph{vm12} and \emph{vm16} page table root formats are as follows.
 \begin{figure}[H]
 \registerspec{64}{32}{%
   12/{0}//{11}/\footnotesize\emph{ASID},%
-  36/{12}//{47}/\footnotesize\emph{page number},%
+  32/{12}//{43}/\footnotesize\emph{physical page number},%
+  -4/{44}//{47}/\texttt{AS},%
   12/{48}//{59}/\footnotesize\emph{sext},%
   4/{60}//{63}/\footnotesize\texttt{0001}%
 }
@@ -4298,7 +4299,8 @@ the \emph{vm12} and \emph{vm16} page table root formats are as follows.
 \begin{figure}[H]
 \registerspec{64}{32}{%
   16/{0}//{16}/\footnotesize\emph{ASID},%
-  39/{16}//{54}/\footnotesize\emph{page number},%
+  35/{16}//{50}/\footnotesize\emph{physical page number},%
+  -4/{51}//{54}/\texttt{AS},%
   5/{55}//{59}/\footnotesize\emph{sext},%
   4/{60}//{63}/\footnotesize\texttt{0011}%
 }
@@ -4331,10 +4333,11 @@ the page table types used in the page table root \texttt{type} field are as foll
 
 page table entries are grouped into arrays within index pages which are
 selected by an index derived from a portion of the virtual address.
-each entry contains a physical page number, a page color, plus several
-permission and metadata bits. the physical page number points to the next
-page table level for \emph{pointer} entries or the translated physical
-address for \emph{leaf} entries.
+each entry contains a 1 --- 4 bit sign-extended address space prefix,
+a physical page number, a page color, plus several permission and
+metadata bits. the physical page number points to the next page table
+level for \emph{pointer} entries or the translated physical address for
+\emph{leaf} entries.
 \\
 \begin{figure}[H]
 \registerspec{64}{32}{%
@@ -4368,7 +4371,8 @@ the \emph{vm12} and \emph{vm16} page table entry formats are as follows.
   1//{6}//\scriptsize\texttt{A},%
   1//{7}//\scriptsize\texttt{D},%
   4/{8}//{11}/\footnotesize\emph{color},%
-  36/{12}//{47}/\footnotesize\emph{physical page number},%
+  32/{12}//{43}/\footnotesize\emph{physical page number},%
+  -4/{44}//{47}/\texttt{AS},%
   16/{48}//{63}/\footnotesize\emph{sext}%
 }
 \caption{64-bit vm12 page table entry format.}
@@ -4388,7 +4392,8 @@ the \emph{vm12} and \emph{vm16} page table entry formats are as follows.
   1//{7}//\scriptsize\texttt{D},%
   4/{8}//{11}/\footnotesize\emph{color},%
   4/{12}//{15}/\footnotesize\texttt{0000},%
-  39/{16}//{54}/\footnotesize\emph{physical page number},%
+  35/{16}//{50}/\footnotesize\emph{physical page number},%
+  -4/{51}//{54}/\texttt{AS},%
   9/{55}//{63}/\footnotesize\emph{sext}%
 }
 \caption{64-bit vm16 page table entry format.}
@@ -4426,9 +4431,9 @@ the page table entry permission and metadata bits are as follows.
 
 translation addresses are used by the address translation system to abstract
 virtual and physical addresses. translation addresses contain an address
-encoded with a page table type specific address format, where address is
-prefixed with a 1 --- 5 bit address space prefix to distinguish user and
-system virtual addresses from physical addresses.
+encoded using a page table type specific address format, where the address
+is prefixed with a 1 --- 4 bit sign-extended address space prefix to
+distinguish user and system virtual addresses from physical addresses.
 \\
 \begin{figure}[H]
 \registerspec{64}{32}{%
