@@ -1354,6 +1354,27 @@ profile is comprised of:
 \end{itemize}
 
 \par\noindent
+the following table shows the \emph{scalar-min} configuration
+register storage:
+\\
+\begin{table}[H]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{type} & \thead{count} & \thead{width} & \thead{size (bits)} & \thead{size (bytes)} \\
+\hline
+control & 2 & 64 & 128 & 16 \\
+scalar  & 8 & 64 & 512 & 64 \\
+\hline
+\end{tabular}
+\caption{\emph{scalar-min} configuration register storage.}
+\label{tab:scalar-min-configuration-register-storage}
+\end{table}
+
+\par\noindent
 the following diagram shows the \emph{scalar-min} configuration
 register state:
 \\
@@ -1383,6 +1404,27 @@ profile is comprised of:
 \item 64-bit \emph{immediate base} register (aligned to 64 bytes).
 \item 64 \texttimes\,128-bit scalar registers (\textsf{r0} --- \textsf{r63}) with \emph{SIMD128}.
 \end{itemize}
+
+\par\noindent
+the following table shows the \emph{scalar-max} configuration
+register storage:
+\\
+\begin{table}[H]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{type} & \thead{count} & \thead{width} & \thead{size (bits)} & \thead{size (bytes)} \\
+\hline
+control & 2  & 64  & 128  & 16 \\
+scalar  & 64 & 128 & 8192 & 1024 \\
+\hline
+\end{tabular}
+\caption{\emph{scalar-max} configuration register storage.}
+\label{tab:scalar-max-configuration-register-storage}
+\end{table}
 
 \par\noindent
 the following diagram shows the \emph{scalar-max} configuration
@@ -1417,6 +1459,28 @@ profile is comprised of:
 \end{itemize}
 
 \par\noindent
+the following table shows the \emph{vector-min} configuration
+register storage:
+\\
+\begin{table}[H]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{type} & \thead{count} & \thead{width} & \thead{size (bits)} & \thead{size (bytes)} \\
+\hline
+control & 2  & 64 & 128    & 16 \\
+scalar  & 64 & 128 & 8192  & 1024 \\
+vector  & 64 & 512 & 32768 & 4096 \\
+\hline
+\end{tabular}
+\caption{\emph{vector-min} configuration register storage.}
+\label{tab:vector-min-configuration-register-storage}
+\end{table}
+
+\par\noindent
 the following diagram shows the \emph{vector-min} configuration
 register state:
 \\
@@ -1440,6 +1504,28 @@ profile is comprised of:
 \item 64 \texttimes\,128-bit scalar registers (\textsf{r0} --- \textsf{r63}) with \emph{SIMD128}.
 \item 64 \texttimes\,4096-bit vector registers (\textsf{v0} --- \textsf{v63}) with \emph{SIMD512} and \emph{SIMD4096}.
 \end{itemize}
+
+\par\noindent
+the following table shows the \emph{vector-max} configuration
+register storage:
+\\
+\begin{table}[H]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{type} & \thead{count} & \thead{width} & \thead{size (bits)} & \thead{size (bytes)} \\
+\hline
+control & 2  & 64   & 128    & 16 \\
+scalar  & 64 & 128  & 8192   & 1024\\
+vector  & 64 & 4096 & 262144 & 32768 \\
+\hline
+\end{tabular}
+\caption{\emph{vector-max} configuration register storage.}
+\label{tab:vector-max-configuration-register-storage}
+\end{table}
 
 \par\noindent
 the following diagram shows the \emph{vector-max} configuration
