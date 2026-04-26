@@ -241,7 +241,7 @@ registers are temporary storage used to fill input and output
 operands for the \emph{ALU}\footnote{\emph{ALU}\,-- Arithmetic logic unit.}
 before and after execution of instructions. registers are
 organized as a word-addressable store where each register number refers
-to $\mathit{XLEN} \in \{64, 128\}$ bits of data. \emph{XLEN} is a parameter
+to $\mathit{SLEN} \in \{64, 128\}$ bits of data. \emph{SLEN} is a parameter
 that specifies the width of registers in bits.
 \\
 \begin{figure}[H]
@@ -273,7 +273,7 @@ that specifies the width of registers in bits.
   }
   \draw [black] (8,\x) rectangle (24,\x+1);
 }
-\node [font=\tiny,anchor=base west] at (8,4.2)  {\textsf{XLEN}};
+\node [font=\tiny,anchor=base west] at (8,4.2)  {\textsf{SLEN}};
 \node [font=\tiny,anchor=base east] at (24,4.2)  {\textsf{0}};
 
 \draw [black,dashed] (8,-1)      rectangle (24,0);
@@ -754,11 +754,11 @@ to typical RISC architectures. glyph does this so that the branch instructions
 can fit \emph{(pc,ib)} into the a single link register for compatibility with
 traditional RISC architectures. glyph achieves this by packing two relative
 \emph{(pc,ib)} displacements into a relative address vector\footnote{the
-architecture defines two parameters: \emph{ALEN} and \emph{XLEN},
+architecture defines two parameters: \emph{ALEN} and \emph{SLEN},
 which respectively to refer to width of addresses and width of general
-purpose registers in bits. when $\mathit{XLEN} \ge \mathit{ALEN} \times 2$
+purpose registers in bits. when $\mathit{SLEN} \ge \mathit{ALEN} \times 2$
 it is possible to pack absolute addresses instead of relative addresses,
-as would be the case where \emph{ALEN=64} and \emph{XLEN=128}.}.
+as would be the case where \emph{ALEN=64} and \emph{SLEN=128}.}.
 \para
 immediate blocks can be switched using the immediate block branch
 instruction. immediate blocks, unlike typical RISC architectures, mean
@@ -842,7 +842,7 @@ NCOL & --, 16     & number of architectural colors \\
 MLEN & 32         & width of message addresses in bits \\
 ILEN & 16, 32, 64 & width of largest instruction in bits \\
 ALEN & 64         & width of arithmetic on scalars in bits \\
-XLEN & 64, 128    & width of scalar registers in bits \\
+SLEN & 64, 128    & width of scalar registers in bits \\
 VLEN & 512, 4096  & width of vector registers in bits \\
 GLEN & 128        & width of vector lane group in bits \\
 \hline
@@ -872,7 +872,7 @@ contains packed-SIMD instruction on vector registers.
 \rowcolor{thcol}
 \thead{profile} &
 \thead{SREG} & \thead{VREG} & \thead{NDOM} & \thead{NCOL} & \thead{MLEN} &
-\thead{ILEN} & \thead{ALEN} & \thead{XLEN} & \thead{VLEN} & \thead{GLEN} \\
+\thead{ILEN} & \thead{ALEN} & \thead{SLEN} & \thead{VLEN} & \thead{GLEN} \\
 \hline
 \emph{scalar-min} & 8  & -  & -  & -  & 32  & 16 & 64  & 64  & -    & -   \\
 \emph{scalar-max} & 64 & -  & 16 & 16 & 32  & 32 & 64  & 128 & -    & -   \\
@@ -1329,7 +1329,7 @@ profile is comprised of:
 \item 1-bit predicate register (\emph{flag}).
 \item ALEN-bit \emph{program counter} register (aligned to 2 bytes).
 \item ALEN-bit \emph{immediate base} register (aligned to 64 bytes).
-\item SREG \texttimes\,XLEN-bit scalar registers (\textsf{r0} --- \textsf{r\textit{N}}).
+\item SREG \texttimes\,SLEN-bit scalar registers (\textsf{r0} --- \textsf{r\textit{N}}).
 \item VREG \texttimes\,VLEN-bit vector registers (\textsf{v0} --- \textsf{v\textit{N}}).
 \end{itemize}
 
@@ -1339,7 +1339,7 @@ register state:
 \\
 \begin{figure}[H]
 \centering
-\registerstate{ALEN,4}{XLEN,8}{VLEN,16}{64,\textit{N}}{64,\textit{N}}{0}{0}
+\registerstate{ALEN,4}{SLEN,8}{VLEN,16}{64,\textit{N}}{64,\textit{N}}{0}{0}
 \caption{template configuration register state.}
 \label{fig:glyph-register-state-template}
 \end{figure}
@@ -1390,7 +1390,7 @@ register state:
 \end{figure}
 
 \par\noindent
-when $\mathit{XLEN} < \mathit{ALEN} \times 2$ it is not possible to pack
+when $\mathit{SLEN} < \mathit{ALEN} \times 2$ it is not possible to pack
 absolute addresses in the link register, so the \texttt{PIN} and
 \texttt{LINK} instructions save relative addresses in the link register.
 this increases latency in branch address calculation compared to
@@ -1442,7 +1442,7 @@ register state:
 \end{figure}
 
 \par\noindent
-when $\mathit{XLEN} \ge \mathit{ALEN} \times 2$ it is possible to pack
+when $\mathit{SLEN} \ge \mathit{ALEN} \times 2$ it is possible to pack
 absolute addresses in the link register, so the \texttt{PIN} and
 \texttt{LINK} instructions save absolute addresses in the link register.
 this reduces latency in branch address calculation compared to
@@ -2505,7 +2505,7 @@ are enabled.
 \texttt{tscratch} is a read-write save register for use during trap handling.
 \\
 \registerspec{64}{32}{%
-  64/{0}//{XLEN-1}/\emph{scratch value}%
+  64/{0}//{SLEN-1}/\emph{scratch value}%
 }
 
 \newpage
@@ -2569,7 +2569,7 @@ and may contain:
 \end{itemize}
 
 \registerspec{64}{32}{%
-  64/{0}//{XLEN-1}/\emph{trap value}%
+  64/{0}//{SLEN-1}/\emph{trap value}%
 }
 
 \newpage
@@ -3351,7 +3351,7 @@ registers containing an array of the scratch values associated with each
 domain.
 \\
 \registerspec{64}{32}{%
-  64/{0}//{XLEN-1}/\emph{domain scratch}%
+  64/{0}//{SLEN-1}/\emph{domain scratch}%
 }
 
 \subsubsection{domain address (\texttt{domaddr}$[\mathit{ndom}]$)}
@@ -4014,7 +4014,7 @@ a \emph{power-of-two} $(1 << \mathit{size})$.
 \newpage
 \subsection{array unit instructions}
 
-the array extension requires $\mathit{XLEN}=128$. an array unit descriptor is
+the array extension requires $\mathit{SLEN}=128$. an array unit descriptor is
 loaded into a register using a 128-bit constant load instruction, or to access
 descriptor arrays, a 128-bit memory load instruction. the array unit must be
 configured with the descriptor before use to allow address computation.
