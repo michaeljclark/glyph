@@ -1311,10 +1311,14 @@ this section details the layout of the \isize-bit instruction forms:
   \end{tikzpicture}%
 }
 
-glyph has register state comprised of a predicate register, program
-counter, and immediate base registers, a unified floating-point and integer
+glyph has a register state comprising a predicate register, a program
+counter, an immediate base register, a unified floating-point and integer
 scalar register file, and an optional unified floating-point and integer
 vector register file, each with an extensible number of registers.
+SIMD instructions are supported on both scalar and vector registers, with
+different widths. this design element provides additional parallelism on
+the scalar control unit for address generation and control flow, with the
+vector unit providing the main parallelism mechanism.
 
 \subsection{template configuration}
 
