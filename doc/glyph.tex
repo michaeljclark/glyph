@@ -1381,7 +1381,7 @@ profile is comprised of:
 \item 1-bit predicate register (\emph{flag}).
 \item 64-bit \emph{program counter} register (aligned to 2 bytes).
 \item 64-bit \emph{immediate base} register (aligned to 64 bytes).
-\item 64 \texttimes\,128-bit scalar registers (\textsf{r0} --- \textsf{r63}).
+\item 64 \texttimes\,128-bit scalar registers (\textsf{r0} --- \textsf{r63}) with \emph{SIMD128}.
 \end{itemize}
 
 \par\noindent
@@ -1412,8 +1412,8 @@ profile is comprised of:
 \item 1-bit predicate register (\emph{flag}).
 \item 64-bit \emph{program counter} register (aligned to 2 bytes).
 \item 64-bit \emph{immediate base} register (aligned to 64 bytes).
-\item 64 \texttimes\,128-bit scalar registers (\textsf{r0} --- \textsf{r63}).
-\item 64 \texttimes\,512-bit vector registers (\textsf{v0} --- \textsf{v63}).
+\item 64 \texttimes\,128-bit scalar registers (\textsf{r0} --- \textsf{r63}) with \emph{SIMD128}.
+\item 64 \texttimes\,512-bit vector registers (\textsf{v0} --- \textsf{v63}) with \emph{SIMD512}.
 \end{itemize}
 
 \par\noindent
@@ -1437,8 +1437,8 @@ profile is comprised of:
 \item 1-bit predicate register (\emph{flag}).
 \item 64-bit \emph{program counter} register (aligned to 2 bytes).
 \item 64-bit \emph{immediate base} register (aligned to 64 bytes).
-\item 64 \texttimes\,128-bit scalar registers (\textsf{r0} --- \textsf{r63}).
-\item 64 \texttimes\,4096-bit vector registers (\textsf{v0} --- \textsf{v63}).
+\item 64 \texttimes\,128-bit scalar registers (\textsf{r0} --- \textsf{r63}) with \emph{SIMD128}.
+\item 64 \texttimes\,4096-bit vector registers (\textsf{v0} --- \textsf{v63}) with \emph{SIMD512} and \emph{SIMD4096}.
 \end{itemize}
 
 \par\noindent
@@ -2158,7 +2158,6 @@ the section describes the user-level floating-point unit registers.
 \texttt{fpstatus} is a read-only register containing status
 information for floating-point operations. the \texttt{Z, O, U, X,}
 and \texttt{I} fields contain accrued floating-point exceptions.
-this register is visible if \texttt{scontrol.F} is enabled.
 \\
 \registerspec{32}{32}{%
   1//{0}//\texttt{I},%
@@ -2195,7 +2194,7 @@ contains the current floating-point rounding mode. the \texttt{Z}
 field enables \emph{flush-to-zero} and \emph{denormals-are-zero}.
 the \texttt{N} field enables \emph{not-strict-ieee754}, allowing
 \emph{fused-multiply-add} and other optimizations that may affect
-precision. this register is visible if \texttt{scontrol.F} is enabled.
+precision.
 \\
 \registerspec{32}{32}{%
   1//{0}//\texttt{Z},%
@@ -2556,7 +2555,7 @@ the section describes the privileged system registers.
 \texttt{scontrol} is a read-write register containing system control bits.
 \\
 \registerspec{32}{32}{%
-  1//{0}//\texttt{F},%
+  1//{0}//\texttt{V},%
   1//{1}//\texttt{T},%
   1//{2}//\texttt{D},%
   1//{3}//\texttt{A},%
@@ -2572,7 +2571,7 @@ the section describes the privileged system registers.
 \rowcolor{thcol}
 \thead{no.} & \thead{name} & \thead{description} \\
 \hline
-\verb|1 << 0| & F   & floating-point unit enabled \\
+\verb|1 << 0| & V   & vector unit enabled \\
 \verb|1 << 1| & T   & user clock and frequency enabled \\
 \verb|1 << 2| & D   & user address and domain enabled \\
 \verb|1 << 3| & A   & user address space access disable enabled \\
@@ -2587,7 +2586,7 @@ the section describes the privileged system registers.
 \texttt{sfeature} is a read-only register containing system feature bits.
 \\
 \registerspec{32}{32}{%
-  1//{0}//\texttt{F},%
+  1//{0}//\texttt{V},%
   1//{1}//\texttt{T},%
   1//{2}//\texttt{D},%
   1//{3}//\texttt{A},%
@@ -2603,7 +2602,7 @@ the section describes the privileged system registers.
 \rowcolor{thcol}
 \thead{no.} & \thead{name} & \thead{description} \\
 \hline
-\verb|1 << 0| & F   & floating-point unit feature \\
+\verb|1 << 0| & V   & vector unit feature \\
 \verb|1 << 1| & T   & user clock and frequency feature \\
 \verb|1 << 2| & D   & user address and domain feature \\
 \verb|1 << 3| & A   & user address space access disable feature \\
