@@ -117,6 +117,32 @@ this list outlines instructions, opcodes, and descriptions used in the
 | 30 | div.i64      | op3r_16      | 11110 | **div** rc,rb,ra; flag                      |
 | 31 | illegal      | op0r_imm9_16 | 11111 | **illegal** uimm9                           |
 
+### compare fun3 codes
+
+| nr | fun3  | description                   |
+|:---|:------|:------------------------------|
+| 0  | lt    | less than (signed)            |
+| 1  | ge    | greather or equal (signed)    |
+| 2  | eq    | equal                         |
+| 3  | ne    | not equal                     |
+| 4  | ltu   | less than (unsigned)          |
+| 5  | geu   | greater or equal (unsigned)   |
+| 6  | cmov  | conditional move              |
+| 7  | ncmov | negated conditional move      |
+
+### logic fun3 codes
+
+| nr | fun3  | description                   |
+|:---|:------|:------------------------------|
+| 0  | mov   | move                          |
+| 1  | not   | logical not                   |
+| 2  | neg   | negate                        |
+| 3  | bswap | byte swap                     |
+| 4  | ctz   | count trailing zeros          |
+| 5  | clz   | count leading zeros           |
+| 6  | ctpop | count population              |
+| 7  | sext  | sign extend                   |
+
 ## instructions formats
 
 glyph uses a super regular RISC encoding designed for vectorized decoders.
