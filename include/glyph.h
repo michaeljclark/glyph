@@ -327,38 +327,30 @@ __glyph_func__ int cpu_exec_op_link_i64(cpu_state *cpu, u64 inst)
     u64 c = cpu_const_i64(cpu, uimm6(inst));
     u64 l = 0;
 
-    i32 dpc = 0, dib = 0, lpc = 0, lib = 0;
+    i32 dpc = (i32)(c      );
+    i32 dib = (i32)(c >> 32);
+    i32 lpc = 0;
+    i32 lib = 0;
 
-    switch (fun3) {
-    case cpu_link_jala_r6: case cpu_link_jala_r7:
+    if (fun3 == cpu_link_jala_r6 || fun3 == cpu_link_jala_r7) {
         l = auth_decrypt_i64(cpu, cpu->r[reg]);
-        dpc = (i32)(c      ) + (i32)(l      );
-        dib = (i32)(c >> 32) + (i32)(l >> 32);
-        break;
-    default:
-        dpc = (i32)(c      );
-        dib = (i32)(c >> 32);
-        break;
+        dpc += (i32)(l      );
+        dib += (i32)(l >> 32);
     }
 
-    switch (fun3) {
-    case cpu_link_jtl_r6: case cpu_link_jtl_r7:
+    if (fun3 == cpu_link_jtl_r6 || fun3 == cpu_link_jtl_r7) {
         l = auth_decrypt_i64(cpu, cpu->r[reg]);
-        lpc = (i32)(l      );
-        lib = (i32)(l >> 32);
-        break;
+        lpc += (i32)(l      );
+        lib += (i32)(l >> 32);
     }
 
     cpu->pc = cpu->pc + (u64)(dpc - lpc);
     cpu->ib = cpu->ib + (u64)(dib - lib);
 
-    i32 rpc, rib;
-    switch (fun3) {
-    case cpu_link_jal_r6: case cpu_link_jal_r7:
-    case cpu_link_jala_r6: case cpu_link_jala_r7:
+    if (fun3 == cpu_link_jal_r6  || fun3 == cpu_link_jal_r7 ||
+        fun3 == cpu_link_jala_r6 || fun3 == cpu_link_jala_r7) {
         cpu->r[reg] = auth_encrypt_i64(cpu,
             (u64)(u32)dpc | ((u64)dib << 32));
-        break;
     }
 
     return 0;

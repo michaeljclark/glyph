@@ -5580,30 +5580,33 @@ value of \emph{fun3}. the type of linkage in \emph{fun3} can be one of:
 \thead{link-type} & \thead{dst-link} & \thead{src-link} \\
 \hline
 0     & j      & jump               & jump & -  & -  \\
-1     & -      & -                  & -    & -  & -  \\
+1     & j      & jump               & jump & -  & -  \\
 2     & jal    & jump-and-link      & call & r6 & -  \\
 3     & jal    & jump-and-link      & call & r7 & -  \\
 4     & jtl    & jump-to-link       & ret  & -  & r6 \\
 5     & jtl    & jump-to-link       & ret  & -  & r7 \\
-6     & jala   & jump-and-link-add  & tail & r6 & -  \\
-7     & jala   & jump-and-link-add  & tail & r7 & -  \\
+6     & jala   & jump-and-link-add  & tail & r6 & r6 \\
+7     & jala   & jump-and-link-add  & tail & r7 & r7 \\
 \hline
 \end{tabular}
 \caption{Link instruction functions}
 \label{tab:link-instruction-functions}
 \end{table}
 
+\vspace{-1em}
+
 \begin{Verbatim}
     lr = 0b110 + (fun3 & 1)
-    cvec = const-mem<i32x2>[ib + uimm6 * 8]
-    dvec = fun3 == jala ? auth-decrypt(reg<i32x2>[lr]) : 0
-    lvec = fun3 == jtl  ? auth-decrypt(reg<i32x2>[lr]) : 0
-    (dpc,dib) = dvec + cvec
-    (lpc,lib) = lvec
+    (dpc,dib) = const-mem<i32x2>[ib + uimm6 * 8]
+    (lpc,lib) = (0,0)
+    if fun3 == jala:
+        (dpc,dib) += auth-decrypt<i32x2>(reg[lr])
+    if fun3 == jtl:
+        (lpc,lib) += auth-decrypt<i32x2>(reg[lr])
     pc = pc + dpc - lpc
     ib = ib + dib - lib
     if fun3 == jal or fun3 == jala:
-        reg[lr] = auth-encrypt(<i32x2>(dpc,dib))
+        reg[lr] = auth-encrypt<i32x2>((dpc,dib))
 \end{Verbatim}
 
 \par\noindent

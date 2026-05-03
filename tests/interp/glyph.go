@@ -253,31 +253,28 @@ func CPU_exec_op_link_i64(cpu *CPUState, inst uint64) int {
     var c uint64 = CPU_const_i64(cpu, uimm6(inst))
     var l uint64 = 0
 
-    var dpc, dib, lpc, lib int32 = 0, 0, 0, 0
+    var dpc = int32(c      )
+    var dib = int32(c >> 32)
+    var lpc = int32(0)
+    var lib = int32(0)
 
-    switch fun3 {
-    case CPU_link_jala_r6, CPU_link_jala_r7:
+    if fun3 == CPU_link_jala_r6 || fun3 == CPU_link_jala_r7 {
         l = auth_decrypt_i64(cpu, cpu.R[reg])
-        dpc = int32(c      ) + int32(l      )
-        dib = int32(c >> 32) + int32(l >> 32)
-    default:
-        dpc = int32(c      )
-        dib = int32(c >> 32)
+        dpc += int32(l      )
+        dib += int32(l >> 32)
     }
 
-    switch fun3 {
-    case CPU_link_jtl_r6, CPU_link_jtl_r7:
+    if fun3 == CPU_link_jtl_r6 || fun3 == CPU_link_jtl_r7 {
         l = auth_decrypt_i64(cpu, cpu.R[reg])
-        lpc = int32(l      )
-        lib = int32(l >> 32)
+        lpc += int32(l      )
+        lib += int32(l >> 32)
     }
 
     cpu.PC = cpu.PC + uint64(dpc - lpc)
     cpu.IB = cpu.IB + uint64(dib - lib)
 
-    switch fun3 {
-    case CPU_link_jal_r6, CPU_link_jal_r7,
-         CPU_link_jala_r6, CPU_link_jala_r7:
+    if fun3 == CPU_link_jal_r6  || fun3 == CPU_link_jal_r7 ||
+       fun3 == CPU_link_jala_r6 || fun3 == CPU_link_jala_r7 {
         cpu.R[reg] = auth_encrypt_i64(cpu,
             uint64(uint32(dpc)) | (uint64(dib) << 32))
     }

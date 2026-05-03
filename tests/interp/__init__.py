@@ -305,20 +305,20 @@ def cpu_exec_op_link_i64(cpu,inst):
     c = cpu_const_i64(cpu, uimm6(inst))
     l = 0
 
-    dpc, dib, lpc, lib = 0, 0, 0, 0
+    dpc = us32(c      )
+    dib = us32(c >> 32)
+    lpc = 0
+    lib = 0
 
     if fun3 == cpu_link_jala_r6 or fun3 == cpu_link_jala_r7:
         l = auth_decrypt_i64(cpu, cpu.r[reg])
-        dpc = us32(c      ) + us32(l      )
-        dib = us32(c >> 32) + us32(l >> 32)
-    else:
-        dpc = us32(c      )
-        dib = us32(c >> 32)
+        dpc += us32(l      )
+        dib += us32(l >> 32)
 
     if fun3 == cpu_link_jtl_r6 or fun3 == cpu_link_jtl_r7:
         l = auth_decrypt_i64(cpu, cpu.r[reg])
-        lpc = us32(l      )
-        lib = us32(l >> 32)
+        lpc += us32(l      )
+        lib += us32(l >> 32)
 
     cpu.pc = sux(cpu.pc + dpc - lpc)
     cpu.ib = sux(cpu.ib + dib - lib)
