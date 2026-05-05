@@ -2338,7 +2338,7 @@ tick counter since power on in clock tick units denoted by \texttt{cfreq}.
 this register is visible if \texttt{scontrol.T} is enabled.
 \\
 \registerspec{64}{32}{%
-  64/{0}//{ALEN-1}/\emph{clock time}%
+  64/{0}//{SLEN-1}/\emph{clock time}%
 }
 
 \subsubsection{clock frequency (\texttt{cfreq})}
@@ -2348,7 +2348,7 @@ is the frequency in Hertz (Hz).
 this register is visible if \texttt{scontrol.T} is enabled.
 \\
 \registerspec{64}{32}{%
-  64/{0}//{ALEN-1}/\emph{clock frequency}%
+  64/{0}//{SLEN-1}/\emph{clock frequency}%
 }
 
 \subsection{thread address registers}
@@ -2814,7 +2814,7 @@ timer interrupts are marked pending in the \texttt{T} field of the
 \texttt{tstatus} register.
 \\
 \registerspec{64}{32}{%
-  64/{0}//{ALEN-1}/\emph{clock time}%
+  64/{0}//{SLEN-1}/\emph{clock time}%
 }
 
 \newpage
