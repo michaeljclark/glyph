@@ -4797,14 +4797,10 @@ the virtual to physical address translation process is as follows.
     \State \textbf{raise} \textbf{fault}
     \Comment{invalid superpage alignment}
   \EndIf
-  \State $\mathit{ta} \gets (\mathit{pte.ppn} << \mathit{shift}) +
+  \State $\mathit{pa} \gets \mathit{as.physical} \lor
+    (\mathit{pte.ppn} << \mathit{shift}) \lor
     (\mathit{va} \land \mathit{mask})$
-  \If {$\lnot (\mathit{ta.as} = \mathit{physical} \lor
-               \mathit{ta.as} = \mathit{local})$}
-    \State \textbf{raise} \textbf{fault}
-    \Comment{translated address is not physical}
-  \EndIf
-  \State \Return $\mathit{ta}$
+  \State \Return $\mathit{pa}$
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
