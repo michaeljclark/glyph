@@ -3568,8 +3568,8 @@ space identifier.
 \begin{figure}[H]
 \centering
 \registerspec{64}{32}{%
-  16/{0}//{15}/\emph{ASID},%
-  40/{16}//{55}/\emph{reserved},%
+  12/{0}//{11}/\emph{ASID},%
+  44/{12}//{55}/\emph{reserved},%
   4/{56}//{59}/\emph{level},%
   4/{60}//{63}/\emph{type}%
 }
@@ -3667,8 +3667,7 @@ the \emph{vm12} and \emph{vm16} translation lookaside buffer entry formats are a
   1//{6}//\scriptsize\texttt{A},%
   1//{7}//\scriptsize\texttt{D},%
   4/{8}//{11}/\footnotesize\emph{color},%
-  36/{12}//{47}/\footnotesize\emph{physical page number},%
-  16/{48}//{63}/\footnotesize\emph{sext}%
+  52/{12}//{63}/\footnotesize\emph{physical page number}%
 }
 \caption{64-bit vm12 translation lookaside buffer entry.}
 \label{fig:64-bit-vm12-tlb-entry}
@@ -3687,8 +3686,7 @@ the \emph{vm12} and \emph{vm16} translation lookaside buffer entry formats are a
   1//{7}//\scriptsize\texttt{D},%
   4/{8}//{11}/\footnotesize\emph{color},%
   4/{12}//{15}/\footnotesize\texttt{0000},%
-  39/{16}//{54}/\footnotesize\emph{physical page number},%
-  9/{55}//{63}/\footnotesize\emph{sext}%
+  48/{16}//{63}/\footnotesize\emph{physical page number}%
 }
 \caption{64-bit vm16 translation lookaside buffer entry.}
 \label{fig:64-bit-vm16-tlb-entry}
@@ -4352,10 +4350,9 @@ vm16 & 3 & 13 & 16 & 55 & 8192 & 64KiB, 512GiB & 32PiB \\
 \label{sec:page-table-root}
 
 the page table root record is stored in the \texttt{sptr} register, and
-contains a \texttt{type} field indicating the page table type, a type
-specific page table root record containing a 1 --- 4 bit sign-extended
-address space prefix, the page table root index physical page number, and
-an address space identifier used to index the translation lookaside buffer.
+contains a \texttt{type} field indicating the page table type, the page
+table root index physical page number, and an address space identifier
+used to index the translation lookaside buffer.
 \\
 \begin{figure}[H]
 \registerspec{64}{32}{%
@@ -4372,9 +4369,7 @@ the \emph{vm12} and \emph{vm16} page table root formats are as follows.
 \begin{figure}[H]
 \registerspec{64}{32}{%
   12/{0}//{11}/\footnotesize\emph{ASID},%
-  32/{12}//{43}/\footnotesize\emph{physical page number},%
-  -4/{44}//{47}/\texttt{AS},%
-  12/{48}//{59}/\footnotesize\emph{sext},%
+  48/{12}//{59}/\footnotesize\emph{physical page number},%
   4/{60}//{63}/\footnotesize\texttt{0001}%
 }
 \caption{64-bit vm12 page table root format.}
@@ -4383,10 +4378,9 @@ the \emph{vm12} and \emph{vm16} page table root formats are as follows.
 
 \begin{figure}[H]
 \registerspec{64}{32}{%
-  16/{0}//{16}/\footnotesize\emph{ASID},%
-  35/{16}//{50}/\footnotesize\emph{physical page number},%
-  -4/{51}//{54}/\texttt{AS},%
-  5/{55}//{59}/\footnotesize\emph{sext},%
+  12/{0}//{11}/\footnotesize\emph{ASID},%
+  4/{12}//{15}/\footnotesize\texttt{0000},%
+  44/{16}//{59}/\footnotesize\emph{physical page number},%
   4/{60}//{63}/\footnotesize\texttt{0011}%
 }
 \caption{64-bit vm16 page table root format.}
@@ -4418,11 +4412,10 @@ the page table types used in the page table root \texttt{type} field are as foll
 
 page table entries are grouped into arrays within index pages which are
 selected by an index derived from a portion of the virtual address.
-each entry contains a 1 --- 4 bit sign-extended address space prefix,
-a physical page number, a page color, plus several permission and
-metadata bits. the physical page number points to the next page table
-level for \emph{pointer} entries or the translated physical address for
-\emph{leaf} entries.
+each entry contains a physical page number, a page color, plus several
+permission and metadata bits. the physical page number points to the next
+page table level for \emph{pointer} entries or the translated physical
+address for \emph{leaf} entries.
 \\
 \begin{figure}[H]
 \registerspec{64}{32}{%
@@ -4456,9 +4449,7 @@ the \emph{vm12} and \emph{vm16} page table entry formats are as follows.
   1//{6}//\scriptsize\texttt{A},%
   1//{7}//\scriptsize\texttt{D},%
   4/{8}//{11}/\footnotesize\emph{color},%
-  32/{12}//{43}/\footnotesize\emph{physical page number},%
-  -4/{44}//{47}/\texttt{AS},%
-  16/{48}//{63}/\footnotesize\emph{sext}%
+  52/{12}//{63}/\footnotesize\emph{physical page number}%
 }
 \caption{64-bit vm12 page table entry format.}
 \label{fig:64-bit-vm12-pte-format}
@@ -4477,9 +4468,7 @@ the \emph{vm12} and \emph{vm16} page table entry formats are as follows.
   1//{7}//\scriptsize\texttt{D},%
   4/{8}//{11}/\footnotesize\emph{color},%
   4/{12}//{15}/\footnotesize\texttt{0000},%
-  35/{16}//{50}/\footnotesize\emph{physical page number},%
-  -4/{51}//{54}/\texttt{AS},%
-  9/{55}//{63}/\footnotesize\emph{sext}%
+  48/{16}//{63}/\footnotesize\emph{physical page number}%
 }
 \caption{64-bit vm16 page table entry format.}
 \label{fig:64-bit-vm16-pte-format}
