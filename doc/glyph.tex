@@ -2419,15 +2419,16 @@ registers:
 \texttt{0x21} & scontrol  & system control \\
 \texttt{0x22} & sfeature  & system feature \\
 \texttt{0x23} & sversion  & system version \\
-\texttt{0x24} & sptr      & system page table root \\
-\texttt{0x25} & saddress  & system machine address \\
-\texttt{0x26} & sdomain   & system domain address \\
-\texttt{0x27} & starget   & system target address \\
-\texttt{0x28} & smask     & system target mask \\
-\texttt{0x29} & smessage  & system target message \\
-\texttt{0x2A} & stimer    & system deadline timer \\
-\texttt{0x2B} & sie       & system interrupt enable \\
-\texttt{0x2C} & sip       & system interrupt pending \\
+\texttt{0x24} & saddress  & system machine address \\
+\texttt{0x25} & sdomain   & system domain address \\
+\texttt{0x26} & sie       & system interrupt enable \\
+\texttt{0x27} & sip       & system interrupt pending \\
+\texttt{0x28} & stimer    & system deadline timer \\
+\texttt{0x29} & spti      & system page table info \\
+\texttt{0x2A} & sptr      & system page table root \\
+\texttt{0x2B} & starget   & system target address \\
+\texttt{0x2C} & smask     & system target mask \\
+\texttt{0x2D} & smessage  & system target message \\
 \hline
 \rowcolor{tscol}
 \multicolumn{3}{|l|}{\tsub{privileged debug registers}} \\
@@ -2731,15 +2732,6 @@ fields. the allowable values are specified in the following table.
 \label{tab:system-version-values}
 \end{table}
 
-\subsubsection{system page table root (\texttt{sptr})}
-\texttt{sptr} is a read-write register containing the page table root
-for address translation on this thread. section~\ref{sec:page-table-root}
-contains details on the page table root format.
-\\
-\registerspec{64}{32}{%
-  64/{0}//{63}/\emph{page table root}%
-}
-
 \subsubsection{system machine address (\texttt{saddress})}
 \texttt{saddress} is a read-only register containing the unique system-wide
 machine address for this thread. the system-wide machine
@@ -2764,6 +2756,65 @@ these addresses must be unique per-domain on one processor.
 \registerspec{64}{32}{%
   60/{0}///\emph{domain address},%
   4///{MLEN-1}/\texttt{1110}%
+}
+
+\newpage
+\subsubsection{system interrupt enable (\texttt{sie})}
+\texttt{sie} is a read-write register that contains interrupt enable flags
+for 32 wired interrupt pins.
+\\
+\registerspec{64}{32}{%
+  32/{0}//{31}/\emph{interrupt enable 0-31}%
+}
+
+\subsubsection{system interrupt pending (\texttt{sip})}
+\texttt{sip} is a read-only register that contains interrupt pending flags
+for 32 wired interrupt pins.
+\\
+\registerspec{64}{32}{%
+  32/{0}//{31}/\emph{interrupt pending 0-31}%
+}
+
+\subsubsection{system deadline timer (\texttt{stimer})}
+\texttt{stimer} is a read-write register containing the deadline timer
+for this thread. when the system clock reaches the value in the
+register, a \emph{timer interrupt} is triggered.
+timer interrupts are marked pending in the \texttt{T} field of the
+\texttt{tstatus} register.
+\\
+\registerspec{64}{32}{%
+  64/{0}//{SLEN-1}/\emph{clock time}%
+}
+
+\subsubsection{system page table info (\texttt{spti})}
+\texttt{spti} is a read-only register that indicates page table info
+such supported page table formats.
+
+\begin{table}[h]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
+\hline
+\verb|1 << 2| & \texttt{vm12d} & 4-level page tables with 4~KiB leaf pages \\
+\verb|1 << 4| & \texttt{vm14c} & 3-level page tables with 16~KiB leaf pages \\
+\verb|1 << 8| & \texttt{vm16c} & 3-level page tables with 64~KiB leaf pages \\
+\hline
+\end{tabular}
+\caption{system page table info bits}
+\label{tab:system-page-table-info-bits}
+\end{table}
+
+\subsubsection{system page table root (\texttt{sptr})}
+\texttt{sptr} is a read-write register containing the page table root
+for address translation on this thread. section~\ref{sec:page-table-root}
+contains details on the page table root format.
+\\
+\registerspec{64}{32}{%
+  64/{0}//{63}/\emph{page table root}%
 }
 
 \newpage
@@ -2804,34 +2855,6 @@ is set if the most recent message was discarded due to an exception.
 \\
 \registerspec{64}{32}{%
   64/{0}//{MLEN-1}/\emph{message signal}%
-}
-
-\subsubsection{system deadline timer (\texttt{stimer})}
-\texttt{stimer} is a read-write register containing the deadline timer
-for this thread. when the system clock reaches the value in the
-register, a \emph{timer interrupt} is triggered.
-timer interrupts are marked pending in the \texttt{T} field of the
-\texttt{tstatus} register.
-\\
-\registerspec{64}{32}{%
-  64/{0}//{SLEN-1}/\emph{clock time}%
-}
-
-\newpage
-\subsubsection{system interrupt enable (\texttt{sie})}
-\texttt{sie} is a read-write register that contains interrupt enable flags
-for 32 wired interrupt pins.
-\\
-\registerspec{64}{32}{%
-  32/{0}//{31}/\emph{interrupt enable 0-31}%
-}
-
-\subsubsection{system interrupt pending (\texttt{sip})}
-\texttt{sip} is a read-only register that contains interrupt pending flags
-for 32 wired interrupt pins.
-\\
-\registerspec{64}{32}{%
-  32/{0}//{31}/\emph{interrupt pending 0-31}%
 }
 
 \newpage
@@ -4418,7 +4441,10 @@ are as follows.
 \end{figure}
 
 \par\noindent
-the page table types used in the page table root \texttt{type} field are as follows.
+the supported page table formats are indicated in the \emph{system page table
+info} (\texttt{spti}) register.
+the page table types used in the \texttt{type} field of the page table root
+register are as follows.
 \\
 \begin{table}[h]
 \centering
