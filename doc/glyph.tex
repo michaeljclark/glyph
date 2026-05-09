@@ -5447,7 +5447,7 @@ virtual machine model.
 \par\noindent
 the firmware is responsible for setting up boot page tables with a
 self-map of physical memory, enabling page-based virtual address
-translation, providing the hardware description in device-tree format,
+translation, providing the hardware description in device tree format,
 initializing devices required for loading the bootloader, then loading
 and executing the bootloader by calling into \texttt{EfiMain}.
 the firmware runs with the \emph{system} role.
@@ -5455,10 +5455,10 @@ the firmware runs with the \emph{system} role.
 \newpage
 \subsection{hardware description}
 
-the base virtual machine model uses device-tree to describe hardware
-configuration properties such as physical memory layout, device identities
-and properties such as memory-mapped I/O addresses, interrupt routing and
-other configuration parameters.
+the base virtual machine model uses device tree or ACPI, and optionally
+SMBIOS, to describe hardware configuration including physical memory layout,
+bus hierarchies, device identities, memory-mapped I/O addresses, and
+interrupt routing.
 
 \begin{table}[h]
 \centering
@@ -5471,22 +5471,22 @@ other configuration parameters.
 \hline
 \textbf{DTS} & device tree source & the hardware description format \\
 \textbf{DTB} & device tree binary & the compiled binary object \\
-\textbf{FDT} & flattened device tree & the standard format used by bootloaders \\
+\textbf{FDT} & flattened device tree & the runtime device tree format \\
+\textbf{AML} & ACPI machine language & the ACPI bytecode description format \\
 \hline
 \end{tabular}
-\caption{glyph virtual machine hardware description}
-\label{tab:glyph-virtual-machine-hardware-description}
+\caption{glyph hardware description formats}
+\label{tab:glyph-hardware-description-formats}
 \end{table}
 
 \par\noindent
-the hardware description is responsible for providing a complete map of
-physical memory and system devices and resources to the firmware and
-system software. it encodes memory regions, bus hierarchies, interrupt
-controllers, and device-specific configuration properties in device-tree
-format. the firmware parses it at boot to initialize devices, and exposes
-it to the bootloader and system software, ensuring a uniform view of
-virtual hardware. the device tree binary data is made available via the
-EFI configuration table named \texttt{EFI\_FDT\_TABLE\_GUID}.
+the hardware description provides a map of physical memory, devices,
+resources and metadata to firmware and system software. it encodes memory
+regions, bus hierarchies, interrupt routing, and device-specific
+configuration properties. the firmware parses it at boot to initialize
+devices and expose it to the bootloader and system software, ensuring a
+uniform view of hardware. device tree or ACPI binary data is made
+available via EFI configuration tables, along with optional SMBIOS data.
 
 \begin{table}[h]
 \centering
@@ -5498,18 +5498,19 @@ EFI configuration table named \texttt{EFI\_FDT\_TABLE\_GUID}.
 \thead{symbol} & \thead{GUID} \\
 \hline
 \texttt{EFI\_FDT\_TABLE\_GUID} & \texttt{B1B621D5-F19C-41A5-830B-D9152C69AAE0} \\
+\texttt{EFI\_ACPI2\_TABLE\_GUID} & \texttt{8868E871-E4F1-11D3-BC22-0080C73C8881} \\
+\texttt{EFI\_SMBIOS3\_TABLE\_GUID} & \texttt{F2FD1544-9794-4A2C-992E-E5BBCF20E394} \\
 \hline
 \end{tabular}
-\caption{EFI flattened device tree table GUID}
+\caption{glyph EFI hardware description table GUIDs}
 \label{tab:efi-fdt-table-guid}
 \end{table}
 
 \subsection{virtual devices}
 
-the base virtual machine model uses OASIS Virtual I/O (VirtIO) as an
-interface for emulated devices inside glyph virtual machines. the
-following minimal set of VirtIO device models are required in the
-base virtual machine model.
+the base virtual machine model recommends OASIS Virtual I/O (VirtIO) for
+virtual devices. the following VirtIO device models are recommended for
+inclusion in the base model.
 
 \begin{table}[h]
 \centering
@@ -5533,10 +5534,10 @@ base virtual machine model.
 
 \par\noindent
 the virtual devices provide the interface between the guest operating
-system and emulated I/O hardware. each device implements a VirtIO protocol
+system and virtualized I/O devices. each device implements a VirtIO protocol
 and exposes standard operations such as configuration, data transfer, and
-interrupt signaling. the firmware and system software device drivers use
-the virtual devices to perform I/O in a platform-independent way.
+interrupt signaling. the firmware and system software may use VirtIO
+device drivers for platform-independent I/O in virtual environments.
 
 \chapter{Instructions} \label{sec:instructions}
 
