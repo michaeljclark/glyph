@@ -2224,16 +2224,17 @@ the following table lists the user-level registers:
 \texttt{0x01} & fpcontrol & floating-point control \\
 \hline
 \rowcolor{tscol}
-\multicolumn{3}{|l|}{\tsub{clock and frequency registers}} \\
+\multicolumn{3}{|l|}{\tsub{clock and time stamp registers}} \\
 \hline
-\texttt{0x02} & ctime     & clock time \\
-\texttt{0x03} & cfreq     & clock frequency \\
+\texttt{0x02} & clock     & wall clock time \\
+\texttt{0x03} & stamp     & time stamp counter \\
+\texttt{0x04} & freq      & time stamp frequency \\
 \hline
 \rowcolor{tscol}
 \multicolumn{3}{|l|}{\tsub{thread address registers}} \\
 \hline
-\texttt{0x04} & address   & user machine address \\
-\texttt{0x05} & domain    & user domain address \\
+\texttt{0x05} & address   & user machine address \\
+\texttt{0x06} & domain    & user domain address \\
 \hline
 \end{tabularx}
 \caption{user-level registers}
@@ -2329,28 +2330,40 @@ precision.
 \end{table}
 
 \newpage
-\subsection{clock and frequency registers}
-the section describes the user-level clock and frequency registers.
+\subsection{clock and time stamp registers}
+the section describes the user-level wall clock, time stamp counter and
+frequency registers.
 
-\subsubsection{clock time (\texttt{ctime})}
-\texttt{ctime} is a read-only register containing the wall-clock
-tick counter since power on in clock tick units denoted by \texttt{cfreq}.
+\subsubsection{wall clock time (\texttt{clock})}
+\texttt{clock} is a read-only register containing the wall clock time as a
+signed integer representing elapsed nanoseconds (ns) relative to the J2000
+epoch (\texttt{2000-01-01T12:00:00Z}), informally noon on 1 January 2000 UTC.
 this register is visible if \texttt{scontrol.T} is enabled.
 \\
 \registerspec{64}{32}{%
-  64/{0}//{SLEN-1}/\emph{clock time}%
+  64/{0}//63/\emph{wall clock time}%
 }
 
-\subsubsection{clock frequency (\texttt{cfreq})}
-\texttt{cfreq} is a read-only register containing the wall-clock
-tick interval in picoseconds; \(\frac{10^{12}}{f} \) where \( f \)
-is the frequency in Hertz (Hz).
+\subsubsection{time stamp counter (\texttt{stamp})}
+\texttt{stamp} is a read-only register containing a high-precision
+time stamp counter that increments at the frequency specified by
+\texttt{freq}.
 this register is visible if \texttt{scontrol.T} is enabled.
 \\
 \registerspec{64}{32}{%
-  64/{0}//{SLEN-1}/\emph{clock frequency}%
+  64/{0}//63/\emph{time stamp counter}%
 }
 
+\subsubsection{time stamp frequency (\texttt{freq})}
+\texttt{freq} is a read-only register containing the frequency of the
+time stamp counter, \texttt{stamp}, in Hertz (Hz).
+this register is visible if \texttt{scontrol.T} is enabled.
+\\
+\registerspec{64}{32}{%
+  64/{0}//63/\emph{time stamp frequency}%
+}
+
+\newpage
 \subsection{thread address registers}
 the section describes the user-level thread address registers.
 
@@ -2776,14 +2789,15 @@ for 32 wired interrupt pins.
 }
 
 \subsubsection{system deadline timer (\texttt{stimer})}
-\texttt{stimer} is a read-write register containing the deadline timer
-for this thread. when the system clock reaches the value in the
-register, a \emph{timer interrupt} is triggered.
-timer interrupts are marked pending in the \texttt{T} field of the
-\texttt{tstatus} register.
+\texttt{stimer} is a read-write register containing the one-shot time stamp
+deadline for this thread. when the time stamp counter, \texttt{stamp}, is
+greater than or equal to the time stamp deadline, a \emph{timer interrupt}
+is generated, the \texttt{T} field of the \texttt{tstatus} register is set
+to pending, and the \texttt{stimer} register is reset to zero. a value of
+zero indicates the one-shot timer is disabled.
 \\
 \registerspec{64}{32}{%
-  64/{0}//{SLEN-1}/\emph{clock time}%
+  64/{0}//63/\emph{time stamp deadline}%
 }
 
 \subsubsection{system page table info (\texttt{spti})}
@@ -5046,13 +5060,13 @@ the pin number, and \texttt{tvalue} is set to zero.
 \subsection{deadline timer interrupts}
 
 deadline timer interrupts can be configured by setting the \texttt{stimer}
-register. an interrupt is generated when $\mathtt{stimer} \ge \mathtt{ctime}$.
+register. an interrupt is generated when $\mathtt{stimer} \ge \mathtt{stamp}$.
 on the signaled processor, \texttt{dommsg[domcurr]}
 contains the message default domain used to route an asynchronous trap.
 the processor initiates a \emph{domain context switch} to the
 \emph{message default domain}, then branches to its trap handler.
 \texttt{tcause} is set to \emph{timer-interrupt} and \texttt{tvalue} is set
-to the value in the \texttt{ctime} register.
+to the value in the \texttt{stamp} register.
 
 \subsection{message signaled interrupts}
 
