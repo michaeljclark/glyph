@@ -30,8 +30,8 @@ this list outlines architectural highlights of the glyph architecture:
 - *page table colors* - for zoned physical memory and address translation permissions.
 - *message-signaled interrupts* - support globally-scoped inter-domain message interrupts.
 - *multicast network-on-chip* - enables synchronized messaging for thread groups.
-- *deadline timer interrupts* - use the processor high-precision clock for deadline timers.
-- *muliple page sizes* - supports 64KiB and 4KiB page sizes to makes emulation easier.
+- *deadline timer interrupts* - uses the processor time stamp counter for deadline timers.
+- *muliple page sizes* - supports 4KiB, 16KiB, and 64KiB page sizes to make emulation easier.
 - *software-defined MMU* - accelerates address translation for foreign page-table formats.
 - *address-space prefixes* - enable support for OpenCL high-speed local scratchpad memory.
 - *virtual machine definition* - provides EFI firmware, device-tree, and VirtIO device support.
