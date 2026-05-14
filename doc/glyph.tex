@@ -4701,7 +4701,14 @@ structures are as follows.
 \subsection{page table walker}
 \label{sec:page-table-walker}
 
-\par\noindent
+the page table walker performs page table lookup to translate virtual
+addresses into physical addresses.
+the page table walker reads the page table root pointer then walks the
+\emph{trie-based} page table structure to find a leaf entry containing
+a physical page address.
+the translation address must be a virtual address.
+the page table root address must be a physical address.
+\para
 page table entries with the \emph{read, write} and \emph{exec} permission
 bits clear are interpreted as \emph{pointer} entries and contain a pointer
 to the next-level index page, otherwise they are interpreted as \emph{leaf}
@@ -4767,19 +4774,20 @@ the page table walker process is as follows.
 \newpage
 \subsection{address translation process}
 
-the page table walker performs page table lookup to translate virtual
-addresses into physical addresses.
-the page table walker reads the page table root pointer then walks the
-\emph{trie-based} page table structure to find a leaf entry containing
-a physical page address.
-the translation address must be a virtual address.
-the page table root address must be a physical address.
+address translation is the process, for a specific memory operation,
+of walking the \emph{trie-based} page table structure to locate a page table
+entry. the permission and metadata bits of the resulting page table entry
+are checked against the memory operation, along with physical self-map
+permissions, if enabled, and address space restrictions via the \emph{user
+address space access disable bit} or \emph{user address space execute
+disable bit}, before translating the virtual address to a physical address
+using the physical page number in the page table entry.
 \para
-entries without the \emph{accessed} bit
-set will fault on read accesses. entries without the \emph{dirty} bit set
-will fault on write accesses. the \emph{global} bit prevents \emph{sptr.ASID}
-from being associated with TLB entries. the \emph{color} field is reserved
-for use by the capabilities extension.
+page table entries without the \emph{accessed} bit set will fault on reads.
+page table entries without the \emph{dirty} bit set will fault on writes.
+the \emph{global} bit prevents \emph{sptr.ASID} from being associated with
+TLB entries.
+the \emph{color} field is reserved for use by the capabilities extension.
 \para
 the virtual to physical address translation process is as follows.
 
