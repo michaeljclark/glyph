@@ -4722,44 +4722,44 @@ the page table walker process is as follows.
 \footnotesize
 \caption{find page table entry for translation address}
 \begin{algorithmic}[1]
-\Function{find\_page}{$\mathit{type},\mathit{level},\mathit{ppn},\mathit{ta}$}
-  \State $\mathit{shift} \gets \mathit{level} \times
-    \mathit{pn\_bits} + \mathit{po\_bits}$
-  \Comment{calculate page number shift}
-  \State $\mathit{tpn} \gets (\mathit{ta} >> \mathit{shift}) \land
-    ((1 << \mathit{pn\_bits}) - 1)$
-  \Comment{calculate translation page number}
-  \State $\mathit{pte} \gets \Call{load}{(\mathit{ppn}
-    << \mathit{po\_bits}) + \mathit{tpn} \times \mathit{sizeof(PTE)}}$
-  \Comment{load page table entry}
-  \State $\mathit{leaf} \gets
-    \mathit{pte.R} \lor \mathit{pte.W} \lor \mathit{pte.X}$
-  \Comment{page table entry node type}
-  \State $\mathit{sm} \gets
-    \mathit{R} \lor \mathit{W} \lor \mathit{X}$
-  \Comment{default self map page table entry}
-  \If {$\mathit{mfeature.P} \land \mathit{mcontrol.P} \land \mathit{type} =
-      \mathit{virtual}$}
-    \State $\mathit{pa} \gets \mathit{pte.ppn} << \mathit{po\_shift}$
-    \State $(\mathit{sm},\mathit{level}) \gets \Call{find\_page}{%
-      \mathit{physical},\mathit{num\_levels}-1,\mathit{sptr.ppn},\mathit{pa}}$
-    \Comment{load self mapping}
-    \If {$(\mathit{leaf} \land \mathit{pte.ppn} \ne \mathit{sm.ppn}) \lor
-      (\lnot\mathit{leaf} \land \lnot\mathit{sm.T})$}
-      \State \textbf{raise} \textbf{fault}
-      \Comment{invalid self mapping}
+\Function{page\_walk}{$\mathit{type},\mathit{ppn},\mathit{ta}$}
+  \For{$\mathit{level} \gets \mathit{num\_levels} - 1$ to $0$}
+    \Comment{for each page table level}
+    \State $\mathit{shift} \gets \mathit{level} \times
+      \mathit{pn\_bits} + \mathit{po\_bits}$
+    \Comment{calculate page number shift}
+    \State $\mathit{tpn} \gets (\mathit{ta} >> \mathit{shift}) \land
+      ((1 << \mathit{pn\_bits}) - 1)$
+    \Comment{calculate translation page number}
+    \State $\mathit{pte} \gets \Call{load}{(\mathit{ppn}
+      << \mathit{po\_bits}) + \mathit{tpn} \times \mathit{sizeof(PTE)}}$
+    \Comment{load page table entry}
+    \State $\mathit{leaf} \gets
+      \mathit{pte.R} \lor \mathit{pte.W} \lor \mathit{pte.X}$
+    \Comment{page table entry node type}
+    \State $\mathit{sm} \gets
+      \mathit{R} \lor \mathit{W} \lor \mathit{X}$
+    \Comment{default self map page table entry}
+    \If {$\mathit{mfeature.P} \land \mathit{mcontrol.P} \land \mathit{type} =
+        \mathit{virtual}$}
+      \State $\mathit{pa} \gets \mathit{pte.ppn} << \mathit{po\_shift}$
+      \State $(\mathit{sm},\mathit{level}) \gets \Call{page\_walk}{%
+        \mathit{physical},\mathit{sptr.ppn},\mathit{pa}}$
+      \Comment{load self mapping}
+      \If {$(\mathit{leaf} \land \mathit{pte.ppn} \ne \mathit{sm.ppn}) \lor
+        (\lnot\mathit{leaf} \land \lnot\mathit{sm.T})$}
+        \State \textbf{raise} \textbf{fault}
+        \Comment{invalid self mapping}
+      \EndIf
     \EndIf
-  \EndIf
-  \If {$\lnot\mathit{leaf} \land \mathit{level} > 0$}
-    \State \Return $\Call{find\_page}{\mathit{type},\mathit{level}-1,%
-      \mathit{pte.ppn},\mathit{ta}}$
-    \Comment{follow pointer entry}
-  \ElsIf {$\lnot\mathit{leaf}$}
-    \State \textbf{raise} \textbf{fault}
-    \Comment{leaf entry not found}
-  \EndIf
-  \State \Return $(\mathit{pte}, \mathit{sm}, \mathit{level})$
-  \Comment{return page table entry}
+    \If {$\mathit{leaf}$}
+      \State \Return $(\mathit{pte}, \mathit{sm}, \mathit{level})$
+      \Comment{return page table entry}
+    \ElsIf {$\mathit{level} = 0$}
+      \State \textbf{raise} \textbf{fault}
+      \Comment{leaf entry not found}
+    \EndIf
+  \EndFor
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
@@ -4793,8 +4793,8 @@ the virtual to physical address translation process is as follows.
     \State \textbf{raise} \textbf{fault}
     \Comment{page table root is not physical}
   \EndIf
-  \State $(\mathit{pte}, \mathit{sm}, \mathit{level}) \gets \Call{find\_page}{
-    \mathit{virtual},\mathit{num\_levels}-1,\mathit{sptr.ppn},\mathit{va}}$
+  \State $(\mathit{pte}, \mathit{sm}, \mathit{level}) \gets \Call{page\_walk}{
+    \mathit{virtual},\mathit{sptr.ppn},\mathit{va}}$
   \Comment{find page table entry}
   \State $\mathit{shift} \gets \mathit{level} \times
     \mathit{pn\_bits} + \mathit{po\_bits}$
@@ -4812,15 +4812,15 @@ the virtual to physical address translation process is as follows.
   \ElsIf{$(\mathit{op.R} \land \lnot\mathit{pte.R}) \lor (\mathit{op.W} \land
     \lnot\mathit{pte.W}) \lor (\mathit{op.X} \land \lnot\mathit{pte.X})$}
     \State \textbf{raise} \textbf{fault}
-    \Comment{invalid permissions}
+    \Comment{invalid page table permissions}
   \ElsIf{$(\mathit{sm.R} \land \lnot\mathit{pte.R}) \lor (\mathit{sm.W} \land
     \lnot\mathit{pte.W}) \lor (\mathit{sm.X} \land \lnot\mathit{pte.X})$}
     \State \textbf{raise} \textbf{fault}
-    \Comment{invalid self map}
+    \Comment{invalid self map permissions}
   \ElsIf{$(\mathit{cap.R} \land \mathit{pte.R}) \lor (\mathit{cap.W} \land
     \mathit{pte.W}) \lor (\mathit{cap.X} \land \mathit{pte.X})$}
     \State \textbf{raise} \textbf{fault}
-    \Comment{invalid capabilities}
+    \Comment{invalid page table capabilities}
   \ElsIf {$(\mathit{op.R} \land \lnot\mathit{pte.A}) \lor
       (\mathit{op.W} \land \lnot\mathit{pte.D})$}
     \State \textbf{raise} \textbf{fault}
