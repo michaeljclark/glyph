@@ -5211,7 +5211,7 @@ state for a domain context switch.
 \texttt{macaddr[n]} & \texttt{saddress} & system machine address \\
 \texttt{domaddr[n]} & \texttt{sdomain} & system domain address \\
 \texttt{domtimer[n]} & \texttt{stimer} & system deadline timer \\
-\texttt{domptr[n]} & \texttt{sptr} & system page table root pointer \\
+\texttt{domptr[n]} & \texttt{sptr} & system page table root \\
 \hline
 \end{tabular}
 \caption{domain context switch registers}
@@ -5267,7 +5267,7 @@ the following procedure is used to perform a domain trap context switch.
     \State $\mathit{stimer} \gets \mathit{domtimer[domain]}$
     \Comment{switch system deadline timer}
     \State $\mathit{sptr} \gets \mathit{domptr[domain]}$
-    \Comment{switch system page table root pointer}
+    \Comment{switch system page table root}
     \medskip
     \State $\mathit{tcause}\gets \mathit{cause}$
     \Comment{save trap cause}
@@ -5345,7 +5345,7 @@ the following procedure is used to perform a domain return context switch.
     \State $\mathit{stimer} \gets \mathit{domtimer[domain]}$
     \Comment{switch system deadline timer}
     \State $\mathit{sptr} \gets \mathit{domptr[domain]}$
-    \Comment{switch system page table root pointer}
+    \Comment{switch system page table root}
     \medskip
     \State $\mathit{tcontrol.I} \gets \mathit{TRUE}$
     \Comment{enable system interrupts}
