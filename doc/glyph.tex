@@ -3252,11 +3252,12 @@ the following tables list the privileged domain system registers:
 \texttt{0x1100...0x110F} & domcause$[n]$   & domain cause & \\
 \texttt{0x1200...0x120F} & domvalue$[n]$   & domain value & \\
 \texttt{0x1300...0x130F} & domaddr$[n]$    & domain address & \\
-\texttt{0x1400...0x140F} & domptr$[n]$     & domain page table root & \\
-\texttt{0x1500...0x150F} & domepc$[n]$     & domain exception program counter & \\
-\texttt{0x1600...0x160F} & domeib$[n]$     & domain exception immediate base & \\
-\texttt{0x1700...0x170F} & domhpc$[n]$     & domain handler program counter & \\
-\texttt{0x1800...0x180F} & domhib$[n]$     & domain handler immediate base & \\
+\texttt{0x1400...0x140F} & domtimer$[n]$   & domain timer & \\
+\texttt{0x1500...0x150F} & domptr$[n]$     & domain page table root & \\
+\texttt{0x1600...0x160F} & domepc$[n]$     & domain exception program counter & \\
+\texttt{0x1700...0x170F} & domeib$[n]$     & domain exception immediate base & \\
+\texttt{0x1800...0x180F} & domhpc$[n]$     & domain handler program counter & \\
+\texttt{0x1900...0x190F} & domhib$[n]$     & domain handler immediate base & \\
 \hline
 \end{tabularx}
 \caption{domain registers}
@@ -3419,6 +3420,16 @@ domain address prefix is unary \texttt{1110}.
 \registerspec{64}{32}{%
   60/{0}///\emph{domain address},%
   4///{MLEN-1}/\texttt{1110}%
+}
+
+\subsubsection{domain timer (\texttt{domtimer}$[\mathit{ndom}]$)}
+\texttt{domtimer}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
+registers containing an array of one-shot time stamp deadlines associated
+with each domain. all non-zero timers are active and will deliver to the
+message role of the associated domain.
+\\
+\registerspec{64}{32}{%
+  64/{0}//63/\emph{time stamp deadline}%
 }
 
 \newpage
@@ -5199,6 +5210,7 @@ state for a domain context switch.
 \texttt{domhib[n]} & \texttt{thib} & trap handler immediate base \\
 \texttt{macaddr[n]} & \texttt{saddress} & system machine address \\
 \texttt{domaddr[n]} & \texttt{sdomain} & system domain address \\
+\texttt{domtimer[n]} & \texttt{stimer} & system deadline timer \\
 \texttt{domptr[n]} & \texttt{sptr} & system page table root pointer \\
 \hline
 \end{tabular}
@@ -5252,6 +5264,8 @@ the following procedure is used to perform a domain trap context switch.
     \Comment{switch system machine address}
     \State $\mathit{sdomain} \gets \mathit{domaddr[domain]}$
     \Comment{switch system domain address}
+    \State $\mathit{stimer} \gets \mathit{domtimer[domain]}$
+    \Comment{switch system deadline timer}
     \State $\mathit{sptr} \gets \mathit{domptr[domain]}$
     \Comment{switch system page table root pointer}
     \medskip
@@ -5328,6 +5342,8 @@ the following procedure is used to perform a domain return context switch.
     \Comment{switch system machine address}
     \State $\mathit{sdomain} \gets \mathit{domaddr[domain]}$
     \Comment{switch system domain address}
+    \State $\mathit{stimer} \gets \mathit{domtimer[domain]}$
+    \Comment{switch system deadline timer}
     \State $\mathit{sptr} \gets \mathit{domptr[domain]}$
     \Comment{switch system page table root pointer}
     \medskip
