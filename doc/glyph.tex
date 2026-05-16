@@ -2597,7 +2597,7 @@ while state is being saved, and for double-faults to be detected.
 }
 
 \subsubsection{trap exception program counter (\texttt{tepc})}
-\texttt{tepc} is a read-only register which contains the \emph{program
+\texttt{tepc} is a read-write register which contains the \emph{program
 counter} address before the trap.
 \\
 \registerspec{64}{32}{%
@@ -2605,7 +2605,7 @@ counter} address before the trap.
 }
 
 \subsubsection{trap exception immediate base (\texttt{teib})}
-\texttt{teib} is a read-only register which contains the \emph{immediate
+\texttt{teib} is a read-write register which contains the \emph{immediate
 base} address before the trap.
 \\
 \registerspec{64}{32}{%
@@ -2973,12 +2973,12 @@ the following tables list the privileged capability system parameters:
 \centering
 \footnotesize
 \rowcolors{2}{tbcol}{tbcol}
-\begin{tabularx}{95mm}{|l|X|}
+\begin{tabularx}{95mm}{|l|X|l|}
 \hline
 \rowcolor{thcol}
-\thead{name} & \thead{description} \\
+\thead{name} & \thead{description} & \thead{default} \\
 \hline
-$\mathit{ncol}$      & the number of architectural colors \\
+$\mathit{ncol}$      & the number of architectural colors & 16 \\
 \hline
 \end{tabularx}
 \caption{capability parameters}
@@ -3072,7 +3072,7 @@ of \textbf{\emph{ncol}} bits containing read permissions for \emph{color-x},
 used to check loads from pages with a matching page table color.
 \\
 \registerspec{32}{32}{%
-  8/{0}//$\mathit{ncol}$/\emph{read perms}%
+  8/{0}//{15}/\emph{read perms}%
 }
 
 \subsubsection{color write permission (\texttt{colorwrite})}
@@ -3081,7 +3081,7 @@ of \textbf{\emph{ncol}} bits containing write permissions for \emph{color-x},
 used to check stores to pages with a matching page table color.
 \\
 \registerspec{32}{32}{%
-  8/{0}//$\mathit{ncol}$/\emph{write perms}%
+  8/{0}//{15}/\emph{write perms}%
 }
 
 \subsubsection{color exec permission (\texttt{colorexec})}
@@ -3090,7 +3090,7 @@ of \textbf{\emph{ncol}} bits containing execute permissions for \emph{color-x},
 used to check execution in pages with a matching page table color.
 \\
 \registerspec{32}{32}{%
-  8/{0}//$\mathit{ncol}$/\emph{exec perms}%
+  8/{0}//{15}/\emph{exec perms}%
 }
 
 \newpage
@@ -3113,7 +3113,7 @@ registers, privileged system registers and privileged debug registers
 from executable pages with a matching page table color.
 \\
 \registerspec{32}{32}{%
-  8/{0}//$\mathit{ncol}$/\emph{system role}%
+  8/{0}//{15}/\emph{system role}%
 }
 
 \subsubsection{color domain role (\texttt{colordom})}
@@ -3123,7 +3123,7 @@ that are used to check access to privileged domain registers from
 executable pages with a matching page table color.
 \\
 \registerspec{32}{32}{%
-  8/{0}//$\mathit{ncol}$/\emph{domain role}%
+  8/{0}//{15}/\emph{domain role}%
 }
 
 \subsubsection{color capability role (\texttt{colorcap})}
@@ -3133,7 +3133,7 @@ that are used to check access to privileged capability registers from
 executable pages with a matching page table color.
 \\
 \registerspec{32}{32}{%
-  8/{0}//$\mathit{ncol}$/\emph{capability role}%
+  8/{0}//{15}/\emph{capability role}%
 }
 
 \subsubsection{color machine role (\texttt{colormac})}
@@ -3143,7 +3143,7 @@ that are used to check access to privileged machine registers from
 executable pages with a matching page table color.
 \\
 \registerspec{32}{32}{%
-  8/{0}//$\mathit{ncol}$/\emph{machine role}%
+  8/{0}//{15}/\emph{machine role}%
 }
 
 \newpage
@@ -3165,7 +3165,7 @@ matching register \emph{page table color} to memory addresses in
 memory pages with a matching \emph{page table color} index.
 \\
 \registerspec{32}{32}{%
-  8/{0}//$\mathit{ncol}$/\emph{read perms}%
+  8/{0}//{15}/\emph{read perms}%
 }
 
 \subsubsection{color matrix write permissions (\texttt{colormatwrite}$[\mathit{ncol}]$)}
@@ -3176,7 +3176,7 @@ matching register \emph{page table color} to memory addresses in
 memory pages with a matching \emph{page table color} index.
 \\
 \registerspec{32}{32}{%
-  8/{0}//$\mathit{ncol}$/\emph{write perms}%
+  8/{0}//{15}/\emph{write perms}%
 }
 
 %\subsubsection{color matrix exec permissions (\texttt{colormatexec}$[\mathit{ncol}]$)}
@@ -3187,7 +3187,7 @@ memory pages with a matching \emph{page table color} index.
 %executable pages with a matching \emph{page table color} index.
 %\\
 %\registerspec{32}{32}{%
-%  8/{0}//$\mathit{ncol}$/\emph{exec perms}%
+%  8/{0}//{15}/\emph{exec perms}%
 %}
 
 \newpage
@@ -3204,12 +3204,12 @@ the following tables list the privileged domain system parameters:
 \centering
 \footnotesize
 \rowcolors{2}{tbcol}{tbcol}
-\begin{tabularx}{95mm}{|l|X|}
+\begin{tabularx}{95mm}{|l|X|l|}
 \hline
 \rowcolor{thcol}
-\thead{name} & \thead{description} \\
+\thead{name} & \thead{description} & \thead{value} \\
 \hline
-$\mathit{ndom}$      & the number of architectural domains \\
+$\mathit{ndom}$      & the number of architectural domains & 16 \\
 \hline
 \end{tabularx}
 \caption{domain parameters}
@@ -3232,9 +3232,8 @@ the following tables list the privileged domain system registers:
 \multicolumn{4}{|l|}{\tsub{domain control registers}} \\
 \hline
 \texttt{0x51} & domcontrol & domain control & \\
-\texttt{0x53} & domlast  & domain number last & \\
-\texttt{0x54} & domcurr  & domain number current & \\
-\texttt{0x55} & domnext  & domain number next & \\
+\texttt{0x53} & domsp    & domain stack pointer & \\
+\texttt{0x54} & domvec   & domain number vector & \\
 \texttt{0x400...0x40F} & dommatrix$[n]$ & domain matrix & \\
 \hline
 \rowcolor{tscol}
@@ -3249,11 +3248,15 @@ the following tables list the privileged domain system registers:
 \rowcolor{tscol}
 \multicolumn{4}{|l|}{\tsub{domain context registers}} \\
 \hline
-\texttt{0xA00...0xA0F} & domscratch$[n]$& domain scratch & \\
-\texttt{0xB00...0xB0F} & domaddr$[n]$   & domain address & \\
-\texttt{0xC00...0xC0F} & domptr$[n]$    & domain page table root & \\
-\texttt{0xD00...0xD0F} & domthpc$[n]$   & domain trap handler program counter & \\
-\texttt{0xE00...0xE0F} & domthib$[n]$   & domain trap handler immediate base & \\
+\texttt{0x1000...0x100F} & domscratch$[n]$ & domain scratch & \\
+\texttt{0x1100...0x110F} & domcause$[n]$   & domain cause & \\
+\texttt{0x1200...0x120F} & domvalue$[n]$   & domain value & \\
+\texttt{0x1300...0x130F} & domaddr$[n]$    & domain address & \\
+\texttt{0x1400...0x140F} & domptr$[n]$     & domain page table root & \\
+\texttt{0x1500...0x150F} & domepc$[n]$     & domain exception program counter & \\
+\texttt{0x1600...0x160F} & domeib$[n]$     & domain exception immediate base & \\
+\texttt{0x1700...0x170F} & domhpc$[n]$     & domain handler program counter & \\
+\texttt{0x1800...0x180F} & domhib$[n]$     & domain handler immediate base & \\
 \hline
 \end{tabularx}
 \caption{domain registers}
@@ -3264,8 +3267,9 @@ the following tables list the privileged domain system registers:
 \subsection{domain control registers}
 
 this section describes the \emph{domain control registers}, which enable
-the domain extension, provide access to the last and current domain number,
-control the next domain number, and control valid domain transitions.
+the domain extension, and provide access to the the domain stack pointer,
+the domain number vector, and the domain matrix to control valid domain
+transitions.
 
 \subsubsection{domain control (\texttt{domcontrol})}
 \texttt{domcontrol} is a read-write register containing domain control bits.
@@ -3290,28 +3294,24 @@ control the next domain number, and control valid domain transitions.
 \label{tab:domain-control-fields}
 \end{table}
 
-\subsubsection{domain number last (\texttt{domlast})}
-\texttt{domlast} is a read-only register containing the domain number
-of the last domain.
+\subsubsection{domain stack pointer (\texttt{domsp})}
+\texttt{domsp} is a read-write register containing the domain stack
+pointer, which points at the top element in the domain number vector.
 \\
 \registerspec{32}{32}{%
-  4/{0}//$log_2(\mathit{ndom})$/\emph{domain}%
+  4/{0}//{3}/\emph{index}%
 }
 
-\subsubsection{domain number current (\texttt{domcurr})}
-\texttt{domcurr} is a read-only register containing the domain number
-of the current domain.
+\subsubsection{domain number vector (\texttt{domvec})}
+\texttt{domvec} is a read-write register containing the domain number
+stack. the top element in the domain number vector is indexed by
+\texttt{domsp} and contains the current domain number.
 \\
 \registerspec{32}{32}{%
-  4/{0}//$log_2(\mathit{ndom})$/\emph{domain}%
-}
-
-\subsubsection{domain number next (\texttt{domnext})}
-\texttt{domnext} is a read-write register containing the domain number
-of the next domain.
-\\
-\registerspec{32}{32}{%
-  4/{0}//$log_2(\mathit{ndom})$/\emph{domain}%
+  4/{0}//{3}/\footnotesize\emph{domain[0]},%
+  4/{4}//{7}/\footnotesize\emph{domain[1]},%
+  4/{8}//{11}/\footnotesize\emph{domain[2]},%
+  4/{12}//{15}/\footnotesize\emph{domain[3]}%
 }
 
 \subsubsection{domain matrix (\texttt{dommatrix}$[\mathit{ndom}]$)}
@@ -3320,7 +3320,7 @@ registers containing a matrix of the domains that the current domain is
 allowed to transition to as the next domain.
 \\
 \registerspec{32}{32}{%
-  8/{0}//$\mathit{ndom}$/\emph{allowed domains}%
+  8/{0}//{15}/\emph{allowed domains}%
 }
 
 \newpage
@@ -3336,7 +3336,7 @@ registers containing the domain number of the domain that system traps
 are routed to.
 \\
 \registerspec{32}{32}{%
-  4/{0}//$log_2(\mathit{ndom})$/\emph{domain}%
+  4/{0}//{3}/\emph{domain}%
 }
 
 \subsubsection{domain domain default domain (\texttt{domdom}$[\mathit{ndom}]$)}
@@ -3345,7 +3345,7 @@ registers containing the domain number of the domain that domain traps
 are routed to.
 \\
 \registerspec{32}{32}{%
-  4/{0}//$log_2(\mathit{ndom})$/\emph{domain}%
+  4/{0}//{3}/\emph{domain}%
 }
 
 \subsubsection{domain capability default domain (\texttt{domcap}$[\mathit{ndom}]$)}
@@ -3354,7 +3354,7 @@ registers containing the domain number of the domain that capability traps
 are routed to.
 \\
 \registerspec{32}{32}{%
-  4/{0}//$log_2(\mathit{ndom})$/\emph{domain}%
+  4/{0}//{3}/\emph{domain}%
 }
 
 \subsubsection{domain machine default domain (\texttt{dommac}$[\mathit{ndom}]$)}
@@ -3363,7 +3363,7 @@ registers containing the domain number of the domain that machine traps
 are routed to.
 \\
 \registerspec{32}{32}{%
-  4/{0}//$log_2(\mathit{ndom})$/\emph{domain}%
+  4/{0}//{3}/\emph{domain}%
 }
 
 \subsubsection{domain message default domain (\texttt{dommsg}$[\mathit{ndom}]$)}
@@ -3372,23 +3372,41 @@ registers containing the domain number of the domain that asynchronous
 interrupts are routed to.
 \\
 \registerspec{32}{32}{%
-  4/{0}//$log_2(\mathit{ndom})$/\emph{domain}%
+  4/{0}//{3}/\emph{domain}%
 }
 
 \newpage
 \subsection{domain context registers}
 
-this section describes the \emph{domain context registers} that control
-message-signaled interrupt addresses, page translation and trap entry
-functions for domain context switching.
+this section describes the \emph{domain context registers} that provide
+per-domain storage for trap context, domain addresses, page table
+root pointer, and domain trap handlers.
 
 \subsubsection{domain scratch (\texttt{domscratch}$[\mathit{ndom}]$)}
 \texttt{domscratch}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
-registers containing an array of the scratch values associated with each
+registers containing an array of the trap scratch values associated with
+each domain.
+\\
+\registerspec{64}{32}{%
+  64/{0}//{SLEN-1}/\emph{domain trap scratch}%
+}
+
+\subsubsection{domain cause (\texttt{domcause}$[\mathit{ndom}]$)}
+\texttt{domcause}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-only
+registers containing an array of the trap causes associated with each
 domain.
 \\
 \registerspec{64}{32}{%
-  64/{0}//{SLEN-1}/\emph{domain scratch}%
+  64/{0}//{SLEN-1}/\emph{domain trap cause}%
+}
+
+\subsubsection{domain value (\texttt{domvalue}$[\mathit{ndom}]$)}
+\texttt{domvalue}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-only
+registers containing an array of the trap values associated with each
+domain.
+\\
+\registerspec{64}{32}{%
+  64/{0}//{SLEN-1}/\emph{domain trap value}%
 }
 
 \subsubsection{domain address (\texttt{domaddr}$[\mathit{ndom}]$)}
@@ -3403,6 +3421,7 @@ domain address prefix is unary \texttt{1110}.
   4///{MLEN-1}/\texttt{1110}%
 }
 
+\newpage
 \subsubsection{domain page table root (\texttt{domptr}$[\mathit{ndom}]$)}
 \texttt{domptr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the page table root pointers for
@@ -3413,7 +3432,25 @@ contains details on the page table root format.
   64/{0}//{63}/\emph{page table root}%
 }
 
-\subsubsection{domain trap handler program counter (\texttt{domthpc}$[\mathit{ndom}]$)}
+\subsubsection{domain exception program counter (\texttt{domepc}$[\mathit{ndom}]$)}
+\texttt{domtepc}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
+registers containing an array of the addresses for the domain trap exception
+addresses in each domain.
+\\
+\registerspec{64}{32}{%
+  64/{0}//{ALEN-1}/\emph{program counter}%
+}
+
+\subsubsection{domain exception immediate base (\texttt{domeib}$[\mathit{ndom}]$)}
+\texttt{domteib}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
+registers containing an array of the addresses for the domain trap exception
+constants in each domain.
+\\
+\registerspec{64}{32}{%
+  64/{0}//{ALEN-1}/\emph{immediate base}%
+}
+
+\subsubsection{domain handler program counter (\texttt{domhpc}$[\mathit{ndom}]$)}
 \texttt{domthpc}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the addresses for the domain trap handler
 routines in each domain.
@@ -3422,7 +3459,7 @@ routines in each domain.
   64/{0}//{ALEN-1}/\emph{program counter}%
 }
 
-\subsubsection{domain trap handler immediate base (\texttt{domthib}$[\mathit{ndom}]$)}
+\subsubsection{domain handler immediate base (\texttt{domhib}$[\mathit{ndom}]$)}
 \texttt{domthib}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the addresses for the domain trap handler
 constants in each domain.
@@ -3459,7 +3496,7 @@ the following tables list the privileged machine registers:
 \rowcolor{tscol}
 \multicolumn{4}{|l|}{\tsub{machine address vectors}} \\
 \hline
-\texttt{0xF00...0xF0F} & macaddr$[n]$   & machine address & domain \\
+\texttt{0x1500...0x150F} & macaddr$[n]$   & machine address & domain \\
 \hline
 \rowcolor{tscol}
 \multicolumn{4}{|l|}{\tsub{machine memory registers}} \\
@@ -4983,16 +5020,16 @@ the following table shows inter-domain trap routing table keys for
 \centering
 \small
 \rowcolors{2}{tbcol}{tbcol}
-\begin{tabular}{|l|l|l|}
+\begin{tabular}{|l|l|}
 \hline
 \rowcolor{thcol}
-\thead{capability} & \thead{domain call} & \thead{domain return} \\
+\thead{role}      & \thead{trap routing default domain} \\
 \hline
-\emph{system}      & \texttt{domsys[domcurr]} & \texttt{domsys[domnext]} \\
-\emph{domain}      & \texttt{domdom[domcurr]} & \texttt{domdom[domnext]} \\
-\emph{capability}  & \texttt{domcap[domcurr]} & \texttt{domcap[domnext]} \\
-\emph{machine}     & \texttt{dommac[domcurr]} & \texttt{dommac[domnext]} \\
-\emph{message}     & \texttt{dommsg[domcurr]} & \texttt{dommsg[domnext]} \\
+\emph{system}     & \texttt{domsys[domcurr]} \\
+\emph{domain}     & \texttt{domdom[domcurr]} \\
+\emph{capability} & \texttt{domcap[domcurr]} \\
+\emph{machine}    & \texttt{dommac[domcurr]} \\
+\emph{message}    & \texttt{dommsg[domcurr]} \\
 \hline
 \end{tabular}
 \caption{inter-domain trap routing table keys}
@@ -5013,13 +5050,13 @@ the following table shows the inter-domain message instructions.
 \begin{tabular}{|l|l|l|}
 \hline
 \rowcolor{thcol}
-\thead{capability} & \thead{synchronous call} & \thead{synchronous return} \\
+\thead{role}      & \thead{synchronous call} & \thead{synchronous return} \\
 \hline
-\emph{system}      & \texttt{syscall} & \texttt{sysret} \\
-\emph{domain}      & \texttt{domcall} & \texttt{domret} \\
-\emph{capability}  & \texttt{capcall} & \texttt{capret} \\
-\emph{machine}     & \texttt{maccall} & \texttt{macret} \\
-\emph{message}     & -- & -- \\
+\emph{system}     & \texttt{syscall}         & \texttt{sysret} \\
+\emph{domain}     & \texttt{domcall}         & \texttt{domret} \\
+\emph{capability} & \texttt{capcall}         & \texttt{capret} \\
+\emph{machine}    & \texttt{maccall}         & \texttt{macret} \\
+\emph{message}    & \texttt{msgcall}         & \texttt{msgret} \\
 \hline
 \end{tabular}
 \caption{inter-domain message instructions}
@@ -5119,10 +5156,10 @@ the processor initiates a \emph{domain context switch} to the
 set to the masked thread or domain address from the initiating processor.
 
 \newpage
-\subsection{domain context switch}
+\subsection{domain context switching}
 
 interrupt delivery due to synchronous and asynchronous exceptions
-causes a domain switch to the trap routing domain for the role the
+causes a context switch to the trap routing domain for the role the
 exception is routed to for the current domain: the \emph{system},
 \emph{domain}, \emph{capability}, \emph{machine}, and \emph{message}
 roles.
@@ -5136,8 +5173,14 @@ roles.
 \end{itemize}
 
 \par\noindent
-the following domain vectors hold state for a domain context switch.
-
+where the top element in the domain number vector, indexed by the domain
+stack pointer, holds the current domain number. the remaining elements
+contain the domain numbers of a stack of domains with exceptions.
+if the default domain number for a role is configured as self-mapped,
+then its traps will not cause domain context switches and can be
+delivered in the current domain. the following register arrays hold
+state for a domain context switch.
+\\
 \begin{table}[h]
 \centering
 \small
@@ -5147,9 +5190,13 @@ the following domain vectors hold state for a domain context switch.
 \rowcolor{thcol}
 \thead{domain register} & \thead{system register} & \thead{description} \\
 \hline
-\texttt{domscratch[n]} & \texttt{tscratch} & trap scratch value \\
-\texttt{domthpc[n]} & \texttt{thpc} & trap handler program counter \\
-\texttt{domthib[n]} & \texttt{thib} & trap handler immediate base \\
+\texttt{domscratch[n]} & \texttt{tscratch} & trap scratch \\
+\texttt{domcause[n]} & \texttt{tcause} & trap cause \\
+\texttt{domvalue[n]} & \texttt{tvalue} & trap value \\
+\texttt{domepc[n]} & \texttt{tepc} & trap exception program counter \\
+\texttt{domeib[n]} & \texttt{teib} & trap exception immediate base \\
+\texttt{domhpc[n]} & \texttt{thpc} & trap handler program counter \\
+\texttt{domhib[n]} & \texttt{thib} & trap handler immediate base \\
 \texttt{macaddr[n]} & \texttt{saddress} & system machine address \\
 \texttt{domaddr[n]} & \texttt{sdomain} & system domain address \\
 \texttt{domptr[n]} & \texttt{sptr} & system page table root pointer \\
@@ -5159,49 +5206,134 @@ the following domain vectors hold state for a domain context switch.
 \label{tab:domain-context-switch-registers}
 \end{table}
 
+\newpage
+\subsubsection{domain trap context switch}
+
 \par\noindent
-the following procedure is used to perform a domain context switch.
+the following procedure is used to perform a domain trap context switch.
 
 \begin{algorithm}[H]
 \footnotesize
 \caption{context switch to a domain and execute its trap handler}
 \begin{algorithmic}[1]
-\Function{switch\_domain}{$\mathit{domain,cause,value}$}
+\Function{domain\_trap}{$\mathit{domain,cause,value}$}
+    \medskip
+    \State $\mathit{domcurr} \gets \mathit{domvec[domsp]}$
+    \Comment{get current domain number}
+    \medskip
     \If {$\lnot\mathit{dommatrix[domcurr][domain]}$}
     \Comment{check domain matrix}
         \State \textbf{raise} \textbf{domain-fault}
         \Comment{raise domain fault}
     \EndIf
-    \State $\mathit{domlast} \gets \mathit{domcurr}$
-    \Comment{save current domain to last}
-    \State $\mathit{domnext} \gets \mathit{domcurr}$
-    \Comment{save current domain to next}
-    \State $\mathit{domcurr} \gets \mathit{domain}$
-    \Comment{set new current domain}
-    \State $\mathit{tepc} \gets \mathit{pc}$
-    \Comment{save program counter register}
-    \State $\mathit{teib} \gets \mathit{ib}$
-    \Comment{save immediate base register}
-    \State $\mathit{tcause} \gets \mathit{cause}$
-    \Comment{set trap cause}
-    \State $\mathit{tvalue} \gets \mathit{value}$
-    \Comment{set trap value}
+    \medskip
+    \State $\mathit{tcontrol.I} \gets \mathit{FALSE}$
+    \Comment{disable system interrupts}
+    \State $\mathit{domsp} \gets \mathit{domsp} + 1$
+    \Comment{increment domain stack pointer}
+    \State $\mathit{domvec[domsp]} \gets \mathit{domain}$
+    \Comment{set current domain number}
+    \medskip
     \State $\mathit{tscratch}\gets \mathit{domscratch[domain]}$
-    \Comment{restore trap scratch value}
-    \State $\mathit{thpc} \gets \mathit{domthpc[domain]}$
-    \Comment{restore trap handler program counter}
-    \State $\mathit{thib} \gets \mathit{domthib[domain]}$
-    \Comment{restore trap handler immediate base}
+    \Comment{switch trap scratch}
+    \State $\mathit{tcause}\gets \mathit{domcause[domain]}$
+    \Comment{switch trap cause}
+    \State $\mathit{tvalue} \gets \mathit{domvalue[domain]}$
+    \Comment{switch trap value}
+    \State $\mathit{tepc} \gets \mathit{domepc[domain]}$
+    \Comment{switch trap exception program counter}
+    \State $\mathit{teib} \gets \mathit{domeib[domain]}$
+    \Comment{switch trap exception immediate base}
+    \State $\mathit{thpc} \gets \mathit{domhpc[domain]}$
+    \Comment{switch trap handler program counter}
+    \State $\mathit{thib} \gets \mathit{domhib[domain]}$
+    \Comment{switch trap handler immediate base}
     \State $\mathit{saddress} \gets \mathit{macaddr[domain]}$
-    \Comment{restore system machine address}
+    \Comment{switch system machine address}
     \State $\mathit{sdomain} \gets \mathit{domaddr[domain]}$
-    \Comment{restore system domain address}
+    \Comment{switch system domain address}
     \State $\mathit{sptr} \gets \mathit{domptr[domain]}$
-    \Comment{restore system page table root pointer}
+    \Comment{switch system page table root pointer}
+    \medskip
+    \State $\mathit{tcause}\gets \mathit{cause}$
+    \Comment{save trap cause}
+    \State $\mathit{tvalue} \gets \mathit{value}$
+    \Comment{save trap value}
+    \State $\mathit{tepc} \gets \mathit{pc}$
+    \Comment{save exception program counter}
+    \State $\mathit{teib} \gets \mathit{ib}$
+    \Comment{save exception immediate base}
     \State $\mathit{pc} \gets \mathit{thpc}$
     \Comment{set program counter to trap handler}
     \State $\mathit{ib} \gets \mathit{thib}$
     \Comment{set immediate base to trap handler}
+    \medskip
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\newpage
+\subsubsection{domain return context switch}
+
+\par\noindent
+the following procedure is used to perform a domain return context switch.
+
+\begin{algorithm}[H]
+\footnotesize
+\caption{return to the calling domain at the point of exception}
+\begin{algorithmic}[1]
+\Function{domain\_return}{${}$}
+    \medskip
+    \If {$\mathit{domsp} = 0$}
+    \Comment{check domain stack pointer}
+        \State \textbf{raise} \textbf{domain-fault}
+        \Comment{raise domain fault}
+    \EndIf
+    \medskip
+    \State $\mathit{domcurr} \gets \mathit{domvec[domsp]}$
+    \Comment{get current domain number}
+    \State $\mathit{domsp} \gets \mathit{domsp} - 1$
+    \Comment{decrement domain stack pointer}
+    \State $\mathit{domain} \gets \mathit{domvec[domsp]}$
+    \Comment{get returning domain number}
+    \medskip
+    \If {$\lnot\mathit{dommatrix[domcurr][domain]}$}
+    \Comment{check domain matrix}
+        \State \textbf{raise} \textbf{domain-fault}
+        \Comment{raise domain fault}
+    \EndIf
+    \medskip
+    \State $\mathit{domvec[domsp+1]} \gets 0$
+    \Comment{clear last domain number}
+    \State $\mathit{pc} \gets \mathit{tepc}$
+    \Comment{restore program counter register}
+    \State $\mathit{ib} \gets \mathit{teib}$
+    \Comment{restore immediate base register}
+    \medskip
+    \State $\mathit{tscratch}\gets \mathit{domscratch[domain]}$
+    \Comment{switch trap scratch}
+    \State $\mathit{tcause}\gets \mathit{domcause[domain]}$
+    \Comment{switch trap cause}
+    \State $\mathit{tvalue} \gets \mathit{domvalue[domain]}$
+    \Comment{switch trap value}
+    \State $\mathit{tepc} \gets \mathit{domepc[domain]}$
+    \Comment{switch trap exception program counter}
+    \State $\mathit{teib} \gets \mathit{domeib[domain]}$
+    \Comment{switch trap exception immediate base}
+    \State $\mathit{thpc} \gets \mathit{domhpc[domain]}$
+    \Comment{switch trap handler program counter}
+    \State $\mathit{thib} \gets \mathit{domhib[domain]}$
+    \Comment{switch trap handler immediate base}
+    \State $\mathit{saddress} \gets \mathit{macaddr[domain]}$
+    \Comment{switch system machine address}
+    \State $\mathit{sdomain} \gets \mathit{domaddr[domain]}$
+    \Comment{switch system domain address}
+    \State $\mathit{sptr} \gets \mathit{domptr[domain]}$
+    \Comment{switch system page table root pointer}
+    \medskip
+    \State $\mathit{tcontrol.I} \gets \mathit{TRUE}$
+    \Comment{enable system interrupts}
+    \medskip
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
