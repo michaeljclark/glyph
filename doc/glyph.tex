@@ -5182,7 +5182,8 @@ where the top element in the domain number vector, indexed by the domain
 stack pointer, holds the current domain number. the remaining elements
 contain the domain numbers of a stack of domains with exceptions.
 if the default domain number for a role is configured as self-mapped,
-then its traps will be delivered in the current domain.
+then its traps will be delivered in the current domain. the system
+registers are aliases of the domain context registers for the current domain.
 the following register arrays hold state for a domain context switch.
 \\
 \begin{table}[h]
