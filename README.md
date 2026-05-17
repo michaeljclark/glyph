@@ -31,11 +31,11 @@ this list outlines architectural highlights of the glyph architecture:
 - *message-signaled interrupts* - support globally-scoped inter-domain message interrupts.
 - *multicast network-on-chip* - enables synchronized messaging for thread groups.
 - *deadline timer interrupts* - uses the processor time stamp counter for deadline timers.
-- *muliple page sizes* - supports 4KiB, 16KiB, and 64KiB page sizes to make emulation easier.
-- *software-defined MMU* - accelerates address translation for foreign page-table formats.
-- *address-space prefixes* - enable support for OpenCL high-speed local scratchpad memory.
-- *virtual machine definition* - provides EFI firmware, device-tree, and VirtIO device support.
-- *comprehensible specification* - uses semantic normalization aligned with ARPA conventions.
+- *muliple page sizes* - supports 4KiB, 16KiB, and 64KiB page sizes to ease emulation.
+- *software-defined MMU* - accelerated address translation for foreign page-table formats.
+- *address-space prefixes* - enable support for OpenCL high-speed local memory.
+- *virtual machine definition* - EFI, ACPI, device-tree, and VirtIO device support.
+- *comprehensible specification* - semantic normalization with ARPA naming conventions.
 
 ## architecture
 
