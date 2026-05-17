@@ -2373,8 +2373,7 @@ system-wide machine address for this thread from \texttt{saddress}.
 this register is visible if \texttt{scontrol.D} is enabled.
 \\
 \registerspec{64}{32}{%
-  60/{0}///\emph{machine address},%
-  4///{MLEN-1}/\texttt{0001}%
+  64/{0}//{MLEN-1}/\emph{machine address}%
 }
 
 \subsubsection{user domain address (\texttt{domain})}
@@ -2383,8 +2382,7 @@ system-wide domain address for this thread from \texttt{sdomain}.
 this register is visible if \texttt{scontrol.D} is enabled.
 \\
 \registerspec{64}{32}{%
-  60/{0}///\emph{domain address},%
-  4///{MLEN-1}/\texttt{1110}%
+  64/{0}//{MLEN-1}/\emph{domain address}%
 }
 
 \newpage
@@ -2748,27 +2746,25 @@ fields. the allowable values are specified in the following table.
 \subsubsection{system machine address (\texttt{saddress})}
 \texttt{saddress} is a read-only register containing the unique system-wide
 machine address for this thread. the system-wide machine
-address is used as a target for inter-thread message interrupts.
+address is used as a target for inter-domain messages.
 this address must not alias across processors.
-this address is assigned during context switching.
-these addresses must be unique per-domain on all processors.
+this address is switched during domain context switching.
+the machine address prefix should be unary \texttt{0001}.
 \\
 \registerspec{64}{32}{%
-  60/{0}///\emph{machine address},%
-  4///{MLEN-1}/\texttt{0001}%
+  64/{0}//{MLEN-1}/\emph{machine address}%
 }
 
 \subsubsection{system domain address (\texttt{sdomain})}
-\texttt{sdomain} is a read-only register containing the system-wide
+\texttt{sdomain} is a read-write register containing the system-wide
 domain address for this thread. the system-wide domain address
-is used as a target for inter-thread message interrupts.
+is used as a target for inter-domain messages.
 this address may alias across processors.
-this address is assigned during context switching.
-these addresses must be unique per-domain on one processor.
+this address is switched during domain context switching.
+the domain address prefix should be unary \texttt{1110}.
 \\
 \registerspec{64}{32}{%
-  60/{0}///\emph{domain address},%
-  4///{MLEN-1}/\texttt{1110}%
+  64/{0}//{MLEN-1}/\emph{domain address}%
 }
 
 \newpage
@@ -2840,13 +2836,12 @@ this register must be set before writing to \texttt{smessage}.
 \begin{itemize}[itemsep=0pt]
 \item all-zeros is the \emph{boot processor}.
 \item all-ones is the \emph{broadcast address}.
-\item \texttt{0001?} prefix is a \emph{machine address}.
-\item \texttt{1110?} prefix is a \emph{domain address}.
+\item unary prefix \texttt{0001?} should be a \emph{machine address}.
+\item unary prefix \texttt{1110?} should be a \emph{domain address}.
 \end{itemize}
 
 \registerspec{64}{32}{%
-  60/{0}///\emph{target address},%
-  4///{MLEN-1}/\texttt{AS}%
+  64/{0}//{MLEN-1}/\emph{target address}%
 }
 
 \subsubsection{system target mask (\texttt{smask})}
@@ -3412,14 +3407,13 @@ domain.
 
 \subsubsection{domain address (\texttt{domaddr}$[\mathit{ndom}]$)}
 \texttt{domaddr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
-registers containing an array of the domain addresses associated with each
-domain. these addresses must be unique per-domain on one processor;
+registers containing the domain addresses associated with each domain.
+domain addresses must be unique within one processor;
 otherwise, behavior is implementation-defined.
-domain address prefix is unary \texttt{1110}.
+the domain address prefix should be unary \texttt{1110}.
 \\
 \registerspec{64}{32}{%
-  60/{0}///\emph{domain address},%
-  4///{MLEN-1}/\texttt{1110}%
+  64/{0}//{MLEN-1}/\emph{domain address}%
 }
 
 \subsubsection{domain timer (\texttt{domtimer}$[\mathit{ndom}]$)}
@@ -3586,14 +3580,13 @@ machine addresses.
 
 \subsubsection{machine address (\texttt{macaddr}$[\mathit{ndom}]$)}
 \texttt{macaddr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
-registers containing an array of the machine addresses associated with each
-domain. these addresses must be unique per-domain on all processors;
+registers containing the machine addresses associated with each domain.
+machine addresses must be unique across all processors;
 otherwise, behavior is implementation-defined.
-machine address prefix is unary \texttt{0001}.
+the machine address prefix should be unary \texttt{0001}.
 \\
 \registerspec{64}{32}{%
-  60/{0}///\emph{machine address},%
-  4///{MLEN-1}/\texttt{0001}%
+  64/{0}//{MLEN-1}/\emph{machine address}%
 }
 
 \newpage
