@@ -3515,6 +3515,12 @@ the following tables list the privileged machine registers:
 \texttt{0x64} & mtlbfmt   & machine tlb format & \\
 \texttt{0x65} & mtlbent   & machine tlb entry & \\
 \hline
+\rowcolor{tscol}
+\multicolumn{4}{|l|}{\tsub{machine handler vectors}} \\
+\hline
+\texttt{0x1E00...0x1E0F} & machpc$[n]$     & machine handler program counter & domain \\
+\texttt{0x1F00...0x1F0F} & machib$[n]$     & machine handler immediate base & domain \\
+\hline
 \end{tabularx}
 \caption{machine registers}
 \label{tab:machine-registers}
@@ -3800,6 +3806,29 @@ entry formats are as follows.
 \caption{64-bit \emph{vm16c} translation lookaside buffer entry.}
 \label{fig:64-bit-vm16c-tlb-entry}
 \end{figure}
+
+\newpage
+\subsection{machine handler vectors}
+the section describes the privileged machine registers that provide
+per-domain machine trap handlers for software-defined memory management.
+
+\subsubsection{machine handler program counter (\texttt{machpc}$[\mathit{ndom}]$)}
+\texttt{machpc}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
+registers containing an array of the addresses for the machine trap handler
+routines in each domain.
+\\
+\registerspec{64}{32}{%
+  64/{0}//{ALEN-1}/\emph{program counter}%
+}
+
+\subsubsection{machine handler immediate base (\texttt{machib}$[\mathit{ndom}]$)}
+\texttt{machib}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
+registers containing an array of the addresses for the machine trap handler
+constants in each domain.
+\\
+\registerspec{64}{32}{%
+  64/{0}//{ALEN-1}/\emph{immediate base}%
+}
 
 \newpage
 \section{Environment extension}
