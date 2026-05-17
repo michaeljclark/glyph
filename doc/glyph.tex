@@ -5182,9 +5182,8 @@ where the top element in the domain number vector, indexed by the domain
 stack pointer, holds the current domain number. the remaining elements
 contain the domain numbers of a stack of domains with exceptions.
 if the default domain number for a role is configured as self-mapped,
-then its traps will not cause domain context switches and can be
-delivered in the current domain. the following register arrays hold
-state for a domain context switch.
+then its traps will be delivered in the current domain.
+the following register arrays hold state for a domain context switch.
 \\
 \begin{table}[h]
 \centering
@@ -5222,10 +5221,25 @@ the following procedure is used to perform a domain trap context switch.
 \footnotesize
 \caption{context switch to a domain and execute its trap handler}
 \begin{algorithmic}[1]
-\Function{domain\_trap}{$\mathit{domain,cause,value}$}
+\Function{domain\_trap}{$\mathit{role,cause,value}$}
+    \medskip
+    \If {$\mathit{domsp} = \mathit{maxdom} - 1$}
+    \Comment{check domain stack pointer}
+        \State \textbf{raise} \textbf{domain-fault}
+        \Comment{raise domain fault}
+    \EndIf
     \medskip
     \State $\mathit{domcurr} \gets \mathit{domvec[domsp]}$
     \Comment{get current domain number}
+    \medskip
+    \State \textbf{case} $\mathit{role}$ \textbf{of}
+    \Comment{get role default domain number}
+    \State \hspace{1em} $\mathtt{sys}$: $\mathit{domain} \gets \mathit{domsys[domcurr]}$
+    \State \hspace{1em} $\mathtt{dom}$: $\mathit{domain} \gets \mathit{domdom[domcurr]}$
+    \State \hspace{1em} $\mathtt{cap}$: $\mathit{domain} \gets \mathit{domcap[domcurr]}$
+    \State \hspace{1em} $\mathtt{mac}$: $\mathit{domain} \gets \mathit{dommac[domcurr]}$
+    \State \hspace{1em} $\mathtt{msg}$: $\mathit{domain} \gets \mathit{dommsg[domcurr]}$
+    \State \textbf{end case}
     \medskip
     \If {$\lnot\mathit{dommatrix[domcurr][domain]}$}
     \Comment{check domain matrix}
@@ -5235,10 +5249,11 @@ the following procedure is used to perform a domain trap context switch.
     \medskip
     \State $\mathit{tcontrol.I} \gets \mathit{FALSE}$
     \Comment{disable system interrupts}
+    \medskip
     \State $\mathit{domsp} \gets \mathit{domsp} + 1$
     \Comment{increment domain stack pointer}
     \State $\mathit{domvec[domsp]} \gets \mathit{domain}$
-    \Comment{set current domain number}
+    \Comment{set target domain number}
     \medskip
     \State $\mathit{tscratch}\gets \mathit{domscratch[domain]}$
     \Comment{switch trap scratch}
@@ -5263,7 +5278,7 @@ the following procedure is used to perform a domain trap context switch.
     \State $\mathit{sptr} \gets \mathit{domptr[domain]}$
     \Comment{switch system page table root}
     \medskip
-    \State $\mathit{tcause}\gets \mathit{cause}$
+    \State $\mathit{tcause} \gets \mathit{cause}$
     \Comment{save trap cause}
     \State $\mathit{tvalue} \gets \mathit{value}$
     \Comment{save trap value}
@@ -5271,6 +5286,7 @@ the following procedure is used to perform a domain trap context switch.
     \Comment{save exception program counter}
     \State $\mathit{teib} \gets \mathit{ib}$
     \Comment{save exception immediate base}
+    \medskip
     \State $\mathit{pc} \gets \mathit{thpc}$
     \Comment{set program counter to trap handler}
     \State $\mathit{ib} \gets \mathit{thib}$
@@ -5290,7 +5306,7 @@ the following procedure is used to perform a domain return context switch.
 \footnotesize
 \caption{return to the calling domain at the point of exception}
 \begin{algorithmic}[1]
-\Function{domain\_return}{${}$}
+\Function{domain\_return}{$\mathit{role}$}
     \medskip
     \If {$\mathit{domsp} = 0$}
     \Comment{check domain stack pointer}
@@ -5300,19 +5316,28 @@ the following procedure is used to perform a domain return context switch.
     \medskip
     \State $\mathit{domcurr} \gets \mathit{domvec[domsp]}$
     \Comment{get current domain number}
-    \State $\mathit{domsp} \gets \mathit{domsp} - 1$
-    \Comment{decrement domain stack pointer}
-    \State $\mathit{domain} \gets \mathit{domvec[domsp]}$
-    \Comment{get returning domain number}
+    \State $\mathit{domain} \gets \mathit{domvec[domsp-1]}$
+    \Comment{get initiating domain number}
     \medskip
-    \If {$\lnot\mathit{dommatrix[domcurr][domain]}$}
+    \State \textbf{case} $\mathit{role}$ \textbf{of}
+    \Comment{get role default domain number}
+    \State \hspace{1em} $\mathtt{sys}$: $\mathit{domcheck} \gets \mathit{domsys[domain]}$
+    \State \hspace{1em} $\mathtt{dom}$: $\mathit{domcheck} \gets \mathit{domdom[domain]}$
+    \State \hspace{1em} $\mathtt{cap}$: $\mathit{domcheck} \gets \mathit{domcap[domain]}$
+    \State \hspace{1em} $\mathtt{mac}$: $\mathit{domcheck} \gets \mathit{dommac[domain]}$
+    \State \hspace{1em} $\mathtt{msg}$: $\mathit{domcheck} \gets \mathit{dommsg[domain]}$
+    \State \textbf{end case}
+    \medskip
+    \If {$\mathit{domcheck} \ne \mathit{domcurr}$}
+    \Comment{check role default domain number}
+        \State \textbf{raise} \textbf{domain-fault}
+        \Comment{raise domain fault}
+    \ElsIf {$\lnot\mathit{dommatrix[domcurr][domain]}$}
     \Comment{check domain matrix}
         \State \textbf{raise} \textbf{domain-fault}
         \Comment{raise domain fault}
     \EndIf
     \medskip
-    \State $\mathit{domvec[domsp+1]} \gets 0$
-    \Comment{clear last domain number}
     \State $\mathit{pc} \gets \mathit{tepc}$
     \Comment{restore program counter register}
     \State $\mathit{ib} \gets \mathit{teib}$
@@ -5340,6 +5365,11 @@ the following procedure is used to perform a domain return context switch.
     \Comment{switch system deadline timer}
     \State $\mathit{sptr} \gets \mathit{domptr[domain]}$
     \Comment{switch system page table root}
+    \medskip
+    \State $\mathit{domvec[domsp]} \gets 0$
+    \Comment{clear last domain number}
+    \State $\mathit{domsp} \gets \mathit{domsp} - 1$
+    \Comment{decrement domain stack pointer}
     \medskip
     \State $\mathit{tcontrol.I} \gets \mathit{TRUE}$
     \Comment{enable system interrupts}
