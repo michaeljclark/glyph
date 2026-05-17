@@ -3303,12 +3303,16 @@ pointer, which points at the top element in the domain number vector.
 stack. the top element in the domain number vector is indexed by
 \texttt{domsp} and contains the current domain number.
 \\
-\registerspec{32}{32}{%
-  4/{0}//{3}/\footnotesize\emph{domain[0]},%
-  4/{4}//{7}/\footnotesize\emph{domain[1]},%
-  4/{8}//{11}/\footnotesize\emph{domain[2]},%
-  4/{12}//{15}/\footnotesize\emph{domain[3]},%
-  4////\footnotesize\emph{...}%
+\registerspec{64}{32}{%
+  4/{0}//{3}/\footnotesize\emph{dn[0]},%
+  4////,%
+  4/{8}//{11}/\footnotesize\emph{dn[1]},%
+  4////,%
+  4/{16}//{19}/\footnotesize\emph{dn[2]},%
+  4////,%
+  4/{24}//{27}/\footnotesize\emph{dn[3]},%
+  4////,%
+  4/{32}//{35}/\footnotesize\emph{...}%
 }
 
 \subsubsection{domain matrix (\texttt{dommatrix}$[\mathit{ndom}]$)}
