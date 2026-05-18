@@ -3148,9 +3148,9 @@ this section describes the color matrix registers. the \emph{capability
 matrix registers} are permission registers that protect access to
 memory based on a combination of \emph{source} and \emph{destination}
 page table color and \emph{read}, or \emph{write} permissions.
-when \texttt{ccontrol.C} is set, memory accesses and branches to memory
-addresses in pages with matching \emph{source} and \emph{destination}
-page table colors, and wider permissions, will cause capability traps.
+when \texttt{ccontrol.C} is set, memory accesses to pages with matching
+\emph{source} and \emph{destination} page table colors, and wider
+permissions, will cause capability traps.
 
 \subsubsection{color matrix read permissions (\texttt{colormatread}$[\mathit{ncol}]$)}
 \texttt{colormatread}$[\mathit{ncol}]$ are \textbf{\emph{ncol}} read-write
