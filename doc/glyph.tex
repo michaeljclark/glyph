@@ -3763,7 +3763,8 @@ entry formats are as follows.
   1//{6}//\scriptsize\texttt{A},%
   1//{7}//\scriptsize\texttt{D},%
   4/{8}//{11}/\footnotesize\emph{color},%
-  52/{12}//{63}/\footnotesize\emph{physical page number}%
+  44/{12}//{55}/\footnotesize\emph{physical page number},%
+  8/{56}//{63}/\footnotesize\emph{reserved}%
 }
 \caption{64-bit \emph{vm12d} translation lookaside buffer entry.}
 \label{fig:64-bit-vm12d-tlb-entry}
@@ -3782,7 +3783,8 @@ entry formats are as follows.
   1//{7}//\scriptsize\texttt{D},%
   4/{8}//{11}/\footnotesize\emph{color},%
   2//{13}//\footnotesize\texttt{00},%
-  50/{14}//{63}/\footnotesize\emph{physical page number}%
+  42/{14}//{55}/\footnotesize\emph{physical page number},%
+  8/{56}//{63}/\footnotesize\emph{reserved}%
 }
 \caption{64-bit \emph{vm14c} translation lookaside buffer entry.}
 \label{fig:64-bit-vm14c-tlb-entry}
@@ -3801,7 +3803,8 @@ entry formats are as follows.
   1//{7}//\scriptsize\texttt{D},%
   4/{8}//{11}/\footnotesize\emph{color},%
   4/{12}//{15}/\footnotesize\texttt{0000},%
-  48/{16}//{63}/\footnotesize\emph{physical page number}%
+  40/{16}//{55}/\footnotesize\emph{physical page number},%
+  8/{56}//{63}/\footnotesize\emph{reserved}%
 }
 \caption{64-bit \emph{vm16c} translation lookaside buffer entry.}
 \label{fig:64-bit-vm16c-tlb-entry}
@@ -4500,8 +4503,9 @@ are as follows.
 \begin{figure}[H]
 \registerspec{64}{32}{%
   12/{0}//{11}/\footnotesize\emph{ASID},%
-  48/{12}//{59}/\footnotesize\emph{physical page number},%
-  4/{60}//{63}/\footnotesize\texttt{0010}%
+  44/{12}//{55}/\footnotesize\emph{physical page number},%
+  4/{56}//{59}/\footnotesize\texttt{0000},%
+  4/{60}//{63}/\footnotesize\emph{type}%
 }
 \caption{64-bit \emph{vm12d} page table root format.}
 \label{fig:64-bit-vm12d-page-table-root-format}
@@ -4511,8 +4515,9 @@ are as follows.
 \registerspec{64}{32}{%
   12/{0}//{11}/\footnotesize\emph{ASID},%
   2//{13}//\footnotesize\texttt{00},%
-  46/{14}//{59}/\footnotesize\emph{physical page number},%
-  4/{60}//{63}/\footnotesize\texttt{0100}%
+  42/{14}//{55}/\footnotesize\emph{physical page number},%
+  4/{56}//{59}/\footnotesize\texttt{0000},%
+  4/{60}//{63}/\footnotesize\emph{type}%
 }
 \caption{64-bit \emph{vm14c} page table root format.}
 \label{fig:64-bit-vm14c-page-table-root-format}
@@ -4522,8 +4527,9 @@ are as follows.
 \registerspec{64}{32}{%
   12/{0}//{11}/\footnotesize\emph{ASID},%
   4/{12}//{15}/\footnotesize\texttt{0000},%
-  44/{16}//{59}/\footnotesize\emph{physical page number},%
-  4/{60}//{63}/\footnotesize\texttt{1000}%
+  40/{16}//{55}/\footnotesize\emph{physical page number},%
+  4/{56}//{59}/\footnotesize\texttt{0000},%
+  4/{60}//{63}/\footnotesize\emph{type}%
 }
 \caption{64-bit \emph{vm16c} page table root format.}
 \label{fig:64-bit-vm16c-page-table-root-format}
@@ -4578,7 +4584,8 @@ are as follows.
   1//{6}//\scriptsize\texttt{A},%
   1//{7}//\scriptsize\texttt{D},%
   4/{8}//{11}/\footnotesize\emph{color},%
-  52/{12}//{63}/\footnotesize\emph{physical page number}%
+  44/{12}//{55}/\footnotesize\emph{physical page number},%
+  8/{56}//{63}/\footnotesize\emph{reserved}%
 }
 \caption{64-bit \emph{vm12d} page table entry format.}
 \label{fig:64-bit-vm12d-pte-format}
@@ -4597,7 +4604,8 @@ are as follows.
   1//{7}//\scriptsize\texttt{D},%
   4/{8}//{11}/\footnotesize\emph{color},%
   2//{13}//\footnotesize\texttt{00},%
-  50/{14}//{63}/\footnotesize\emph{physical page number}%
+  42/{14}//{55}/\footnotesize\emph{physical page number},%
+  8/{56}//{63}/\footnotesize\emph{reserved}%
 }
 \caption{64-bit \emph{vm14c} page table entry format.}
 \label{fig:64-bit-vm14c-pte-format}
@@ -4616,7 +4624,8 @@ are as follows.
   1//{7}//\scriptsize\texttt{D},%
   4/{8}//{11}/\footnotesize\emph{color},%
   4/{12}//{15}/\footnotesize\texttt{0000},%
-  48/{16}//{63}/\footnotesize\emph{physical page number}%
+  40/{16}//{55}/\footnotesize\emph{physical page number},%
+  8/{56}//{63}/\footnotesize\emph{reserved}%
 }
 \caption{64-bit \emph{vm16c} page table entry format.}
 \label{fig:64-bit-vm16c-pte-format}
