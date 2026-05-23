@@ -3233,16 +3233,16 @@ the following tables list the privileged domain system registers:
 \texttt{0x51} & domcontrol & domain control & \\
 \texttt{0x53} & domsp    & domain stack pointer & \\
 \texttt{0x54} & domvec   & domain number vector & \\
-\texttt{0x400...0x40F} & dommatrix$[n]$ & domain matrix & \\
+\texttt{0x500...0x50F} & dommatrix$[n]$ & domain matrix & \\
 \hline
 \rowcolor{tscol}
 \multicolumn{4}{|l|}{\tsub{domain routing registers}} \\
 \hline
-\texttt{0x500...0x50F} & domsys$[n]$    & domain system default domain & \\
-\texttt{0x600...0x60F} & domdom$[n]$    & domain domain default domain & \\
-\texttt{0x700...0x70F} & domcap$[n]$    & domain capability default domain & capability \\
-\texttt{0x800...0x80F} & dommac$[n]$    & domain machine default domain & machine \\
-\texttt{0x900...0x90F} & dommsg$[n]$    & domain message default domain & \\
+\texttt{0x600...0x60F} & domsys$[n]$    & domain system default domain & \\
+\texttt{0x700...0x70F} & domdom$[n]$    & domain domain default domain & \\
+\texttt{0x800...0x80F} & domcap$[n]$    & domain capability default domain & capability \\
+\texttt{0x900...0x90F} & dommac$[n]$    & domain machine default domain & machine \\
+\texttt{0xA00...0xA0F} & dommsg$[n]$    & domain message default domain & \\
 \hline
 \rowcolor{tscol}
 \multicolumn{4}{|l|}{\tsub{domain context registers}} \\
