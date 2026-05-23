@@ -3002,7 +3002,7 @@ the following tables list the privileged capability system registers:
 \hline
 \texttt{0x43} & colorread      & color read permissions & \\
 \texttt{0x44} & colorwrite     & color write permissions & \\
-\texttt{0x45} & colorexec      & color exec permissions & \\
+%\texttt{0x45} & colorexec      & color exec permissions & \\
 \hline
 \rowcolor{tscol}
 \multicolumn{4}{|l|}{\tsub{capability role registers}} \\
@@ -3011,12 +3011,12 @@ the following tables list the privileged capability system registers:
 \texttt{0x47} & colordom       & color domain role & domain \\
 \texttt{0x48} & colorcap       & color capability role & \\
 \texttt{0x49} & colormac       & color machine role & machine \\
-\hline
-\rowcolor{tscol}
-\multicolumn{4}{|l|}{\tsub{capability matrix registers}} \\
-\hline
-\texttt{0x100...0x10F} & colormatread$[n]$   & color matrix read permissions & \\
-\texttt{0x200...0x20F} & colormatwrite$[n]$   & color matrix write permissions & \\
+%\hline
+%\rowcolor{tscol}
+%\multicolumn{4}{|l|}{\tsub{capability matrix registers}} \\
+%\hline
+%\texttt{0x100...0x10F} & colormatread$[n]$   & color matrix read permissions & \\
+%\texttt{0x200...0x20F} & colormatwrite$[n]$   & color matrix write permissions & \\
 %\texttt{0x300...0x30F} & colormatexec$[n]$   & color matrix exec permissions & \\
 \hline
 \end{tabularx}
@@ -3058,8 +3058,8 @@ the capability extension.
 this section describes the \emph{capability permission registers} which
 define \emph{page table color} permission masks for page table entries.
 when \texttt{ccontrol.C} is set, the \emph{capability permission registers}
-are combined with page table permissions to limit maximum \emph{read},
-\emph{write}, or \emph{execute} permission based on page table color.
+are combined with page table permissions to limit maximum \emph{read}
+and \emph{write} permission based on page table color.
 
 \subsubsection{color read permission (\texttt{colorread})}
 \texttt{colorread} is a read-write register containing an array
@@ -3079,6 +3079,7 @@ used to check stores to pages with a matching page table color.
   8/{0}//{15}/\emph{write perms}%
 }
 
+\iffalse
 \subsubsection{color exec permission (\texttt{colorexec})}
 \texttt{colorexec} is a read-write register containing an array
 of \textbf{\emph{ncol}} bits containing execute permissions for \emph{color-x},
@@ -3087,6 +3088,7 @@ used to check execution in pages with a matching page table color.
 \registerspec{32}{32}{%
   8/{0}//{15}/\emph{exec perms}%
 }
+\fi
 
 \newpage
 \subsection{capability role registers}
@@ -3141,6 +3143,7 @@ executable pages with a matching page table color.
   8/{0}//{15}/\emph{machine role}%
 }
 
+\iffalse
 \newpage
 \subsection{capability matrix registers}
 
@@ -3174,16 +3177,17 @@ memory pages with a matching \emph{page table color} index.
   8/{0}//{15}/\emph{write perms}%
 }
 
-%\subsubsection{color matrix exec permissions (\texttt{colormatexec}$[\mathit{ncol}]$)}
-%\texttt{colormatexec}$[\mathit{ncol}]$ are \textbf{\emph{ncol}} read-write
-%registers containing an array of \textbf{\emph{ncol}} bits with exec
-%permissions, used to check branches from executable pages with a
-%matching register \emph{page table color} to branch addresses in
-%executable pages with a matching \emph{page table color} index.
-%\\
-%\registerspec{32}{32}{%
-%  8/{0}//{15}/\emph{exec perms}%
-%}
+\subsubsection{color matrix exec permissions (\texttt{colormatexec}$[\mathit{ncol}]$)}
+\texttt{colormatexec}$[\mathit{ncol}]$ are \textbf{\emph{ncol}} read-write
+registers containing an array of \textbf{\emph{ncol}} bits with exec
+permissions, used to check branches from executable pages with a
+matching register \emph{page table color} to branch addresses in
+executable pages with a matching \emph{page table color} index.
+\\
+\registerspec{32}{32}{%
+  8/{0}//{15}/\emph{exec perms}%
+}
+\fi
 
 \newpage
 \section{Domain extension}
