@@ -2195,6 +2195,44 @@ this example omits hazard detection and forwarding logic for the sake of simplic
 
 \chapter{System registers}
 
+this chapter describes the user-level, system, capability, domain,
+machine, and environment registers. the registers are used to manage
+user-level context, trap handling, address translation, interrupt
+routing, capabilities, virtual domains, machine, and environment.
+\para
+the system register set is divided into the following sections.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabularx}{125mm}{|l|X|}
+\hline
+\rowcolor{thcol}
+\thead{name} & \thead{description} \\
+\hline
+\rowcolor{tscol}
+\multicolumn{2}{|l|}{\tsub{core}} \\
+\hline
+\textbf{user-level registers}  & floating-point status and control,
+clock, time stamp counter, time stamp frequency, and thread addresses. \\
+\textbf{system registers}      & trap handling, system addresses,
+interrupts, timers, memory management and inter-domain messages. \\
+\hline
+\rowcolor{tscol}
+\multicolumn{2}{|l|}{\tsub{extension}} \\
+\hline
+\textbf{capability extension}  & page-based roles and permissions using page table colors. \\
+\textbf{domain extension}      & domain addresses, trap routing, and system context vectors. \\
+\textbf{machine extension}     & machine features, addresses, and translation fault handling. \\
+\textbf{environment extension} & diagnostics, reset, and power. \\
+\hline
+\end{tabularx}
+\caption{system registers}
+\label{tab:system-registers}
+\end{table}
+
+\newpage
 \section{User-level registers}
 the architecture provides several user-level status and control registers
 for floating-point status and control, clock time, clock frequency,
@@ -4447,507 +4485,38 @@ the array access address calculation using the array unit descriptor is as follo
 \fi
 
 \chapter{System operation}
-\section{Address translation}
 
-the architecture provides for page-based virtual to physical address
-translation using a page table \emph{trie structure} composed of index
-pages containing arrays of page table entries. a page walker reads the
-structure from the root pointer to leaf entries to translate virtual
-addresses into physical addresses. the architecture introduces the
-concept of a \emph{translation address} which is an address boxed with
-an \emph{address space prefix} (\texttt{AS}) designed to provide a
-canonical address form for user and system virtual addresses as
-well as physical addresses.
+this chapter describes the operational semantics of the architecture.
+this includes architectural behavior in response to privileged instructions,
+interrupts, memory management faults, capability violations, and updates to
+system and machine state.
+this chapter also describes interaction between the processor core,
+interrupt routing fabric, virtual domains, memory management system,
+and virtual machine environment.
 \para
-the address translation system is designed to support the following use cases:
-\begin{itemize}[itemsep=0pt]
-\item logical partitioning of memory using page table colors and physical self-maps.
-\item zoning of page table pages using page table entry translate permissions.
-\item tagged translation lookaside buffers using address space identifiers.
-\item multiple pages sizes including 4~KiB, 16~KiB, and 64~KiB leaf page sizes.
-\end{itemize}
+the system operational semantics are divided into the following sections.
 
-\par\noindent
-the follow table describes the dimensions for memory address translation
-using the \emph{trie-based} page table structure pointed to by the
-\emph{system page table root} (\texttt{sptr}) register.
-the page table types \emph{vm12d}, \emph{vm14c}, and \emph{vm16c} support
-4~KiB, 16~KiB, and 64~KiB leaf pages, respectively.
-\\
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \footnotesize
 \rowcolors{2}{tbcol}{tbcol}
-\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
+\begin{tabularx}{125mm}{|l|X|}
 \hline
 \rowcolor{thcol}
-\thead{Page} & \thead{Page} & \thead{Page} & \thead{Page} & \thead{Virtual} &
-\thead{Page} & & \\
-\rowcolor{thcol}
-\thead{Table} & \thead{Table} & \thead{No.} & \thead{Offset} & \thead{Address} &
-\thead{Index} & \thead{Page} & \thead{Address}  \\
-\rowcolor{thcol}
-\thead{Type} & \thead{Levels} & \thead{Bits} & \thead{Bits} & \thead{Bits} &
-\thead{Entries} & \thead{Sizes} & \thead{Space} \\
+\thead{name} & \thead{description} \\
 \hline
-vm12d & 4 & 9 & 12 & 48 & 512 & 4~KiB, 2~MiB, 1~GiB & 256~TiB \\
-vm14c & 3 & 11 & 14 & 47 & 2048 & 16~KiB, 32~MiB & 128~TiB \\
-vm16c & 3 & 13 & 16 & 55 & 8192 & 64~KiB, 512~MiB & 32~PiB \\
+\textbf{interrupt handling} & synchronous and asynchronous traps and
+exceptions, trap routing, and domain context switching for system,
+domain, capability, machine, and message traps. \\
+\textbf{memory management} & page table structure, address formats,
+page table walking, address translation, and permission checks. \\
+\textbf{virtual machine} & hypervisor, firmware interfaces, hardware
+description models, and virtual devices for I/O. \\
 \hline
-\end{tabular}
-\caption{64-bit page table dimensions}
-\label{tab:64-bit-page-table-dimensions}
+\end{tabularx}
+\caption{system operation}
+\label{tab:system-operation}
 \end{table}
-
-\newpage
-\subsection{page table root}
-\label{sec:page-table-root}
-
-the page table root pointer is stored in the \texttt{sptr} register.
-the page walker reads the root pointer to lookup virtual addresses
-in the page table trie structure. the page table root pointer contains a
-\texttt{type} field indicating the page table type, the page table root
-physical page number, and an address space identifier used to index the
-translation lookaside buffer.
-\para
-the \emph{vm12d}, \emph{vm14c}, and \emph{vm16c} page table root formats
-are as follows.
-\\
-\begin{figure}[H]
-\registerspec{64}{32}{%
-  12/{0}//{11}/\footnotesize\emph{ASID},%
-  44/{12}//{55}/\footnotesize\emph{physical page number},%
-  4/{56}//{59}/\footnotesize\texttt{0000},%
-  4/{60}//{63}/\footnotesize\emph{type}%
-}
-\caption{64-bit \emph{vm12d} page table root format.}
-\label{fig:64-bit-vm12d-page-table-root-format}
-\end{figure}
-
-\begin{figure}[H]
-\registerspec{64}{32}{%
-  12/{0}//{11}/\footnotesize\emph{ASID},%
-  2//{13}//\footnotesize\texttt{00},%
-  42/{14}//{55}/\footnotesize\emph{physical page number},%
-  4/{56}//{59}/\footnotesize\texttt{0000},%
-  4/{60}//{63}/\footnotesize\emph{type}%
-}
-\caption{64-bit \emph{vm14c} page table root format.}
-\label{fig:64-bit-vm14c-page-table-root-format}
-\end{figure}
-
-\begin{figure}[H]
-\registerspec{64}{32}{%
-  12/{0}//{11}/\footnotesize\emph{ASID},%
-  4/{12}//{15}/\footnotesize\texttt{0000},%
-  40/{16}//{55}/\footnotesize\emph{physical page number},%
-  4/{56}//{59}/\footnotesize\texttt{0000},%
-  4/{60}//{63}/\footnotesize\emph{type}%
-}
-\caption{64-bit \emph{vm16c} page table root format.}
-\label{fig:64-bit-vm16c-page-table-root-format}
-\end{figure}
-
-\par\noindent
-the supported page table formats are indicated in the \emph{system page table
-info} (\texttt{spti}) register.
-the page table types used in the \texttt{type} field of the page table root
-register are as follows.
-\\
-\begin{table}[h]
-\centering
-\footnotesize
-\rowcolors{2}{tbcol}{tbcol}
-\begin{tabular}{|l|l|l|}
-\hline
-\rowcolor{thcol}
-\thead{no.} & \thead{type} & \thead{description} \\
-\hline
-\texttt{0b0010} & \texttt{vm12d} & 4-level page tables with 4~KiB leaf pages \\
-\texttt{0b0100} & \texttt{vm14c} & 3-level page tables with 16~KiB leaf pages \\
-\texttt{0b1000} & \texttt{vm16c} & 3-level page tables with 64~KiB leaf pages \\
-\hline
-\end{tabular}
-\caption{64-bit page table types.}
-\label{tab:64-bit-page-table-types}
-\end{table}
-
-\newpage
-\subsection{page table entries}
-
-page table entries are grouped into arrays within index pages which are
-selected by an index derived from a portion of the virtual address.
-each entry contains a physical page number, a page color, plus several
-permission and metadata bits. the physical page number points to the next
-page table level for \emph{pointer} entries or the translated physical
-address for \emph{leaf} entries.
-\para
-the \emph{vm12d}, \emph{vm14c}, and \emph{vm16c} page table entry formats
-are as follows.
-\\
-\begin{figure}[H]
-\centering
-\registerspec{64}{32}{%
-  1//{0}//\scriptsize\texttt{V},%
-  1//{1}//\scriptsize\texttt{R},%
-  1//{2}//\scriptsize\texttt{W},%
-  1//{3}//\scriptsize\texttt{X},%
-  1//{4}//\scriptsize\texttt{T},%
-  1//{5}//\scriptsize\texttt{G},%
-  1//{6}//\scriptsize\texttt{A},%
-  1//{7}//\scriptsize\texttt{D},%
-  4/{8}//{11}/\footnotesize\emph{color},%
-  44/{12}//{55}/\footnotesize\emph{physical page number},%
-  8/{56}//{63}/\footnotesize\emph{reserved}%
-}
-\caption{64-bit \emph{vm12d} page table entry format.}
-\label{fig:64-bit-vm12d-pte-format}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\registerspec{64}{32}{%
-  1//{0}//\scriptsize\texttt{V},%
-  1//{1}//\scriptsize\texttt{R},%
-  1//{2}//\scriptsize\texttt{W},%
-  1//{3}//\scriptsize\texttt{X},%
-  1//{4}//\scriptsize\texttt{T},%
-  1//{5}//\scriptsize\texttt{G},%
-  1//{6}//\scriptsize\texttt{A},%
-  1//{7}//\scriptsize\texttt{D},%
-  4/{8}//{11}/\footnotesize\emph{color},%
-  2//{13}//\footnotesize\texttt{00},%
-  42/{14}//{55}/\footnotesize\emph{physical page number},%
-  8/{56}//{63}/\footnotesize\emph{reserved}%
-}
-\caption{64-bit \emph{vm14c} page table entry format.}
-\label{fig:64-bit-vm14c-pte-format}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\registerspec{64}{32}{%
-  1//{0}//\scriptsize\texttt{V},%
-  1//{1}//\scriptsize\texttt{R},%
-  1//{2}//\scriptsize\texttt{W},%
-  1//{3}//\scriptsize\texttt{X},%
-  1//{4}//\scriptsize\texttt{T},%
-  1//{5}//\scriptsize\texttt{G},%
-  1//{6}//\scriptsize\texttt{A},%
-  1//{7}//\scriptsize\texttt{D},%
-  4/{8}//{11}/\footnotesize\emph{color},%
-  4/{12}//{15}/\footnotesize\texttt{0000},%
-  40/{16}//{55}/\footnotesize\emph{physical page number},%
-  8/{56}//{63}/\footnotesize\emph{reserved}%
-}
-\caption{64-bit \emph{vm16c} page table entry format.}
-\label{fig:64-bit-vm16c-pte-format}
-\end{figure}
-
-\par\noindent
-the page table entry permission and metadata bits are as follows.
-\\
-\begin{table}[h]
-\centering
-\footnotesize
-\rowcolors{2}{tbcol}{tbcol}
-\begin{tabular}{|l|l|l|}
-\hline
-\rowcolor{thcol}
-\thead{no.} & \thead{name} & \thead{description} \\
-\hline
-\verb|1 << 0| & V   & valid \\
-\verb|1 << 1| & R   & read \\
-\verb|1 << 2| & W   & write \\
-\verb|1 << 3| & X   & execute \\
-\verb|1 << 4| & T   & translate \\
-\verb|1 << 5| & G   & global \\
-\verb|1 << 6| & A   & accessed \\
-\verb|1 << 7| & D   & dirty \\
-\hline
-\end{tabular}
-\caption{64-bit page table entry fields}
-\label{tab:64-bit-page-table-entry-fields}
-\end{table}
-
-\newpage
-\subsection{translation addresses}
-
-translation addresses are used by the address translation system to abstract
-virtual and physical addresses. translation addresses contain an address
-encoded using a page table type specific address format, where the address
-is prefixed with a 1 --- 4 bit sign-extended address space prefix to
-distinguish user and system virtual addresses from physical addresses.
-\para
-the \emph{vm12d}, \emph{vm14c}, and \emph{vm16c} translation address formats
-are as follows.
-\\
-\begin{figure}[H]
-\centering
-\registerspec{64}{32}{%
-  12/{0}//{11}/\footnotesize\emph{page offset},%
-  32/{12}//{43}/\footnotesize\emph{virtual page number},%
-  -4/{44}//{47}/\texttt{AS},%
-  16/{48}//{63}/\footnotesize\emph{sext}%
-}
-\caption{64-bit \emph{vm12d} translation address format.}
-\label{fig:64-bit-vm12d-translation-address-format}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\registerspec{64}{32}{%
-  14/{0}//{13}/\footnotesize\emph{page offset},%
-  29/{14}//{42}/\footnotesize\emph{virtual page number},%
-  -4/{43}//{46}/\texttt{AS},%
-  17/{47}//{63}/\footnotesize\emph{sext}%
-}
-\caption{64-bit \emph{vm14c} translation address format.}
-\label{fig:64-bit-vm14c-translation-address-format}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\registerspec{64}{32}{%
-  16/{0}//{15}/\footnotesize\emph{page offset},%
-  35/{16}//{50}/\footnotesize\emph{virtual page number},%
-  -4/{51}//{54}/\texttt{AS},%
-  9/{55}//{63}/\footnotesize\emph{sext}%
-}
-\caption{64-bit \emph{vm16c} translation address format.}
-\label{fig:64-bit-vm16c-translation-address-format}
-\end{figure}
-
-\par\noindent
-the translation address unary address space prefixes are as follows.
-\\
-\begin{table}[h]
-\centering
-\footnotesize
-\rowcolors{2}{tbcol}{tbcol}
-\begin{tabular}{|l|l|l|}
-\hline
-\rowcolor{thcol}
-\thead{no.} & \thead{name} & \thead{description} \\
-\hline
-\texttt{0b0.} & user & user virtual addresses \\
-\texttt{0b10.} & system & system virtual addresses \\
-\texttt{0b110.} & physical & global physical memory \\
-\texttt{0b1110.} & local & local scratchpad memory \\
-\hline
-\end{tabular}
-\caption{1---4 bit translation address space prefixes.}
-\label{tab:1--bit-translation-address-space-prefixes}
-\end{table}
-
-\newpage
-\subsection{translation indices}
-
-translation virtual addresses are decomposed into page table indexing
-structures containing a page offset and a vector of page number
-indices used to select page table entries in the page table trie.
-the page table indexing structure partitions the virtual page
-number into a vector of fixed-width page number indices, where
-each index has a width of \emph{page number bits}.
-\para
-the \emph{vm12d}, \emph{vm14c}, and \emph{vm16c} translation index
-structures are as follows.
-\\
-\begin{figure}[H]
-\centering
-\registerspec{64}{32}{%
-  12/{0}//{11}/\footnotesize\emph{page offset},%
-  9/{12}//{20}/\footnotesize\emph{pn[0]},%
-  9/{21}//{29}/\footnotesize\emph{pn[1]},%
-  9/{30}//{38}/\footnotesize\emph{pn[2]},%
-  9/{39}//{47}/\footnotesize\emph{pn[3]},%
-  16/{48}//{63}/\footnotesize\emph{sext}%
-}
-\caption{64-bit \emph{vm12d} translation index structure.}
-\label{fig:64-bit-vm12d-translation-index-structure}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\registerspec{64}{32}{%
-  14/{0}//{13}/\footnotesize\emph{page offset},%
-  11/{14}//{24}/\footnotesize\emph{pn[0]},%
-  11/{25}//{35}/\footnotesize\emph{pn[1]},%
-  11/{36}//{46}/\footnotesize\emph{pn[2]},%
-  17/{47}//{63}/\footnotesize\emph{sext}%
-}
-\caption{64-bit \emph{vm14c} translation index structure.}
-\label{fig:64-bit-vm14c-translation-index-structure}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\registerspec{64}{32}{%
-  16/{0}//{15}/\footnotesize\emph{page offset},%
-  13/{16}//{28}/\footnotesize\emph{pn[0]},%
-  13/{29}//{41}/\footnotesize\emph{pn[1]},%
-  13/{42}//{54}/\footnotesize\emph{pn[2]},%
-  9/{55}//{63}/\footnotesize\emph{sext}%
-}
-\caption{64-bit \emph{vm16c} translation index structure.}
-\label{fig:64-bit-vm16c-translation-index-structure}
-\end{figure}
-
-\newpage
-\subsection{page table walker}
-\label{sec:page-table-walker}
-
-the page table walker performs page table lookup to translate virtual
-addresses into physical addresses.
-the page table walker reads the page table root pointer then walks the
-\emph{trie-based} page table structure to find a leaf entry containing
-a physical page address.
-the translation address must be a virtual address.
-the page table root address must be a physical address.
-\para
-page table entries with the \emph{read, write} and \emph{exec} permission
-bits clear are interpreted as \emph{pointer} entries and contain a pointer
-to the next-level index page, otherwise they are interpreted as \emph{leaf}
-entries with a final translation. entries with the \emph{write} bit set
-must have the \emph{read} bit set.
-\para
-if the physical permissions feature \emph{mfeature.P} is present and
-\emph{mcontrol.P} is enabled, then physical pages must be present in the
-page table with a self-mapping of their physical address prefixed with
-$(\mathit{AS} = \mathit{physical})$ leading to a leaf page table entry
-containing its own address. this is to allow physical page permissions
-to be checked. in addition to this, the physical self-mappings for physical
-pages containing page table pages must have the \emph{translate} bit set.
-\para
-the page table walker process is as follows.
-
-\begin{algorithm}[H]
-\footnotesize
-\caption{find page table entry for translation address}
-\begin{algorithmic}[1]
-\Function{page\_walk}{$\mathit{type},\mathit{ppn},\mathit{ta}$}
-  \For{$\mathit{level} \gets \mathit{num\_levels} - 1$ to $0$}
-    \Comment{for each page table level}
-    \State $\mathit{shift} \gets \mathit{level} \times
-      \mathit{pn\_bits} + \mathit{po\_bits}$
-    \Comment{calculate page number shift}
-    \State $\mathit{tpn} \gets (\mathit{ta} >> \mathit{shift}) \land
-      ((1 << \mathit{pn\_bits}) - 1)$
-    \Comment{calculate translation page number}
-    \State $\mathit{pte} \gets \Call{load}{(\mathit{ppn}
-      << \mathit{po\_bits}) + \mathit{tpn} \times \mathit{sizeof(PTE)}}$
-    \Comment{load page table entry}
-    \State $\mathit{leaf} \gets
-      \mathit{pte.R} \lor \mathit{pte.W} \lor \mathit{pte.X}$
-    \Comment{page table entry node type}
-    \State $\mathit{sm} \gets
-      \mathit{R} \lor \mathit{W} \lor \mathit{X}$
-    \Comment{default self map page table entry}
-    \If {$\mathit{mfeature.P} \land \mathit{mcontrol.P} \land \mathit{type} =
-        \mathit{virtual}$}
-      \State $\mathit{pa} \gets \mathit{pte.ppn} << \mathit{po\_shift}$
-      \State $(\mathit{sm},\mathit{level}) \gets \Call{page\_walk}{%
-        \mathit{physical},\mathit{sptr.ppn},\mathit{pa}}$
-      \Comment{load self mapping}
-      \If {$(\mathit{leaf} \land \mathit{pte.ppn} \ne \mathit{sm.ppn}) \lor
-        (\lnot\mathit{leaf} \land \lnot\mathit{sm.T})$}
-        \State \textbf{raise} \textbf{fault}
-        \Comment{invalid self mapping}
-      \EndIf
-    \EndIf
-    \If {$\mathit{leaf}$}
-      \State \Return $(\mathit{pte}, \mathit{sm}, \mathit{level})$
-      \Comment{return page table entry}
-    \ElsIf {$\mathit{level} = 0$}
-      \State \textbf{raise} \textbf{fault}
-      \Comment{leaf entry not found}
-    \EndIf
-  \EndFor
-\EndFunction
-\end{algorithmic}
-\end{algorithm}
-
-\newpage
-\subsection{address translation process}
-
-address translation is the process, for a specific memory operation,
-of walking the \emph{trie-based} page table structure to locate a page table
-entry. the permission and metadata bits of the resulting page table entry
-are checked against the memory operation, along with physical self-map
-permissions, if enabled, and address space restrictions via the \emph{user
-address space access disable bit} or \emph{user address space execute
-disable bit}, before translating the virtual address to a physical address
-using the physical page number in the page table entry.
-\para
-page table entries without the \emph{accessed} bit set will fault on reads.
-page table entries without the \emph{dirty} bit set will fault on writes.
-the \emph{global} bit prevents \emph{sptr.ASID} from being associated with
-TLB entries.
-the \emph{color} field is reserved for use by the capabilities extension.
-\para
-the virtual to physical address translation process is as follows.
-
-\begin{algorithm}[H]
-\footnotesize
-\caption{translate virtual address to physical address}
-\begin{algorithmic}[1]
-\Function{virtual\_to\_physical}{$\mathit{op}, \mathit{va}$}
-  \Comment{$\mathit{op}$: operation, $\mathit{va}$: virtual address}
-  \If {$\mathit{sptr.as} \ne \mathit{physical}$}
-    \State \textbf{raise} \textbf{fault}
-    \Comment{page table root is not physical}
-  \EndIf
-  \State $(\mathit{pte}, \mathit{sm}, \mathit{level}) \gets \Call{page\_walk}{
-    \mathit{virtual},\mathit{sptr.ppn},\mathit{va}}$
-  \Comment{find page table entry}
-  \State $\mathit{shift} \gets \mathit{level} \times
-    \mathit{pn\_bits} + \mathit{po\_bits}$
-  \Comment{calculate page number shift}
-  \State $\mathit{mask} \gets (1 << \mathit{shift}) - 1$
-  \State $\mathit{caps} \gets
-    (\mathit{R} \land \mathit{colorread[pte.color]}) \lor
-    (\mathit{W} \land \mathit{colorwrite[pte.color]}) \lor
-    (\mathit{X} \land \mathit{colorexec[pte.color]})$
-  \State $\mathit{user} \gets
-    \lnot((\mathit{va} >> (\mathit{va\_bits} - 1)) \land 1)$
-  \If {$(\lnot\mathit{pte.V}) \lor (\mathit{pte.W} \land \lnot\mathit{pte.R})$}
-    \State \textbf{raise} \textbf{fault}
-    \Comment{invalid write must have read}
-  \ElsIf{$(\mathit{op.R} \land \lnot\mathit{pte.R}) \lor (\mathit{op.W} \land
-    \lnot\mathit{pte.W}) \lor (\mathit{op.X} \land \lnot\mathit{pte.X})$}
-    \State \textbf{raise} \textbf{fault}
-    \Comment{invalid page table permissions}
-  \ElsIf{$(\mathit{sm.R} \land \lnot\mathit{pte.R}) \lor (\mathit{sm.W} \land
-    \lnot\mathit{pte.W}) \lor (\mathit{sm.X} \land \lnot\mathit{pte.X})$}
-    \State \textbf{raise} \textbf{fault}
-    \Comment{invalid self map permissions}
-  \ElsIf{$(\mathit{cap.R} \land \mathit{pte.R}) \lor (\mathit{cap.W} \land
-    \mathit{pte.W}) \lor (\mathit{cap.X} \land \mathit{pte.X})$}
-    \State \textbf{raise} \textbf{fault}
-    \Comment{invalid page table capabilities}
-  \ElsIf {$(\mathit{op.R} \land \lnot\mathit{pte.A}) \lor
-      (\mathit{op.W} \land \lnot\mathit{pte.D})$}
-    \State \textbf{raise} \textbf{fault}
-    \Comment{invalid accessed or dirty}
-  \ElsIf {$\lnot\mathit{role(user)} \land \lnot\mathit{scontrol.E} \land
-      \mathit{user} \land \mathit{op.X}$}
-    \State \textbf{raise} \textbf{fault}
-    \Comment{invalid user page execute}
-  \ElsIf {$\lnot\mathit{role(user)} \land \lnot\mathit{scontrol.A} \land
-      \mathit{user} \land \mathit{op.(R \lor W})$}
-    \State \textbf{raise} \textbf{fault}
-    \Comment{invalid user page access}
-  \ElsIf {($\mathit{pte.ppn} << \mathit{shift}) \land \mathit{mask} \ne 0$}
-    \State \textbf{raise} \textbf{fault}
-    \Comment{invalid superpage alignment}
-  \EndIf
-  \State $\mathit{pa} \gets \mathit{as.physical} \lor
-    (\mathit{pte.ppn} << \mathit{shift}) \lor
-    (\mathit{va} \land \mathit{mask})$
-  \State \Return $\mathit{pa}$
-\EndFunction
-\end{algorithmic}
-\end{algorithm}
 
 \newpage
 \section{Interrupt handling}
@@ -5610,6 +5179,509 @@ processor network.
 \caption{example four node processor--router network.}
 \label{fig:example-four-node-processor-router-network}
 \end{figure}
+
+\newpage
+\section{Memory management}
+
+the architecture provides for page-based virtual to physical address
+translation using a page table \emph{trie structure} composed of index
+pages containing arrays of page table entries. a page walker reads the
+structure from the root pointer to leaf entries to translate virtual
+addresses into physical addresses. the architecture introduces the
+concept of a \emph{translation address} which is an address boxed with
+an \emph{address space prefix} (\texttt{AS}) designed to provide a
+canonical address form for user and system virtual addresses as
+well as physical addresses.
+\para
+the address translation system is designed to support the following use cases:
+\begin{itemize}[itemsep=0pt]
+\item logical partitioning of memory using page table colors and physical self-maps.
+\item zoning of page table pages using page table entry translate permissions.
+\item tagged translation lookaside buffers using address space identifiers.
+\item multiple pages sizes including 4~KiB, 16~KiB, and 64~KiB leaf page sizes.
+\end{itemize}
+
+\par\noindent
+the follow table describes the dimensions for memory address translation
+using the \emph{trie-based} page table structure pointed to by the
+\emph{system page table root} (\texttt{sptr}) register.
+the page table types \emph{vm12d}, \emph{vm14c}, and \emph{vm16c} support
+4~KiB, 16~KiB, and 64~KiB leaf pages, respectively.
+\\
+\begin{table}[h]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{Page} & \thead{Page} & \thead{Page} & \thead{Page} & \thead{Virtual} &
+\thead{Page} & & \\
+\rowcolor{thcol}
+\thead{Table} & \thead{Table} & \thead{No.} & \thead{Offset} & \thead{Address} &
+\thead{Index} & \thead{Page} & \thead{Address}  \\
+\rowcolor{thcol}
+\thead{Type} & \thead{Levels} & \thead{Bits} & \thead{Bits} & \thead{Bits} &
+\thead{Entries} & \thead{Sizes} & \thead{Space} \\
+\hline
+vm12d & 4 & 9 & 12 & 48 & 512 & 4~KiB, 2~MiB, 1~GiB & 256~TiB \\
+vm14c & 3 & 11 & 14 & 47 & 2048 & 16~KiB, 32~MiB & 128~TiB \\
+vm16c & 3 & 13 & 16 & 55 & 8192 & 64~KiB, 512~MiB & 32~PiB \\
+\hline
+\end{tabular}
+\caption{64-bit page table dimensions}
+\label{tab:64-bit-page-table-dimensions}
+\end{table}
+
+\newpage
+\subsection{page table root}
+\label{sec:page-table-root}
+
+the page table root pointer is stored in the \texttt{sptr} register.
+the page walker reads the root pointer to lookup virtual addresses
+in the page table trie structure. the page table root pointer contains a
+\texttt{type} field indicating the page table type, the page table root
+physical page number, and an address space identifier used to index the
+translation lookaside buffer.
+\para
+the \emph{vm12d}, \emph{vm14c}, and \emph{vm16c} page table root formats
+are as follows.
+\\
+\begin{figure}[H]
+\registerspec{64}{32}{%
+  12/{0}//{11}/\footnotesize\emph{ASID},%
+  44/{12}//{55}/\footnotesize\emph{physical page number},%
+  4/{56}//{59}/\footnotesize\texttt{0000},%
+  4/{60}//{63}/\footnotesize\emph{type}%
+}
+\caption{64-bit \emph{vm12d} page table root format.}
+\label{fig:64-bit-vm12d-page-table-root-format}
+\end{figure}
+
+\begin{figure}[H]
+\registerspec{64}{32}{%
+  12/{0}//{11}/\footnotesize\emph{ASID},%
+  2//{13}//\footnotesize\texttt{00},%
+  42/{14}//{55}/\footnotesize\emph{physical page number},%
+  4/{56}//{59}/\footnotesize\texttt{0000},%
+  4/{60}//{63}/\footnotesize\emph{type}%
+}
+\caption{64-bit \emph{vm14c} page table root format.}
+\label{fig:64-bit-vm14c-page-table-root-format}
+\end{figure}
+
+\begin{figure}[H]
+\registerspec{64}{32}{%
+  12/{0}//{11}/\footnotesize\emph{ASID},%
+  4/{12}//{15}/\footnotesize\texttt{0000},%
+  40/{16}//{55}/\footnotesize\emph{physical page number},%
+  4/{56}//{59}/\footnotesize\texttt{0000},%
+  4/{60}//{63}/\footnotesize\emph{type}%
+}
+\caption{64-bit \emph{vm16c} page table root format.}
+\label{fig:64-bit-vm16c-page-table-root-format}
+\end{figure}
+
+\par\noindent
+the supported page table formats are indicated in the \emph{system page table
+info} (\texttt{spti}) register.
+the page table types used in the \texttt{type} field of the page table root
+register are as follows.
+\\
+\begin{table}[h]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{no.} & \thead{type} & \thead{description} \\
+\hline
+\texttt{0b0010} & \texttt{vm12d} & 4-level page tables with 4~KiB leaf pages \\
+\texttt{0b0100} & \texttt{vm14c} & 3-level page tables with 16~KiB leaf pages \\
+\texttt{0b1000} & \texttt{vm16c} & 3-level page tables with 64~KiB leaf pages \\
+\hline
+\end{tabular}
+\caption{64-bit page table types.}
+\label{tab:64-bit-page-table-types}
+\end{table}
+
+\newpage
+\subsection{page table entries}
+
+page table entries are grouped into arrays within index pages which are
+selected by an index derived from a portion of the virtual address.
+each entry contains a physical page number, a page color, plus several
+permission and metadata bits. the physical page number points to the next
+page table level for \emph{pointer} entries or the translated physical
+address for \emph{leaf} entries.
+\para
+the \emph{vm12d}, \emph{vm14c}, and \emph{vm16c} page table entry formats
+are as follows.
+\\
+\begin{figure}[H]
+\centering
+\registerspec{64}{32}{%
+  1//{0}//\scriptsize\texttt{V},%
+  1//{1}//\scriptsize\texttt{R},%
+  1//{2}//\scriptsize\texttt{W},%
+  1//{3}//\scriptsize\texttt{X},%
+  1//{4}//\scriptsize\texttt{T},%
+  1//{5}//\scriptsize\texttt{G},%
+  1//{6}//\scriptsize\texttt{A},%
+  1//{7}//\scriptsize\texttt{D},%
+  4/{8}//{11}/\footnotesize\emph{color},%
+  44/{12}//{55}/\footnotesize\emph{physical page number},%
+  8/{56}//{63}/\footnotesize\emph{reserved}%
+}
+\caption{64-bit \emph{vm12d} page table entry format.}
+\label{fig:64-bit-vm12d-pte-format}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\registerspec{64}{32}{%
+  1//{0}//\scriptsize\texttt{V},%
+  1//{1}//\scriptsize\texttt{R},%
+  1//{2}//\scriptsize\texttt{W},%
+  1//{3}//\scriptsize\texttt{X},%
+  1//{4}//\scriptsize\texttt{T},%
+  1//{5}//\scriptsize\texttt{G},%
+  1//{6}//\scriptsize\texttt{A},%
+  1//{7}//\scriptsize\texttt{D},%
+  4/{8}//{11}/\footnotesize\emph{color},%
+  2//{13}//\footnotesize\texttt{00},%
+  42/{14}//{55}/\footnotesize\emph{physical page number},%
+  8/{56}//{63}/\footnotesize\emph{reserved}%
+}
+\caption{64-bit \emph{vm14c} page table entry format.}
+\label{fig:64-bit-vm14c-pte-format}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\registerspec{64}{32}{%
+  1//{0}//\scriptsize\texttt{V},%
+  1//{1}//\scriptsize\texttt{R},%
+  1//{2}//\scriptsize\texttt{W},%
+  1//{3}//\scriptsize\texttt{X},%
+  1//{4}//\scriptsize\texttt{T},%
+  1//{5}//\scriptsize\texttt{G},%
+  1//{6}//\scriptsize\texttt{A},%
+  1//{7}//\scriptsize\texttt{D},%
+  4/{8}//{11}/\footnotesize\emph{color},%
+  4/{12}//{15}/\footnotesize\texttt{0000},%
+  40/{16}//{55}/\footnotesize\emph{physical page number},%
+  8/{56}//{63}/\footnotesize\emph{reserved}%
+}
+\caption{64-bit \emph{vm16c} page table entry format.}
+\label{fig:64-bit-vm16c-pte-format}
+\end{figure}
+
+\par\noindent
+the page table entry permission and metadata bits are as follows.
+\\
+\begin{table}[h]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
+\hline
+\verb|1 << 0| & V   & valid \\
+\verb|1 << 1| & R   & read \\
+\verb|1 << 2| & W   & write \\
+\verb|1 << 3| & X   & execute \\
+\verb|1 << 4| & T   & translate \\
+\verb|1 << 5| & G   & global \\
+\verb|1 << 6| & A   & accessed \\
+\verb|1 << 7| & D   & dirty \\
+\hline
+\end{tabular}
+\caption{64-bit page table entry fields}
+\label{tab:64-bit-page-table-entry-fields}
+\end{table}
+
+\newpage
+\subsection{translation addresses}
+
+translation addresses are used by the address translation system to abstract
+virtual and physical addresses. translation addresses contain an address
+encoded using a page table type specific address format, where the address
+is prefixed with a 1 --- 4 bit sign-extended address space prefix to
+distinguish user and system virtual addresses from physical addresses.
+\para
+the \emph{vm12d}, \emph{vm14c}, and \emph{vm16c} translation address formats
+are as follows.
+\\
+\begin{figure}[H]
+\centering
+\registerspec{64}{32}{%
+  12/{0}//{11}/\footnotesize\emph{page offset},%
+  32/{12}//{43}/\footnotesize\emph{virtual page number},%
+  -4/{44}//{47}/\texttt{AS},%
+  16/{48}//{63}/\footnotesize\emph{sext}%
+}
+\caption{64-bit \emph{vm12d} translation address format.}
+\label{fig:64-bit-vm12d-translation-address-format}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\registerspec{64}{32}{%
+  14/{0}//{13}/\footnotesize\emph{page offset},%
+  29/{14}//{42}/\footnotesize\emph{virtual page number},%
+  -4/{43}//{46}/\texttt{AS},%
+  17/{47}//{63}/\footnotesize\emph{sext}%
+}
+\caption{64-bit \emph{vm14c} translation address format.}
+\label{fig:64-bit-vm14c-translation-address-format}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\registerspec{64}{32}{%
+  16/{0}//{15}/\footnotesize\emph{page offset},%
+  35/{16}//{50}/\footnotesize\emph{virtual page number},%
+  -4/{51}//{54}/\texttt{AS},%
+  9/{55}//{63}/\footnotesize\emph{sext}%
+}
+\caption{64-bit \emph{vm16c} translation address format.}
+\label{fig:64-bit-vm16c-translation-address-format}
+\end{figure}
+
+\par\noindent
+the translation address unary address space prefixes are as follows.
+\\
+\begin{table}[h]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
+\hline
+\texttt{0b0.} & user & user virtual addresses \\
+\texttt{0b10.} & system & system virtual addresses \\
+\texttt{0b110.} & physical & global physical memory \\
+\texttt{0b1110.} & local & local scratchpad memory \\
+\hline
+\end{tabular}
+\caption{1---4 bit translation address space prefixes.}
+\label{tab:1--bit-translation-address-space-prefixes}
+\end{table}
+
+\newpage
+\subsection{translation indices}
+
+translation virtual addresses are decomposed into page table indexing
+structures containing a page offset and a vector of page number
+indices used to select page table entries in the page table trie.
+the page table indexing structure partitions the virtual page
+number into a vector of fixed-width page number indices, where
+each index has a width of \emph{page number bits}.
+\para
+the \emph{vm12d}, \emph{vm14c}, and \emph{vm16c} translation index
+structures are as follows.
+\\
+\begin{figure}[H]
+\centering
+\registerspec{64}{32}{%
+  12/{0}//{11}/\footnotesize\emph{page offset},%
+  9/{12}//{20}/\footnotesize\emph{pn[0]},%
+  9/{21}//{29}/\footnotesize\emph{pn[1]},%
+  9/{30}//{38}/\footnotesize\emph{pn[2]},%
+  9/{39}//{47}/\footnotesize\emph{pn[3]},%
+  16/{48}//{63}/\footnotesize\emph{sext}%
+}
+\caption{64-bit \emph{vm12d} translation index structure.}
+\label{fig:64-bit-vm12d-translation-index-structure}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\registerspec{64}{32}{%
+  14/{0}//{13}/\footnotesize\emph{page offset},%
+  11/{14}//{24}/\footnotesize\emph{pn[0]},%
+  11/{25}//{35}/\footnotesize\emph{pn[1]},%
+  11/{36}//{46}/\footnotesize\emph{pn[2]},%
+  17/{47}//{63}/\footnotesize\emph{sext}%
+}
+\caption{64-bit \emph{vm14c} translation index structure.}
+\label{fig:64-bit-vm14c-translation-index-structure}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\registerspec{64}{32}{%
+  16/{0}//{15}/\footnotesize\emph{page offset},%
+  13/{16}//{28}/\footnotesize\emph{pn[0]},%
+  13/{29}//{41}/\footnotesize\emph{pn[1]},%
+  13/{42}//{54}/\footnotesize\emph{pn[2]},%
+  9/{55}//{63}/\footnotesize\emph{sext}%
+}
+\caption{64-bit \emph{vm16c} translation index structure.}
+\label{fig:64-bit-vm16c-translation-index-structure}
+\end{figure}
+
+\newpage
+\subsection{page table walker}
+\label{sec:page-table-walker}
+
+the page table walker performs page table lookup to translate virtual
+addresses into physical addresses.
+the page table walker reads the page table root pointer then walks the
+\emph{trie-based} page table structure to find a leaf entry containing
+a physical page address.
+the translation address must be a virtual address.
+the page table root address must be a physical address.
+\para
+page table entries with the \emph{read, write} and \emph{exec} permission
+bits clear are interpreted as \emph{pointer} entries and contain a pointer
+to the next-level index page, otherwise they are interpreted as \emph{leaf}
+entries with a final translation. entries with the \emph{write} bit set
+must have the \emph{read} bit set.
+\para
+if the physical permissions feature \emph{mfeature.P} is present and
+\emph{mcontrol.P} is enabled, then physical pages must be present in the
+page table with a self-mapping of their physical address prefixed with
+$(\mathit{AS} = \mathit{physical})$ leading to a leaf page table entry
+containing its own address. this is to allow physical page permissions
+to be checked. in addition to this, the physical self-mappings for physical
+pages containing page table pages must have the \emph{translate} bit set.
+\para
+the page table walker process is as follows.
+
+\begin{algorithm}[H]
+\footnotesize
+\caption{find page table entry for translation address}
+\begin{algorithmic}[1]
+\Function{page\_walk}{$\mathit{type},\mathit{ppn},\mathit{ta}$}
+  \For{$\mathit{level} \gets \mathit{num\_levels} - 1$ to $0$}
+    \Comment{for each page table level}
+    \State $\mathit{shift} \gets \mathit{level} \times
+      \mathit{pn\_bits} + \mathit{po\_bits}$
+    \Comment{calculate page number shift}
+    \State $\mathit{tpn} \gets (\mathit{ta} >> \mathit{shift}) \land
+      ((1 << \mathit{pn\_bits}) - 1)$
+    \Comment{calculate translation page number}
+    \State $\mathit{pte} \gets \Call{load}{(\mathit{ppn}
+      << \mathit{po\_bits}) + \mathit{tpn} \times \mathit{sizeof(PTE)}}$
+    \Comment{load page table entry}
+    \State $\mathit{leaf} \gets
+      \mathit{pte.R} \lor \mathit{pte.W} \lor \mathit{pte.X}$
+    \Comment{page table entry node type}
+    \State $\mathit{sm} \gets
+      \mathit{R} \lor \mathit{W} \lor \mathit{X}$
+    \Comment{default self map page table entry}
+    \If {$\mathit{mfeature.P} \land \mathit{mcontrol.P} \land \mathit{type} =
+        \mathit{virtual}$}
+      \State $\mathit{pa} \gets \mathit{pte.ppn} << \mathit{po\_shift}$
+      \State $(\mathit{sm},\mathit{level}) \gets \Call{page\_walk}{%
+        \mathit{physical},\mathit{sptr.ppn},\mathit{pa}}$
+      \Comment{load self mapping}
+      \If {$(\mathit{leaf} \land \mathit{pte.ppn} \ne \mathit{sm.ppn}) \lor
+        (\lnot\mathit{leaf} \land \lnot\mathit{sm.T})$}
+        \State \textbf{raise} \textbf{fault}
+        \Comment{invalid self mapping}
+      \EndIf
+    \EndIf
+    \If {$\mathit{leaf}$}
+      \State \Return $(\mathit{pte}, \mathit{sm}, \mathit{level})$
+      \Comment{return page table entry}
+    \ElsIf {$\mathit{level} = 0$}
+      \State \textbf{raise} \textbf{fault}
+      \Comment{leaf entry not found}
+    \EndIf
+  \EndFor
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\newpage
+\subsection{address translation}
+
+address translation is the process, for a specific memory operation,
+of walking the \emph{trie-based} page table structure to locate a page table
+entry. the permission and metadata bits of the resulting page table entry
+are checked against the memory operation, along with physical self-map
+permissions, if enabled, and address space restrictions via the \emph{user
+address space access disable bit} or \emph{user address space execute
+disable bit}, before translating the virtual address to a physical address
+using the physical page number in the page table entry.
+\para
+page table entries without the \emph{accessed} bit set will fault on reads.
+page table entries without the \emph{dirty} bit set will fault on writes.
+the \emph{global} bit prevents \emph{sptr.ASID} from being associated with
+TLB entries.
+the \emph{color} field is reserved for use by the capabilities extension.
+\para
+the virtual to physical address translation process is as follows.
+
+\begin{algorithm}[H]
+\footnotesize
+\caption{translate virtual address to physical address}
+\begin{algorithmic}[1]
+\Function{virtual\_to\_physical}{$\mathit{op}, \mathit{va}$}
+  \Comment{$\mathit{op}$: operation, $\mathit{va}$: virtual address}
+  \If {$\mathit{sptr.as} \ne \mathit{physical}$}
+    \State \textbf{raise} \textbf{fault}
+    \Comment{page table root is not physical}
+  \EndIf
+  \State $(\mathit{pte}, \mathit{sm}, \mathit{level}) \gets \Call{page\_walk}{
+    \mathit{virtual},\mathit{sptr.ppn},\mathit{va}}$
+  \Comment{find page table entry}
+  \State $\mathit{shift} \gets \mathit{level} \times
+    \mathit{pn\_bits} + \mathit{po\_bits}$
+  \Comment{calculate page number shift}
+  \State $\mathit{mask} \gets (1 << \mathit{shift}) - 1$
+  \State $\mathit{caps} \gets
+    (\mathit{R} \land \mathit{colorread[pte.color]}) \lor
+    (\mathit{W} \land \mathit{colorwrite[pte.color]}) \lor
+    (\mathit{X} \land \mathit{colorexec[pte.color]})$
+  \State $\mathit{user} \gets
+    \lnot((\mathit{va} >> (\mathit{va\_bits} - 1)) \land 1)$
+  \If {$(\lnot\mathit{pte.V}) \lor (\mathit{pte.W} \land \lnot\mathit{pte.R})$}
+    \State \textbf{raise} \textbf{fault}
+    \Comment{invalid write must have read}
+  \ElsIf{$(\mathit{op.R} \land \lnot\mathit{pte.R}) \lor (\mathit{op.W} \land
+    \lnot\mathit{pte.W}) \lor (\mathit{op.X} \land \lnot\mathit{pte.X})$}
+    \State \textbf{raise} \textbf{fault}
+    \Comment{invalid page table permissions}
+  \ElsIf{$(\mathit{sm.R} \land \lnot\mathit{pte.R}) \lor (\mathit{sm.W} \land
+    \lnot\mathit{pte.W}) \lor (\mathit{sm.X} \land \lnot\mathit{pte.X})$}
+    \State \textbf{raise} \textbf{fault}
+    \Comment{invalid self map permissions}
+  \ElsIf{$(\mathit{cap.R} \land \mathit{pte.R}) \lor (\mathit{cap.W} \land
+    \mathit{pte.W}) \lor (\mathit{cap.X} \land \mathit{pte.X})$}
+    \State \textbf{raise} \textbf{fault}
+    \Comment{invalid page table capabilities}
+  \ElsIf {$(\mathit{op.R} \land \lnot\mathit{pte.A}) \lor
+      (\mathit{op.W} \land \lnot\mathit{pte.D})$}
+    \State \textbf{raise} \textbf{fault}
+    \Comment{invalid accessed or dirty}
+  \ElsIf {$\lnot\mathit{role(user)} \land \lnot\mathit{scontrol.E} \land
+      \mathit{user} \land \mathit{op.X}$}
+    \State \textbf{raise} \textbf{fault}
+    \Comment{invalid user page execute}
+  \ElsIf {$\lnot\mathit{role(user)} \land \lnot\mathit{scontrol.A} \land
+      \mathit{user} \land \mathit{op.(R \lor W})$}
+    \State \textbf{raise} \textbf{fault}
+    \Comment{invalid user page access}
+  \ElsIf {($\mathit{pte.ppn} << \mathit{shift}) \land \mathit{mask} \ne 0$}
+    \State \textbf{raise} \textbf{fault}
+    \Comment{invalid superpage alignment}
+  \EndIf
+  \State $\mathit{pa} \gets \mathit{as.physical} \lor
+    (\mathit{pte.ppn} << \mathit{shift}) \lor
+    (\mathit{va} \land \mathit{mask})$
+  \State \Return $\mathit{pa}$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
 
 \newpage
 \section{Virtual machine}
