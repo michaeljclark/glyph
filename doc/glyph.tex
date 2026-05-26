@@ -3471,7 +3471,7 @@ constants in each domain.
 \section{Machine extension}
 
 the architecture provides an optional machine extension that includes
-registers for physical memory protection, machine address vectors, and
+registers for physical memory protection, machine context vectors, and
 software-defined memory management.
 
 \subsubsection{machine registers}
@@ -3493,9 +3493,11 @@ the following tables list the privileged machine registers:
 \texttt{0x62} & mfeature  & machine feature & \\
 \hline
 \rowcolor{tscol}
-\multicolumn{4}{|l|}{\tsub{machine address vectors}} \\
+\multicolumn{4}{|l|}{\tsub{machine context registers}} \\
 \hline
-\texttt{0xF00...0xF0F} & macaddr$[n]$   & machine address & domain \\
+\texttt{0x2000...0x200F} & macaddr$[n]$   & machine address & domain \\
+\texttt{0x2100...0x210F} & machpc$[n]$    & machine handler program counter & domain \\
+\texttt{0x2200...0x220F} & machib$[n]$    & machine handler immediate base & domain \\
 \hline
 \rowcolor{tscol}
 \multicolumn{4}{|l|}{\tsub{machine memory registers}} \\
@@ -3503,12 +3505,6 @@ the following tables list the privileged machine registers:
 \texttt{0x63} & mtlbkey   & machine tlb key & \\
 \texttt{0x64} & mtlbfmt   & machine tlb format & \\
 \texttt{0x65} & mtlbent   & machine tlb entry & \\
-\hline
-\rowcolor{tscol}
-\multicolumn{4}{|l|}{\tsub{machine handler vectors}} \\
-\hline
-\texttt{0x1E00...0x1E0F} & machpc$[n]$     & machine handler program counter & domain \\
-\texttt{0x1F00...0x1F0F} & machib$[n]$     & machine handler immediate base & domain \\
 \hline
 \end{tabularx}
 \caption{machine registers}
@@ -3574,9 +3570,11 @@ control and features.
 \label{tab:machine-feature-fields}
 \end{table}
 
-\subsection{machine address vectors}
-the section describes the privileged machine registers for domain
-machine addresses.
+\newpage
+\subsection{machine context registers}
+the section describes the privileged machine registers that provide the
+per-domain machine address and machine trap handlers for software-defined
+memory management.
 
 \subsubsection{machine address (\texttt{macaddr}$[\mathit{ndom}]$)}
 \texttt{macaddr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
@@ -3587,6 +3585,24 @@ the machine address prefix should be unary \texttt{0001}.
 \\
 \registerspec{64}{32}{%
   64/{0}//{MLEN-1}/\emph{machine address}%
+}
+
+\subsubsection{machine handler program counter (\texttt{machpc}$[\mathit{ndom}]$)}
+\texttt{machpc}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
+registers containing an array of the addresses for the machine trap handler
+routines in each domain.
+\\
+\registerspec{64}{32}{%
+  64/{0}//{ALEN-1}/\emph{program counter}%
+}
+
+\subsubsection{machine handler immediate base (\texttt{machib}$[\mathit{ndom}]$)}
+\texttt{machib}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
+registers containing an array of the addresses for the machine trap handler
+constants in each domain.
+\\
+\registerspec{64}{32}{%
+  64/{0}//{ALEN-1}/\emph{immediate base}%
 }
 
 \newpage
@@ -3798,29 +3814,6 @@ entry formats are as follows.
 \caption{64-bit \emph{vm16c} translation lookaside buffer entry.}
 \label{fig:64-bit-vm16c-tlb-entry}
 \end{figure}
-
-\newpage
-\subsection{machine handler vectors}
-the section describes the privileged machine registers that provide
-per-domain machine trap handlers for software-defined memory management.
-
-\subsubsection{machine handler program counter (\texttt{machpc}$[\mathit{ndom}]$)}
-\texttt{machpc}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
-registers containing an array of the addresses for the machine trap handler
-routines in each domain.
-\\
-\registerspec{64}{32}{%
-  64/{0}//{ALEN-1}/\emph{program counter}%
-}
-
-\subsubsection{machine handler immediate base (\texttt{machib}$[\mathit{ndom}]$)}
-\texttt{machib}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
-registers containing an array of the addresses for the machine trap handler
-constants in each domain.
-\\
-\registerspec{64}{32}{%
-  64/{0}//{ALEN-1}/\emph{immediate base}%
-}
 
 \newpage
 \section{Environment extension}
