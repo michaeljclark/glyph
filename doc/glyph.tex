@@ -3271,16 +3271,7 @@ the following tables list the privileged domain system registers:
 \texttt{0x51} & domcontrol & domain control & \\
 \texttt{0x53} & domsp    & domain stack pointer & \\
 \texttt{0x54} & domvec   & domain number vector & \\
-\texttt{0x500...0x50F} & dommatrix$[n]$ & domain matrix & \\
-\hline
-\rowcolor{tscol}
-\multicolumn{4}{|l|}{\tsub{domain routing registers}} \\
-\hline
-\texttt{0x600...0x60F} & domsys$[n]$    & domain system default domain & \\
-\texttt{0x700...0x70F} & domdom$[n]$    & domain domain default domain & \\
-\texttt{0x800...0x80F} & domcap$[n]$    & domain capability default domain & capability \\
-\texttt{0x900...0x90F} & dommac$[n]$    & domain machine default domain & machine \\
-\texttt{0xA00...0xA0F} & dommsg$[n]$    & domain message default domain & \\
+\texttt{0x500...0x50F}   & domroute$[n]$    & domain default routes & \\
 \hline
 \rowcolor{tscol}
 \multicolumn{4}{|l|}{\tsub{domain context registers}} \\
@@ -3305,9 +3296,9 @@ the following tables list the privileged domain system registers:
 \subsection{domain control registers}
 
 this section describes the \emph{domain control registers}, which enable
-the domain extension, and provide access to the the domain stack pointer,
-the domain number vector, and the domain matrix to control valid domain
-transitions.
+the domain extension, provide access to the the domain stack pointer,
+the domain number vector and control trap routing for context switching
+of system, domain, capability, machine, and message traps.
 
 \subsubsection{domain control (\texttt{domcontrol})}
 \texttt{domcontrol} is a read-write register containing domain control bits.
@@ -3357,65 +3348,21 @@ stack. the top element in the domain number vector is indexed by
   4/{32}//{35}/\footnotesize\emph{...}%
 }
 
-\subsubsection{domain matrix (\texttt{dommatrix}$[\mathit{ndom}]$)}
-\texttt{dommatrix}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
-registers containing a matrix of the domains that the current domain is
-allowed to transition to as the next domain.
+\subsubsection{domain default routes (\texttt{domroute}$[\mathit{ndom}]$)}
+\texttt{domroute}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
+registers containing the domain number of the default domain that system,
+domain, capability, machine, and message traps are routed to.
 \\
-\registerspec{32}{32}{%
-  8/{0}//{15}/\emph{allowed domains}%
-}
-
-\newpage
-\subsection{domain routing registers}
-
-this section describes the \emph{domain routing registers} that control
-routing for context switching of system, domain, capability, machine,
-and message traps.
-
-\subsubsection{domain system default domain (\texttt{domsys}$[\mathit{ndom}]$)}
-\texttt{domsys}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
-registers containing the domain number of the domain that system traps
-are routed to.
-\\
-\registerspec{32}{32}{%
-  4/{0}//{3}/\emph{domain}%
-}
-
-\subsubsection{domain domain default domain (\texttt{domdom}$[\mathit{ndom}]$)}
-\texttt{domdom}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
-registers containing the domain number of the domain that domain traps
-are routed to.
-\\
-\registerspec{32}{32}{%
-  4/{0}//{3}/\emph{domain}%
-}
-
-\subsubsection{domain capability default domain (\texttt{domcap}$[\mathit{ndom}]$)}
-\texttt{domcap}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
-registers containing the domain number of the domain that capability traps
-are routed to.
-\\
-\registerspec{32}{32}{%
-  4/{0}//{3}/\emph{domain}%
-}
-
-\subsubsection{domain machine default domain (\texttt{dommac}$[\mathit{ndom}]$)}
-\texttt{dommac}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
-registers containing the domain number of the domain that machine traps
-are routed to.
-\\
-\registerspec{32}{32}{%
-  4/{0}//{3}/\emph{domain}%
-}
-
-\subsubsection{domain message default domain (\texttt{dommsg}$[\mathit{ndom}]$)}
-\texttt{dommsg}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
-registers containing the domain number of the domain that asynchronous
-interrupts are routed to.
-\\
-\registerspec{32}{32}{%
-  4/{0}//{3}/\emph{domain}%
+\registerspec{64}{32}{%
+  4/{0}//{3}/\emph{sys},%
+  4////,%
+  4/{8}//{11}/\emph{dom},%
+  4////,%
+  4/{16}//{19}/\emph{cap},%
+  4////,%
+  4/{24}//{27}/\emph{mac},%
+  4////,%
+  4/{32}//{35}/\emph{msg}%
 }
 
 \newpage
@@ -4574,9 +4521,8 @@ processing of the asynchronous trap.
 
 capability and domain registers are used to configure the trap routing
 domains for context switches arising from interrupts and exceptions.
-trap routing is configured by the hypervisor in the \texttt{domsys},
-\texttt{domdom}, \texttt{domcap}, \texttt{dommac}, and \texttt{dommsg}
-vectors, which contain the domain ids of domains that receive traps
+trap routing is configured by the hypervisor in the \texttt{domroute}
+vector, which contain the domain ids of domains that receive traps
 for the \emph{system}, \emph{domain}, \emph{capability}, \emph{machine},
 and \emph{message} roles respectively.
 synchronous and asynchronous interrupts and exceptions are delivered
@@ -4593,10 +4539,10 @@ and \emph{message} roles depending on the initiating event:
 
 \subsection{synchronous exceptions}
 
-synchronous exceptions are grouped into \emph{system}, \emph{domain},
-\emph{capability}, and \emph{machine} roles and are routed based on the
-\texttt{domsys}, \texttt{domdom}, \texttt{domcap}, and \texttt{dommac}
-vectors:
+synchronous exceptions use the \emph{system}, \emph{domain},
+\emph{capability}, and \emph{machine} roles and are routed based on
+domain numbers in the \texttt{sys}, \texttt{dom}, \texttt{cap}, and
+\texttt{mac} fields of the \texttt{domroute} vector:
 \para
 \textbf{system exceptions:}
 arising from access to system registers, illegal instruction
@@ -4623,7 +4569,8 @@ also known as machine calls.
 \subsection{asynchronous exceptions}
 
 asynchronous exceptions use the \emph{message} role and are
-routed based on the \texttt{dommsg} vector:
+routed based on domain number in the \texttt{msg} field of the
+\texttt{domroute} vector:
 \para
 \textbf{message exceptions:}
 arising from interrupt pins, the deadline timer, and
@@ -4654,11 +4601,11 @@ the following table shows inter-domain trap routing table keys for
 \rowcolor{thcol}
 \thead{role}      & \thead{trap routing default domain} \\
 \hline
-\emph{system}     & \texttt{domsys[domcurr]} \\
-\emph{domain}     & \texttt{domdom[domcurr]} \\
-\emph{capability} & \texttt{domcap[domcurr]} \\
-\emph{machine}    & \texttt{dommac[domcurr]} \\
-\emph{message}    & \texttt{dommsg[domcurr]} \\
+\emph{system}     & \texttt{domroute[domcurr].sys} \\
+\emph{domain}     & \texttt{domroute[domcurr].dom} \\
+\emph{capability} & \texttt{domroute[domcurr].cap} \\
+\emph{machine}    & \texttt{domroute[domcurr].mac} \\
+\emph{message}    & \texttt{domroute[domcurr].msg} \\
 \hline
 \end{tabular}
 \caption{inter-domain trap routing table keys}
@@ -4794,11 +4741,11 @@ exception is routed to for the current domain: the \emph{system},
 roles.
 
 \begin{itemize}[itemsep=0pt]
-\item \texttt{domsys[domcurr]} contains the system default domain.
-\item \texttt{domdom[domcurr]} contains the domain default domain.
-\item \texttt{domcap[domcurr]} contains the capability default domain.
-\item \texttt{dommac[domcurr]} contains the machine default domain.
-\item \texttt{dommsg[domcurr]} contains the message default domain.
+\item \texttt{domroute[domcurr].sys} contains the system default domain.
+\item \texttt{domroute[domcurr].dom} contains the domain default domain.
+\item \texttt{domroute[domcurr].cap} contains the capability default domain.
+\item \texttt{domroute[domcurr].mac} contains the machine default domain.
+\item \texttt{domroute[domcurr].msg} contains the message default domain.
 \end{itemize}
 
 \par\noindent
@@ -4859,18 +4806,12 @@ the following procedure is used to perform a domain trap context switch.
     \medskip
     \State \textbf{case} $\mathit{role}$ \textbf{of}
     \Comment{get role default domain number}
-    \State \hspace{1em} $\mathtt{sys}$: $\mathit{domain} \gets \mathit{domsys[domcurr]}$
-    \State \hspace{1em} $\mathtt{dom}$: $\mathit{domain} \gets \mathit{domdom[domcurr]}$
-    \State \hspace{1em} $\mathtt{cap}$: $\mathit{domain} \gets \mathit{domcap[domcurr]}$
-    \State \hspace{1em} $\mathtt{mac}$: $\mathit{domain} \gets \mathit{dommac[domcurr]}$
-    \State \hspace{1em} $\mathtt{msg}$: $\mathit{domain} \gets \mathit{dommsg[domcurr]}$
+    \State \hspace{1em} $\mathtt{sys}$: $\mathit{domain} \gets \mathit{domroute[domcurr].sys}$
+    \State \hspace{1em} $\mathtt{dom}$: $\mathit{domain} \gets \mathit{domroute[domcurr].dom}$
+    \State \hspace{1em} $\mathtt{cap}$: $\mathit{domain} \gets \mathit{domroute[domcurr].cap}$
+    \State \hspace{1em} $\mathtt{mac}$: $\mathit{domain} \gets \mathit{domroute[domcurr].mac}$
+    \State \hspace{1em} $\mathtt{msg}$: $\mathit{domain} \gets \mathit{domroute[domcurr].msg}$
     \State \textbf{end case}
-    \medskip
-    \If {$\lnot\mathit{dommatrix[domcurr][domain]}$}
-    \Comment{check domain matrix}
-        \State \textbf{raise} \textbf{domain-fault}
-        \Comment{raise domain fault}
-    \EndIf
     \medskip
     \State $\mathit{tcontrol.I} \gets \mathit{FALSE}$
     \Comment{disable system interrupts}
@@ -4946,19 +4887,15 @@ the following procedure is used to perform a domain return context switch.
     \medskip
     \State \textbf{case} $\mathit{role}$ \textbf{of}
     \Comment{get role default domain number}
-    \State \hspace{1em} $\mathtt{sys}$: $\mathit{domcheck} \gets \mathit{domsys[domain]}$
-    \State \hspace{1em} $\mathtt{dom}$: $\mathit{domcheck} \gets \mathit{domdom[domain]}$
-    \State \hspace{1em} $\mathtt{cap}$: $\mathit{domcheck} \gets \mathit{domcap[domain]}$
-    \State \hspace{1em} $\mathtt{mac}$: $\mathit{domcheck} \gets \mathit{dommac[domain]}$
-    \State \hspace{1em} $\mathtt{msg}$: $\mathit{domcheck} \gets \mathit{dommsg[domain]}$
+    \State \hspace{1em} $\mathtt{sys}$: $\mathit{domcheck} \gets \mathit{domroute[domain].sys}$
+    \State \hspace{1em} $\mathtt{dom}$: $\mathit{domcheck} \gets \mathit{domroute[domain].dom}$
+    \State \hspace{1em} $\mathtt{cap}$: $\mathit{domcheck} \gets \mathit{domroute[domain].cap}$
+    \State \hspace{1em} $\mathtt{mac}$: $\mathit{domcheck} \gets \mathit{domroute[domain].mac}$
+    \State \hspace{1em} $\mathtt{msg}$: $\mathit{domcheck} \gets \mathit{domroute[domain].msg}$
     \State \textbf{end case}
     \medskip
     \If {$\mathit{domcheck} \ne \mathit{domcurr}$}
     \Comment{check role default domain number}
-        \State \textbf{raise} \textbf{domain-fault}
-        \Comment{raise domain fault}
-    \ElsIf {$\lnot\mathit{dommatrix[domcurr][domain]}$}
-    \Comment{check domain matrix}
         \State \textbf{raise} \textbf{domain-fault}
         \Comment{raise domain fault}
     \EndIf
