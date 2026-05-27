@@ -73,7 +73,7 @@ compiled versions of the architecture specification are available from the
 following URLs:
 
 - current: [glyph.pdf](https://metaparadigm.com/~mclark/glyph.pdf)
-- latest: [glyph-20260526.pdf](https://metaparadigm.com/~mclark/glyph-20260526.pdf)
+- latest: [glyph-20260527.pdf](https://metaparadigm.com/~mclark/glyph-20260527.pdf)
 
 ## opcodes
 

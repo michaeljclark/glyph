@@ -333,7 +333,6 @@ specifies the width of addresses in bits.
 
 \newpage
 \subsection{instructions}
-\label{sec:instructions}
 
 instruction memory is a memory region dedicated to program instructions.
 it is organized as a word-addressable store, similar to main memory,
@@ -346,8 +345,7 @@ both program instructions and data.
 instruction words contain packets of 16-bits which are composed of
 size, opcode, and operand fields. instruction packets can be appended
 together to form larger instruction words with larger opcode and
-operand fields. section~\ref{sec:instruction-format} provides details
-on the instruction template and instruction forms.
+operand fields.
 \\
 \begin{figure}[H]
 \centering
@@ -488,14 +486,11 @@ counter} called \emph{pc-relative} addresses.
 
 \newpage
 \subsection{constants}
-\label{sec:constants}
 
 constant memory~\cite{Solomonoff1964} is a memory region dedicated to
 constants. it is organized as a word-addressable store like main-memory,
 but is read-only and restricted to constants. instructions can refer to
 constants using \emph{ib-relative} addresses inside instruction operands.
-section~\ref{sec:program-streams} provides more details on the split
-instruction and constant streams.
 \para
 constant memory is addressed with displacements from the \emph{immediate
 base} register called \emph{ib-relative} addresses which are stored inside
@@ -618,7 +613,6 @@ storage space containing all types.}
 
 \newpage
 \section{Program streams}
-\label{sec:program-streams}
 
 glyph separates the stored programs into two streams, one with instructions
 and one with constants~\cite{Solomonoff1964}. the instruction stream is
@@ -887,7 +881,6 @@ contains packed-SIMD instruction on vector registers.
 
 \newpage
 \section{Instruction format}
-\label{sec:instruction-format}
 
 instructions use a variable length format~\cite{US5717881A} with a
 16-bit instruction packet that supports 16, 32, 64, and 128-bit
@@ -2858,8 +2851,7 @@ such supported page table formats.
 
 \subsubsection{system page table root (\texttt{sptr})}
 \texttt{sptr} is a read-write register containing the page table root
-for address translation on this thread. section~\ref{sec:page-table-root}
-contains details on the page table root format.
+for address translation on this thread.
 \\
 \registerspec{64}{32}{%
   64/{0}//{63}/\emph{page table root}%
@@ -3424,8 +3416,7 @@ message role of the associated domain.
 \subsubsection{domain page table root (\texttt{domptr}$[\mathit{ndom}]$)}
 \texttt{domptr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing an array of the page table root pointers for
-address translation in each domain. section~\ref{sec:page-table-root}
-contains details on the page table root format.
+address translation in each domain.
 \\
 \registerspec{64}{32}{%
   64/{0}//{63}/\emph{page table root}%
@@ -4144,8 +4135,7 @@ loaded into a register using a 128-bit constant load instruction, or to access
 descriptor arrays, a 128-bit memory load instruction. the array unit must be
 configured with the descriptor before use to allow address computation.
 array unit instructions take a base address, an array unit descriptor
-register, and a coordinate vector. section~\ref{sec:array-address-calculation}
-contains the address computation algorithm. the following table describes
+register, and a coordinate vector. the following table describes
 the high-level templates for the array unit instructions.
 
 \begin{table}[h]
@@ -4351,7 +4341,6 @@ the coordinate field order is swapped using the array unit descriptor as follows
 \end{algorithm}
 
 \subsection{address calculation}
-\label{sec:array-address-calculation}
 
 the array access address calculation using the array unit descriptor is as follows.
 
@@ -5165,7 +5154,6 @@ vm16c & 3 & 13 & 16 & 55 & 8192 & 64~KiB, 512~MiB & 32~PiB \\
 
 \newpage
 \subsection{page table root}
-\label{sec:page-table-root}
 
 the page table root pointer is stored in the \texttt{sptr} register.
 the page walker reads the root pointer to lookup virtual addresses
@@ -5459,7 +5447,6 @@ structures are as follows.
 
 \newpage
 \subsection{page table walker}
-\label{sec:page-table-walker}
 
 the page table walker performs page table lookup to translate virtual
 addresses into physical addresses.
@@ -5775,7 +5762,7 @@ and exposes standard operations such as configuration, data transfer, and
 interrupt signaling. the firmware and system software may use VirtIO
 device drivers for platform-independent I/O in virtual environments.
 
-\chapter{Instructions} \label{sec:instructions}
+\chapter{Instructions}
 
 \newcommand{\insncell}[6]{%
   % #1=xl #2=xr #3=left-bit-label #4=right-bit-label #5=header #6=value
@@ -6340,7 +6327,6 @@ and the \emph{program counter} is set to a trap vector address.
 this glyph assembly language reference begins with an introduction to
 assembler and linker concepts and terminology, followed by sections
 describing the glyph assembler directives, and pseudo-instruction aliases.
-section~\ref{sec:instructions} contains a complete listing of instructions.
 
 \section{Concepts}
 this section covers the concepts required to understand assembling and
