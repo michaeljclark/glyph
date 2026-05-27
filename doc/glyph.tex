@@ -2463,11 +2463,11 @@ registers:
 \texttt{0x23} & sversion  & system version \\
 \texttt{0x24} & saddress  & system machine address \\
 \texttt{0x25} & sdomain   & system domain address \\
-\texttt{0x26} & sie       & system interrupt enable \\
-\texttt{0x27} & sip       & system interrupt pending \\
-\texttt{0x28} & stimer    & system deadline timer \\
-\texttt{0x29} & spti      & system page table info \\
-\texttt{0x2A} & sptr      & system page table root \\
+\texttt{0x26} & spti      & system page table info \\
+\texttt{0x27} & sptr      & system page table root \\
+\texttt{0x28} & sie       & system interrupt enable \\
+\texttt{0x29} & sip       & system interrupt pending \\
+\texttt{0x2A} & stimer    & system deadline timer \\
 \texttt{0x2B} & starget   & system target address \\
 \texttt{0x2C} & smask     & system target mask \\
 \texttt{0x2D} & smessage  & system target message \\
@@ -2799,34 +2799,6 @@ the domain address prefix should be unary \texttt{1110}.
 }
 
 \newpage
-\subsubsection{system interrupt enable (\texttt{sie})}
-\texttt{sie} is a read-write register that contains interrupt enable flags
-for 32 wired interrupt pins.
-\\
-\registerspec{64}{32}{%
-  32/{0}//{31}/\emph{interrupt enable 0-31}%
-}
-
-\subsubsection{system interrupt pending (\texttt{sip})}
-\texttt{sip} is a read-only register that contains interrupt pending flags
-for 32 wired interrupt pins.
-\\
-\registerspec{64}{32}{%
-  32/{0}//{31}/\emph{interrupt pending 0-31}%
-}
-
-\subsubsection{system deadline timer (\texttt{stimer})}
-\texttt{stimer} is a read-write register containing the one-shot time stamp
-deadline for this thread. when the time stamp counter, \texttt{stamp}, is
-greater than or equal to the time stamp deadline, a \emph{timer interrupt}
-is generated, the \texttt{T} field of the \texttt{tstatus} register is set
-to pending, and the \texttt{stimer} register is reset to zero. a value of
-zero indicates the one-shot timer is disabled.
-\\
-\registerspec{64}{32}{%
-  64/{0}//63/\emph{time stamp deadline}%
-}
-
 \subsubsection{system page table info (\texttt{spti})}
 \texttt{spti} is a read-only register that indicates page table info
 such supported page table formats.
@@ -2855,6 +2827,34 @@ pointer for address translation.
 \\
 \registerspec{64}{32}{%
   64/{0}//{63}/\emph{page table root}%
+}
+
+\subsubsection{system interrupt enable (\texttt{sie})}
+\texttt{sie} is a read-write register that contains interrupt enable flags
+for 32 wired interrupt pins.
+\\
+\registerspec{64}{32}{%
+  32/{0}//{31}/\emph{interrupt enable 0-31}%
+}
+
+\subsubsection{system interrupt pending (\texttt{sip})}
+\texttt{sip} is a read-only register that contains interrupt pending flags
+for 32 wired interrupt pins.
+\\
+\registerspec{64}{32}{%
+  32/{0}//{31}/\emph{interrupt pending 0-31}%
+}
+
+\subsubsection{system deadline timer (\texttt{stimer})}
+\texttt{stimer} is a read-write register containing the one-shot time stamp
+deadline for this thread. when the time stamp counter, \texttt{stamp}, is
+greater than or equal to the time stamp deadline, a \emph{timer interrupt}
+is generated, the \texttt{T} field of the \texttt{tstatus} register is set
+to pending, and the \texttt{stimer} register is reset to zero. a value of
+zero indicates the one-shot timer is disabled.
+\\
+\registerspec{64}{32}{%
+  64/{0}//63/\emph{time stamp deadline}%
 }
 
 \newpage
