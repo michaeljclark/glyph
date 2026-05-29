@@ -2201,6 +2201,11 @@ machine, and environment registers. the registers are used to manage
 user-level context, trap handling, address translation, interrupt
 routing, capabilities, virtual domains, machine, and environment.
 \para
+reserved and unlabeled register fields will read as zero and ignore
+writes. registers narrower than the scalar register width will return
+zero in upper bits and ignore writes to upper bits. all registers, if
+otherwise unspecified, are initialized to zero after reset.
+\para
 the system register set is divided into the following sections.
 
 \begin{table}[H]
