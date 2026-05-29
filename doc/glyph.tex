@@ -5617,10 +5617,89 @@ the virtual to physical address translation process is as follows.
 \addtocontents{toc}{\protect\clearpage}
 \section{Virtual machine}
 
-glyph defines a base virtual machine model with a well-defined minimum set of
-firmware interfaces, hardware description models and virtual devices for I/O.
+glyph has a well-defined base virtual machine model with a system memory
+map, power-on and reset behavior, application binary interface, hypervisor
+software roles, and a minimum set of firmware interfaces, hardware
+description models, and virtual devices for I/O.
 
-\subsection{hypervisor}
+\subsection{system memory map}
+
+the following table shows fixed regions of the system memory map.
+the top 64~KiB of the boot firmware is mapped into the first 64~KiB of
+memory starting at address zero.
+
+\begin{table}[h]
+\centering
+\small
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|r|r|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{start address} & \thead{end address} & \thead{size}  & \thead{description} \\
+\hline
+\texttt{0000} & \texttt{FFFF} & 64~KiB & shadow of the last 64~KiB of boot firmware \\
+\texttt{C000\_0000\_0000} & \texttt{DFFF\_FFFF\_FFFF} & 32~TiB & physical memory (write-back cached) \\
+\texttt{E000\_0000\_0000} & \texttt{EFFF\_FFFF\_FFFF} & 16~TiB & device memory (PCIe MMIO uncached) \\
+\texttt{EFFF\_FF00\_0000} & \texttt{EFFF\_FFFF\_FFFF} & 16~MiB & boot firmware (flash/EEPROM cached) \\
+\hline
+\end{tabular}
+\caption{glyph memory map}
+\label{tab:glyph-memory-map}
+\end{table}
+
+\subsection{power-on and reset}
+
+during power-on and reset, read-write fields of all system registers are
+zeroed, unless otherwise specified, then the program counter and immediate
+base register are set to the shadow reset vector addresses. cold reset
+zeros the predicate register, plus scalar and vector registers. warm reset
+preserves the predicate register, plus scalar and vector registers.
+
+\begin{table}[h]
+\centering
+\small
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|r|r|l|}
+\hline
+\rowcolor{thcol}
+\thead{program counter} & \thead{immediate base} & \thead{description} \\
+\hline
+\texttt{FF80} & \texttt{FFC0} & shadow reset vector addresses \\
+\texttt{EFFF\_FFFF\_FF80} & \texttt{EFFF\_FFFF\_FFC0} & firmware reset vector addresses \\
+\hline
+\end{tabular}
+\caption{glyph reset vector addresses}
+\label{tab:glyph-reset-vector-addresses}
+\end{table}
+
+\subsection{application binary interface}
+
+it is recommended that code targeting the glyph architecture is
+position-independent. \S\ref{sec:calling-convention-16-bit} defines
+the calling convention for the 16-bit instruction subset.
+application binary interfaces are defined in processor supplement
+documents for the following binary formats.
+
+\begin{table}[h]
+\centering
+\small
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{format} & \thead{ABI} & \thead{description} \\
+\hline
+\textbf{PE}     & \textsf{glyph-pe}    & Portable Executable Format \\
+\textbf{ELF}    & \textsf{glyph-elf}   & Executable and Linkable Format \\
+\textbf{Mach-O} & \textsf{glyph-macho} & Mach Object Format \\
+\hline
+\end{tabular}
+\caption{glyph binary formats and ABIs}
+\label{tab:glyph-binary-formats-and-abis}
+\end{table}
+
+\newpage
+\subsection{hypervisor software}
 
 the virtual machine defines several roles. the \emph{domain},
 \emph{capability}, \emph{machine}, and \emph{message} roles are used by
@@ -6569,6 +6648,7 @@ the following table lists glyph assembler pseudo-instruction aliases:
 \newpage
 \section{Calling conventions}
 \subsection{calling convention --- 16-bit}
+\label{sec:calling-convention-16-bit}
 
 the 16-bit instruction packet, while intended to be used in conjunction
 with the larger opcodes, is designed as a complete subset, so there is
