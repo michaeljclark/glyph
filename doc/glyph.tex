@@ -4621,13 +4621,13 @@ the following table shows the inter-domain message instructions.
 \begin{tabular}{|l|l|l|}
 \hline
 \rowcolor{thcol}
-\thead{role}      & \thead{synchronous call} & \thead{synchronous return} \\
+\thead{role}      & \thead{sync call} & \thead{return} \\
 \hline
-\emph{system}     & \texttt{syscall}         & \texttt{sysret} \\
-\emph{domain}     & \texttt{domcall}         & \texttt{domret} \\
-\emph{capability} & \texttt{capcall}         & \texttt{capret} \\
-\emph{machine}    & \texttt{maccall}         & \texttt{macret} \\
-\emph{message}    & \texttt{msgcall}         & \texttt{msgret} \\
+\emph{system}     & \texttt{syscall} & \texttt{iret} \\
+\emph{domain}     & \texttt{domcall} & \texttt{iret} \\
+\emph{capability} & \texttt{capcall} & \texttt{iret} \\
+\emph{machine}    & \texttt{maccall} & \texttt{iret} \\
+\emph{message}    & \texttt{msgcall} & \texttt{iret} \\
 \hline
 \end{tabular}
 \caption{inter-domain message instructions}
