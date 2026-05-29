@@ -134,10 +134,18 @@ as its dominating principle, along with several features not yet present
 in mainstream RISC architectures:
 
 \begin{itemize}[itemsep=0pt]
-  \item a compression technique for split instruction and constant streams.
-  \item a variable-length instruction format designed for vectorized decoding.
-  \item an efficient frontier between hardware synthesis and software translation.
-  \item a modern approach to virtualization, memory management, and capabilities.
+  \item a compression technique for split instruction and constant streams,
+        keeping instruction words uniform by relocating constants to a
+        secondary constant stream.
+  \item a variable-length instruction format designed for vectorized decoding,
+        that uses a fixed-position size field to efficiently resolve
+        instruction boundaries in parallel.
+  \item an efficient frontier between hardware synthesis and software
+        translation, achieved by a super-regular encoding scheme that lowers
+        instruction decode complexity.
+  \item a modern approach to virtualization, memory management, and
+        capabilities, that supports context-switched virtual domains and
+        page-table color permissions.
 \end{itemize}
 
 \par\noindent
