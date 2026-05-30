@@ -4862,7 +4862,7 @@ the following procedure is used to perform a domain return context switch.
 \footnotesize
 \caption{return to the calling domain at the point of exception}
 \begin{algorithmic}[1]
-\Function{domain\_return}{$\mathit{role}$}
+\Function{domain\_return}{$\mathit{}$}
     \medskip
     \If {$\mathit{domsp} = 0$}
     \Comment{check domain stack pointer}
@@ -4870,25 +4870,12 @@ the following procedure is used to perform a domain return context switch.
         \Comment{raise domain fault}
     \EndIf
     \medskip
-    \State $\mathit{domcurr} \gets \mathit{domvec[domsp]}$
-    \Comment{get current domain number}
-    \State $\mathit{domain} \gets \mathit{domvec[domsp-1]}$
+    \State $\mathit{domvec[domsp]} \gets 0$
+    \Comment{clear last domain number}
+    \State $\mathit{domsp} \gets \mathit{domsp} - 1$
+    \Comment{decrement domain stack pointer}
+    \State $\mathit{domain} \gets \mathit{domvec[domsp]}$
     \Comment{get initiating domain number}
-    \medskip
-    \State \textbf{case} $\mathit{role}$ \textbf{of}
-    \Comment{get role default domain number}
-    \State \hspace{1em} $\mathtt{sys}$: $\mathit{domcheck} \gets \mathit{domroute[domain].sys}$
-    \State \hspace{1em} $\mathtt{dom}$: $\mathit{domcheck} \gets \mathit{domroute[domain].dom}$
-    \State \hspace{1em} $\mathtt{cap}$: $\mathit{domcheck} \gets \mathit{domroute[domain].cap}$
-    \State \hspace{1em} $\mathtt{mac}$: $\mathit{domcheck} \gets \mathit{domroute[domain].mac}$
-    \State \hspace{1em} $\mathtt{msg}$: $\mathit{domcheck} \gets \mathit{domroute[domain].msg}$
-    \State \textbf{end case}
-    \medskip
-    \If {$\mathit{domcheck} \ne \mathit{domcurr}$}
-    \Comment{check role default domain number}
-        \State \textbf{raise} \textbf{domain-fault}
-        \Comment{raise domain fault}
-    \EndIf
     \medskip
     \State $\mathit{pc} \gets \mathit{tepc}$
     \Comment{restore program counter register}
@@ -4917,11 +4904,6 @@ the following procedure is used to perform a domain return context switch.
     \Comment{switch system deadline timer}
     \State $\mathit{sptr} \gets \mathit{domptr[domain]}$
     \Comment{switch system page table root}
-    \medskip
-    \State $\mathit{domvec[domsp]} \gets 0$
-    \Comment{clear last domain number}
-    \State $\mathit{domsp} \gets \mathit{domsp} - 1$
-    \Comment{decrement domain stack pointer}
     \medskip
     \State $\mathit{tcontrol.I} \gets \mathit{TRUE}$
     \Comment{enable system interrupts}
