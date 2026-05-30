@@ -3576,8 +3576,10 @@ memory management.
 \subsubsection{machine address (\texttt{macaddr}$[\mathit{ndom}]$)}
 \texttt{macaddr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing the machine addresses associated with each domain.
-machine addresses must be unique across all processors;
-otherwise, behavior is implementation-defined.
+machine addresses must be unique across all processors; otherwise,
+behavior is implementation-defined. machine addresses are preserved
+during warm reset. cold reset and power-on use an implementation-defined
+mechanism to ensure system-wide unique addresses are assigned.
 the machine address prefix should be unary \texttt{0001}.
 \\
 \registerspec{64}{32}{%
