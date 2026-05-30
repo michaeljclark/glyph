@@ -745,27 +745,21 @@ relative addressing mode.
 
 \par\noindent
 glyph is a super regular RISC architecture that encodes constants in a
-secondary stream accessed via an \emph{immediate base} register that points at
-immediate blocks containing constants accessed via a constant address
-mode. the \emph{immediate base} register branches like the
-\emph{program counter}, and procedure calls and returns set and restore
-\emph{(pc,ib)} together.
+secondary stream accessed via an \emph{immediate base} that points at
+immediate block constants using a constant address mode.
+the \emph{immediate base} register branches like the \emph{program counter},
+and procedure calls and returns set and restore \emph{(pc,ib)} together.
 \para
-glyph uses relative address vectors in its link register which is different
-to typical RISC architectures. glyph does this so that the branch instructions
-can fit \emph{(pc,ib)} into the a single link register for compatibility with
-traditional RISC architectures. glyph achieves this by packing two relative
-\emph{(pc,ib)} displacements into a relative address vector\footnote{the
-architecture defines two parameters: \emph{ALEN} and \emph{SLEN},
-which respectively to refer to width of addresses and width of general
-purpose registers in bits. when $\mathit{SLEN} \ge \mathit{ALEN} \times 2$
-it is possible to pack absolute addresses instead of relative addresses,
-as would be the case where \emph{ALEN=64} and \emph{SLEN=128}.}.
+glyph uses relative address vectors in its link register, packing two
+\emph{(pc,ib)} displacements into a single register. this avoids requiring
+a second link register for the immediate base, maintaining compatibility
+with the single link register on traditional RISC architectures.
 \para
-immediate blocks can be switched using the immediate block branch
-instruction. immediate blocks, unlike typical RISC architectures, mean
-that most relocations are word sized like CISC architectures, and can
-use C-style structure packing and alignment rules.
+immediate blocks can be switched using the immediate block branch instruction,
+and unlike typical RISC architectures, which synthesize constants inline using
+multiple long-form instructions, immediate block constants use C-style
+structure packing and alignment rules, making relocations word-aligned
+and avoiding the need to patch instruction encoding fields.
 \para
 this list outlines differentiating features of the glyph architecture:
 
@@ -785,24 +779,23 @@ to the \emph{immediate base} register.
 \emph{immediate block constant}.
 \item \texttt{jal} --- \emph{jump-and-link} or \emph{link-function-call}
 copies the address vector into the link register and adds \emph{immediate
-block constants} to \emph{(pc,ib)}. it is used to branch the \emph{program
-counter} and \emph{immediate base} register at the same time for calling
-procedures.
+block constants} to \emph{(pc,ib)}.
 \item \texttt{jtl} --- \emph{jump-to-link} or \emph{link-function-return}
-subtracts link vector from and adds \emph{immediate block constants}
-to \emph{(pc,ib)}. it is used to branch the \emph{program counter} and the
-\emph{immediate base} register at the same time for returning from called
-procedures.
-\item \texttt{pin} --- \emph{pack-indirect} packs two absolute addresses as
-relative address vector from \emph{(pc,ib)} and is used for calling
+subtracts link vector from \emph{(pc,ib)} and adds \emph{immediate block
+constants}.
+\item \texttt{pin} --- \emph{pack-indirect} packs two absolute addresses
+as a relative address vector from \emph{(pc,ib)} and is used for calling
 absolute addresses such as virtual functions.
 \end{itemize}
 
 \par\noindent
 the \texttt{pin} and \texttt{link} instructions form a modular arithmetic
-ring of relative address vectors, due to their use of relative addresses.
-relative address vectors can be encrypted, decrypted, and authenticated to
-form a verifiable chain of addresses for control flow integrity.
+ring of relative address vectors. calling a function adds a relative
+address vector to \emph{(pc,ib)} and stores it in the link register.
+returning subtracts the link vector and adds the block entry constants,
+restoring \emph{(pc,ib)} to the call site. tail calls are the additive
+identity of this ring, and they replace \emph{(pc,ib)} without storing a
+link, composing directly with the caller's link register.
 
 \newpage
 \section{Core parameters}
