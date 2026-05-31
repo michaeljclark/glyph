@@ -3480,6 +3480,15 @@ constants in each domain.
 the architecture provides an optional machine extension that includes
 registers for physical memory protection, machine context vectors, and
 software-defined memory management.
+\para
+the architecture is designed to work without the machine extension.
+if the machine extension is not present, then the system page table
+roots use pre-defined formats. when the machine extension is present,
+a global TLB miss handler allows custom page table walkers and page
+table formats. when the domain extension is present in conjunction
+with the machine extension, each domain has a dominating domain in
+the \texttt{macdom} vector to allow second-level address translation
+which can optionally invoke custom per-domain TLB miss handlers.
 
 \subsubsection{machine registers}
 the following tables list the privileged machine registers:
