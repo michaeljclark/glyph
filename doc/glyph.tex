@@ -4591,11 +4591,11 @@ the following table shows inter-domain trap routing table keys for
 \rowcolor{thcol}
 \thead{role}      & \thead{trap routing default domain} \\
 \hline
-\emph{system}     & \texttt{domroute[domcurr].sys} \\
-\emph{domain}     & \texttt{domroute[domcurr].dom} \\
-\emph{capability} & \texttt{domroute[domcurr].cap} \\
-\emph{machine}    & \texttt{domroute[domcurr].mac} \\
-\emph{message}    & \texttt{domroute[domcurr].msg} \\
+\emph{system}     & \texttt{domroute[domain].sys} \\
+\emph{domain}     & \texttt{domroute[domain].dom} \\
+\emph{capability} & \texttt{domroute[domain].cap} \\
+\emph{machine}    & \texttt{domroute[domain].mac} \\
+\emph{message}    & \texttt{domroute[domain].msg} \\
 \hline
 \end{tabular}
 \caption{inter-domain trap routing table keys}
@@ -4671,7 +4671,7 @@ the pin number, and \texttt{tvalue} is set to zero.
 
 deadline timer interrupts can be configured by setting the \texttt{stimer}
 register. an interrupt is generated when $\mathtt{stimer} \ge \mathtt{stamp}$.
-on the signaled processor, \texttt{dommsg[domcurr]}
+on the signaled processor, \texttt{dommsg[domain]}
 contains the message default domain used to route an asynchronous trap.
 the processor initiates a \emph{domain context switch} to the
 \emph{message default domain}, then branches to its trap handler.
@@ -4714,7 +4714,7 @@ the following special addresses can be used.
 \end{table}
 
 \par\noindent
-on signaled processors, \texttt{dommsg[domcurr]} contains the message
+on signaled processors, \texttt{dommsg[domain]} contains the message
 default domain used to route an asynchronous trap.
 the processor initiates a \emph{domain context switch} to the
 \emph{message default domain}, then branches to its trap handler.
@@ -4731,11 +4731,11 @@ exception is routed to for the current domain: the \emph{system},
 roles.
 
 \begin{itemize}[itemsep=0pt]
-\item \texttt{domroute[domcurr].sys} contains the system default domain.
-\item \texttt{domroute[domcurr].dom} contains the domain default domain.
-\item \texttt{domroute[domcurr].cap} contains the capability default domain.
-\item \texttt{domroute[domcurr].mac} contains the machine default domain.
-\item \texttt{domroute[domcurr].msg} contains the message default domain.
+\item \texttt{domroute[domain].sys} contains the system default domain.
+\item \texttt{domroute[domain].dom} contains the domain default domain.
+\item \texttt{domroute[domain].cap} contains the capability default domain.
+\item \texttt{domroute[domain].mac} contains the machine default domain.
+\item \texttt{domroute[domain].msg} contains the message default domain.
 \end{itemize}
 
 \par\noindent
