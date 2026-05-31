@@ -4703,7 +4703,7 @@ the pin number, and \texttt{tvalue} is set to zero.
 
 deadline timer interrupts can be configured by setting the \texttt{stimer}
 register. an interrupt is generated when $\mathtt{stimer} \ge \mathtt{stamp}$.
-on the signaled processor, \texttt{dommsg[domain]}
+on the signaled processor, \texttt{domroute[domain].msg}
 contains the message default domain used to route an asynchronous trap.
 the processor initiates a \emph{domain context switch} to the
 \emph{message default domain}, then branches to its trap handler.
@@ -4746,8 +4746,8 @@ the following special addresses can be used.
 \end{table}
 
 \par\noindent
-on signaled processors, \texttt{dommsg[domain]} contains the message
-default domain used to route an asynchronous trap.
+on signaled processors, \texttt{domroute[domain].msg} contains the
+message default domain used to route an asynchronous trap.
 the processor initiates a \emph{domain context switch} to the
 \emph{message default domain}, then branches to its trap handler.
 \texttt{tcause} is set to \emph{message-interrupt} and \texttt{tvalue} is
