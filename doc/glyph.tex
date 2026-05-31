@@ -2995,8 +2995,13 @@ the architecture provides an optional capabilities extension that
 provides a capability check for permissions and capabilities enabled by
 \emph{page table colors} in page table entries. color permissions mask
 page table permissions based on \emph{page table color}. color
-capabilities restrict access to system, domain, capability and machine
+capabilities restrict access to system, domain, capability, and machine
 registers based on \emph{page table color}.
+\para
+the architecture is designed to work without the capability extension.
+if the capability extension is not present, the domain, capability,
+machine, and message roles map to the system role, and the user and
+system roles are derived from their respective address space prefixes.
 \para
 the following tables list the privileged capability system parameters:
 
