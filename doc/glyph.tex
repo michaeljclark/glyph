@@ -3036,7 +3036,7 @@ the following tables list the privileged capability system registers:
 \rowcolor{tscol}
 \multicolumn{4}{|l|}{\tsub{capability control registers}} \\
 \hline
-\texttt{0x41} & ccontrol       & capability control & \\
+\texttt{0x41} & capcontrol     & capability control & \\
 \hline
 \rowcolor{tscol}
 \multicolumn{4}{|l|}{\tsub{capability permission registers}} \\
@@ -3071,8 +3071,8 @@ the following tables list the privileged capability system registers:
 this section describes the \emph{capability control registers} which enable
 the capability extension.
 
-\subsubsection{capability control (\texttt{ccontrol})}
-\texttt{ccontrol} is a read-write register containing capability control bits.
+\subsubsection{capability control (\texttt{capcontrol})}
+\texttt{capcontrol} is a read-write register containing capability control bits.
 \\
 \registerspec{32}{32}{%
   1//{0}//\texttt{C}%
@@ -3090,15 +3090,15 @@ the capability extension.
 \verb|1 << 0| & C   & capability check enable \\
 \hline
 \end{tabular}
-\caption{color control fields}
-\label{tab:color-control-fields}
+\caption{capability control fields}
+\label{tab:capability-control-fields}
 \end{table}
 
 \subsection{capability permission registers}
 
 this section describes the \emph{capability permission registers} which
 define \emph{page table color} permission masks for page table entries.
-when \texttt{ccontrol.C} is set, the \emph{capability permission registers}
+when \texttt{capcontrol.C} is set, the \emph{capability permission registers}
 are combined with page table permissions to limit maximum \emph{read}
 and \emph{write} permission based on page table color.
 
@@ -3137,8 +3137,8 @@ used to check execution in pages with a matching page table color.
 this section describes the \emph{capability role registers}.
 the \emph{capability role registers} describe access to privileged
 system registers and instructions based on \emph{page table color}.
-when \texttt{ccontrol.C} is set, privileged system registers and
-instructions and will cause capability traps for illegal accesses.
+when \texttt{capcontrol.C} is set, privileged system registers and
+instructions will cause capability traps for illegal accesses.
 system registers and instructions are restricted based on the
 following roles: \emph{system}, \emph{domain}, \emph{capability},
 and \emph{machine}.
@@ -3192,7 +3192,7 @@ this section describes the color matrix registers. the \emph{capability
 matrix registers} are permission registers that protect access to
 memory based on a combination of \emph{source} and \emph{destination}
 page table color and \emph{read}, or \emph{write} permissions.
-when \texttt{ccontrol.C} is set, memory accesses to pages with matching
+when \texttt{capcontrol.C} is set, memory accesses to pages with matching
 \emph{source} and \emph{destination} page table colors, and wider
 permissions, will cause capability traps.
 
@@ -3324,7 +3324,7 @@ of system, domain, capability, machine, and message traps.
 \rowcolor{thcol}
 \thead{no.} & \thead{name} & \thead{description} \\
 \hline
-\verb|1 << 0| & V   & virtual domains enable \\
+\verb|1 << 0| & D   & domain contexts enable \\
 \hline
 \end{tabular}
 \caption{domain control fields}
