@@ -3312,7 +3312,7 @@ of system, domain, capability, machine, and message traps.
 \texttt{domcontrol} is a read-write register containing domain control bits.
 \\
 \registerspec{32}{32}{%
-  1//{0}//\texttt{V}%
+  1//{0}//\texttt{D}%
 }
 
 \begin{table}[h]
@@ -4804,6 +4804,14 @@ the following register arrays hold state for a domain context switch.
 \caption{domain context switch registers}
 \label{tab:domain-context-switch-registers}
 \end{table}
+
+\par\noindent
+when domain contexts are enabled in \texttt{domcontrol.D}, system traps
+use the \emph{domain\_trap} and \emph{domain\_return} procedures to
+enable domain context stacking when delivering and return from traps.
+when domain contexts are disabled in \texttt{domcontrol.D}, or if the
+domain extension is not present, system traps use the \emph{system\_trap}
+and \emph{system\_return} procedures to deliver and return from traps.
 
 \newpage
 \subsubsection{system trap}
