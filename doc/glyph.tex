@@ -3238,6 +3238,11 @@ extension for virtual machines. the extension adds registers for virtual
 domain addresses, trap routing, page translation, and context switching
 for system traps, domain traps, capability traps and machine traps.
 \para
+the architecture is designed to work without the domain extension.
+if the domain extension is not present, the user and system roles are
+derived from their respective address space prefixes, and traps are
+handled without capability trap routing and domain context switching.
+\para
 the following tables list the privileged domain system parameters:
 
 \begin{table}[H]
@@ -3274,7 +3279,7 @@ the following tables list the privileged domain system registers:
 \texttt{0x51} & domcontrol & domain control & \\
 \texttt{0x53} & domsp    & domain stack pointer & \\
 \texttt{0x54} & domvec   & domain number vector & \\
-\texttt{0x500...0x50F}   & domroute$[n]$    & domain default routes & \\
+\texttt{0x500...0x50F}   & domroute$[n]$    & domain default routes & capability \\
 \hline
 \rowcolor{tscol}
 \multicolumn{4}{|l|}{\tsub{domain context registers}} \\
