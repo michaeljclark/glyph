@@ -3692,16 +3692,17 @@ key formats are as follows.
 \subsubsection{machine translation lookaside buffer format (\texttt{mtlbfmt})}
 \texttt{mtlbfmt} is a read-write register containing the TLB format for the
 current TLB miss fault. this register is populated by the TLB miss fault
-handler with a page table type, page size encoded using level, and an address
-space identifier.
+handler with a page table type, page size encoded using level, the faulting
+domain number, and an address space identifier.
 \\
 \begin{figure}[H]
 \centering
 \registerspec{64}{32}{%
-  12/{0}//{11}/\emph{ASID},%
-  44/{12}//{55}/\emph{reserved},%
-  4/{56}//{59}/\emph{level},%
-  4/{60}//{63}/\emph{type}%
+  12/{0}//{11}/\footnotesize\emph{ASID},%
+  4/{12}//{15}/\footnotesize\emph{dom},%
+  40/{16}//{55}/\footnotesize\emph{reserved},%
+  4/{56}//{59}/\footnotesize\emph{level},%
+  4/{60}//{63}/\footnotesize\emph{type}%
 }
 \caption{64-bit translation lookaside buffer format.}
 \label{fig:64-bit-tlb-format}
