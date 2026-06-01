@@ -3520,7 +3520,7 @@ the following tables list the privileged machine registers:
 \multicolumn{4}{|l|}{\tsub{machine memory registers}} \\
 \hline
 \texttt{0x63} & mtlbkey   & machine tlb key & \\
-\texttt{0x64} & mtlbfmt   & machine tlb format & \\
+\texttt{0x64} & mtlbscope & machine tlb format & \\
 \texttt{0x65} & mtlbent   & machine tlb entry & \\
 \hline
 \end{tabularx}
@@ -3689,8 +3689,8 @@ key formats are as follows.
 \end{figure}
 
 \newpage
-\subsubsection{machine translation lookaside buffer format (\texttt{mtlbfmt})}
-\texttt{mtlbfmt} is a read-write register containing the TLB format for the
+\subsubsection{machine translation lookaside buffer scope (\texttt{mtlbscope})}
+\texttt{mtlbscope} is a read-write register containing the TLB scope for the
 current TLB miss fault. this register is populated by the TLB miss fault
 handler with a page table type, page size encoded using level, the faulting
 domain number, and an address space identifier.
@@ -3704,8 +3704,8 @@ domain number, and an address space identifier.
   4/{56}//{59}/\footnotesize\emph{level},%
   4/{60}//{63}/\footnotesize\emph{type}%
 }
-\caption{64-bit translation lookaside buffer format.}
-\label{fig:64-bit-tlb-format}
+\caption{64-bit translation lookaside buffer scope.}
+\label{fig:64-bit-tlb-scope}
 \end{figure}
 
 \begin{table}[H]
@@ -3722,8 +3722,8 @@ domain number, and an address space identifier.
 \texttt{0b1000} & \texttt{vm16c} & 3-level page tables with 64~KiB leaf pages \\
 \hline
 \end{tabular}
-\caption{64-bit translation lookaside buffer format type field}
-\label{tab:64-bit-tlb-format-type-field}
+\caption{64-bit translation lookaside buffer scope type field}
+\label{tab:64-bit-tlb-scope-type-field}
 \end{table}
 
 \begin{table}[H]
@@ -3740,8 +3740,8 @@ domain number, and an address space identifier.
 \verb|2| & $\mathsf{2^{30}}$ & \emph{vm12d} page table entry 1~GiB page \\
 \hline
 \end{tabular}
-\caption{64-bit \emph{vm12d} translation lookaside buffer format level field}
-\label{tab:64-bit-vm12d-tlb-format-level-field}
+\caption{64-bit \emph{vm12d} translation lookaside buffer scope level field}
+\label{tab:64-bit-vm12d-tlb-scope-level-field}
 \end{table}
 
 \begin{table}[H]
@@ -3757,8 +3757,8 @@ domain number, and an address space identifier.
 \verb|1| & $\mathsf{2^{25}}$ & \emph{vm14c} page table entry 32~MiB page \\
 \hline
 \end{tabular}
-\caption{64-bit \emph{vm14c} translation lookaside buffer format level field}
-\label{tab:64-bit-vm14c-tlb-format-level-field}
+\caption{64-bit \emph{vm14c} translation lookaside buffer scope level field}
+\label{tab:64-bit-vm14c-tlb-scope-level-field}
 \end{table}
 
 \begin{table}[H]
@@ -3774,8 +3774,8 @@ domain number, and an address space identifier.
 \verb|1| & $\mathsf{2^{29}}$ & \emph{vm16c} page table entry 512~MiB page \\
 \hline
 \end{tabular}
-\caption{64-bit \emph{vm16c} translation lookaside buffer format level field}
-\label{tab:64-bit-vm16c-tlb-format-level-field}
+\caption{64-bit \emph{vm16c} translation lookaside buffer scope level field}
+\label{tab:64-bit-vm16c-tlb-scope-level-field}
 \end{table}
 
 \newpage
