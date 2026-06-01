@@ -3075,7 +3075,9 @@ the capability extension.
 \texttt{capcontrol} is a read-write register containing capability control bits.
 \\
 \registerspec{32}{32}{%
-  1//{0}//\texttt{C}%
+  1//{0}//\texttt{P},%
+  1//{1}//\texttt{C}%
+  %1//{2}//\texttt{M}
 }
 
 \begin{table}[h]
@@ -3087,7 +3089,9 @@ the capability extension.
 \rowcolor{thcol}
 \thead{no.} & \thead{name} & \thead{description} \\
 \hline
-\verb|1 << 0| & C   & capability check enable \\
+\verb|1 << 0| & P   & color permission check enable \\
+\verb|1 << 1| & C   & color role check enable \\
+%\verb|1 << 2| & M   & color matrix check enable \\
 \hline
 \end{tabular}
 \caption{capability control fields}
@@ -3098,7 +3102,7 @@ the capability extension.
 
 this section describes the \emph{capability permission registers} which
 define \emph{page table color} permission masks for page table entries.
-when \texttt{capcontrol.C} is set, the \emph{capability permission registers}
+when \texttt{capcontrol.P} is set, the \emph{capability permission registers}
 are combined with page table permissions to limit maximum \emph{read}
 and \emph{write} permission based on page table color.
 
@@ -3192,7 +3196,7 @@ this section describes the color matrix registers. the \emph{capability
 matrix registers} are permission registers that protect access to
 memory based on a combination of \emph{source} and \emph{destination}
 page table color and \emph{read}, or \emph{write} permissions.
-when \texttt{capcontrol.C} is set, memory accesses to pages with matching
+when \texttt{capcontrol.M} is set, memory accesses to pages with matching
 \emph{source} and \emph{destination} page table colors, and wider
 permissions, will cause capability traps.
 
