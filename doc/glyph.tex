@@ -3555,7 +3555,7 @@ control and features.
 \thead{no.} & \thead{name} & \thead{description} \\
 \hline
 \verb|1 << 0| & V   & virtual address translation enable \\
-\verb|1 << 1| & P   & physical permissions check enable \\
+\verb|1 << 1| & P   & physical permission check enable \\
 \verb|1 << 2| & S   & software page translation enable \\
 \hline
 \end{tabular}
@@ -5615,7 +5615,7 @@ the virtual to physical address translation process is as follows.
     \mathit{pn\_bits} + \mathit{po\_bits}$
   \Comment{calculate page number shift}
   \State $\mathit{mask} \gets (1 << \mathit{shift}) - 1$
-  \State $\mathit{cap} \gets
+  \State $\mathit{col} \gets
     (\mathit{R} \land \mathit{colorread[pte.color]})
     \lor (\mathit{W} \land \mathit{colorwrite[pte.color]})
     %\lor (\mathit{X} \land \mathit{colorexec[pte.color]})
@@ -5633,11 +5633,13 @@ the virtual to physical address translation process is as follows.
     \lnot\mathit{pte.W}) \lor (\mathit{sm.X} \land \lnot\mathit{pte.X})$}
     \State \textbf{raise} \textbf{fault}
     \Comment{invalid self map permissions}
-  \ElsIf{$(\mathit{cap.R} \land \mathit{pte.R}) \lor (\mathit{cap.W} \land
-    \mathit{pte.W}) %\lor (\mathit{cap.X} \land \mathit{pte.X}
+  \ElsIf{$\mathit{capcontrol.P} \land
+    ((\mathit{pte.R} \land \lnot\mathit{col.R})
+    \lor (\mathit{pte.W} \land \lnot\mathit{col.W})
+    %\lor (\mathit{pte.X} \land \lnot\mathit{col.X})
     )$}
     \State \textbf{raise} \textbf{fault}
-    \Comment{invalid page table capabilities}
+    \Comment{invalid color permissions}
   \ElsIf {$(\mathit{op.R} \land \lnot\mathit{pte.A}) \lor
       (\mathit{op.W} \land \lnot\mathit{pte.D})$}
     \State \textbf{raise} \textbf{fault}
