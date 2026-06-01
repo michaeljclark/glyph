@@ -3340,7 +3340,7 @@ of system, domain, capability, machine, and message traps.
 pointer, which points at the top element in the domain number vector.
 \\
 \registerspec{32}{32}{%
-  4/{0}//{3}/\emph{index}%
+  3/{0}//{2}/\emph{index}%
 }
 
 \subsubsection{domain number vector (\texttt{domvec})}
@@ -3357,7 +3357,13 @@ stack. the top element in the domain number vector is indexed by
   4////,%
   4/{24}//{27}/\footnotesize\emph{dn[3]},%
   4////,%
-  4/{32}//{35}/\footnotesize\emph{...}%
+  4/{32}//{35}/\footnotesize\emph{dn[4]},%
+  4////,%
+  4/{40}//{43}/\footnotesize\emph{dn[5]},%
+  4////,%
+  4/{48}//{51}/\footnotesize\emph{dn[6]},%
+  4////,%
+  4/{56}//{59}/\footnotesize\emph{dn[7]}%
 }
 
 \subsubsection{domain default routes (\texttt{domroute}$[\mathit{ndom}]$)}
