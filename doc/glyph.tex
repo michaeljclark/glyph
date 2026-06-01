@@ -5629,8 +5629,10 @@ the virtual to physical address translation process is as follows.
     \lnot\mathit{pte.W}) \lor (\mathit{op.X} \land \lnot\mathit{pte.X})$}
     \State \textbf{raise} \textbf{fault}
     \Comment{invalid page table permissions}
-  \ElsIf{$(\mathit{sm.R} \land \lnot\mathit{pte.R}) \lor (\mathit{sm.W} \land
-    \lnot\mathit{pte.W}) \lor (\mathit{sm.X} \land \lnot\mathit{pte.X})$}
+  \ElsIf{$\mathit{mcontrol.P} \land
+     ((\mathit{pte.R} \land \lnot\mathit{sm.R})
+     \lor (\mathit{pte.W} \land \lnot\mathit{sm.W})
+     \lor (\mathit{pte.X} \land \lnot\mathit{sm.X}))$}
     \State \textbf{raise} \textbf{fault}
     \Comment{invalid self map permissions}
   \ElsIf{$\mathit{capcontrol.P} \land
