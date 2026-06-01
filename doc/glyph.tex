@@ -5615,10 +5615,11 @@ the virtual to physical address translation process is as follows.
     \mathit{pn\_bits} + \mathit{po\_bits}$
   \Comment{calculate page number shift}
   \State $\mathit{mask} \gets (1 << \mathit{shift}) - 1$
-  \State $\mathit{caps} \gets
-    (\mathit{R} \land \mathit{colorread[pte.color]}) \lor
-    (\mathit{W} \land \mathit{colorwrite[pte.color]}) \lor
-    (\mathit{X} \land \mathit{colorexec[pte.color]})$
+  \State $\mathit{cap} \gets
+    (\mathit{R} \land \mathit{colorread[pte.color]})
+    \lor (\mathit{W} \land \mathit{colorwrite[pte.color]})
+    %\lor (\mathit{X} \land \mathit{colorexec[pte.color]})
+    $
   \State $\mathit{user} \gets
     \lnot((\mathit{va} >> (\mathit{va\_bits} - 1)) \land 1)$
   \If {$(\lnot\mathit{pte.V}) \lor (\mathit{pte.W} \land \lnot\mathit{pte.R})$}
@@ -5633,7 +5634,8 @@ the virtual to physical address translation process is as follows.
     \State \textbf{raise} \textbf{fault}
     \Comment{invalid self map permissions}
   \ElsIf{$(\mathit{cap.R} \land \mathit{pte.R}) \lor (\mathit{cap.W} \land
-    \mathit{pte.W}) \lor (\mathit{cap.X} \land \mathit{pte.X})$}
+    \mathit{pte.W}) %\lor (\mathit{cap.X} \land \mathit{pte.X}
+    )$}
     \State \textbf{raise} \textbf{fault}
     \Comment{invalid page table capabilities}
   \ElsIf {$(\mathit{op.R} \land \lnot\mathit{pte.A}) \lor
