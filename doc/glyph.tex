@@ -3532,6 +3532,13 @@ the following tables list the privileged machine registers:
 \texttt{0x64} & mtlbscope & machine tlb format & \\
 \texttt{0x65} & mtlbent   & machine tlb entry & \\
 \hline
+\rowcolor{tscol}
+\multicolumn{4}{|l|}{\tsub{memory type registers}} \\
+\hline
+\texttt{0x66} & mtcount & memory type count & \\
+\texttt{0x2300...0x230F} & mtbase$[n]$ & memory type base & \\
+\texttt{0x2400...0x240F} & mtmask$[n]$ & memory type mask & \\
+\hline
 \end{tabularx}
 \caption{machine registers}
 \label{tab:machine-registers}
@@ -3846,6 +3853,60 @@ entry formats are as follows.
 \caption{64-bit \emph{vm16c} translation lookaside buffer entry.}
 \label{fig:64-bit-vm16c-tlb-entry}
 \end{figure}
+
+\newpage
+\subsection{memory type registers}
+the section describes the privileged machine registers containing
+memory type information for ranges of physical memory accessed via
+the memory port on one processor.
+
+\subsubsection{memory type count (\texttt{mtcount})}
+\texttt{mtcount} is a read-only register containing the number of
+available memory type registers.
+\\
+\registerspec{64}{32}{%
+  4/{0}//{3}/\footnotesize\emph{count}%
+}
+
+\subsubsection{memory type base (\texttt{mtbase}$[\mathit{n}]$)}
+\texttt{mtbase}$[\mathit{n}]$ are \textbf{\emph{n}} read-write
+registers containing physical address and memory type.
+\\
+\registerspec{64}{32}{%
+  4/{0}//3/\footnotesize\emph{type},%
+  8/{4}//11/\footnotesize\emph{reserved},%
+  40/{12}//51/\footnotesize\emph{physical address},%
+  12/{52}//63/\footnotesize\emph{reserved}%
+}
+
+\begin{table}[h]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
+\hline
+\texttt{0b00} & \emph{WB}  & write-back \\
+\texttt{0b01} & \emph{WC}  & write-combine \\
+\texttt{0b10} & \emph{WT}  & write-through \\
+\texttt{0b11} & \emph{UC}  & uncached \\
+\hline
+\end{tabular}
+\caption{memory type base memory type field.}
+\label{tab:memory-type-base-memory-type-field}
+\end{table}
+
+\subsubsection{memory type mask (\texttt{mtmask}$[\mathit{n}]$)}
+\texttt{mtmask}$[\mathit{n}]$ are \textbf{\emph{n}} read-write
+registers containing physical address mask.
+\\
+\registerspec{64}{32}{%
+  12/{0}//11/\footnotesize\emph{reserved},%
+  40/{12}//51/\footnotesize\emph{physical mask},%
+  12/{52}//63/\footnotesize\emph{reserved}%
+}
 
 \newpage
 \section{Environment extension}
