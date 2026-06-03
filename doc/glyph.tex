@@ -3871,6 +3871,13 @@ available memory type registers.
 \subsubsection{memory type base (\texttt{mtbase}$[\mathit{n}]$)}
 \texttt{mtbase}$[\mathit{n}]$ are \textbf{\emph{n}} read-write
 registers containing physical address and memory type.
+when multiple memory types are defined for the same range,
+including page table memory types, if address translation
+is active, then the resulting memory type will be
+$\max(\mathit{type}_1,\mathit{type}_2)$. this conflict resolution
+rule preserves the most device-friendly memory type with the least caching.
+a conflict resolution override mask can be used when this is not
+the desired behavior.
 \\
 \registerspec{64}{32}{%
   4/{0}//3/\footnotesize\emph{type},%
@@ -3883,7 +3890,7 @@ registers containing physical address and memory type.
 \centering
 \footnotesize
 \rowcolors{2}{tbcol}{tbcol}
-\begin{tabular}{|l|l|l|}
+\begin{tabular}{|r|l|l|}
 \hline
 \rowcolor{thcol}
 \thead{no.} & \thead{name} & \thead{description} \\
@@ -3892,6 +3899,8 @@ registers containing physical address and memory type.
 \texttt{0b01} & \emph{WC}  & write-combine \\
 \texttt{0b10} & \emph{WT}  & write-through \\
 \texttt{0b11} & \emph{UC}  & uncached \\
+\texttt{0b100} & --  & \emph{override mask} \\
+\texttt{0b1000} & --  & \emph{reserved mask} \\
 \hline
 \end{tabular}
 \caption{memory type base memory type field.}
