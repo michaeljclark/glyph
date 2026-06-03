@@ -3687,10 +3687,10 @@ key formats are as follows.
 
 \newpage
 \subsubsection{machine translation lookaside buffer scope (\texttt{mtlbscope})}
-\texttt{mtlbscope} is a read-write register containing the TLB scope for the
-current TLB miss fault. this register is populated by the TLB miss fault
-handler with a page table type, page size encoded using level, the faulting
-domain number, and an address space identifier.
+\texttt{mtlbscope} is a read-write register containing the TLB scope for
+the current TLB miss fault. this register is populated by the TLB miss
+fault handler with a page table format, page size encoded using level,
+the faulting domain number, and an address space identifier.
 \\
 \begin{figure}[H]
 \centering
@@ -3699,7 +3699,7 @@ domain number, and an address space identifier.
   4/{12}//{15}/\footnotesize\emph{dom},%
   40/{16}//{55}/\footnotesize\emph{reserved},%
   4/{56}//{59}/\footnotesize\emph{level},%
-  4/{60}//{63}/\footnotesize\emph{type}%
+  4/{60}//{63}/\footnotesize\emph{fmt}%
 }
 \caption{64-bit translation lookaside buffer scope.}
 \label{fig:64-bit-tlb-scope}
@@ -3719,8 +3719,8 @@ domain number, and an address space identifier.
 \texttt{0b1000} & \texttt{vm16c} & 3-level page tables with 64~KiB leaf pages \\
 \hline
 \end{tabular}
-\caption{64-bit translation lookaside buffer scope type field}
-\label{tab:64-bit-tlb-scope-type-field}
+\caption{64-bit translation lookaside buffer scope format.}
+\label{tab:64-bit-tlb-scope-format}
 \end{table}
 
 \begin{table}[H]
@@ -3737,8 +3737,8 @@ domain number, and an address space identifier.
 \verb|2| & $\mathsf{2^{30}}$ & \emph{vm12d} page table entry 1~GiB page \\
 \hline
 \end{tabular}
-\caption{64-bit \emph{vm12d} translation lookaside buffer scope level field}
-\label{tab:64-bit-vm12d-tlb-scope-level-field}
+\caption{64-bit \emph{vm12d} translation lookaside buffer scope level.}
+\label{tab:64-bit-vm12d-tlb-scope-level}
 \end{table}
 
 \begin{table}[H]
@@ -3754,8 +3754,8 @@ domain number, and an address space identifier.
 \verb|1| & $\mathsf{2^{25}}$ & \emph{vm14c} page table entry 32~MiB page \\
 \hline
 \end{tabular}
-\caption{64-bit \emph{vm14c} translation lookaside buffer scope level field}
-\label{tab:64-bit-vm14c-tlb-scope-level-field}
+\caption{64-bit \emph{vm14c} translation lookaside buffer scope level.}
+\label{tab:64-bit-vm14c-tlb-scope-level}
 \end{table}
 
 \begin{table}[H]
@@ -3771,8 +3771,8 @@ domain number, and an address space identifier.
 \verb|1| & $\mathsf{2^{29}}$ & \emph{vm16c} page table entry 512~MiB page \\
 \hline
 \end{tabular}
-\caption{64-bit \emph{vm16c} translation lookaside buffer scope level field}
-\label{tab:64-bit-vm16c-tlb-scope-level-field}
+\caption{64-bit \emph{vm16c} translation lookaside buffer scope level.}
+\label{tab:64-bit-vm16c-tlb-scope-level}
 \end{table}
 
 \newpage
@@ -5190,7 +5190,7 @@ the address translation system is designed to support the following use cases:
 the follow table describes the dimensions for memory address translation
 using the \emph{trie-based} page table structure pointed to by the
 \emph{system page table root} (\texttt{sptr}) register.
-the page table types \emph{vm12d}, \emph{vm14c}, and \emph{vm16c} support
+the page table formats \emph{vm12d}, \emph{vm14c}, and \emph{vm16c} support
 4~KiB, 16~KiB, and 64~KiB leaf pages, respectively.
 \\
 \begin{table}[h]
@@ -5206,7 +5206,7 @@ the page table types \emph{vm12d}, \emph{vm14c}, and \emph{vm16c} support
 \thead{Table} & \thead{Table} & \thead{No.} & \thead{Offset} & \thead{Address} &
 \thead{Index} & \thead{Page} & \thead{Address}  \\
 \rowcolor{thcol}
-\thead{Type} & \thead{Levels} & \thead{Bits} & \thead{Bits} & \thead{Bits} &
+\thead{Format} & \thead{Levels} & \thead{Bits} & \thead{Bits} & \thead{Bits} &
 \thead{Entries} & \thead{Sizes} & \thead{Space} \\
 \hline
 vm12d & 4 & 9 & 12 & 48 & 512 & 4~KiB, 2~MiB, 1~GiB & 256~TiB \\
@@ -5223,10 +5223,10 @@ vm16c & 3 & 13 & 16 & 55 & 8192 & 64~KiB, 512~MiB & 32~PiB \\
 
 the page table root pointer is stored in the \texttt{sptr} register.
 the page walker reads the root pointer to lookup virtual addresses
-in the page table trie structure. the page table root pointer contains a
-\texttt{type} field indicating the page table type, the page table root
-physical page number, and an address space identifier used to index the
-translation lookaside buffer.
+in the page table trie structure. the page table root pointer contains
+a \texttt{fmt} field indicating the page table format, the page table
+root physical page number, and an address space identifier used to index
+the translation lookaside buffer.
 \para
 the \emph{vm12d}, \emph{vm14c}, and \emph{vm16c} page table root formats
 are as follows.
@@ -5236,7 +5236,7 @@ are as follows.
   12/{0}//{11}/\footnotesize\emph{ASID},%
   44/{12}//{55}/\footnotesize\emph{physical page number},%
   4/{56}//{59}/\footnotesize\texttt{0000},%
-  4/{60}//{63}/\footnotesize\emph{type}%
+  4/{60}//{63}/\footnotesize\emph{fmt}%
 }
 \caption{64-bit \emph{vm12d} page table root format.}
 \label{fig:64-bit-vm12d-page-table-root-format}
@@ -5248,7 +5248,7 @@ are as follows.
   2//{13}//\footnotesize\texttt{00},%
   42/{14}//{55}/\footnotesize\emph{physical page number},%
   4/{56}//{59}/\footnotesize\texttt{0000},%
-  4/{60}//{63}/\footnotesize\emph{type}%
+  4/{60}//{63}/\footnotesize\emph{fmt}%
 }
 \caption{64-bit \emph{vm14c} page table root format.}
 \label{fig:64-bit-vm14c-page-table-root-format}
@@ -5260,7 +5260,7 @@ are as follows.
   4/{12}//{15}/\footnotesize\texttt{0000},%
   40/{16}//{55}/\footnotesize\emph{physical page number},%
   4/{56}//{59}/\footnotesize\texttt{0000},%
-  4/{60}//{63}/\footnotesize\emph{type}%
+  4/{60}//{63}/\footnotesize\emph{fmt}%
 }
 \caption{64-bit \emph{vm16c} page table root format.}
 \label{fig:64-bit-vm16c-page-table-root-format}
@@ -5269,7 +5269,7 @@ are as follows.
 \par\noindent
 the supported page table formats are indicated in the \emph{system page table
 info} (\texttt{spti}) register.
-the page table types used in the \texttt{type} field of the page table root
+the page table formats used in the \texttt{fmt} field of the page table root
 register are as follows.
 \\
 \begin{table}[h]
@@ -5286,8 +5286,8 @@ register are as follows.
 \texttt{0b1000} & \texttt{vm16c} & 3-level page tables with 64~KiB leaf pages \\
 \hline
 \end{tabular}
-\caption{64-bit page table types.}
-\label{tab:64-bit-page-table-types}
+\caption{64-bit page table formats.}
+\label{tab:64-bit-page-table-formats}
 \end{table}
 
 \newpage
@@ -5384,7 +5384,7 @@ the page table entry permission and metadata bits are as follows.
 \verb|1 << 7| & D   & dirty \\
 \hline
 \end{tabular}
-\caption{64-bit page table entry fields}
+\caption{64-bit page table entry fields.}
 \label{tab:64-bit-page-table-entry-fields}
 \end{table}
 
@@ -5393,7 +5393,7 @@ the page table entry permission and metadata bits are as follows.
 
 translation addresses are used by the address translation system to abstract
 virtual and physical addresses. translation addresses contain an address
-encoded using a page table type specific address format, where the address
+encoded using a page table format specific address layout, where the address
 is prefixed with a 1 --- 4 bit sign-extended address space prefix to
 distinguish user and system virtual addresses from physical addresses.
 \para
