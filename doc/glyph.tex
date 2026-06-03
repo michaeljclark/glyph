@@ -3779,7 +3779,7 @@ the faulting domain number, and an address space identifier.
 \subsubsection{machine translation lookaside buffer entry (\texttt{mtlbent})}
 \texttt{mtlbent} is a read-write register containing the TLB entry for the
 current TLB miss fault. this register is populated by the TLB miss fault
-handler with a physical page number, a page color, plus several permission
+handler with memory type, physical page number, color, plus several permission
 and metadata bits in the same format as page table entries.
 \para
 the \emph{vm12d}, \emph{vm14c}, and \emph{vm16c} translation lookaside buffer
@@ -3797,7 +3797,8 @@ entry formats are as follows.
   1//{6}//\scriptsize\texttt{A},%
   1//{7}//\scriptsize\texttt{D},%
   4/{8}//{11}/\footnotesize\emph{color},%
-  44/{12}//{55}/\footnotesize\emph{physical page number},%
+  40/{12}//{51}/\footnotesize\emph{physical page number},%
+  4/{52}//{55}/\footnotesize\emph{type},%
   8/{56}//{63}/\footnotesize\emph{reserved}%
 }
 \caption{64-bit \emph{vm12d} translation lookaside buffer entry.}
@@ -3817,7 +3818,8 @@ entry formats are as follows.
   1//{7}//\scriptsize\texttt{D},%
   4/{8}//{11}/\footnotesize\emph{color},%
   2//{13}//\footnotesize\texttt{00},%
-  42/{14}//{55}/\footnotesize\emph{physical page number},%
+  38/{14}//{51}/\footnotesize\emph{physical page number},%
+  4/{52}//{55}/\footnotesize\emph{type},%
   8/{56}//{63}/\footnotesize\emph{reserved}%
 }
 \caption{64-bit \emph{vm14c} translation lookaside buffer entry.}
@@ -3837,7 +3839,8 @@ entry formats are as follows.
   1//{7}//\scriptsize\texttt{D},%
   4/{8}//{11}/\footnotesize\emph{color},%
   4/{12}//{15}/\footnotesize\texttt{0000},%
-  40/{16}//{55}/\footnotesize\emph{physical page number},%
+  36/{16}//{51}/\footnotesize\emph{physical page number},%
+  4/{52}//{55}/\footnotesize\emph{type},%
   8/{56}//{63}/\footnotesize\emph{reserved}%
 }
 \caption{64-bit \emph{vm16c} translation lookaside buffer entry.}
@@ -5234,8 +5237,8 @@ are as follows.
 \begin{figure}[H]
 \registerspec{64}{32}{%
   12/{0}//{11}/\footnotesize\emph{ASID},%
-  44/{12}//{55}/\footnotesize\emph{physical page number},%
-  4/{56}//{59}/\footnotesize\texttt{0000},%
+  40/{12}//{51}/\footnotesize\emph{physical page number},%
+  8/{52}//{59}/\footnotesize\emph{reserved},%
   4/{60}//{63}/\footnotesize\emph{fmt}%
 }
 \caption{64-bit \emph{vm12d} page table root format.}
@@ -5246,8 +5249,8 @@ are as follows.
 \registerspec{64}{32}{%
   12/{0}//{11}/\footnotesize\emph{ASID},%
   2//{13}//\footnotesize\texttt{00},%
-  42/{14}//{55}/\footnotesize\emph{physical page number},%
-  4/{56}//{59}/\footnotesize\texttt{0000},%
+  38/{14}//{51}/\footnotesize\emph{physical page number},%
+  8/{52}//{59}/\footnotesize\emph{reserved},%
   4/{60}//{63}/\footnotesize\emph{fmt}%
 }
 \caption{64-bit \emph{vm14c} page table root format.}
@@ -5258,8 +5261,8 @@ are as follows.
 \registerspec{64}{32}{%
   12/{0}//{11}/\footnotesize\emph{ASID},%
   4/{12}//{15}/\footnotesize\texttt{0000},%
-  40/{16}//{55}/\footnotesize\emph{physical page number},%
-  4/{56}//{59}/\footnotesize\texttt{0000},%
+  36/{16}//{51}/\footnotesize\emph{physical page number},%
+  8/{52}//{59}/\footnotesize\emph{reserved},%
   4/{60}//{63}/\footnotesize\emph{fmt}%
 }
 \caption{64-bit \emph{vm16c} page table root format.}
@@ -5293,9 +5296,9 @@ register are as follows.
 \newpage
 \subsection{page table entries}
 
-page table entries are grouped into arrays within index pages which are
-selected by an index derived from a portion of the virtual address.
-each entry contains a physical page number, a page color, plus several
+page table entries are grouped into arrays within index pages selected by
+an index derived from a portion of the virtual address.
+each entry contains memory type, physical page number, color, plus several
 permission and metadata bits. the physical page number points to the next
 page table level for \emph{pointer} entries or the translated physical
 address for \emph{leaf} entries.
@@ -5315,7 +5318,8 @@ are as follows.
   1//{6}//\scriptsize\texttt{A},%
   1//{7}//\scriptsize\texttt{D},%
   4/{8}//{11}/\footnotesize\emph{color},%
-  44/{12}//{55}/\footnotesize\emph{physical page number},%
+  40/{12}//{51}/\footnotesize\emph{physical page number},%
+  4/{52}//{55}/\footnotesize\emph{type},%
   8/{56}//{63}/\footnotesize\emph{reserved}%
 }
 \caption{64-bit \emph{vm12d} page table entry format.}
@@ -5335,7 +5339,8 @@ are as follows.
   1//{7}//\scriptsize\texttt{D},%
   4/{8}//{11}/\footnotesize\emph{color},%
   2//{13}//\footnotesize\texttt{00},%
-  42/{14}//{55}/\footnotesize\emph{physical page number},%
+  38/{14}//{51}/\footnotesize\emph{physical page number},%
+  4/{52}//{55}/\footnotesize\emph{type},%
   8/{56}//{63}/\footnotesize\emph{reserved}%
 }
 \caption{64-bit \emph{vm14c} page table entry format.}
@@ -5355,7 +5360,8 @@ are as follows.
   1//{7}//\scriptsize\texttt{D},%
   4/{8}//{11}/\footnotesize\emph{color},%
   4/{12}//{15}/\footnotesize\texttt{0000},%
-  40/{16}//{55}/\footnotesize\emph{physical page number},%
+  36/{16}//{51}/\footnotesize\emph{physical page number},%
+  4/{52}//{55}/\footnotesize\emph{type},%
   8/{56}//{63}/\footnotesize\emph{reserved}%
 }
 \caption{64-bit \emph{vm16c} page table entry format.}
@@ -5386,6 +5392,27 @@ the page table entry permission and metadata bits are as follows.
 \end{tabular}
 \caption{64-bit page table entry fields.}
 \label{tab:64-bit-page-table-entry-fields}
+\end{table}
+
+\vspace{-1em}
+
+\begin{table}[h]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
+\hline
+\texttt{0b00} & \emph{WB}  & write-back \\
+\texttt{0b01} & \emph{WC}  & write-combine \\
+\texttt{0b10} & \emph{WT}  & write-through \\
+\texttt{0b11} & \emph{UC}  & uncached \\
+\hline
+\end{tabular}
+\caption{64-bit page table entry memory types.}
+\label{tab:64-bit-page-table-entry-memory-types}
 \end{table}
 
 \newpage
