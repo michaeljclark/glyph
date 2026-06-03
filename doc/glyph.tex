@@ -5739,20 +5739,24 @@ memory starting at address zero.
 \centering
 \small
 \rowcolors{2}{tbcol}{tbcol}
-\begin{tabular}{|r|r|l|l|}
+\begin{tabular}{|r|r|l|l|l|}
 \hline
 \rowcolor{thcol}
-\thead{start address} & \thead{end address} & \thead{size}  & \thead{description} \\
+\thead{start address} & \thead{end address} & \thead{size} & \thead{description}& \thead{type} \\
 \hline
-\texttt{0000} & \texttt{FFFF} & 64~KiB & shadow of the last 64~KiB of boot firmware \\
-\texttt{C000\_0000\_0000} & \texttt{DFFF\_FFFF\_FFFF} & 32~TiB & physical memory (write-back cached) \\
-\texttt{E000\_0000\_0000} & \texttt{EFFF\_FFFF\_FFFF} & 16~TiB & device memory (PCIe MMIO uncached) \\
-\texttt{EFFF\_FF00\_0000} & \texttt{EFFF\_FFFF\_FFFF} & 16~MiB & boot firmware (flash/EEPROM cached) \\
+\texttt{0000} & \texttt{FFFF} & 64~KiB & boot firmware shadow & WB\footnotemark[1] \\
+\texttt{C000\_0000\_0000} & \texttt{DFFF\_FFFF\_FFFF} & 32~TiB & physical memory & WB\footnotemark[1] \\
+\texttt{E000\_0000\_0000} & \texttt{EFFF\_FFFF\_FFFF} & 16~TiB & device memory & WB,WC,WT,UC\footnotemark[1] \\
+\texttt{EFFF\_FF00\_0000} & \texttt{EFFF\_FFFF\_FFFF} & 16~MiB & boot firmware & WB\footnotemark[1] \\
 \hline
 \end{tabular}
 \caption{glyph memory map}
 \label{tab:glyph-memory-map}
 \end{table}
+
+\footnotetext[1]{\emph{memory types}: WB = write-back, WC = write-combine, WT = write-through, UC = uncached}
+
+\vspace{-1em}
 
 \subsection{power-on and reset}
 
@@ -5778,6 +5782,8 @@ preserves the predicate register, plus scalar and vector registers.
 \caption{glyph reset vector addresses}
 \label{tab:glyph-reset-vector-addresses}
 \end{table}
+
+\vspace{-1em}
 
 \subsection{application binary interface}
 
