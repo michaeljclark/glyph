@@ -3847,22 +3847,6 @@ entry formats are as follows.
 \label{fig:64-bit-vm16c-tlb-entry}
 \end{figure}
 
-\subsection{nested address translation}
-
-when the domain extension is present, domains have a machine default
-domain defined in the \texttt{domroute[domain].mac} field that provides
-context for nested address translation. this role may be self-mapped,
-in which case the domain context is a root machine context.
-\para
-when \texttt{domcontrol.C} and \texttt{mcontrol.V} are both set, and the
-machine default domain is not self-mapped, then nested address translation
-is active and machine trap handler addresses are \emph{domain physical
-addresses}. when nested address translation is active, the implementation
-runs the TLB miss handler for the handler address of the faulting domain
-in its machine default domain, so that the handler's TLB entry is present
-before it is invoked. the TLB miss handler for a subordinate domain can
-be invoked in its default context using \texttt{maccall}.
-
 \newpage
 \section{Environment extension}
 
@@ -5746,6 +5730,37 @@ the virtual to physical address translation process is as follows.
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
+
+\newpage
+\subsection{nested address translation}
+
+domains have a machine default domain defined in \texttt{domroute[domain].mac},
+the machine context for nested address translation.
+when the domain extension and the machine extension are present,
+\texttt{domcontrol.C} and \texttt{mcontrol.V} are set, and the
+machine default domain is not self-mapped, then nested address
+translation will be active. the machine default domain may be
+self-mapped, in which case the domain context is a root machine context.
+
+\subsection{software address translation}
+
+when the machine extension is present, and \texttt{mcontrol.S} is set,
+software address translation will be active. TLB miss faults will be
+raised in the machine default domain defined in \texttt{domroute[domain].mac},
+the machine context for address translation.
+
+\subsubsection{nested software address translation}
+
+when the domain extension and the machine extension are present,
+\texttt{domcontrol.C} and \texttt{mcontrol.S} are set, and the
+machine default domain is not self-mapped, then nested software address
+translation is active and machine trap handler addresses are
+\emph{domain physical addresses}. when nested software address
+translation is active, the implementation runs the TLB miss handler for
+the handler address of the faulting domain in its machine default domain,
+so that the handler's TLB entry is present before it is recursively
+invoked. the TLB miss handler for a subordinate domain can be invoked
+in its default context using \texttt{maccall}.
 
 \newpage
 \addtocontents{toc}{\protect\clearpage}
