@@ -3536,7 +3536,7 @@ the following tables list the privileged machine registers:
 \multicolumn{4}{|l|}{\tsub{memory type registers}} \\
 \hline
 \texttt{0x66} & mtcount & memory type count & \\
-\texttt{0x2300...0x230F} & mtbase$[n]$ & memory type base & \\
+\texttt{0x2300...0x230F} & mtaddr$[n]$ & memory type address & \\
 \texttt{0x2400...0x240F} & mtmask$[n]$ & memory type mask & \\
 \hline
 \end{tabularx}
@@ -3868,8 +3868,8 @@ available memory type registers.
   4/{0}//{3}/\footnotesize\emph{count}%
 }
 
-\subsubsection{memory type base (\texttt{mtbase}$[\mathit{n}]$)}
-\texttt{mtbase}$[\mathit{n}]$ are \textbf{\emph{n}} read-write
+\subsubsection{memory type address (\texttt{mtaddr}$[\mathit{n}]$)}
+\texttt{mtaddr}$[\mathit{n}]$ are \textbf{\emph{n}} read-write
 registers containing physical address and memory type.
 when multiple memory types are defined for the same range,
 including page table memory types, if address translation
