@@ -5804,6 +5804,14 @@ the virtual to physical address translation process is as follows.
 \newpage
 \subsection{nested address translation}
 
+the glyph architecture supports nested address translation with per-domain
+software-defined TLB miss handlers via a combination of the machine
+extension and the domain extension. the capability extension is used to
+limit control of this functionality to designated domains.
+there is support for a global TLB miss handler implementing the
+fixed page table formats defined by the architecture, as well as per-domain
+software-defined TLB miss handlers.
+\para
 domains have a machine default domain defined in \texttt{domroute[domain].mac},
 the machine context for nested address translation.
 when the domain extension and the machine extension are present,
@@ -5818,6 +5826,15 @@ when the machine extension is present, and \texttt{mcontrol.S} is set,
 software address translation will be active. TLB miss faults will be
 raised in the machine default domain defined in \texttt{domroute[domain].mac},
 the machine context for address translation.
+\para
+the following registers are read or written by the machine context TLB miss handler.
+
+\begin{itemize}[itemsep=0pt]
+\item \texttt{sptr} contains input page table root address and ASID.
+\item \texttt{mtlbkey} contains the input faulting address used as input to the miss handler.
+\item \texttt{mtlbscope} contains the output page size, domain number, and ASID.
+\item \texttt{mtlbent} contains the output physical address, permission and metadata bits.
+\end{itemize}
 
 \subsubsection{nested software address translation}
 
@@ -5831,6 +5848,12 @@ the handler address of the faulting domain in its machine default domain,
 so that the handler's TLB entry is present before it is recursively
 invoked. the TLB miss handler for a subordinate domain can be invoked
 in its default context using \texttt{maccall}.
+\para
+the following handler vectors are used by nested machine context TLB miss handlers.
+\begin{itemize}[itemsep=0pt]
+\item \texttt{machpc} contains per domain machine handler program counter.
+\item \texttt{machib} contains per domain machine handler immediate base.
+\end{itemize}
 
 \newpage
 \addtocontents{toc}{\protect\clearpage}
