@@ -498,16 +498,17 @@ counter} called \emph{pc-relative} addresses.
 constant memory~\cite{Solomonoff1964} is a memory region dedicated to
 constants. it is organized as a word-addressable store like main-memory,
 but is read-only and restricted to constants. instructions can refer to
-constants using \emph{ib-relative} addresses inside instruction operands.
+constants with \emph{immediate-base-register-relative} addresses in
+instruction operands.
 \para
-constant memory is addressed with displacements from the \emph{immediate
-base} register called \emph{ib-relative} addresses which are stored inside
-instruction operand slots, are sized, scaled and aligned addresses computed
-relative to the \emph{immediate base} register, which is like a program
-counter for constants. these diagrams show $ib8(n)$ through $ib64(n)$
-\emph{ib-relative} addresses for access to 8-bit through to 64-bit constants
-respectively: \emph{note: ib-relative addresses alias a single constant
-storage space containing all types.}
+constant memory addresses stored in instruction operand slots as
+displacements from the \emph{immediate base} register are referred to
+as \emph{ib-relative} addresses. \emph{ib-relative} addresses are sized,
+scaled, and aligned displacements computed relative to the \emph{immediate
+base} register, which behaves like a program counter for constants. all
+\emph{ib-relative} addresses alias a single storage space containing all
+constant types. these diagrams show $ib8(n)$ through $ib64(n)$ addresses
+for access to 8-bit through 64-bit constants respectively.
 \\
 \begin{figure}[H]
 \centering
