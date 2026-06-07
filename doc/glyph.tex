@@ -160,10 +160,9 @@ programming language calling convention.
 this document does not simply present an architecture reimplementing
 existing ideas; rather, it introduces a novel architecture featuring an
 instruction coding scheme optimized for efficient parallel decoding in
-hardware or software, combined with contemporary practices in instruction
-semantics, including the use of single-bit predicates for compare, divide,
-branch, plus arithmetic instructions with carry, to achieve an optimal
-mapping to vectors.
+hardware or software. it also adopts contemporary instruction semantics,
+including the use of single-bit predicates for compare, divide, branch,
+and arithmetic with carry, to achieve an optimal mapping to vectors.
 \para
 in addition to the core instruction set, the architecture also defines
 extensions for capabilities, virtual domains, software-defined memory
@@ -213,13 +212,12 @@ to the instruction.
 \end{Verbatim}
 
 \par\noindent
-some instructions have operands that point to values inside of
-\emph{registers} in a \emph{register-file} which is like a close filing
-cabinet containing cards with numbers on them, and some of these numbers
-are addresses that point to values in \emph{main-memory} which is like a
-larger but slower filing cabinet. some of these values are \emph{immediate}
-values which are small numbers listed inside of the instructions on the
-paper tape.
+some instructions have operands that point to values inside \emph{registers}
+in a \emph{register-file}, which is like a nearby filing cabinet containing
+cards with numbers on them. some of these values are addresses that point
+to values in \emph{main-memory}, which is like a larger but slower and more
+distant filing cabinet. some of them are \emph{immediate} values, which are
+small numbers listed inside of the instructions on the paper tape.
 \para
 the paper tape is just a way conceptualize a list of instructions stored
 in \emph{main-memory}. there is a special register called \emph{PC} short
@@ -725,10 +723,10 @@ base} register. constant memory is addressed with \emph{ib-relative}
 addresses stored inside instruction operand slots, which are sized, scaled,
 and aligned relative to the \emph{immediate base} register.
 \para
-the constant stream branches independently using the
+the constant stream can branch independently, using the
 \emph{immediate-block-jump} instruction to update the \emph{immediate base}
-register, or together with the \emph{program counter} in procedure call and
-return instructions that branch instruction and constants at the same time;
+register, or together with the \emph{program counter} during procedure calls
+and returns.
 \emph{jump-and-link-immediate-block} and \emph{jump-to-link-immediate-block}
 add and subtract address vectors to \emph{(pc,ib)}. the \emph{pack-indirect}
 instruction allows absolute \emph{(pc,ib)} addresses to be packed into an
@@ -756,11 +754,11 @@ glyph uses relative address vectors in its link register, packing two
 a second link register for the immediate base, maintaining compatibility
 with the single link register on traditional RISC architectures.
 \para
-immediate blocks can be switched using the immediate block branch instruction,
-and unlike typical RISC architectures, which synthesize constants inline using
-multiple long-form instructions, immediate block constants use C-style
-structure packing and alignment rules, making relocations word-aligned
-and avoiding the need to patch instruction encoding fields.
+immediate blocks can be switched using the immediate block branch instruction.
+unlike typical RISC architectures, which synthesize constants inline using
+long-form sequences of instructions, immediate block constants use C-style
+structure packing and alignment rules. this keeps relocations word-aligned
+and avoids patching of instruction encoding fields.
 \para
 this list outlines differentiating features of the glyph architecture:
 
@@ -1575,13 +1573,12 @@ relational comparisons are performed according to signed magnitude.
 
 \subsubsection{binary floating-point number rules}
 
-binary floating‑point number formats and arithmetic rules defined
-in this specification conform to the IEEE standard for floating‑point
-arithmetic, \emph{IEEE-754-2019}~\cite{ieee754-2019}, which specifies
-fixed‑width binary interchange formats, encoding of sign, exponent,
-and fraction fields, and defines arithmetic, comparison, and rounding
-behavior, including the handling of exceptional values such as NaNs
-and infinities.
+binary floating‑point number formats and arithmetic rules conform to the
+IEEE standard for floating‑point arithmetic, \emph{IEEE-754-2019}~%
+\cite{ieee754-2019}, which specifies fixed‑width binary interchange formats,
+encoding of sign, exponent, and fraction fields, and arithmetic, comparison,
+and rounding behavior, including the handling of exceptional values such
+as NaNs and infinities.
 
 \begin{itemize}[itemsep=0pt]
 \item the quiet NaN has the most significant bit of the fraction field set to one.
