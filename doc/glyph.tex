@@ -6213,12 +6213,12 @@ the resulting \emph{immediate base} address is \emph{$[ib + simm9 \times 64]$}.
 \subsection{link}
 \insrcimmsix{fun}{uimm}{00100}{\textbf{link.i64}\: \mathit{fun3}, \mathit{ib64}(\mathit{uimm6})}
 \\
-the \emph{link} instruction loads a 64-bit constant addressed by \emph{$[ib
-+ uimm6 \times 8]$} containing a \emph{i32x2} relative address vector,
-which it adds it to \emph{(pc,ib)}, conditionally subtracts the source
-link register \emph{(r6 or r7)}, then conditionally adds the difference
-to the destination link register \emph{(r6 or r7)}, depending on the
-value of \emph{fun3}. the type of linkage in \emph{fun3} can be one of:
+the \emph{link} instruction loads a \emph{i32x2} relative address
+vector addressed by \emph{$[ib + uimm6 \times 8]$}. it adds the relative
+address vector to \emph{(pc,ib)}, conditionally subtracts the source link
+register \emph{(r6 or r7)}, then conditionally adds the difference to the
+destination link register \emph{(r6 or r7)}, depending on the value
+of \emph{fun3}. the type of linkage in \emph{fun3} can be one of:
 \\
 \begin{table}[h]
 \centering
