@@ -5714,14 +5714,14 @@ the page table walker process is as follows.
 \newpage
 \subsection{address translation}
 
-address translation is the process, for a specific memory operation,
-of walking the \emph{trie-based} page table structure to locate a page table
-entry. the permission and metadata bits of the resulting page table entry
-are checked against the memory operation, along with physical self-map
-permissions, if enabled, and address space restrictions via the \emph{user
-address space access disable bit} or \emph{user address space execute
-disable bit}, before translating the virtual address to a physical address
-using the physical page number in the page table entry.
+address translation, in the context of a memory operation, is the process of
+walking the \emph{trie-based} page table structure to locate a page table
+entry, then using the physical page number contained within it to translate
+a virtual address to a physical address. permission and metadata bits
+of the resulting page table entry are checked against the memory operation.
+physical self-map permissions, if enabled, are checked. address space
+restrictions using the \emph{user address space access disable bit} or
+\emph{user address space execute disable bit} are checked.
 \para
 page table entries without the \emph{accessed} bit set will fault on reads.
 page table entries without the \emph{dirty} bit set will fault on writes.
@@ -5842,8 +5842,8 @@ machine default domain is not self-mapped, then nested software address
 translation is active and machine trap handler addresses are
 \emph{domain physical addresses}. when nested software address
 translation is active, the implementation runs the TLB miss handler for
-the handler address of the faulting domain in its machine default domain,
-so that the handler's TLB entry is present before it is recursively
+the handler address of the faulting domain in its machine default domain.
+this is to ensure the handler's TLB entry is present before it is recursively
 invoked. the TLB miss handler for a subordinate domain can be invoked
 in its default context using \texttt{maccall}.
 \para
