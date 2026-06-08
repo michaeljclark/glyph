@@ -3138,13 +3138,12 @@ used to check execution in pages with a matching page table color.
 \subsection{capability role registers}
 
 this section describes the \emph{capability role registers}.
-the \emph{capability role registers} describe access to privileged
-system registers and instructions based on \emph{page table color}.
-when \texttt{capcontrol.C} is set, privileged system registers and
-instructions will cause capability traps for illegal accesses.
-system registers and instructions are restricted based on the
-following roles: \emph{system}, \emph{domain}, \emph{capability},
-and \emph{machine}.
+the \emph{capability role registers} control access to privileged
+registers and instructions based on \emph{page table color}.
+when \texttt{capcontrol.C} is set, privileged registers and
+instructions cause capability traps for illegal accesses, which are
+restricted based on the \emph{system}, \emph{domain},
+\emph{capability}, and \emph{machine} roles.
 
 \subsubsection{color system role (\texttt{colorsys})}
 \texttt{colorsys} is a read-write register containing an array of
