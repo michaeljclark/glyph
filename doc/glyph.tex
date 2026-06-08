@@ -160,9 +160,10 @@ programming language calling convention.
 this document does not simply present an architecture reimplementing
 existing ideas; rather, it introduces a novel architecture featuring an
 instruction coding scheme optimized for efficient parallel decoding in
-hardware or software. it also adopts contemporary instruction semantics,
-including the use of single-bit predicates for compare, divide, branch,
-and arithmetic with carry, to achieve an optimal mapping to vectors.
+hardware or software. novel too are its contemporary instruction semantics,
+which use single-bit predicates for scalar compare, divide, branch, and
+arithmetic with carry, to achieve a correspondence with vector operations
+using mask registers.
 \para
 in addition to the core instruction set, the architecture also defines
 extensions for capabilities, virtual domains, software-defined memory
