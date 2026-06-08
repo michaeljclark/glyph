@@ -2075,41 +2075,45 @@ processors with \emph{strongly-ordered} memory models providing a
 
 \subsection{address spaces}
 
-glyph divides the address space into four categories of memory
-with different characteristics:
+glyph divides the address space into several categories with different characteristics.
 
 \begin{itemize}[itemsep=0pt]
-\item \emph{user} --- virtual memory accessible to unprivileged software with \emph{user} role.
-\item \emph{system} --- virtual memory accessible to privileged software with \emph{system} role.
-\item \emph{physical} --- physical memory visible globally with well-defined ordering rules.
-\item \emph{local} --- high-speed physical scratchpad memory local to one processing unit.
+\item \emph{user} --- virtual memory accessible to unprivileged software with the \emph{user} role.
+\item \emph{system} --- virtual memory accessible to privileged software with the \emph{system} role.
+\item \emph{physical} --- globally visible memory with well-defined cache-coherency and ordering.
+\item \emph{device} --- memory mapped I/O for peripherals and special-purpose devices.
 \end{itemize}
 
-\subsection{local memory}
+\subsection{memory types}
 
-the \emph{local} address space is used to access local memory, and is defined
-to align with OpenCL\footnote{OpenCL -- \emph{The OpenCL Specification} (API,
-Platform, and Language Specifications), Khronos Group.} work-group shared
-memory. the visibility, lifetime, and synchronization semantics of this
-address space follow the principles of OpenCL work-group shared memory.
-local address space prefixes may be distinct for each processing unit,
-allowing local memory on each processing unit to be accessed from other
-processing units via uncached memory operations. such accesses are not
-required to be coherent or globally ordered.
+glyph supports several memory types designed to enable alternative caching behavior.
+
+\begin{itemize}[itemsep=0pt]
+\item \emph{WB} --- write-back caching.
+\item \emph{WC} --- write-combine caching.
+\item \emph{WT} --- write-through caching.
+\item \emph{UC} --- uncached memory.
+\end{itemize}
+
+\subsection{device memory}
+
+device memory is a memory class with non-uniform access semantics, intended for memory-mapped I/O and special-purpose regions such as high-speed scratchpad memory.
+OpenCL local memory may be implemented using scratchpad memory local to each processing unit.
+device memory can be mapped into the \emph{user} or \emph{system} virtual address spaces.
+device memory is not required to be coherent or globally ordered and is typically uncached.
 
 \subsection{atomic operations}
 
 glyph is designed to support translation to instruction sets with
 \emph{weakly-ordered} memory operations. to achieve this,
-\emph{strongly-ordered} or \emph{synchronized} stores must enforce a
+\emph{synchronized} stores must enforce a
 \emph{total order} among such operations. on \emph{weakly-ordered} systems,
 a synchronizing memory barrier following these writes defines the
 synchronization point and prevents subsequent reads from being reordered
 before them.
 \para
 thus, \emph{weakly-ordered} systems with \emph{acquire-release} ordering
-require synchronizing memory barriers after \emph{strongly-ordered} writes
-and atomic \emph{read–modify–write} operations to act as implicit
+require synchronizing memory barriers after atomic \emph{read–modify–write} operations to act as implicit
 synchronization points. loads observe ordering established by prior
 synchronization points. on architectures providing sufficient ordering
 guarantees, loads may be implemented as relaxed operations.
@@ -5529,8 +5533,8 @@ the translation address unary address space prefixes are as follows.
 \hline
 \texttt{0b0.} & user & user virtual addresses \\
 \texttt{0b10.} & system & system virtual addresses \\
-\texttt{0b110.} & physical & global physical memory \\
-\texttt{0b1110.} & local & local scratchpad memory \\
+\texttt{0b110.} & physical & global memory \\
+\texttt{0b1110.} & device & device memory \\
 \hline
 \end{tabular}
 \caption{1---4 bit translation address space prefixes.}
