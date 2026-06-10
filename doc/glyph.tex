@@ -2084,7 +2084,14 @@ glyph divides the address space into several categories with different character
 \item \emph{device} --- memory mapped I/O for peripherals and special-purpose devices.
 \end{itemize}
 
-\subsection{memory types}
+\subsubsection{device memory}
+
+device memory is a memory class with non-uniform access semantics, intended for memory-mapped I/O and special-purpose regions such as high-speed scratchpad memory.
+OpenCL local memory may be implemented using scratchpad memory local to each processing unit.
+device memory can be mapped into the \emph{user} or \emph{system} virtual address spaces.
+device memory is not required to be coherent or globally ordered and is typically uncached.
+
+\subsubsection{memory types}
 
 glyph supports several memory types designed to enable alternative caching behavior.
 
@@ -2094,13 +2101,6 @@ glyph supports several memory types designed to enable alternative caching behav
 \item \emph{WT} --- write-through caching.
 \item \emph{UC} --- uncached memory.
 \end{itemize}
-
-\subsection{device memory}
-
-device memory is a memory class with non-uniform access semantics, intended for memory-mapped I/O and special-purpose regions such as high-speed scratchpad memory.
-OpenCL local memory may be implemented using scratchpad memory local to each processing unit.
-device memory can be mapped into the \emph{user} or \emph{system} virtual address spaces.
-device memory is not required to be coherent or globally ordered and is typically uncached.
 
 \subsection{atomic operations}
 
@@ -5858,7 +5858,7 @@ the following handler vectors are used by nested machine context TLB miss handle
 \end{itemize}
 
 \newpage
-\addtocontents{toc}{\protect\clearpage}
+%\addtocontents{toc}{\protect\clearpage}
 \section{Virtual machine}
 
 glyph has a well-defined base virtual machine model with a system memory
