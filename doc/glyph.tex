@@ -6659,11 +6659,11 @@ and carry is saved to the \emph{flag} register.
 \\
 the \emph{srl} or \emph{shift-right-logical} instruction performs a
 logical right shift of the value in the \emph{rb} register by the
-number of bits in register \emph{ra} then saves the result in the
+number of bits in register \emph{ra[5:0]} then saves the result in the
 \emph{rc} register.
 zeros are copied into the right most bits.
 \begin{Verbatim}
-    reg[rc] = reg<u64>[rb] >> reg[ra]
+    reg[rc] = reg<u64>[rb] >> (reg[ra] & 63)
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -6672,10 +6672,10 @@ zeros are copied into the right most bits.
 \\
 the \emph{sra} or \emph{shift-right-arithmetic} instruction performs an
 arithmetic right shift of the value in the \emph{rb} register by the
-number of bits in register \emph{ra} then saves the result in the
+number of bits in register \emph{ra[5:0]} then saves the result in the
 \emph{rc} register. sign is copied into the right most bits.
 \begin{Verbatim}
-    reg[rc] = reg<i64>[rb] >> reg[ra]
+    reg[rc] = reg<i64>[rb] >> (reg[ra] & 63)
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -6684,10 +6684,10 @@ number of bits in register \emph{ra} then saves the result in the
 \\
 the \emph{sll} or \emph{shift-left-logical} instruction performs a
 logical left shift of the value in the \emph{rb} register by the
-number of bits in register \emph{ra} then saves the result in the
+number of bits in register \emph{ra[5:0]} then saves the result in the
 \emph{rc} register.
 \begin{Verbatim}
-    reg[rc] = reg[rb] << reg[ra]
+    reg[rc] = reg[rb] << (reg[ra] & 63)
 \end{Verbatim}
 
 \needspace{8\baselineskip}
