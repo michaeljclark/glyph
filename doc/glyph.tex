@@ -3074,12 +3074,14 @@ monitor exception} for a matching memory store address.
 \newpage
 \section{Capability extension}
 
-the architecture provides an optional capabilities extension that
-provides a capability check for permissions and capabilities enabled by
-\emph{page table colors} in page table entries. color permissions mask
-page table permissions based on \emph{page table color}. color
-capabilities restrict access to system, domain, capability, and machine
-registers based on \emph{page table color}.
+the architecture provides an optional capabilities extension for role and
+permission checks using page table colors.
+the capability extension is a component of the privilege and virtual machine
+isolation system.
+color permissions mask page table permissions based on page table color.
+color roles restrict access to privileged registers and instructions based on
+page table color.
+privileged registers and instructions have predefined roles associated with them.
 \para
 the architecture is designed to work without the capability extension.
 if the capability extension is not present, the domain, capability,
@@ -3223,7 +3225,7 @@ used to check execution in pages with a matching page table color.
 
 this section describes the \emph{capability role registers}.
 the \emph{capability role registers} control access to privileged
-registers and instructions based on \emph{page table color}.
+registers and instructions based on \emph{page table color} of the executable text.
 when \texttt{capcontrol.C} is set, privileged registers and
 instructions cause capability traps for illegal accesses, which are
 restricted based on the \emph{system}, \emph{domain},
@@ -3320,9 +3322,12 @@ executable pages with a matching \emph{page table color} index.
 \section{Domain extension}
 
 the architecture provides an optional domain~\cite{barham2003xen}
-extension for virtual machines. the extension adds registers for virtual
-domain addresses, trap routing, page translation, and context switching
-for system traps, domain traps, capability traps and machine traps.
+extension for virtual machines.
+the domain extension is a component of the privilege and virtual machine
+isolation system.
+the extension adds registers for virtual domain addresses, trap routing,
+page translation, and context switching for system traps, domain traps,
+capability traps and machine traps.
 \para
 the architecture is designed to work without the domain extension.
 if the domain extension is not present, the user and system roles are
