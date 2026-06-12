@@ -2067,43 +2067,111 @@ the following table lists \width-bit vector types, their symbols, mnemonics and 
 \newpage
 \section{Memory model}
 
+the glyph memory model covers address spaces, isolation,
+memory classes, memory types, and atomic operations.
+address spaces define isolation and memory class.
+memory types define caching and write behavior.
+atomic operations define synchronization and ordering.
+
+\subsection{address spaces}
+
+glyph divides the address space into several categories with different characteristics.
+\\
+\begin{table}[h]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{prefix} & \thead{name} & \thead{description} \\
+\hline
+\texttt{0b0.} & user & virtual memory accessible to unprivileged software with the \emph{user} role. \\
+\texttt{0b10.} & system & virtual memory accessible to privileged software with the \emph{system} role. \\
+\texttt{0b110.} & physical & globally visible memory with well-defined cache-coherency and ordering. \\
+\texttt{0b1110.} & device & memory mapped I/O for peripherals and special-purpose devices. \\
+\hline
+\end{tabular}
+\caption{glyph address spaces.}
+\label{tab:glyph-address-spaces}
+\end{table}
+
+\vspace{-1em}
+
+\subsubsection{user}
+
+user memory is a virtual address space intended for application
+software executing with the \emph{user} role.
+user memory is isolated from the \emph{system} address space except
+through controlled privilege transitions.
+user memory may map physical memory, device memory, or other
+implementation-defined memory classes.
+
+\subsubsection{system}
+
+system memory is a virtual address space intended for operating systems
+and other privileged software executing with the \emph{system} role.
+system memory is isolated from the \emph{user} address space except
+through controlled privilege transitions.
+system memory may map physical memory, device memory, or other
+implementation-defined memory classes.
+
+\subsubsection{physical}
+
+physical memory is a globally visible memory class with well-defined
+cache-coherency and memory-ordering semantics.
+physical memory provides a common view of random-access memory shared
+by all processing units in the system.
+physical memory may be accessed directly by privileged software or
+mapped into the \emph{user} or \emph{system} virtual address spaces.
+
+\subsubsection{device}
+
+device memory is a memory class with non-uniform access semantics,
+intended for memory-mapped I/O and special purposes such as high-speed
+scratchpad memory.
+device memory can be mapped into the \emph{user} or \emph{system}
+virtual address spaces.
+device memory is not required to be coherent or globally ordered
+and is typically uncached.
+
+\subsection{memory types}
+
+glyph supports several memory types that define caching and write
+propagation behaviour for memory accesses.
+memory types are specified via memory type registers or address
+translation attributes and determine how memory regions interact
+with the caching system.
+\para
+the following table lists the available memory types:
+\\
+\begin{table}[h]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{symbol} & \thead{description} \\
+\hline
+\texttt{0b00} & write-back    & \emph{WB} & cache reads and defer writes until eviction or explicit flush. \\
+\texttt{0b01} & write-combine & \emph{WC} & cache and coalesce writes within cache lines before writeback. \\
+\texttt{0b10} & write-through & \emph{WT} & cache reads with all writes forwarded through to memory. \\
+\texttt{0b11} & uncached      & \emph{UC} & all accesses bypass the cache hierarchy. \\
+\hline
+\end{tabular}
+\caption{glyph memory types.}
+\label{tab:glyph-memory-types}
+\end{table}
+
+\subsection{atomic operations}
+
 glyph adopts a simple and pragmatic memory model designed for practical
 implementation in hardware or for translation to processors with
 \emph{weakly-ordered} \emph{acquire-release} ordering primitives or
 processors with \emph{strongly-ordered} memory models providing a
 \emph{total store order}.
-
-\subsection{address spaces}
-
-glyph divides the address space into several categories with different characteristics.
-
-\begin{itemize}[itemsep=0pt]
-\item \emph{user} --- virtual memory accessible to unprivileged software with the \emph{user} role.
-\item \emph{system} --- virtual memory accessible to privileged software with the \emph{system} role.
-\item \emph{physical} --- globally visible memory with well-defined cache-coherency and ordering.
-\item \emph{device} --- memory mapped I/O for peripherals and special-purpose devices.
-\end{itemize}
-
-\subsubsection{device memory}
-
-device memory is a memory class with non-uniform access semantics, intended for memory-mapped I/O and special-purpose regions such as high-speed scratchpad memory.
-OpenCL local memory may be implemented using scratchpad memory local to each processing unit.
-device memory can be mapped into the \emph{user} or \emph{system} virtual address spaces.
-device memory is not required to be coherent or globally ordered and is typically uncached.
-
-\subsubsection{memory types}
-
-glyph supports several memory types designed to enable alternative caching behavior.
-
-\begin{itemize}[itemsep=0pt]
-\item \emph{WB} --- write-back caching.
-\item \emph{WC} --- write-combine caching.
-\item \emph{WT} --- write-through caching.
-\item \emph{UC} --- uncached memory.
-\end{itemize}
-
-\subsection{atomic operations}
-
+\para
 glyph is designed to support translation to instruction sets with
 \emph{weakly-ordered} memory operations. to achieve this,
 \emph{synchronized} stores must enforce a
@@ -2113,10 +2181,11 @@ synchronization point and prevents subsequent reads from being reordered
 before them.
 \para
 thus, \emph{weakly-ordered} systems with \emph{acquire-release} ordering
-require synchronizing memory barriers after atomic \emph{read–modify–write} operations to act as implicit
-synchronization points. loads observe ordering established by prior
-synchronization points. on architectures providing sufficient ordering
-guarantees, loads may be implemented as relaxed operations.
+require synchronizing memory barriers after atomic \emph{read–modify–write}
+operations to act as implicit synchronization points.
+loads observe ordering established by prior synchronization points.
+on architectures providing sufficient ordering guarantees, loads may be
+implemented as relaxed operations.
 
 \newpage
 \section{Example pipeline}
