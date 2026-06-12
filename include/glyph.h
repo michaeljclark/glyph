@@ -528,17 +528,17 @@ __glyph_func__ int cpu_exec_op_add_i64(cpu_state *cpu, u64 inst)
 }
 __glyph_func__ int cpu_exec_op_srl_i64(cpu_state *cpu, u64 inst)
 {
-    cpu->r[rc(inst)] = (u64)cpu->r[rb(inst)] >> cpu->r[ra(inst)];
+    cpu->r[rc(inst)] = (u64)cpu->r[rb(inst)] >> (cpu->r[ra(inst)] & 63);
     return 2;
 }
 __glyph_func__ int cpu_exec_op_sra_i64(cpu_state *cpu, u64 inst)
 {
-    cpu->r[rc(inst)] = (u64)((i64)cpu->r[rb(inst)] >> cpu->r[ra(inst)]);
+    cpu->r[rc(inst)] = (u64)((i64)cpu->r[rb(inst)] >> (cpu->r[ra(inst)] & 63));
     return 2;
 }
 __glyph_func__ int cpu_exec_op_sll_i64(cpu_state *cpu, u64 inst)
 {
-    cpu->r[rc(inst)] = cpu->r[rb(inst)] << cpu->r[ra(inst)];
+    cpu->r[rc(inst)] = cpu->r[rb(inst)] << (cpu->r[ra(inst)] & 63);
     return 2;
 }
 __glyph_func__ int cpu_exec_op_sub_i64(cpu_state *cpu, u64 inst)

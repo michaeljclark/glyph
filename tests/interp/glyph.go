@@ -433,15 +433,15 @@ func CPU_exec_op_add_i64(cpu *CPUState, inst uint64) int {
     return 2
 }
 func CPU_exec_op_srl_i64(cpu *CPUState, inst uint64) int {
-    cpu.R[rc(inst)] = cpu.R[rb(inst)] >> cpu.R[ra(inst)]
+    cpu.R[rc(inst)] = cpu.R[rb(inst)] >> (cpu.R[ra(inst)] & 63)
     return 2
 }
 func CPU_exec_op_sra_i64(cpu *CPUState, inst uint64) int {
-    cpu.R[rc(inst)] = uint64(int64(cpu.R[rb(inst)]) >> cpu.R[ra(inst)])
+    cpu.R[rc(inst)] = uint64(int64(cpu.R[rb(inst)]) >> (cpu.R[ra(inst)] & 63))
     return 2
 }
 func CPU_exec_op_sll_i64(cpu *CPUState, inst uint64) int {
-    cpu.R[rc(inst)] = cpu.R[rb(inst)] << cpu.R[ra(inst)]
+    cpu.R[rc(inst)] = cpu.R[rb(inst)] << (cpu.R[ra(inst)] & 63)
     return 2
 }
 func CPU_exec_op_sub_i64(cpu *CPUState, inst uint64) int {

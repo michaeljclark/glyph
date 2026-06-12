@@ -433,13 +433,13 @@ def cpu_exec_op_add_i64(cpu,inst):
     cpu.r[rc(inst)] = sux(cpu.r[rb(inst)] + cpu.r[ra(inst)]);
     return 2
 def cpu_exec_op_srl_i64(cpu,inst):
-    cpu.r[rc(inst)] = sux(cpu.r[rb(inst)] >> cpu.r[ra(inst)])
+    cpu.r[rc(inst)] = sux(cpu.r[rb(inst)] >> (cpu.r[ra(inst)] & 63))
     return 2
 def cpu_exec_op_sra_i64(cpu,inst):
-    cpu.r[rc(inst)] = sux(usx(cpu.r[rb(inst)]) >> cpu.r[ra(inst)])
+    cpu.r[rc(inst)] = sux(usx(cpu.r[rb(inst)]) >> (cpu.r[ra(inst)] & 63))
     return 2
 def cpu_exec_op_sll_i64(cpu,inst):
-    cpu.r[rc(inst)] = sux(cpu.r[rb(inst)] << cpu.r[ra(inst)]);
+    cpu.r[rc(inst)] = sux(cpu.r[rb(inst)] << (cpu.r[ra(inst)] & 63))
     return 2
 def cpu_exec_op_sub_i64(cpu,inst):
     cpu.r[rc(inst)] = sux(cpu.r[rb(inst)] - cpu.r[ra(inst)])
