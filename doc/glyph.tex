@@ -343,11 +343,10 @@ specifies the width of addresses in bits.
 
 instruction memory is a memory region dedicated to program instructions.
 it is organized as a word-addressable store, similar to main memory,
-but is read-only and reserved exclusively for instructions. this
-configuration is typically referred to as a Harvard architecture%
-~\cite{aiken1946marki}, in contrast to a Von Neumann architecture%
-~\cite{vonneumann1945edvac}, which uses a shared memory region for
-both program instructions and data.
+but is read-only and reserved exclusively for instructions. this is
+typically referred to as a Harvard architecture~\cite{aiken1946marki},
+in contrast to a Von Neumann architecture~\cite{vonneumann1945edvac},
+which uses shared memory for instructions and data.
 \para
 instruction words contain packets of 16-bits which are composed of
 size, opcode, and operand fields. instruction packets can be appended
