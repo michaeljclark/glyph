@@ -2176,7 +2176,7 @@ the memory consistency model has the following properties:
 \begin{itemize}[itemsep=0pt]
 \item memory writes have a total store order.
 \item memory writes become visible to other threads at synchronization points.
-\item memory reads ordered with respect to synchronization points are otherwise relaxed.
+\item memory reads cannot be reordered across synchronization points.
 \end{itemize}
 
 \par\noindent
