@@ -2068,7 +2068,7 @@ the following table lists \width-bit vector types, their symbols, mnemonics and 
 \section{Memory model}
 
 the glyph memory model covers address spaces, isolation,
-memory classes, memory types, and atomic operations.
+memory classes, memory types, and memory ordering.
 address spaces define isolation and memory class.
 memory types define caching and write behavior.
 atomic operations define synchronization and ordering.
@@ -2164,24 +2164,35 @@ the following table lists the available memory types:
 \label{tab:glyph-memory-types}
 \end{table}
 
-\subsection{atomic operations}
+\subsection{memory ordering}
 
-glyph adopts a simple and pragmatic memory model designed for practical
-implementation in hardware or for translation to processors with
-\emph{weakly-ordered} \emph{acquire-release} ordering primitives or
-processors with \emph{strongly-ordered} memory models providing a
+glyph adopts a simple memory consistency model designed for
+practical implementation in hardware or for translation to processors
+with \emph{weakly-ordered} \emph{acquire-release} memory models as well
+as processors with \emph{strongly-ordered} memory models that possess a
 \emph{total store order}.
-\para
+the memory consistency model has the following properties:
+
+\begin{itemize}[itemsep=0pt]
+\item memory writes have a total store order.
+\item memory writes become visible to other threads at synchronization points.
+\item memory reads ordered with respect to synchronization points are otherwise relaxed.
+\end{itemize}
+
+\par\noindent
 glyph is designed to support translation to instruction sets with
-\emph{weakly-ordered} memory operations. to achieve this,
-\emph{synchronized} stores must enforce a
-\emph{total order} among such operations. on \emph{weakly-ordered} systems,
-a synchronizing memory barrier following these writes defines the
-synchronization point and prevents subsequent reads from being reordered
-before them.
+weakly-ordered memory operations.
+to achieve this, synchronized operations must enforce a total order among
+themselves, realized at synchronization points immediately following them.
+a synchronized operation is any operation that performs a globally
+ordered write such as an atomic read-modify-write operation.
+the synchronization point acts as an implicit write ordering barrier.
+on weakly-ordered systems, a synchronizing memory ordering barrier is
+inserted at the synchronization point to prevent subsequent reads from
+being reordered with respect to it.
 \para
-thus, \emph{weakly-ordered} systems with \emph{acquire-release} ordering
-require synchronizing memory barriers after atomic \emph{read–modify–write}
+thus, weakly-ordered systems with acquire-release ordering require
+synchronizing memory barriers after atomic read-modify-write
 operations to act as implicit synchronization points.
 loads observe ordering established by prior synchronization points.
 on architectures providing sufficient ordering guarantees, loads may be
