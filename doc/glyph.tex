@@ -946,15 +946,12 @@ various width parallel instruction decoders.
 \newpage
 \subsection{instruction forms}
 
-the variable length instruction format has a single base format
-where fields in the template instruction form are extended by
-successive instruction packets.
-\para
+the variable length instruction format has a single base form where
+fields in the template are extended by successive instruction packets.
 the instructions forms are super regular in that operand and opcode
 bits do not overlap and the number and complexity of the formats is
 reduced so that vectorized instruction decoding is simple in both
-hardware and software. the scheme is designed so that \emph{1-bit} of
-coding space in the larger packet can be used to extend register sizes.
+hardware and software.
 
 \subsubsection{instruction templates}
 
