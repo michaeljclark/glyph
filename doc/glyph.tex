@@ -921,7 +921,7 @@ this table shows the size fields for the different instruction sizes:
 the instruction size encoding and field extension scheme has been designed
 to minimize complexity for parallel decoding in hardware and software.
 the following table shows the instruction width combinations for
-various width parallel instruction decoders.
+various width parallel instruction decoders:
 \\
 \begin{table}[h]
 \centering
@@ -1592,7 +1592,7 @@ Conversions Extension}.
 \newpage
 \subsection{unsigned integer formats}
 
-the following unsigned fixed-width integer formats are supported.
+the following unsigned fixed-width integer formats are supported:
 
 \begin{table}[H]
 \centering
@@ -1685,7 +1685,7 @@ the 64-bit unsigned integer has a 64-bit number ($n$) field.
 \newpage
 \subsection{signed two's complement integer formats}
 
-the following signed fixed-width two's complement integer formats are supported.
+the following signed fixed-width two's complement integer formats are supported:
 
 \begin{table}[H]
 \centering
@@ -1776,7 +1776,7 @@ the 64-bit signed integer has a 64-bit two's complement number ($n$) field.
 \newpage
 \subsection{binary floating-point number formats}
 
-the following binary floating-point number formats are supported.
+the following binary floating-point number formats are supported:
 
 \begin{table}[H]
 \centering
@@ -1967,7 +1967,7 @@ the mnemonics have been chosen to disambiguate operand size and type.
 
 \subsection{scalar types}
 
-the following table lists scalar types, their symbols, mnemonics and descriptions:
+the following table lists scalar types, their symbols, mnemonics, and descriptions:
 
 \begin{table}[H]
 \centering
@@ -2019,7 +2019,7 @@ the following section describes vector types from 128-bit through to 4096-bit.
 \needspace{9\baselineskip}
 \subsubsection{\width-bit vector types \texttt{(L=0b\bits)}}
 
-the following table lists \width-bit vector types, their symbols, mnemonics and descriptions:
+the following table lists \width-bit vector types, their symbols, mnemonics, and descriptions:
 
 \begin{table}[H]
 \centering
@@ -2070,7 +2070,7 @@ atomic operations define synchronization and ordering.
 
 \subsection{address spaces}
 
-glyph divides the address space into several categories with different characteristics.
+glyph divides the address space into several categories with different characteristics:
 \\
 \begin{table}[h]
 \centering
@@ -2138,7 +2138,7 @@ memory types are specified via memory type registers or address
 translation attributes and determine how memory regions interact
 with the caching system.
 \para
-the following table lists the available memory types:
+the following table lists memory types, their symbols, and descriptions:
 \\
 \begin{table}[h]
 \centering
@@ -2512,7 +2512,7 @@ using the \texttt{sysread}, \texttt{syswrite}, \texttt{sysset}, and
 from executable pages with system or physical address spaces.
 
 \subsubsection{privileged registers}
-the following table lists the privileged trap, system, debug and machine
+the following table lists the privileged trap, system, debug, and machine
 registers:
 
 \begin{table}[H]
@@ -4101,7 +4101,7 @@ the array unit descriptor contains the following fields:
 \end{table}
 
 \par\noindent
-the array unit descriptor limits are as follows.
+the array unit descriptor limits are as follows:
 
 \begin{table}[H]
 \centering
@@ -4487,7 +4487,7 @@ the mipmap base address calculation using the array unit descriptor is as follow
 \newpage
 \subsection{array dimensions}
 
-the array dimensions are computed from the array unit descriptor as follows.
+the array dimensions are computed from the array unit descriptor as follows:
 \\
 \begin{table}[H]
 \centering
@@ -4511,7 +4511,7 @@ z & $(\mathit{d.size}_z + 1) \times (1 << \mathit{d.tile}_z)$ &
 \end{table}
 
 \par\noindent
-the coordinate field order is swapped using the array unit descriptor as follows.
+the coordinate field order is swapped using the array unit descriptor as follows:
 
 \begin{algorithm}[H]
 \footnotesize
@@ -4765,7 +4765,7 @@ or globally. inter-domain messages are grouped into two categories.
 
 \par\noindent
 the following table shows inter-domain trap routing table keys for
-\emph{domain context switching}.
+\emph{domain context switching}:
 
 \begin{table}[h]
 \centering
@@ -4792,7 +4792,7 @@ the following table shows inter-domain trap routing table keys for
 \subsubsection{locally-scoped inter-domain messages}
 \emph{locally-scoped inter-domain messages} route synchronous
 exceptions to the default domain of roles on the local processor.
-the following table shows the inter-domain message instructions.
+the following table shows the inter-domain message instructions:
 
 \begin{table}[h]
 \centering
@@ -4877,7 +4877,7 @@ the \texttt{smessage} register. a \emph{message interrupt} is then multicast
 to the set of threads matching the thread or domain address applying the mask.
 \texttt{sstatus.E} is set if an exception occurs.
 \para
-the following special addresses can be used.
+the following special addresses can be used:
 
 \begin{table}[h]
 \centering
@@ -4930,7 +4930,7 @@ contain the domain numbers of a stack of domains with exceptions.
 if the default domain number for a role is configured as self-mapped,
 then its traps will be delivered in the current domain. the system
 registers are aliases of the domain context registers for the current domain.
-the following register arrays hold state for a domain context switch.
+the following register arrays hold state for a domain context switch:
 \\
 \begin{table}[h]
 \centering
@@ -5409,7 +5409,7 @@ are as follows.
 the supported page table formats are indicated in the \emph{system page table
 info} (\texttt{spti}) register.
 the page table formats used in the \texttt{fmt} field of the page table root
-register are as follows.
+register are as follows:
 \\
 \begin{table}[h]
 \centering
@@ -5505,7 +5505,7 @@ are as follows.
 \end{figure}
 
 \par\noindent
-the page table entry permission and metadata bits are as follows.
+the page table entry permission and metadata bits are as follows:
 \\
 \begin{table}[h]
 \centering
@@ -5600,7 +5600,7 @@ are as follows.
 \end{figure}
 
 \par\noindent
-the translation address unary address space prefixes are as follows.
+the translation address unary address space prefixes are as follows:
 \\
 \begin{table}[h]
 \centering
@@ -6008,7 +6008,7 @@ it is recommended that code targeting the glyph architecture is
 position-independent. \S\ref{sec:calling-convention-16-bit} defines
 the calling convention for the 16-bit instruction subset.
 application binary interfaces are defined in processor supplement
-documents for the following binary formats.
+documents for the following binary formats:
 
 \begin{table}[h]
 \centering
