@@ -2138,6 +2138,10 @@ memory types are specified via memory type registers or address
 translation attributes and determine how memory regions interact
 with the caching system.
 \para
+memory regions that have a memory type with caching enabled must support
+misaligned loads and stores, excluding instructions that are explicitly
+defined to require alignment.
+\para
 the following table lists memory types, their symbols, and descriptions:
 \\
 \begin{table}[h]
