@@ -248,7 +248,7 @@ registers are temporary storage used to fill input and output
 operands for the \emph{ALU}\footnote{\emph{ALU}\,-- Arithmetic logic unit.}
 before and after execution of instructions. registers are
 organized as a word-addressable store where each register number refers
-to $\mathit{SLEN} \in \{64, 128\}$ bits of data. \emph{SLEN} is a parameter
+to $\mathit{GLEN} \in \{64, 128\}$ bits of data. \emph{GLEN} is a parameter
 that specifies register width in bits.
 \\
 \begin{figure}[H]
@@ -280,7 +280,7 @@ that specifies register width in bits.
   }
   \draw [black] (8,\x) rectangle (24,\x+1);
 }
-\node [font=\tiny,anchor=base west] at (8,4.2)  {\textsf{SLEN}};
+\node [font=\tiny,anchor=base west] at (8,4.2)  {\textsf{GLEN}};
 \node [font=\tiny,anchor=base east] at (24,4.2)  {\textsf{0}};
 
 \draw [black,dashed] (8,-1)      rectangle (24,0);
@@ -806,7 +806,7 @@ configurations of these parameters are grouped into architectural profiles.
 
 \subsection{architectural parameters}
 
-glyph defines a unified floating-point and integer scalar register file
+glyph defines a unified floating-point and integer general register file
 with 8 or 64 registers and an optional unified floating-point and integer
 vector register file with 64 registers.
 
@@ -828,16 +828,16 @@ glyph architectural parameters are as follows:
 \rowcolor{thcol}
 \thead{Parameter} & \thead{Value}& \thead{Description} \\
 \hline
-SREG & 8, 64      & number of scalar registers \\
+GREG & 8, 64      & number of general registers \\
 VREG & --, 64     & number of vector registers \\
 NDOM & --, 16     & number of domain contexts \\
 NCOL & --, 16     & number of architectural colors \\
 MLEN & 32         & width of message addresses in bits \\
 ILEN & 16, 32, 64 & width of largest instruction in bits \\
-ALEN & 64         & width of arithmetic on scalars in bits \\
-SLEN & 64, 128    & width of scalar registers in bits \\
+ALEN & 64         & width of arithmetic lane in bits \\
+GLEN & 64, 128    & width of general registers in bits \\
 VLEN & 512, 4096  & width of vector registers in bits \\
-GLEN & 128        & width of vector lane group in bits \\
+SLEN & 128        & width of vector subgroup in bits \\
 \hline
 \end{tabular}
 \caption{architectural parameters}
@@ -852,7 +852,7 @@ glyph architectural parameters are linked to the dimensions of the
 register slots in the variable length instruction packets. the 16-bit
 packet can be used in a freestanding micro-controller profile. the 32-bit
 packet contains scalar and packed-SIMD\footnote{SIMD - Single Instruction
-Multiple Data} instructions on scalar registers. the 64-bit packet
+Multiple Data} instructions on general registers. the 64-bit packet
 contains packed-SIMD instruction on vector registers.
 
 \begin{table}[h]
@@ -864,11 +864,11 @@ contains packed-SIMD instruction on vector registers.
 \hline
 \rowcolor{thcol}
 \thead{profile} &
-\thead{SREG} & \thead{VREG} & \thead{NDOM} & \thead{NCOL} & \thead{MLEN} &
-\thead{ILEN} & \thead{ALEN} & \thead{SLEN} & \thead{VLEN} & \thead{GLEN} \\
+\thead{GREG} & \thead{VREG} & \thead{NDOM} & \thead{NCOL} & \thead{MLEN} &
+\thead{ILEN} & \thead{ALEN} & \thead{GLEN} & \thead{VLEN} & \thead{SLEN} \\
 \hline
-\emph{scalar-min} & 8  & -  & -  & -  & 32  & 16 & 64  & 64  & -    & -   \\
-\emph{scalar-max} & 64 & -  & 16 & 16 & 32  & 32 & 64  & 128 & -    & -   \\
+\emph{general-min} & 8  & -  & -  & -  & 32  & 16 & 64  & 64 & -    & -   \\
+\emph{general-max} & 64 & -  & 16 & 16 & 32  & 32 & 64  & 128 & -    & -   \\
 \emph{vector-min} & 64 & 64 & 16 & 16 & 32  & 64 & 64  & 128 & 512  & 128 \\
 \emph{vector-max} & 64 & 64 & 16 & 16 & 32  & 64 & 64  & 128 & 4096 & 128 \\
 \hline
@@ -1223,7 +1223,7 @@ this section details the layout of the \isize-bit instruction forms:
   \pgfmathsetmacro{\xdiv}{#6}
   \pgfmathsetmacro{\vdiv}{#7}
 
-  \registerfile{7}{\xw}{\xr}{\xdiv}{r}{\xlast}{\xlen}{scalar\\registers}
+  \registerfile{7}{\xw}{\xr}{\xdiv}{r}{\xlast}{\xlen}{general\\registers}
 
   \ifnum\vr>0\relax
     \registerfile{-2}{\vw}{\vr}{\vdiv}{v}{\vlast}{\vlen}{vector\\registers}
@@ -1302,12 +1302,12 @@ this section details the layout of the \isize-bit instruction forms:
 
 glyph has a register state comprising a predicate register, a program
 counter, an immediate base register, a unified floating-point and integer
-scalar register file, and an optional unified floating-point and integer
+general register file, and an optional unified floating-point and integer
 vector register file, each with an extensible number of registers.
-SIMD instructions are supported on both scalar and vector registers, with
+SIMD instructions are supported on both general and vector registers, with
 different widths. this design element provides additional parallelism on
-the scalar control unit for address generation and control flow, with the
-vector unit providing the main parallelism mechanism.
+the general port for address generation and control flow, with the
+vector port providing the main parallelism mechanism.
 
 \subsection{template configuration}
 
@@ -1318,7 +1318,7 @@ profile is comprised of:
 \item 1-bit predicate register (\emph{flag}).
 \item ALEN-bit \emph{program counter} register (aligned to 2 bytes).
 \item ALEN-bit \emph{immediate base} register (aligned to 64 bytes).
-\item SREG \texttimes\,SLEN-bit scalar registers (\textsf{r0} --- \textsf{r\textit{N}}).
+\item GREG \texttimes\,GLEN-bit general registers (\textsf{r0} --- \textsf{r\textit{N}}).
 \item VREG \texttimes\,VLEN-bit vector registers (\textsf{v0} --- \textsf{v\textit{N}}).
 \end{itemize}
 
@@ -1328,26 +1328,26 @@ register state:
 \\
 \begin{figure}[H]
 \centering
-\registerstate{ALEN,4}{SLEN,8}{VLEN,16}{64,\textit{N}}{64,\textit{N}}{0}{0}
+\registerstate{ALEN,4}{GLEN,8}{VLEN,16}{64,\textit{N}}{64,\textit{N}}{0}{0}
 \caption{template configuration register state.}
 \label{fig:glyph-register-state-template}
 \end{figure}
 
 \newpage
-\subsection{\emph{scalar-min} configuration}
+\subsection{\emph{general-min} configuration}
 
-the register state accessible by the \emph{scalar-min} architectural
+the register state accessible by the \emph{general-min} architectural
 profile is comprised of:
 
 \begin{itemize}[itemsep=0pt]
 \item 1-bit predicate register (\emph{flag}).
 \item 64-bit \emph{program counter} register (aligned to 2 bytes).
 \item 64-bit \emph{immediate base} register (aligned to 64 bytes).
-\item 8 \texttimes\,64-bit scalar registers (\textsf{r0} --- \textsf{r7}).
+\item 8 \texttimes\,64-bit general registers (\textsf{r0} --- \textsf{r7}).
 \end{itemize}
 
 \par\noindent
-the following table shows the \emph{scalar-min} configuration
+the following table shows the \emph{general-min} configuration
 register storage:
 \\
 \begin{table}[H]
@@ -1360,46 +1360,46 @@ register storage:
 \thead{type} & \thead{count} & \thead{width} & \thead{size (bits)} & \thead{size (bytes)} \\
 \hline
 control & 2 & 64 & 128 & 16 \\
-scalar  & 8 & 64 & 512 & 64 \\
+general & 8 & 64 & 512 & 64 \\
 \hline
 \end{tabular}
-\caption{\emph{scalar-min} configuration register storage.}
-\label{tab:scalar-min-configuration-register-storage}
+\caption{\emph{general-min} configuration register storage.}
+\label{tab:general-min-configuration-register-storage}
 \end{table}
 
 \par\noindent
-the following diagram shows the \emph{scalar-min} configuration
+the following diagram shows the \emph{general-min} configuration
 register state:
 \\
 \begin{figure}[H]
 \centering
 \registerstate{64,4}{64,4}{VLEN,0}{8,7}{0,0}{0}{0}
-\caption{\emph{scalar-min} configuration register state.}
-\label{fig:glyph-register-state-scalar-min}
+\caption{\emph{general-min} configuration register state.}
+\label{fig:glyph-register-state-general-min}
 \end{figure}
 
 \par\noindent
-when $\mathit{SLEN} < \mathit{ALEN} \times 2$ it is not possible to pack
+when $\mathit{GLEN} < \mathit{ALEN} \times 2$ it is not possible to pack
 absolute addresses in the link register, so the \texttt{PIN} and
 \texttt{LINK} instructions save relative addresses in the link register.
 this increases latency in branch address calculation compared to
 absolute addresses.
 
 \newpage
-\subsection{\emph{scalar-max} configuration}
+\subsection{\emph{general-max} configuration}
 
-the register state accessible by the \emph{scalar-max} architectural
+the register state accessible by the \emph{general-max} architectural
 profile is comprised of:
 
 \begin{itemize}[itemsep=0pt]
 \item 1-bit predicate register (\emph{flag}).
 \item 64-bit \emph{program counter} register (aligned to 2 bytes).
 \item 64-bit \emph{immediate base} register (aligned to 64 bytes).
-\item 64 \texttimes\,128-bit scalar registers (\textsf{r0} --- \textsf{r63}) with \emph{SIMD128}.
+\item 64 \texttimes\,128-bit general registers (\textsf{r0} --- \textsf{r63}) with \emph{SIMD128}.
 \end{itemize}
 
 \par\noindent
-the following table shows the \emph{scalar-max} configuration
+the following table shows the \emph{general-max} configuration
 register storage:
 \\
 \begin{table}[H]
@@ -1412,26 +1412,26 @@ register storage:
 \thead{type} & \thead{count} & \thead{width} & \thead{size (bits)} & \thead{size (bytes)} \\
 \hline
 control & 2  & 64  & 128  & 16 \\
-scalar  & 64 & 128 & 8192 & 1024 \\
+general & 64 & 128 & 8192 & 1024 \\
 \hline
 \end{tabular}
-\caption{\emph{scalar-max} configuration register storage.}
-\label{tab:scalar-max-configuration-register-storage}
+\caption{\emph{general-max} configuration register storage.}
+\label{tab:general-max-configuration-register-storage}
 \end{table}
 
 \par\noindent
-the following diagram shows the \emph{scalar-max} configuration
+the following diagram shows the \emph{general-max} configuration
 register state:
 \\
 \begin{figure}[H]
 \centering
 \registerstate{64,4}{128,8}{0,0}{64,63}{0,0}{0}{0}
-\caption{\emph{scalar-max} configuration register state.}
-\label{fig:glyph-register-state-scalar-max}
+\caption{\emph{general-max} configuration register state.}
+\label{fig:glyph-register-state-general-max}
 \end{figure}
 
 \par\noindent
-when $\mathit{SLEN} \ge \mathit{ALEN} \times 2$ it is possible to pack
+when $\mathit{GLEN} \ge \mathit{ALEN} \times 2$ it is possible to pack
 absolute addresses in the link register, so the \texttt{PIN} and
 \texttt{LINK} instructions save absolute addresses in the link register.
 this reduces latency in branch address calculation compared to
@@ -1447,7 +1447,7 @@ profile is comprised of:
 \item 1-bit predicate register (\emph{flag}).
 \item 64-bit \emph{program counter} register (aligned to 2 bytes).
 \item 64-bit \emph{immediate base} register (aligned to 64 bytes).
-\item 64 \texttimes\,128-bit scalar registers (\textsf{r0} --- \textsf{r63}) with \emph{SIMD128}.
+\item 64 \texttimes\,128-bit general registers (\textsf{r0} --- \textsf{r63}) with \emph{SIMD128}.
 \item 64 \texttimes\,512-bit vector registers (\textsf{v0} --- \textsf{v63}) with \emph{SIMD512}.
 \end{itemize}
 
@@ -1465,7 +1465,7 @@ register storage:
 \thead{type} & \thead{count} & \thead{width} & \thead{size (bits)} & \thead{size (bytes)} \\
 \hline
 control & 2  & 64 & 128    & 16 \\
-scalar  & 64 & 128 & 8192  & 1024 \\
+general & 64 & 128 & 8192  & 1024 \\
 vector  & 64 & 512 & 32768 & 4096 \\
 \hline
 \end{tabular}
@@ -1494,7 +1494,7 @@ profile is comprised of:
 \item 1-bit predicate register (\emph{flag}).
 \item 64-bit \emph{program counter} register (aligned to 2 bytes).
 \item 64-bit \emph{immediate base} register (aligned to 64 bytes).
-\item 64 \texttimes\,128-bit scalar registers (\textsf{r0} --- \textsf{r63}) with \emph{SIMD128}.
+\item 64 \texttimes\,128-bit general registers (\textsf{r0} --- \textsf{r63}) with \emph{SIMD128}.
 \item 64 \texttimes\,4096-bit vector registers (\textsf{v0} --- \textsf{v63}) with \emph{SIMD512} and \emph{SIMD4096}.
 \end{itemize}
 
@@ -1512,7 +1512,7 @@ register storage:
 \thead{type} & \thead{count} & \thead{width} & \thead{size (bits)} & \thead{size (bytes)} \\
 \hline
 control & 2  & 64   & 128    & 16 \\
-scalar  & 64 & 128  & 8192   & 1024\\
+general & 64 & 128  & 8192   & 1024\\
 vector  & 64 & 4096 & 262144 & 32768 \\
 \hline
 \end{tabular}
@@ -2273,7 +2273,7 @@ user-level context, trap handling, address translation, interrupt
 routing, capabilities, virtual domains, machine, and environment.
 \para
 reserved and unlabeled register fields will read as zero and ignore writes.
-registers narrower than the scalar register width will return zero in upper
+registers narrower than the general register width will return zero in upper
 bits and ignore writes to upper bits. read-write fields of all registers,
 if otherwise unspecified, are initialized to zero after reset.
 \para
@@ -2632,7 +2632,7 @@ are enabled.
 \texttt{tscratch} is a read-write save register for use during trap handling.
 \\
 \registerspec{64}{32}{%
-  64/{0}//{SLEN-1}/\emph{scratch value}%
+  64/{0}//{GLEN-1}/\emph{scratch value}%
 }
 
 \newpage
@@ -2696,7 +2696,7 @@ and may contain:
 \end{itemize}
 
 \registerspec{64}{32}{%
-  64/{0}//{SLEN-1}/\emph{trap value}%
+  64/{0}//{GLEN-1}/\emph{trap value}%
 }
 
 \newpage
@@ -3478,7 +3478,7 @@ registers containing an array of the trap scratch values associated with
 each domain.
 \\
 \registerspec{64}{32}{%
-  64/{0}//{SLEN-1}/\emph{trap scratch}%
+  64/{0}//{GLEN-1}/\emph{trap scratch}%
 }
 
 \subsubsection{domain cause (\texttt{domcause}$[\mathit{ndom}]$)}
@@ -3487,7 +3487,7 @@ registers containing an array of the trap causes associated with each
 domain.
 \\
 \registerspec{64}{32}{%
-  64/{0}//{SLEN-1}/\emph{trap cause}%
+  64/{0}//{GLEN-1}/\emph{trap cause}%
 }
 
 \subsubsection{domain value (\texttt{domvalue}$[\mathit{ndom}]$)}
@@ -3496,7 +3496,7 @@ registers containing an array of the trap values associated with each
 domain.
 \\
 \registerspec{64}{32}{%
-  64/{0}//{SLEN-1}/\emph{trap value}%
+  64/{0}//{GLEN-1}/\emph{trap value}%
 }
 
 \subsubsection{domain address (\texttt{domaddr}$[\mathit{ndom}]$)}
@@ -4323,7 +4323,7 @@ a \emph{power-of-two} $(1 << \mathit{size})$.
 \newpage
 \subsection{array unit instructions}
 
-the array extension requires $\mathit{SLEN}=128$. an array unit descriptor is
+the array extension requires $\mathit{GLEN}=128$. an array unit descriptor is
 loaded into a register using a 128-bit constant load instruction, or to access
 descriptor arrays, a 128-bit memory load instruction. the array unit must be
 configured with the descriptor before use to allow address computation.
@@ -5980,8 +5980,8 @@ memory starting at address zero.
 during power-on and reset, read-write fields of all system registers are
 zeroed, unless otherwise specified, then the program counter and immediate
 base register are set to the shadow reset vector addresses. cold reset
-zeros the predicate register, plus scalar and vector registers. warm reset
-preserves the predicate register, plus scalar and vector registers.
+zeros the predicate register, plus general and vector registers. warm reset
+preserves the predicate register, plus general and vector registers.
 
 \begin{table}[h]
 \centering
