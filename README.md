@@ -59,7 +59,6 @@ to be word-sized, following C-style packing and alignment rules.
 this list outlines differentiating features of the glyph architecture:
 
 - variable length instruction format supporting 16, 32, and 64-bit instructions.
-- 16-bit compressed instruction packets that can access 8 registers.
 - 1-bit predicate for compare, branch, divide-by-zero, and add or subtract with carry.
 - _(pc,ib)_ is a program counter and immediate base register address vector.
 - link register contains a packed relative _(pc,ib)_ address vector to function entry.
