@@ -499,14 +499,14 @@ but is read-only and restricted to constants. instructions can refer to
 constants with \emph{immediate-base-register-relative} addresses in
 instruction operands.
 \para
-constant memory addresses stored in instruction operand slots as
-displacements from the \emph{immediate base} register are referred to
+constant memory addresses are stored in instruction operand slots as
+displacements from the \emph{immediate base} register and are referred to
 as \emph{ib-relative} addresses. \emph{ib-relative} addresses are sized,
-scaled, and aligned displacements computed relative to the \emph{immediate
-base} register, which behaves like a program counter for constants. all
-\emph{ib-relative} addresses alias a single storage space containing all
-constant types. these diagrams show $ib8(n)$ through $ib64(n)$ addresses
-for access to 8-bit through 64-bit constants respectively.
+scaled, and aligned relative to the \emph{immediate
+base} register, which anchors the current immediate block.
+\emph{ib-relative} addresses alias a single constant storage space.
+these diagrams show $ib8(n)$ through to $ib64(n)$ addresses for access
+to 8-bit through to 64-bit constants.
 \\
 \begin{figure}[H]
 \centering
