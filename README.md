@@ -1,6 +1,6 @@
 # glyph
 
-> a super regular RISC that encodes constants in immediate blocks.
+> a super regular RISC with split instruction and constant streams.
 
 ![instruction and constant streams](/doc/concept.png)
 
