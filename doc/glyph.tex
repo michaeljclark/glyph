@@ -2293,9 +2293,9 @@ the system register set is divided into the following sections.
 \multicolumn{2}{|l|}{\tsub{core}} \\
 \hline
 \textbf{user-level registers}  & floating-point status and control,
-clock, time stamp counter, time stamp frequency, and thread addresses. \\
-\textbf{system registers}      & trap handling, system addresses,
-interrupts, timers, memory management and inter-domain messages. \\
+time stamp counter and frequency, thread and domain address aliases. \\
+\textbf{system registers}      & trap handling, addresses, interrupts,
+wall clock, timer, memory management and inter-domain messages. \\
 \hline
 \rowcolor{tscol}
 \multicolumn{2}{|l|}{\tsub{extension}} \\
@@ -2313,7 +2313,7 @@ interrupts, timers, memory management and inter-domain messages. \\
 \newpage
 \section{User-level registers}
 the architecture provides several user-level status and control registers
-for floating-point status and control, clock time, clock frequency,
+for floating-point status and control, time stamp counter and frequency,
 machine address and domain.
 \para
 user-level status and control registers can be read and written using the
