@@ -894,7 +894,7 @@ inspired by LEB128~\cite{leb128} in a fixed position in every instruction
 packet, to reduce the complexity of size-decoding for variable length
 instructions\footnote{instructions are considered \emph{well-formed}
 if the size field of subsequent packets has the value \texttt{11}.}.
-this table shows the size fields for the different instruction sizes:
+the following table shows the size fields for the different instruction sizes:
 
 \begin{table}[h]
 \centering
@@ -3084,7 +3084,7 @@ machine, and message roles map to the system role, and the user and
 system roles are derived from their respective address space prefixes.
 the capability and domain extensions are detected and enabled via the machine extension.
 \para
-the following tables list the privileged capability system parameters:
+the following table lists the privileged capability system parameters:
 
 \begin{table}[H]
 \centering
@@ -3103,7 +3103,7 @@ $\mathit{ncol}$      & the number of architectural colors & 16 \\
 \end{table}
 
 \subsubsection{capability registers}
-the following tables list the privileged capability system registers:
+the following table lists the privileged capability system registers:
 
 \begin{table}[H]
 \centering
@@ -3331,7 +3331,7 @@ derived from their respective address space prefixes, and traps are
 handled without capability trap routing and domain context switching.
 the capability and domain extensions are detected and enabled via the machine extension.
 \para
-the following tables list the privileged domain system parameters:
+the following table lists the privileged domain system parameters:
 
 \begin{table}[H]
 \centering
@@ -3350,7 +3350,7 @@ $\mathit{ndom}$      & the number of architectural domains & 16 \\
 \end{table}
 
 \subsubsection{domain registers}
-the following tables list the privileged domain system registers:
+the following table lists the privileged domain system registers:
 
 \begin{table}[H]
 \centering
@@ -3586,7 +3586,7 @@ nested address translation. the machine context is used to route TLB
 miss exceptions to per-domain TLB miss handlers.
 
 \subsubsection{machine registers}
-the following tables list the privileged machine registers:
+the following table lists the privileged machine registers:
 
 \begin{table}[H]
 \centering
@@ -4017,7 +4017,7 @@ the architecture provides an optional environment extension that includes
 machine-level registers for diagnostics, warm reset, cold reset, and power off.
 
 \subsubsection{environment registers}
-the following tables list the privileged environment registers:
+the following table lists the privileged environment registers:
 
 \begin{table}[H]
 \centering
