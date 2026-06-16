@@ -1301,11 +1301,10 @@ this section details the layout of the \isize-bit instruction forms:
 glyph has a register state comprising a predicate register, a program
 counter, an immediate base register, a unified floating-point and integer
 general register file, and an optional unified floating-point and integer
-vector register file, each with an extensible number of registers.
-SIMD instructions are supported on both general and vector registers, with
-different widths. this design element provides additional parallelism on
-the general port for address generation and control flow, with the
-vector port providing the main parallelism mechanism.
+vector register file.
+SIMD instructions are supported on both the general port and the vector port.
+general registers support narrow SIMD for address generation and control flow.
+vector registers support wide SIMD parallelism for throughput.
 
 \subsection{template configuration}
 
