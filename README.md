@@ -9,7 +9,7 @@ _Figure 1 - instruction (pc-relative) and constant (ib-relative) streams_
 ## introduction
 
 glyph is a proposed computer architecture that emphasizes simplicity,
-efficiency, and flexibility. unlike typical processors, it separates
+efficiency, and flexibility. unlike conventional processors, it separates
 instructions from constants, which can make programs smaller and faster
 to execute. it uses a compact, regular instruction format and a small
 'predicate' register for control flow. the design carefully considers
@@ -72,7 +72,7 @@ compiled versions of the architecture specification are available from the
 following URLs:
 
 - current: [glyph.pdf](https://metaparadigm.com/~mclark/glyph.pdf)
-- latest: [glyph-20260616.pdf](https://metaparadigm.com/~mclark/glyph-20260616.pdf)
+- latest: [glyph-20260617.pdf](https://metaparadigm.com/~mclark/glyph-20260617.pdf)
 
 ## opcodes
 

@@ -343,7 +343,7 @@ by the \emph{ALEN} parameter.
 instruction memory is a memory region dedicated to program instructions.
 it is organized as a word-addressable store, similar to main memory,
 but is read-only and reserved exclusively for instructions. this is
-typically referred to as a Harvard architecture~\cite{aiken1946marki},
+conventionally referred to as a Harvard architecture~\cite{aiken1946marki},
 in contrast to a Von Neumann architecture~\cite{vonneumann1945edvac},
 which uses shared memory for instructions and data.
 \para
@@ -754,7 +754,7 @@ a second link register for the immediate base, maintaining compatibility
 with the single link register on traditional RISC architectures.
 \para
 immediate blocks can be switched using the immediate block branch instruction.
-unlike typical RISC architectures, which synthesize large constants inline
+unlike conventional RISC architectures, which synthesize large constants inline
 using long-form instruction sequences, immediate block constants use C-style
 structure packing and alignment rules. this keeps relocations word-aligned
 and avoids patching of instruction encoding fields.
