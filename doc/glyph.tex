@@ -4802,7 +4802,7 @@ the following table shows inter-domain trap routing table keys for
 
 \subsubsection{locally-scoped inter-domain messages}
 \emph{locally-scoped inter-domain messages} route synchronous
-exceptions to the default domain of roles on the local processor.
+exceptions to default domain roles on the local processor.
 the following table shows the inter-domain message instructions:
 
 \begin{table}[h]
@@ -4830,8 +4830,8 @@ the following table shows the inter-domain message instructions:
 \par\noindent
 \subsubsection{globally-scoped inter-domain messages}
 \emph{globally-scoped inter-domain messages} route asynchronous
-exceptions to the default domain of the message role on remote
-processors. the \texttt{starget}, \texttt{smask}, and \texttt{smessage}
+exceptions to the message default domain on remote processors.
+the \texttt{starget}, \texttt{smask}, and \texttt{smessage}
 system registers are used to multicast asynchronous message interrupts
 over the processor network. interrupts are delivered to processors
 matching the advertised machine or domain addresses after applying
