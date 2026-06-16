@@ -2340,17 +2340,16 @@ the following table lists the user-level registers:
 \texttt{0x01} & fpcontrol & floating-point control \\
 \hline
 \rowcolor{tscol}
-\multicolumn{3}{|l|}{\tsub{clock and time stamp registers}} \\
+\multicolumn{3}{|l|}{\tsub{time stamp counter registers}} \\
 \hline
-\texttt{0x02} & clock     & wall clock time \\
-\texttt{0x03} & stamp     & time stamp counter \\
-\texttt{0x04} & freq      & time stamp frequency \\
+\texttt{0x02} & stamp     & time stamp counter \\
+\texttt{0x03} & freq      & time stamp frequency \\
 \hline
 \rowcolor{tscol}
 \multicolumn{3}{|l|}{\tsub{thread address registers}} \\
 \hline
-\texttt{0x05} & address   & user machine address \\
-\texttt{0x06} & domain    & user domain address \\
+\texttt{0x04} & address   & user machine address \\
+\texttt{0x05} & domain    & user domain address \\
 \hline
 \end{tabularx}
 \caption{user-level registers}
@@ -2446,19 +2445,8 @@ precision.
 \end{table}
 
 \newpage
-\subsection{clock and time stamp registers}
-the section describes the user-level wall clock, time stamp counter and
-frequency registers.
-
-\subsubsection{wall clock time (\texttt{clock})}
-\texttt{clock} is a read-only register containing the wall clock time as a
-signed integer representing elapsed nanoseconds (ns) relative to the J2000
-epoch (\texttt{2000-01-01T12:00:00Z}), informally noon on 1 January 2000 UTC.
-this register is visible if \texttt{scontrol.T} is enabled.
-\\
-\registerspec{64}{32}{%
-  64/{0}//63/\emph{wall clock time}%
-}
+\subsection{time stamp counter registers}
+the section describes the user-level time stamp counter and frequency registers.
 
 \subsubsection{time stamp counter (\texttt{stamp})}
 \texttt{stamp} is a read-only register containing a high-precision
@@ -2546,16 +2534,17 @@ registers:
 \texttt{0x21} & scontrol  & system control \\
 \texttt{0x22} & sfeature  & system feature \\
 \texttt{0x23} & sversion  & system version \\
-\texttt{0x24} & saddress  & system machine address \\
-\texttt{0x25} & sdomain   & system domain address \\
-\texttt{0x26} & spti      & system page table info \\
-\texttt{0x27} & sptr      & system page table root \\
-\texttt{0x28} & sie       & system interrupt enable \\
-\texttt{0x29} & sip       & system interrupt pending \\
-\texttt{0x2A} & stimer    & system deadline timer \\
-\texttt{0x2B} & starget   & system target address \\
-\texttt{0x2C} & smask     & system target mask \\
-\texttt{0x2D} & smessage  & system target message \\
+\texttt{0x24} & sclock    & system clock \\
+\texttt{0x25} & saddress  & system machine address \\
+\texttt{0x26} & sdomain   & system domain address \\
+\texttt{0x27} & spti      & system page table info \\
+\texttt{0x28} & sptr      & system page table root \\
+\texttt{0x29} & sie       & system interrupt enable \\
+\texttt{0x2A} & sip       & system interrupt pending \\
+\texttt{0x2B} & stimer    & system deadline timer \\
+\texttt{0x2C} & starget   & system target address \\
+\texttt{0x2D} & smask     & system target mask \\
+\texttt{0x2E} & smessage  & system target message \\
 \hline
 \rowcolor{tscol}
 \multicolumn{3}{|l|}{\tsub{privileged debug registers}} \\
@@ -2790,7 +2779,7 @@ the section describes the privileged system registers.
 \thead{no.} & \thead{name} & \thead{description} \\
 \hline
 \verb|1 << 0| & V   & vector unit enabled \\
-\verb|1 << 1| & T   & user clock and frequency enabled \\
+\verb|1 << 1| & T   & user time stamp counter enabled \\
 \verb|1 << 2| & D   & user address and domain enabled \\
 \verb|1 << 3| & A   & user address space access disable enabled \\
 \verb|1 << 4| & E   & user address space execute disable enabled \\
@@ -2821,7 +2810,7 @@ the section describes the privileged system registers.
 \thead{no.} & \thead{name} & \thead{description} \\
 \hline
 \verb|1 << 0| & V   & vector unit feature \\
-\verb|1 << 1| & T   & user clock and frequency feature \\
+\verb|1 << 1| & T   & user time stamp counter feature \\
 \verb|1 << 2| & D   & user address and domain feature \\
 \verb|1 << 3| & A   & user address space access disable feature \\
 \verb|1 << 4| & E   & user address space execute disable feature \\
@@ -2858,6 +2847,16 @@ fields. the allowable values are specified in the following table.
 \caption{system version values}
 \label{tab:system-version-values}
 \end{table}
+
+\subsubsection{system clock (\texttt{sclock})}
+\texttt{sclock} is a read-only register containing the wall clock time as a
+signed integer representing elapsed nanoseconds (ns) relative to the J2000
+epoch (\texttt{2000-01-01T12:00:00Z}), informally noon on 1 January 2000 UTC.
+this register is visible if \texttt{scontrol.T} is enabled.
+\\
+\registerspec{64}{32}{%
+  64/{0}//63/\emph{wall clock time}%
+}
 
 \subsubsection{system machine address (\texttt{saddress})}
 \texttt{saddress} is a read-only register containing the unique system-wide
