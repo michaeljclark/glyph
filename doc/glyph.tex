@@ -820,9 +820,9 @@ configurations of these parameters are grouped into architectural profiles.
 
 \subsection{architectural parameters}
 
-the architecture has a unified floating-point and integer general register
-file with 8 or 64 registers and an optional unified floating-point and
-integer vector register file with 64 registers.
+the architecture provides a unified floating-point and integer general
+register file with 8 or 64 registers, and a unified floating-point
+and integer vector register file with 64 registers.
 
 \begin{itemize}[itemsep=0pt]
 \item 16-bit instruction packet can access 8 registers with up to 3 operands.
@@ -1959,8 +1959,9 @@ and 112-bit fraction ($f$) fields.
 \newpage
 \section{Type conventions}
 
-a common type naming convention is used for integer and floating-point
-scalar and packed SIMD vector types. each type is described by several attributes:
+the architecture provides a common type naming convention for
+integer and floating-point scalar and packed SIMD vector types.
+each type is described by several attributes:
 
 \vspace{-0.3em}
 
@@ -2177,9 +2178,9 @@ the following table lists memory types, their symbols, and descriptions:
 
 \subsection{memory ordering}
 
-the architecture has a memory consistency model designed for practical
-implementation in hardware or for translation to processors with
-\emph{weakly-ordered} \emph{acquire-release} memory models and to
+the architecture provides a memory consistency model designed for
+practical implementation in hardware or for translation to processors
+with \emph{weakly-ordered} \emph{acquire-release} memory models and to
 processors with \emph{strongly-ordered} memory models that possess a
 \emph{total store order}.
 the memory consistency model has the following properties:
