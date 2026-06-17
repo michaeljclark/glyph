@@ -507,11 +507,10 @@ counter} called \emph{pc-relative} addresses.
 \newpage
 \subsection{constants}
 
-constant memory~\cite{Solomonoff1964} is a memory region dedicated to
-constants. it is organized as a word-addressable store like main-memory,
-but is read-only and restricted to constants. instructions can refer to
-constants with \emph{immediate-base-register-relative} addresses in
-instruction operands.
+constant memory is a memory region dedicated to constants. it is organized
+as a word-addressable store like main-memory, but is read-only and
+restricted to constants. instructions can refer to constants with
+\emph{immediate-base-register-relative} addresses in instruction operands.
 \para
 constant memory addresses are stored in instruction operand slots as
 displacements from the \emph{immediate base} register and are referred to
@@ -635,11 +634,13 @@ to 8-bit through to 64-bit constants.
 \newpage
 \section{Program streams}
 
-\arch{} separates the stored programs into two streams, one with instructions
-and one with constants~\cite{Solomonoff1964}. the instruction stream is
-addressed with the \emph{program counter (pc)} and the constant stream is
-addressed with the \emph{immediate base (ib)} register. this could be
-referred to as split program stream Harvard architecture.
+\arch{} separates the stored program into two streams, one with instructions
+and one with constants, analogous to the use of separate tapes assigned to
+program and constants in a multi-tape universal Turing machine model%
+~\cite{Minsky1967}.
+the instruction stream is addressed with the \emph{program counter (pc)} and
+the constant stream is addressed with the \emph{immediate base (ib)} register.
+this may be referred to as split program stream Harvard architecture.
 
 \begin{figure}[H]
 \centering
