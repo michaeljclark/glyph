@@ -3722,9 +3722,7 @@ memory management.
 \texttt{macaddr}$[\mathit{ndom}]$ are \textbf{\emph{ndom}} read-write
 registers containing the machine addresses associated with each domain.
 machine addresses must be unique across all processors; otherwise,
-behavior is implementation-defined. machine addresses are preserved
-during warm reset. cold reset and power-on use an implementation-defined
-mechanism to ensure system-wide unique addresses are assigned.
+behavior is implementation-defined.
 the machine address prefix should be unary \texttt{0001}.
 \\
 \registerspec{64}{32}{%
@@ -5969,19 +5967,19 @@ the following handler vectors are used by nested machine context TLB miss handle
 \section{Virtual machine}
 
 the architecture defines a virtual machine model with a system memory
-map, power-on and reset behavior, application binary interface, hypervisor
-software roles, and a minimum set of firmware interfaces, hardware
-description models, and virtual devices for I/O.
+map, power-on and reset behavior, firmware interface, hardware
+description models, hypervisor interface, and virtual devices for I/O.
 
 \subsection{system memory map}
 
 the following table shows fixed regions of the system memory map.
 the top 64~KiB of the boot firmware is mapped into the first 64~KiB of
-memory starting at address zero.
-
+memory starting at address zero. this is so that the reset vector
+can point to a constant low address irrespective of the firmware location.
+\\
 \begin{table}[h]
 \centering
-\small
+\footnotesize
 \rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|r|r|l|l|l|}
 \hline
@@ -5994,13 +5992,11 @@ memory starting at address zero.
 \texttt{EFFF\_FF00\_0000} & \texttt{EFFF\_FFFF\_FFFF} & 16~MiB & boot firmware & WB\footnotemark[1] \\
 \hline
 \end{tabular}
-\caption{glyph memory map}
+\caption{glyph 48-bit address space memory map}
 \label{tab:glyph-memory-map}
 \end{table}
 
 \footnotetext[1]{\emph{memory types}: WB = write-back, WC = write-combine, WT = write-through, UC = uncached}
-
-\vspace{-1em}
 
 \subsection{power-on and reset}
 
@@ -6009,10 +6005,17 @@ zeroed, unless otherwise specified, then the program counter and immediate
 base register are set to the shadow reset vector addresses. cold reset
 zeros the predicate register, plus general and vector registers. warm reset
 preserves the predicate register, plus general and vector registers.
-
+\para
+all processors must start at the reset vector after cold or warm reset.
+an implementation-defined mechanism is used to ensure system-wide unique
+addresses are assigned to all processors.
+if the domain and machine extensions are both present, it is up to the
+firmware to ensure unique addresses are assigned to the \texttt{macaddr}
+vector for the active domain.
+\\
 \begin{table}[h]
 \centering
-\small
+\footnotesize
 \rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|r|r|l|}
 \hline
@@ -6023,49 +6026,109 @@ preserves the predicate register, plus general and vector registers.
 \texttt{EFFF\_FFFF\_FF80} & \texttt{EFFF\_FFFF\_FFC0} & firmware reset vector addresses \\
 \hline
 \end{tabular}
-\caption{glyph reset vector addresses}
-\label{tab:glyph-reset-vector-addresses}
+\caption{glyph 48-bit address space reset vector}
+\label{tab:glyph-reset-vector}
 \end{table}
 
-\vspace{-1em}
+\newpage
+\subsection{firmware interface}
 
-\subsection{application binary interface}
-
-it is recommended that code targeting the architecture is
-position-independent. \S\ref{sec:calling-convention-16-bit} defines
-the calling convention for the 16-bit instruction subset.
-application binary interfaces are defined in processor supplement
-documents for the following binary formats:
-
+the base virtual machine model provides early boot interfaces to bootloaders
+and operating systems using the Unified Extensible Firmware Interface (UEFI).
+the following minimal set of UEFI protocols are required in the base
+virtual machine model.
+\para
+the firmware is responsible for setting up boot page tables with a
+self-map of physical memory, enabling page-based virtual address
+translation, providing the hardware description in device tree format,
+initializing devices required for loading the bootloader, then loading
+and executing the bootloader by calling into \texttt{EfiMain}.
+the firmware runs with the \emph{system} role.
+\\
 \begin{table}[h]
 \centering
-\small
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{name} & \thead{description} \\
+\hline
+\texttt{EFI\_LOADED\_IMAGE\_PROTOCOL}        & image context and load parameters \\
+\texttt{EFI\_DEVICE\_PATH\_PROTOCOL}         & device and image location encoding \\
+\texttt{EFI\_BLOCK\_IO\_PROTOCOL}            & block device access to boot media \\
+\texttt{EFI\_SERIAL\_IO\_PROTOCOL}           & serial device access to console \\
+\texttt{EFI\_SIMPLE\_FILE\_SYSTEM\_PROTOCOL} & filesystem access for boot media \\
+\hline
+\end{tabular}
+\caption{glyph virtual machine UEFI protocols}
+\label{tab:glyph-virtual-machine-uefi-protocols}
+\end{table}
+
+\subsubsection{hardware description}
+
+the base virtual machine model uses device tree or ACPI, and optionally
+SMBIOS, to describe the hardware.
+the description provides a detailed map of memory, devices, bus hierarchies,
+memory-mapped I/O regions, interrupt routing and other device-specific
+configuration properties to firmware and system software.
+device tree, ACPI and optional SMBIOS data is made available to bootloaders
+and system software via EFI configuration tables.
+\\
+\begin{table}[h]
+\centering
+\footnotesize
 \rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
 \rowcolor{thcol}
-\thead{format} & \thead{ABI} & \thead{description} \\
+\thead{symbol} & \thead{name} & \thead{description} \\
 \hline
-\textbf{PE}     & \textsf{glyph-pe}    & Portable Executable Format \\
-\textbf{ELF}    & \textsf{glyph-elf}   & Executable and Linkable Format \\
-\textbf{Mach-O} & \textsf{glyph-macho} & Mach Object Format \\
+\textbf{DTS} & device tree source & the hardware description format \\
+\textbf{DTB} & device tree binary & the compiled binary object \\
+\textbf{FDT} & flattened device tree & the runtime device tree format \\
+\textbf{AML} & ACPI machine language & the ACPI bytecode description format \\
 \hline
 \end{tabular}
-\caption{glyph binary formats and ABIs}
-\label{tab:glyph-binary-formats-and-abis}
+\caption{glyph hardware description formats}
+\label{tab:glyph-hardware-description-formats}
+\end{table}
+
+\begin{table}[h]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{symbol} & \thead{GUID} \\
+\hline
+\texttt{EFI\_FDT\_TABLE\_GUID} & \texttt{B1B621D5-F19C-41A5-830B-D9152C69AAE0} \\
+\texttt{EFI\_ACPI2\_TABLE\_GUID} & \texttt{8868E871-E4F1-11D3-BC22-0080C73C8881} \\
+\texttt{EFI\_SMBIOS3\_TABLE\_GUID} & \texttt{F2FD1544-9794-4A2C-992E-E5BBCF20E394} \\
+\hline
+\end{tabular}
+\caption{glyph EFI hardware description table GUIDs}
+\label{tab:efi-fdt-table-guid}
 \end{table}
 
 \newpage
-\subsection{hypervisor software}
+\subsection{hypervisor interface}
 
 the virtual machine defines several roles. the \emph{domain},
 \emph{capability}, \emph{machine}, and \emph{message} roles are used by
 the hypervisor to control domain switching, trap routing, execution
 permissions and software-defined page-based virtual address translation.
-
+\para
+the hypervisor is responsible for setting up the capability permission
+registers, domain trap routing and context switching registers, and setting
+the initial state of system registers before starting an isolated context.
+the initial context may be a root context in which case all processors
+start executing in domain zero with all trap routing registers self-mapped.
+\\
 \begin{table}[h]
 \centering
-\small
+\footnotesize
 \rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|l|}
 \hline
@@ -6084,110 +6147,21 @@ permissions and software-defined page-based virtual address translation.
 \label{tab:glyph-virtual-machine-roles}
 \end{table}
 
-\par\noindent
-the hypervisor is responsible for setting up the capability permission
-registers, trap routing and context switching registers, and the initial
-state of system registers to create threads in an isolated context before
-handing over control to the firmware.
-
-\subsection{firmware interface}
-
-the base virtual machine model provides early boot interfaces to bootloaders
-and operating systems using the Unified Extensible Firmware Interface (UEFI).
-the following minimal set of UEFI protocols are required in the base
-virtual machine model.
-
-\begin{table}[h]
-\centering
-\small
-\rowcolors{2}{tbcol}{tbcol}
-\begin{tabular}{|l|l|}
-\hline
-\rowcolor{thcol}
-\thead{name} & \thead{description} \\
-\hline
-\texttt{EFI\_LOADED\_IMAGE\_PROTOCOL}        & image context and load parameters \\
-\texttt{EFI\_DEVICE\_PATH\_PROTOCOL}         & device and image location encoding \\
-\texttt{EFI\_BLOCK\_IO\_PROTOCOL}            & block device access to boot media \\
-\texttt{EFI\_SERIAL\_IO\_PROTOCOL}           & serial device access to console \\
-\texttt{EFI\_SIMPLE\_FILE\_SYSTEM\_PROTOCOL} & filesystem access for boot media \\
-\hline
-\end{tabular}
-\caption{glyph virtual machine UEFI protocols}
-\label{tab:glyph-virtual-machine-uefi-protocols}
-\end{table}
-
-\par\noindent
-the firmware is responsible for setting up boot page tables with a
-self-map of physical memory, enabling page-based virtual address
-translation, providing the hardware description in device tree format,
-initializing devices required for loading the bootloader, then loading
-and executing the bootloader by calling into \texttt{EfiMain}.
-the firmware runs with the \emph{system} role.
-
-\newpage
-\subsection{hardware description}
-
-the base virtual machine model uses device tree or ACPI, and optionally
-SMBIOS, to describe hardware configuration including physical memory layout,
-bus hierarchies, device identities, memory-mapped I/O addresses, and
-interrupt routing.
-
-\begin{table}[h]
-\centering
-\small
-\rowcolors{2}{tbcol}{tbcol}
-\begin{tabular}{|l|l|l|}
-\hline
-\rowcolor{thcol}
-\thead{symbol} & \thead{name} & \thead{description} \\
-\hline
-\textbf{DTS} & device tree source & the hardware description format \\
-\textbf{DTB} & device tree binary & the compiled binary object \\
-\textbf{FDT} & flattened device tree & the runtime device tree format \\
-\textbf{AML} & ACPI machine language & the ACPI bytecode description format \\
-\hline
-\end{tabular}
-\caption{glyph hardware description formats}
-\label{tab:glyph-hardware-description-formats}
-\end{table}
-
-\par\noindent
-the hardware description provides a map of physical memory, devices,
-resources and metadata to firmware and system software. it encodes memory
-regions, bus hierarchies, interrupt routing, and device-specific
-configuration properties. the firmware parses it at boot to initialize
-devices and expose it to the bootloader and system software, ensuring a
-uniform view of hardware. device tree or ACPI binary data is made
-available via EFI configuration tables, along with optional SMBIOS data.
-
-\begin{table}[h]
-\centering
-\small
-\rowcolors{2}{tbcol}{tbcol}
-\begin{tabular}{|l|l|}
-\hline
-\rowcolor{thcol}
-\thead{symbol} & \thead{GUID} \\
-\hline
-\texttt{EFI\_FDT\_TABLE\_GUID} & \texttt{B1B621D5-F19C-41A5-830B-D9152C69AAE0} \\
-\texttt{EFI\_ACPI2\_TABLE\_GUID} & \texttt{8868E871-E4F1-11D3-BC22-0080C73C8881} \\
-\texttt{EFI\_SMBIOS3\_TABLE\_GUID} & \texttt{F2FD1544-9794-4A2C-992E-E5BBCF20E394} \\
-\hline
-\end{tabular}
-\caption{glyph EFI hardware description table GUIDs}
-\label{tab:efi-fdt-table-guid}
-\end{table}
-
-\subsection{virtual devices}
+\subsubsection{virtual devices}
 
 the base virtual machine model recommends OASIS Virtual I/O (VirtIO) for
 virtual devices. the following VirtIO device models are recommended for
 inclusion in the base model.
-
+\para
+the virtual devices provide the interface between the guest operating
+system and virtualized I/O devices. each device implements a VirtIO protocol
+and exposes standard operations such as configuration, data transfer, and
+interrupt signaling. the firmware and system software may use VirtIO
+device drivers for platform-independent I/O in virtual environments.
+\\
 \begin{table}[h]
 \centering
-\small
+\footnotesize
 \rowcolors{2}{tbcol}{tbcol}
 \begin{tabular}{|l|l|}
 \hline
@@ -6204,13 +6178,6 @@ inclusion in the base model.
 \caption{glyph virtual machine virtual devices}
 \label{tab:glyph-virtual-machine-virtual-devices}
 \end{table}
-
-\par\noindent
-the virtual devices provide the interface between the guest operating
-system and virtualized I/O devices. each device implements a VirtIO protocol
-and exposes standard operations such as configuration, data transfer, and
-interrupt signaling. the firmware and system software may use VirtIO
-device drivers for platform-independent I/O in virtual environments.
 
 \chapter{Instructions}
 
@@ -6771,6 +6738,7 @@ and the \emph{program counter} is set to a trap vector address.
 
 \addtocontents{toc}{\protect\clearpage}
 \chapter{Assembly}
+\label{sec:assembly-reference}
 
 \section{Introduction}
 
@@ -7003,9 +6971,69 @@ the following table lists \arch{} assembler pseudo-instruction aliases:
 \end{table}
 
 \newpage
+\section{Application binary interface}
+
+the application binary interface is the set of specifications that
+determine the calling conventions, object, archive, debug, and
+executable file formats, static and dynamic linking, thread local
+storage, and program loading behavior for the architecture.
+the calling convention covers register classes and preservation
+rules, such as argument and return value registers, stack pointer,
+frame pointer, return address, and temporary registers, caller-save
+or callee-save behavior, parameter-passing register assignment rules,
+and stack alignment.
+\para
+\S\ref{sec:assembly-reference} covers the assembler and linker
+conventions.
+\S\ref{sec:calling-convention-general-min} defines the calling convention
+for the \emph{general-min} embedded architectural profile targeting
+the 16-bit instruction subset with support for 8 general registers.
+the application binary interfaces for the other architectural profiles:
+\emph{general-max}, \emph{vector-min}, and \emph{vector-max}, are defined
+in processor supplement documents for their respective binary formats,
+including the following:
+\\
+\begin{table}[h]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{format} & \thead{ABI} & \thead{description} \\
+\hline
+\textbf{PE}     & \textsf{glyph-pe}    & Portable Executable Format \\
+\textbf{ELF}    & \textsf{glyph-elf}   & Executable and Linkable Format \\
+\textbf{Mach-O} & \textsf{glyph-macho} & Mach Object Format \\
+\textbf{DWARF}  & \textsf{glyph-dwarf} & Debugging Information Format \\
+\hline
+\end{tabular}
+\caption{glyph binary formats and ABIs}
+\label{tab:glyph-binary-formats-and-abis}
+\end{table}
+
 \section{Calling conventions}
-\subsection{calling convention --- 16-bit}
-\label{sec:calling-convention-16-bit}
+
+it is recommended that all code targeting the architecture is
+position-independent.
+the stack pointer should be in general register \texttt{r0}, the
+frame pointer, if present, in general register \texttt{r1},
+and the return address in general register \texttt{r7}.
+the stack pointer should be aligned to 64-bytes on function entry,
+to support aligned 512-bit vector load and store instructions for the
+\emph{vector-min} and \emph{vector-max} architectural profiles.
+the \emph{immediate base} register must point to a valid immediate block
+on function entry, and be restored to that value in the function
+\emph{epilogue} before returning.
+the split instruction and constant streams require function symbols
+to be exported with two labels; one in the \texttt{.text} section,
+and one in the \texttt{.const} section.
+the remainder of the details are to be defined in the processor
+supplement documents.
+
+\newpage
+\subsection{\emph{general-min} calling convention}
+\label{sec:calling-convention-general-min}
 
 the 16-bit instruction packet, while intended to be used in conjunction
 with the larger opcodes, is designed as a complete subset, so there is
