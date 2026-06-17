@@ -37,6 +37,9 @@ software-defined MMU\sep message-signaled interrupts\sep virtual machine}
 \addbibresource{doc/glyph.bib}
 \AtBeginBibliography{\small}
 
+% architecture name
+\def\arch{\textsf{glyph}}
+
 % table styles
 \newcommand{\thead}[1]{\sffamily #1}
 \newcommand{\tsub}[1]{\sffamily\itshape #1}
@@ -119,15 +122,15 @@ software-defined MMU\sep message-signaled interrupts\sep virtual machine}
 
 \chapter*{Abstract}
 
-glyph is a RISC architecture designed with simplicity as its dominating
+\arch{} is a RISC architecture designed with simplicity as its dominating
 principle. it separates instructions from constants, uses a compact and
 regular variable-length instruction format, and encodes scalar control
 flow with a single-bit predicate register that corresponds to vector
 mask operations. the design places particular emphasis on the relationship
 between instruction encoding, execution, virtualization, memory management,
-capabilities, and isolation. rather than treating these concerns as
-separate layers, glyph integrates them into a coherent architectural model
-that is both practical to implement and straightforward to understand.
+capabilities, and isolation. rather than treating these concerns separately,
+the architecture integrates them into a coherent model that is both
+practical to implement and straightforward to understand.
 
 % table of contents
 \cleardoublepage
@@ -632,7 +635,7 @@ to 8-bit through to 64-bit constants.
 \newpage
 \section{Program streams}
 
-glyph separates the stored programs into two streams, one with instructions
+\arch{} separates the stored programs into two streams, one with instructions
 and one with constants~\cite{Solomonoff1964}. the instruction stream is
 addressed with the \emph{program counter (pc)} and the constant stream is
 addressed with the \emph{immediate base (ib)} register. this could be
@@ -754,15 +757,15 @@ relative addressing mode.
 \section{Core concepts}
 
 \par\noindent
-glyph is a super regular RISC architecture that encodes constants in a
+\arch{} is a super regular RISC architecture that encodes constants in a
 secondary stream accessed via an \emph{immediate base} that points at
 immediate block constants using a constant address mode.
 the \emph{immediate base} register branches like the \emph{program counter},
 and procedure calls and returns set and restore \emph{(pc,ib)} together.
 \para
-glyph uses relative address vectors in its link register, packing two
-\emph{(pc,ib)} displacements into a single register. this avoids requiring
-a second link register for the immediate base, maintaining compatibility
+the architecture uses relative address vectors to pack two \emph{(pc,ib)}
+displacements into a single link register. this avoids the need for a
+second link register to store the immediate base, maintaining compatibility
 with the single link register on traditional RISC architectures.
 \para
 immediate blocks can be switched using the immediate block branch instruction.
@@ -771,7 +774,7 @@ using long-form instruction sequences, immediate block constants use C-style
 structure packing and alignment rules. this keeps relocations word-aligned
 and avoids patching of instruction encoding fields.
 \para
-this list outlines differentiating features of the glyph architecture:
+this list outlines differentiating features of the architecture:
 
 \begin{itemize}[itemsep=0pt]
 \item variable length instruction format supporting 16, 32, and 64-bit
@@ -810,15 +813,15 @@ link, composing directly with the caller's link register.
 \section{Core parameters}
 
 \par\noindent
-glyph has several architectural parameters that define the dimensions of an
+\arch{} has several architectural parameters that define the dimensions of an
 instance of the architecture.
 configurations of these parameters are grouped into architectural profiles.
 
 \subsection{architectural parameters}
 
-glyph defines a unified floating-point and integer general register file
-with 8 or 64 registers and an optional unified floating-point and integer
-vector register file with 64 registers.
+the architecture has a unified floating-point and integer general register
+file with 8 or 64 registers and an optional unified floating-point and
+integer vector register file with 64 registers.
 
 \begin{itemize}[itemsep=0pt]
 \item 16-bit instruction packet can access 8 registers with up to 3 operands.
@@ -827,7 +830,7 @@ vector register file with 64 registers.
 \end{itemize}
 
 \par\noindent
-glyph architectural parameters are as follows:
+the architectural parameters are as follows:
 
 \begin{table}[h]
 \centering
@@ -858,7 +861,7 @@ SLEN & 128        & width of vector subgroup in bits \\
 
 \subsection{architectural profiles}
 
-glyph architectural parameters are linked to the dimensions of the
+the architectural parameters are linked to the dimensions of the
 register slots in the variable length instruction packets. the 16-bit
 packet can be used in a freestanding micro-controller profile. the 32-bit
 packet contains scalar and packed-SIMD\footnote{SIMD - Single Instruction
@@ -891,8 +894,8 @@ contains packed-SIMD instruction on vector registers.
 \newpage
 \section{Instruction format}
 
-instructions use a variable length format~\cite{US5717881A} with a
-16-bit instruction packet that supports 16, 32, 64, and 128-bit
+\arch{} instructions use a variable length format~\cite{US5717881A} with
+a 16-bit instruction packet that supports 16, 32, 64, and 128-bit
 instruction words. the instruction packet uses a \emph{super regular}
 scheme, whereby successive instruction packets extend the fields in
 the previous instruction packet~\cite{US6877084B1}. instruction words
@@ -1310,7 +1313,7 @@ this section details the layout of the \isize-bit instruction forms:
   \end{tikzpicture}%
 }
 
-glyph has a register state comprising a predicate register, a program
+the architectural register state comprises a predicate register, a program
 counter, an immediate base register, a unified floating-point and integer
 general register file, and an optional unified floating-point and integer
 vector register file.
@@ -1543,7 +1546,7 @@ register state:
 \newpage
 \section{Type formats}
 
-there are three basic scalar types used with the scalar and packed SIMD instructions:
+the architecture uses three basic scalar types with the scalar and packed SIMD instructions:
 
 \vspace{-0.3em}
 
@@ -1955,7 +1958,7 @@ and 112-bit fraction ($f$) fields.
 \newpage
 \section{Type conventions}
 
-glyph adopts a common type naming convention for integer and floating-point
+a common type naming convention is used for integer and floating-point
 scalar and packed SIMD vector types. each type is described by several attributes:
 
 \vspace{-0.3em}
@@ -2071,15 +2074,15 @@ the following table lists \width-bit vector types, their symbols, mnemonics, and
 \newpage
 \section{Memory model}
 
-the glyph memory model covers address spaces, isolation,
-memory classes, memory types, and memory ordering.
+the memory model covers address spaces, isolation,
+memory classes, types, and ordering rules.
 address spaces define isolation and memory class.
 memory types define caching and write behavior.
 atomic operations define synchronization and ordering.
 
 \subsection{address spaces}
 
-glyph divides the address space into several categories with different characteristics:
+address spaces are divided into categories with different prefixes and characteristics:
 \\
 \begin{table}[h]
 \centering
@@ -2141,11 +2144,10 @@ and is typically uncached.
 
 \subsection{memory types}
 
-glyph supports several memory types that define caching and write
-propagation behaviour for memory accesses.
-memory types are specified via memory type registers or address
-translation attributes and determine how memory regions interact
-with the caching system.
+the architecture supports several memory types that define caching and
+write propagation behavior for memory accesses. they are specified via
+memory type registers or address translation attributes to determine how
+memory regions interact with the caching system.
 \para
 memory regions that have a memory type with caching enabled must support
 misaligned loads and stores, excluding instructions that are explicitly
@@ -2174,10 +2176,10 @@ the following table lists memory types, their symbols, and descriptions:
 
 \subsection{memory ordering}
 
-glyph adopts a simple memory consistency model designed for
-practical implementation in hardware or for translation to processors
-with \emph{weakly-ordered} \emph{acquire-release} memory models as well
-as processors with \emph{strongly-ordered} memory models that possess a
+the architecture has a memory consistency model designed for practical
+implementation in hardware or for translation to processors with
+\emph{weakly-ordered} \emph{acquire-release} memory models and to
+processors with \emph{strongly-ordered} memory models that possess a
 \emph{total store order}.
 the memory consistency model has the following properties:
 
@@ -2188,7 +2190,7 @@ the memory consistency model has the following properties:
 \end{itemize}
 
 \par\noindent
-glyph is designed to support translation to instruction sets with
+the design supports translation to instruction sets with
 weakly-ordered memory operations.
 to achieve this, synchronized operations must enforce a total order among
 themselves, realized at synchronization points immediately following them.
@@ -4666,7 +4668,7 @@ description models, and virtual devices for I/O. \\
 \newpage
 \section{Interrupt handling}
 
-the glyph interrupt system is designed to support synchronous and
+the interrupt system is designed to support synchronous and
 asynchronous traps to divert control flow for instruction execution
 exceptions and synchronous or asynchronous message delivery interrupts
 for inter-domain messages, timers, and peripheral interrupt pins.
@@ -5909,7 +5911,7 @@ the virtual to physical address translation process is as follows.
 \newpage
 \subsection{nested address translation}
 
-the glyph architecture supports nested address translation with per-domain
+the architecture supports nested address translation with per-domain
 software-defined TLB miss handlers via a combination of the machine
 extension and the domain extension. the capability extension is used to
 limit control of this functionality to designated domains.
@@ -5964,7 +5966,7 @@ the following handler vectors are used by nested machine context TLB miss handle
 %\addtocontents{toc}{\protect\clearpage}
 \section{Virtual machine}
 
-glyph has a well-defined base virtual machine model with a system memory
+the architecture defines a virtual machine model with a system memory
 map, power-on and reset behavior, application binary interface, hypervisor
 software roles, and a minimum set of firmware interfaces, hardware
 description models, and virtual devices for I/O.
@@ -6027,7 +6029,7 @@ preserves the predicate register, plus general and vector registers.
 
 \subsection{application binary interface}
 
-it is recommended that code targeting the glyph architecture is
+it is recommended that code targeting the architecture is
 position-independent. \S\ref{sec:calling-convention-16-bit} defines
 the calling convention for the 16-bit instruction subset.
 application binary interfaces are defined in processor supplement
@@ -6090,7 +6092,7 @@ handing over control to the firmware.
 
 the base virtual machine model provides early boot interfaces to bootloaders
 and operating systems using the Unified Extensible Firmware Interface (UEFI).
-the following minimal set of UEFI protocols are required in the glyph base
+the following minimal set of UEFI protocols are required in the base
 virtual machine model.
 
 \begin{table}[h]
@@ -6770,9 +6772,9 @@ and the \emph{program counter} is set to a trap vector address.
 
 \section{Introduction}
 
-this glyph assembly language reference begins with an introduction to
+the assembly language reference begins with an introduction to
 assembler and linker concepts and terminology, followed by sections
-describing the glyph assembler directives, and pseudo-instruction aliases.
+describing the assembler directives, and pseudo-instruction aliases.
 
 \section{Concepts}
 this section covers the concepts required to understand assembling and
@@ -6864,7 +6866,7 @@ AT\&T System V assembler~\cite{att-svr4-asm} and the GNU assembler%
 include arbitrary data, align data, export symbols, switch sections,
 define constants, and emit metadata.
 \para
-the following table lists glyph assembler directives:
+the following table lists \arch{} assembler directives:
 
 \begin{table}[h]
 \centering
@@ -6926,7 +6928,7 @@ the following table lists glyph assembler directives:
 the assembler implements a number of convenience pseudo-instruction aliases
 that are formed from regular instructions, but have implicit or deduced arguments.
 \para
-the following table lists glyph assembler pseudo-instruction aliases:
+the following table lists \arch{} assembler pseudo-instruction aliases:
 
 \begin{table}[h]
 \centering
