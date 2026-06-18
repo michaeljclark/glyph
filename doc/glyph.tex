@@ -7016,18 +7016,16 @@ including the following:
 
 it is recommended that all code targeting the architecture is
 position-independent.
-the stack pointer should be in general register \texttt{r0}, the
-frame pointer, if present, in general register \texttt{r1},
-and the return address in general register \texttt{r7}.
+the stack pointer must be in register \texttt{r0}, and the return
+address must be in register \texttt{r7}.
 the stack pointer should be aligned to 64-bytes on function entry,
-to support aligned 512-bit vector load and store instructions for the
+to support 512-bit aligned vector memory instructions using the
 \emph{vector-min} and \emph{vector-max} architectural profiles.
-the \emph{immediate base} register must point to a valid immediate block
-on function entry, and be restored to that value in the function
-\emph{epilogue} before returning.
-the split instruction and constant streams require function symbols
-to be exported with two labels; one in the \texttt{.text} section,
-and one in the \texttt{.const} section.
+the \emph{immediate base} register must point to a valid immediate
+block on function entry, and be restored to that value in the
+\emph{epilogue} to support relative link address vectors.
+split instruction and constant streams require functions to export two
+labels, one in each of the \texttt{.text} and \texttt{.const} sections.
 the remainder of the details are to be defined in the processor
 supplement documents.
 
