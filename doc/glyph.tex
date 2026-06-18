@@ -6023,6 +6023,66 @@ the following handler vectors are used by nested machine context TLB miss handle
 
 \newpage
 %\addtocontents{toc}{\protect\clearpage}
+\section{Security model}
+
+the domain and capability extensions define the principal access and
+isolation mechanism for the architecture, in addition to intrinsic user
+and system role isolation with address space prefixes.
+the domain extension provides isolated contexts with role-based trap
+routing and context switching.
+the capability extension provides role-based instruction execution
+and memory access permissions based on page table entry colors.
+the machine extension provides access to memory type configuration,
+first-level and second-level software-defined address translation handlers.
+the message role provides access to inter-domain message interrupts.
+
+\subsection{Roles}
+
+the architecture provides several roles that together define the isolation
+and privilege model across execution, memory, and communication domains.
+\para
+\textbf{user role:}
+the user role provides the least-privileged context for
+user-level applications. it protects the privileged roles from untrusted
+software by restricting access to user-level instructions and memory
+in the user address space.
+\para
+\textbf{system role:}
+the system role provides the privileged context for trusted systems software.
+it provides access to system instructions, fault handlers for debug,
+illegal instruction, alignment, and page fault exceptions, and for memory
+access faults in the system address space.
+\para
+\textbf{domain role:}
+the domain role provides the privileged context to configure isolated domain
+execution contexts, including configuration of trap routing registers for
+role-based exception delivery.
+it protects software components from one another via domain boundaries.
+\para
+\textbf{capability role:}
+the capability role provides the privileged context to associate page table
+colors with memory access permissions and roles, to enable masking of memory
+access permissions and restriction of executable pages to specific roles.
+\para
+\textbf{machine role:}
+the machine role provides the privileged context to configure the memory
+type registers, to control address translation, and to run software-defined
+TLB miss handlers for custom first-level and second-level address translation.
+\para
+\textbf{message role:}
+the message role provides the privileged context to process inter-domain
+messages, which include locally-scoped synchronous message instructions,
+and globally-scoped asynchronous message exceptions, such as timers and
+message-signaled interrupts.
+
+\subsection{Permissions}
+
+the capability extension associates page table colors with additional
+permission masks, which are combined with page table permissions during
+memory access checks.
+
+\newpage
+%\addtocontents{toc}{\protect\clearpage}
 \section{Virtual machine}
 
 the architecture defines a virtual machine model with a system memory
