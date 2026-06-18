@@ -3090,8 +3090,10 @@ permission checks using page table colors.
 the capability extension is a component of the privilege and virtual machine
 isolation system.
 color permissions mask page table permissions based on page table color.
+\iffalse
 color roles restrict access to privileged registers and instructions based on
 page table color.
+\fi
 privileged registers and instructions have predefined roles associated with them.
 \para
 the architecture is designed to work without the capability extension.
@@ -3141,7 +3143,10 @@ the following table lists the privileged capability system registers:
 \hline
 \texttt{0x43} & colorread      & color read permissions & \\
 \texttt{0x44} & colorwrite     & color write permissions & \\
-%\texttt{0x45} & colorexec      & color exec permissions & \\
+\iffalse
+\texttt{0x45} & colorexec      & color exec permissions & \\
+\fi
+\iffalse
 \hline
 \rowcolor{tscol}
 \multicolumn{4}{|l|}{\tsub{capability role registers}} \\
@@ -3150,13 +3155,16 @@ the following table lists the privileged capability system registers:
 \texttt{0x47} & colordom       & color domain role & domain \\
 \texttt{0x48} & colorcap       & color capability role & \\
 \texttt{0x49} & colormac       & color machine role & machine \\
-%\hline
-%\rowcolor{tscol}
-%\multicolumn{4}{|l|}{\tsub{capability matrix registers}} \\
-%\hline
-%\texttt{0x100...0x10F} & colormatread$[n]$   & color matrix read permissions & \\
-%\texttt{0x200...0x20F} & colormatwrite$[n]$   & color matrix write permissions & \\
-%\texttt{0x300...0x30F} & colormatexec$[n]$   & color matrix exec permissions & \\
+\fi
+\iffalse
+\hline
+\rowcolor{tscol}
+\multicolumn{4}{|l|}{\tsub{capability matrix registers}} \\
+\hline
+\texttt{0x100...0x10F} & colormatread$[n]$   & color matrix read permissions & \\
+\texttt{0x200...0x20F} & colormatwrite$[n]$   & color matrix write permissions & \\
+\texttt{0x300...0x30F} & colormatexec$[n]$   & color matrix exec permissions & \\
+\fi
 \hline
 \end{tabularx}
 \caption{capability registers}
@@ -3173,9 +3181,9 @@ capability extension features and report their presence.
 \texttt{capcontrol} is a read-write register containing capability control bits.
 \\
 \registerspec{32}{32}{%
-  1//{0}//\texttt{P},%
-  1//{1}//\texttt{R}%
-  %1//{2}//\texttt{M}
+  1//{0}//\texttt{P}%
+  %1//{1}//\texttt{R}%
+  %1//{2}//\texttt{M}%
 }
 
 \begin{table}[h]
@@ -3188,7 +3196,7 @@ capability extension features and report their presence.
 \thead{no.} & \thead{name} & \thead{description} \\
 \hline
 \verb|1 << 0| & P   & color permission check enable \\
-\verb|1 << 1| & R   & color role check enable \\
+%\verb|1 << 1| & R   & color role check enable \\
 %\verb|1 << 2| & M   & color matrix check enable \\
 \hline
 \end{tabular}
@@ -3200,9 +3208,9 @@ capability extension features and report their presence.
 \texttt{capfeature} is a read-only register containing capability feature bits.
 \\
 \registerspec{32}{32}{%
-  1//{0}//\texttt{P},%
-  1//{1}//\texttt{R}%
-  %1//{2}//\texttt{M}
+  1//{0}//\texttt{P}%
+  %1//{1}//\texttt{R}%
+  %1//{2}//\texttt{M}%
 }
 
 \begin{table}[h]
@@ -3215,7 +3223,7 @@ capability extension features and report their presence.
 \thead{no.} & \thead{name} & \thead{description} \\
 \hline
 \verb|1 << 0| & P   & color permission check feature \\
-\verb|1 << 1| & R   & color role check feature \\
+%\verb|1 << 1| & R   & color role check feature \\
 %\verb|1 << 2| & M   & color matrix check feature \\
 \hline
 \end{tabular}
@@ -3262,6 +3270,7 @@ used to check execution in pages with a matching page table color.
 }
 \fi
 
+\iffalse
 \newpage
 \subsection{capability role registers}
 
@@ -3314,6 +3323,7 @@ executable pages with a matching page table color.
 \registerspec{32}{32}{%
   8/{0}//{15}/\emph{machine role}%
 }
+\fi
 
 \iffalse
 \newpage
@@ -6030,11 +6040,18 @@ isolation mechanism for the architecture, in addition to intrinsic user
 and system role isolation with address space prefixes.
 the domain extension provides isolated contexts with role-based trap
 routing and context switching.
+\iffalse
 the capability extension provides role-based instruction execution
 and memory access permissions based on page table entry colors.
+\else
+the capability extension provides memory access permissions based on
+page table entry colors.
+\fi
 the machine extension provides access to memory type configuration,
 first-level and second-level software-defined address translation handlers.
+\iffalse
 the message role provides access to inter-domain message interrupts.
+\fi
 
 \subsection{Roles}
 
@@ -6061,8 +6078,13 @@ it protects software components from one another via domain boundaries.
 \para
 \textbf{capability role:}
 the capability role provides the privileged context to associate page table
+\iffalse
 colors with memory access permissions and roles, to enable masking of memory
 access permissions and restriction of executable pages to specific roles.
+\else
+colors with memory access permissions, to enable masking of memory
+access permissions.
+\fi
 \para
 \textbf{machine role:}
 the machine role provides the privileged context to configure the memory
