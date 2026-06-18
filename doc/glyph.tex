@@ -3653,9 +3653,9 @@ constants in each domain.
 \section{Machine extension}
 
 the architecture provides an optional machine extension that includes
-registers for physical memory protection, machine context vectors,
-software-defined memory management, and control of the capability and
-domain extensions.
+registers for control of the capability and domain extensions,
+physical memory protection, machine context vectors, software-defined
+memory management, and memory type information.
 \para
 the architecture is designed to work without the machine extension.
 if the machine extension is not present, then the system page table
@@ -3697,13 +3697,9 @@ the following table lists the privileged machine registers:
 \texttt{0x63} & mtlbkey   & machine tlb key & \\
 \texttt{0x64} & mtlbscope & machine tlb format & \\
 \texttt{0x65} & mtlbent   & machine tlb entry & \\
-\hline
-\rowcolor{tscol}
-\multicolumn{4}{|l|}{\tsub{memory type registers}} \\
-\hline
-\texttt{0x66} & mtcount & memory type count & \\
-\texttt{0x2300...0x230F} & mtaddr$[n]$ & memory type address & \\
-\texttt{0x2400...0x240F} & mtmask$[n]$ & memory type mask & \\
+\texttt{0x66} & mtcount   & memory type count & \\
+\texttt{0x2300...0x230F}  & mtaddr$[n]$ & memory type address & \\
+\texttt{0x2400...0x240F}  & mtmask$[n]$ & memory type mask & \\
 \hline
 \end{tabularx}
 \caption{machine registers}
@@ -3814,11 +3810,13 @@ machine trap handler constants in each domain.
 
 \newpage
 \subsection{machine memory registers}
-the section describes the privileged machine registers for address
-translation. the registers in this section enable a \emph{tlb-miss-fault}
-trap handler to perform address translation by walking the page table
-structures and populating the TLB\footnote{Translation Lookaside Buffer}
-as part of a software-defined MMU\footnote{Memory Management Unit}.
+
+the section describes the privileged machine registers for software-defined
+address translation and memory type information. the address translation
+registers enable a \emph{tlb-miss-fault} trap handler that walks page table
+trie structure to populate the TLB\footnote{Translation Lookaside Buffer}.
+the memory type registers enable configuration of caching and write
+propagation behavior for memory ranges.
 
 \subsubsection{machine translation lookaside buffer key (\texttt{mtlbkey})}
 \texttt{mtlbkey} is a read-only register containing the translation address
@@ -4027,10 +4025,6 @@ entry formats are as follows.
 \end{figure}
 
 \newpage
-\subsection{memory type registers}
-the section describes the privileged machine registers containing
-memory type information for ranges of physical memory accessed via
-the memory port on one processor.
 
 \subsubsection{memory type count (\texttt{mtcount})}
 \texttt{mtcount} is a read-only register containing the number of
