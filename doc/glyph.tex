@@ -3134,6 +3134,7 @@ the following table lists the privileged capability system registers:
 \multicolumn{4}{|l|}{\tsub{capability control registers}} \\
 \hline
 \texttt{0x41} & capcontrol     & capability control & \\
+\texttt{0x42} & capfeature     & capability feature & \\
 \hline
 \rowcolor{tscol}
 \multicolumn{4}{|l|}{\tsub{capability permission registers}} \\
@@ -3166,14 +3167,14 @@ the following table lists the privileged capability system registers:
 \subsection{capability control registers}
 
 this section describes the \emph{capability control registers} which enable
-the capability extension.
+capability extension features and report their presence.
 
 \subsubsection{capability control (\texttt{capcontrol})}
 \texttt{capcontrol} is a read-write register containing capability control bits.
 \\
 \registerspec{32}{32}{%
   1//{0}//\texttt{P},%
-  1//{1}//\texttt{C}%
+  1//{1}//\texttt{R}%
   %1//{2}//\texttt{M}
 }
 
@@ -3187,7 +3188,7 @@ the capability extension.
 \thead{no.} & \thead{name} & \thead{description} \\
 \hline
 \verb|1 << 0| & P   & color permission check enable \\
-\verb|1 << 1| & C   & color role check enable \\
+\verb|1 << 1| & R   & color role check enable \\
 %\verb|1 << 2| & M   & color matrix check enable \\
 \hline
 \end{tabular}
@@ -3195,13 +3196,42 @@ the capability extension.
 \label{tab:capability-control-fields}
 \end{table}
 
+\subsubsection{capability feature (\texttt{capfeature})}
+\texttt{capfeature} is a read-only register containing capability feature bits.
+\\
+\registerspec{32}{32}{%
+  1//{0}//\texttt{P},%
+  1//{1}//\texttt{R}%
+  %1//{2}//\texttt{M}
+}
+
+\begin{table}[h]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
+\hline
+\verb|1 << 0| & P   & color permission check feature \\
+\verb|1 << 1| & R   & color role check feature \\
+%\verb|1 << 2| & M   & color matrix check feature \\
+\hline
+\end{tabular}
+\caption{capability feature fields}
+\label{tab:capability-feature-fields}
+\end{table}
+
+\newpage
 \subsection{capability permission registers}
 
 this section describes the \emph{capability permission registers} which
 define \emph{page table color} permission masks for page table entries.
-when \texttt{capcontrol.P} is set, the \emph{capability permission registers}
-are combined with page table permissions to limit maximum \emph{read}
-and \emph{write} permission based on page table color.
+when \texttt{capcontrol.P} and \texttt{mcontrol.C} are set, the
+\emph{capability permission registers} are combined with page table
+permissions to limit maximum \emph{read} and \emph{write} permission
+based on page table color.
 
 \subsubsection{color read permission (\texttt{colorread})}
 \texttt{colorread} is a read-write register containing an array
@@ -3237,10 +3267,11 @@ used to check execution in pages with a matching page table color.
 
 this section describes the \emph{capability role registers}.
 the \emph{capability role registers} control access to privileged
-registers and instructions based on \emph{page table color} of the executable text.
-when \texttt{capcontrol.C} is set, privileged registers and
-instructions cause capability traps for illegal accesses, which are
-restricted based on the \emph{system}, \emph{domain},
+registers and instructions based on \emph{page table color} of the
+executable text.
+when \texttt{capcontrol.R} and \texttt{mcontrol.C} are set, privileged
+registers and instructions cause capability traps for illegal accesses,
+which are restricted based on the \emph{system}, \emph{domain},
 \emph{capability}, and \emph{machine} roles.
 
 \subsubsection{color system role (\texttt{colorsys})}
@@ -3381,6 +3412,11 @@ the following table lists the privileged domain system registers:
 \multicolumn{4}{|l|}{\tsub{domain control registers}} \\
 \hline
 \texttt{0x51} & domcontrol & domain control & \\
+\texttt{0x52} & domfeature & domain feature & \\
+\hline
+\rowcolor{tscol}
+\multicolumn{4}{|l|}{\tsub{domain routing registers}} \\
+\hline
 \texttt{0x53} & domsp    & domain stack pointer & \\
 \texttt{0x54} & domvec   & domain number vector & \\
 \texttt{0x500...0x50F}   & domroute$[n]$    & domain default routes & capability \\
@@ -3407,10 +3443,8 @@ the following table lists the privileged domain system registers:
 \newpage
 \subsection{domain control registers}
 
-this section describes the \emph{domain control registers}, which enable
-the domain extension, provide access to the domain stack pointer,
-the domain number vector, and control trap routing for context switching
-of system, domain, capability, machine, and message traps.
+this section describes the \emph{domain control registers} which enable
+domain extension features and report their presence.
 
 \subsubsection{domain control (\texttt{domcontrol})}
 \texttt{domcontrol} is a read-write register containing domain control bits.
@@ -3428,12 +3462,43 @@ of system, domain, capability, machine, and message traps.
 \rowcolor{thcol}
 \thead{no.} & \thead{name} & \thead{description} \\
 \hline
-\verb|1 << 0| & D   & domain contexts enable \\
+\verb|1 << 0| & D   & domain context switch enable \\
 \hline
 \end{tabular}
 \caption{domain control fields}
 \label{tab:domain-control-fields}
 \end{table}
+
+\subsubsection{domain feature (\texttt{domfeature})}
+\texttt{domfeature} is a read-only register containing domain feature bits.
+\\
+\registerspec{32}{32}{%
+  1//{0}//\texttt{D}%
+}
+
+\begin{table}[h]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
+\hline
+\verb|1 << 0| & D   & domain context switch feature \\
+\hline
+\end{tabular}
+\caption{domain feature fields}
+\label{tab:domain-feature-fields}
+\end{table}
+
+\newpage
+\subsection{domain routing registers}
+
+this section describes the \emph{domain control registers}, which provide
+access to the domain stack pointer, the domain number vector, and control
+trap routing for context switching of system, domain, capability, machine,
+and message traps.
 
 \subsubsection{domain stack pointer (\texttt{domsp})}
 \texttt{domsp} is a read-write register containing the domain stack
@@ -4984,8 +5049,8 @@ the following register arrays hold state for a domain context switch:
 \end{table}
 
 \par\noindent
-when domain contexts are enabled in \texttt{domcontrol.D}, system traps
-use the \emph{domain\_trap} and \emph{domain\_return} procedures to
+when domain context switch is enabled in \texttt{domcontrol.D}, system
+traps use the \emph{domain\_trap} and \emph{domain\_return} procedures to
 enable domain context stacking when delivering and return from traps.
 when domain contexts are disabled in \texttt{domcontrol.D}, or if the
 domain extension is not present, system traps use the \emph{system\_trap}
@@ -5922,7 +5987,7 @@ software-defined TLB miss handlers.
 domains specify a machine default domain in \texttt{domroute[domain].mac},
 the machine context for nested address translation.
 when the domain and machine extensions are present,
-\texttt{domcontrol.C} and \texttt{mcontrol.V} are set, and the
+\texttt{domcontrol.D} and \texttt{mcontrol.V} are set, and the
 machine default domain is not self-mapped, then nested address
 translation will be active. the machine default domain may be
 self-mapped, in which case the domain context is a root machine context.
@@ -5946,7 +6011,7 @@ the following registers are read or written by the machine context TLB miss hand
 \subsubsection{nested software address translation}
 
 when the domain and machine extensions are present,
-\texttt{domcontrol.C} and \texttt{mcontrol.S} are set, and the
+\texttt{domcontrol.D} and \texttt{mcontrol.S} are set, and the
 machine default domain is not self-mapped, then nested software address
 translation is active and machine trap handler addresses are
 \emph{domain physical addresses}. when nested software address
