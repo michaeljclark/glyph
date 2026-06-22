@@ -4155,7 +4155,7 @@ the \emph{cause code} field is recorded in an environment log.
 \label{tab:environment-control-opcode-field}
 \end{table}
 
-\iffalse
+\iftrue
 %
 % array extension begin
 %
@@ -4166,6 +4166,39 @@ the array extension defines a 128-bit \emph{array unit descriptor}
 constant format containing array unit configuration along with array
 load and store instructions for tiled array fetches.
 
+\subsection{tiled array fetch}
+the array extension defines tiled array fetch instructions implementing
+image load-store, which are designed to map to Vulkan images.%
+\footnote{Khronos Group, \emph{Vulkan 1.3 Specification}, §16: Resource Descriptors,
+\url{https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html}.}
+Vulkan separates image and sampler descriptors into distinct binding types,
+where the image descriptor contains the memory layout, dimensions, format,
+and mipmap structure, and the sampler descriptor contains the filtering
+and interpolation configuration.
+SPIR-V represents the combined image and sampler as \texttt{OpTypeSampledImage}%
+\footnote{Khronos Group, \emph{SPIR-V Specification}, §3.32.10: Image Instructions,
+\url{https://registry.khronos.org/SPIR-V/specs/unified1/SPIRV.html}.}
+and uses \texttt{OpSampleImage} operations to fetch and filter samples.
+\para
+in the proposed architecture, filtering and interpolation are lowered
+to vector instructions and the tiled array fetch is implemented using
+array unit descriptors and instructions.
+the array unit descriptor is a 128-bit constant encoding the tiling
+geometry, dimension ordering, mipmap levels, component format, and
+swizzle for a tiled array resource.
+the array unit descriptor can represent Vulkan images in either linear or
+optimal tiling, corresponding to images before or after layout transition.
+\para
+the array unit descriptor is loaded from constant or data memory into a
+general register and used to configure the array unit before use.
+this enables temporal parallelism for address calculation.
+array unit instructions take a base address, a descriptor register, and
+a coordinate vector, and compute the final memory address from the tile
+geometry and mipmap level encoded in the descriptor. this makes the tiling
+layout visible to the compiler, in contrast to Vulkan image layouts,
+where tiling is implementation-defined and opaque to the application.
+
+\newpage
 \subsection{array unit descriptor}
 
 the array unit descriptor contains the following fields:
@@ -4451,7 +4484,7 @@ store scalar with desc (\texttt{rd}), base (\texttt{rb}), and coordinate (\textt
 vector-array-load \texttt{ve} \texttt{rd} \texttt{vc} \texttt{rb} \texttt{va} &
 load vector with desc (\texttt{rd}), base (\texttt{rb}), and vector of coordinates (\texttt{vc}) \\
 vector-array-store \texttt{rd} \texttt{vc} \texttt{rb} \texttt{va} &
-store vector with desc (\texttt{rd}), base (\texttt{rb}, and vector of coordinates (\texttt{vc}) \\
+store vector with desc (\texttt{rd}), base (\texttt{rb}), and vector of coordinates (\texttt{vc}) \\
 \hline
 \end{tabular}
 \caption{array unit instructions}
@@ -4460,7 +4493,7 @@ store vector with desc (\texttt{rd}), base (\texttt{rb}, and vector of coordinat
 
 \vspace{-1em}
 
-\subsection{coordinate vectors}
+\subsubsection{coordinate vectors}
 
 the 64-bit and 128-bit integer coordinate vector layouts are as follows.
 
@@ -4504,7 +4537,7 @@ the 64-bit and 128-bit integer coordinate vector layouts are as follows.
 \end{figure}
 
 \newpage
-\subsection{component swizzle}
+\subsubsection{component swizzle}
 
 the component swizzle using the array unit descriptor is as follows.
 
@@ -4538,7 +4571,7 @@ the component swizzle using the array unit descriptor is as follows.
 \end{algorithmic}
 \end{algorithm}
 
-\subsection{mipmap base address}
+\subsubsection{mipmap base address}
 the mipmap base address calculation using the array unit descriptor is as follows.
 
 \begin{algorithm}[H]
@@ -4579,7 +4612,7 @@ the mipmap base address calculation using the array unit descriptor is as follow
 \end{algorithm}
 
 \newpage
-\subsection{array dimensions}
+\subsubsection{array dimensions}
 
 the array dimensions are computed from the array unit descriptor as follows:
 \\
@@ -4627,7 +4660,7 @@ the coordinate field order is swapped using the array unit descriptor as follows
 \end{algorithmic}
 \end{algorithm}
 
-\subsection{address calculation}
+\subsubsection{address calculation}
 
 the array access address calculation using the array unit descriptor is as follows.
 
@@ -6877,7 +6910,7 @@ the \emph{illegal} instruction causes an illegal instruction trap.
 for the operating system to dispatch to an illegal instruction handler
 and the \emph{program counter} is set to a trap vector address.
 
-\addtocontents{toc}{\protect\clearpage}
+%\addtocontents{toc}{\protect\clearpage}
 \chapter{Assembly}
 \label{sec:assembly-reference}
 
