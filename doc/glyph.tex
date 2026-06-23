@@ -35,7 +35,7 @@ software-defined MMU\sep message-signaled interrupts\sep virtual machine}
 
 % bibliography
 \addbibresource{doc/glyph.bib}
-\AtBeginBibliography{\normalsize}
+\AtBeginBibliography{\small}
 
 % architecture name
 \def\arch{\textsf{glyph}}
@@ -4172,17 +4172,15 @@ load and store instructions for tiled array fetches.
 
 \subsection{tiled array fetch}
 the array extension defines tiled array fetch instructions implementing
-image load-store, which are designed to map to Vulkan images.%
-\footnote{Khronos Group, \emph{Vulkan 1.3 Specification}, §16: Resource Descriptors,
-\url{https://registry.khronos.org/vulkan/specs/1.3/html/vkspec.html}.}
-Vulkan separates image and sampler descriptors into distinct binding types,
-where the image descriptor contains the memory layout, dimensions, format,
-and mipmap structure, and the sampler descriptor contains the filtering
-and interpolation configuration.
-SPIR-V represents the combined image and sampler as \texttt{OpTypeSampledImage}%
-\footnote{Khronos Group, \emph{SPIR-V Specification}, §3.32.10: Image Instructions,
-\url{https://registry.khronos.org/SPIR-V/specs/unified1/SPIRV.html}.}
-and uses \texttt{OpSampleImage} operations to fetch and filter samples.
+image load-store, which map to Vulkan and OpenCL images%
+~\cite{khronos2023vulkan,khronos2023opencl}.
+Vulkan and OpenCL separate image and sampler objects into distinct types,
+where the image object encapsulates the memory layout, dimensions, and
+format, and the sampler object contains the filtering, interpolation,
+and addressing configuration.
+SPIR-V~\cite{khronos2023spirv} represents the combined image and sampler
+as \texttt{OpTypeSampledImage} and uses \texttt{OpSampleImage} operations
+to fetch and filter samples.
 \para
 in the proposed architecture, filtering and interpolation are lowered
 to vector instructions and the tiled array fetch is implemented using
