@@ -7238,7 +7238,7 @@ to the entry value in the function \emph{epilogue} before it can be restored
 by \texttt{ret}.
 \item \emph{argument registers} \texttt{a0} and \texttt{a1} are used for the
 first two arguments, and the remaining arguments are passed on the stack.
-\emph{return value} is places in \texttt{a0} and \texttt{a1},
+\emph{return value} is passed in \texttt{a0} and \texttt{a1},
 \emph{temporary register} \texttt{t0} is a volatile register, and
 \emph{frame pointer} (if enabled) uses \texttt{s0}. there are two more
 non-volatile \emph{callee-save} registers, \texttt{s1} and \texttt{s2}.
@@ -7258,7 +7258,6 @@ volatile \emph{caller-save} status.
 \rowcolor{thcol}
 \thead{name} & \thead{alias} & \thead{description} & \thead{save} \\
 \hline
-ib    &       & immediate base                              & callee \\
 r0    & sp    & stack pointer                               & callee \\
 r1    & s0/fp & saved register 0 / frame pointer            & callee \\
 r2    & s1    & saved register 1                            & callee \\
