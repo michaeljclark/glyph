@@ -6161,6 +6161,28 @@ of capability-level policy as opposed to a system exception.
 capability faults are delivered through the domain extension
 trap routing mechanism, allowing each domain to configure an independent
 capability fault handler.
+\para
+the following table describes the architectural exception categories:
+\\
+\begin{table}[h]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{exception} & \thead{description} \\
+\hline
+system     & illegal instruction, breakpoint, alignment, page, memory access fault \\
+domain     & trap routing and inter-domain boundary violations \\
+capability & capability role and permission policy violations \\
+machine    & address translation and machine access violations \\
+message    & inter-domain message delivery, timer events, or interrupt pins \\
+\hline
+\end{tabular}
+\caption{glyph exception categories}
+\label{tab:glyph-exception-categories}
+\end{table}
 
 \newpage
 %\addtocontents{toc}{\protect\clearpage}
