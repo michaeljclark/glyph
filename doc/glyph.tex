@@ -2088,7 +2088,7 @@ atomic operations define synchronization and ordering.
 
 address space prefixes support architectural role checking based on address.
 address spaces extend a concept known as \emph{linear address space separation}%
-~\cite{intel2023sdm}, originally derived from the Linux kernel convention,
+~\cite{intel-sdm}, originally derived from the Linux kernel convention,
 whereby the upper half of the address space is reserved for system software,
 and the invariant on the address role is checked during execution.
 \para
@@ -4174,12 +4174,12 @@ load and store instructions for tiled array fetches.
 \subsection{tiled array fetch}
 the array extension defines tiled array fetch instructions implementing
 image load-store, which map to Vulkan and OpenCL images%
-~\cite{khronos2023vulkan,khronos2023opencl}.
+~\cite{khronos-vulkan,khronos-opencl}.
 Vulkan and OpenCL separate image and sampler objects into distinct types,
 where the image object encapsulates the memory layout, dimensions, and
 format, and the sampler object contains the filtering, interpolation,
 and addressing configuration.
-SPIR-V~\cite{khronos2023spirv} represents the combined image and sampler
+SPIR-V~\cite{khronos-spirv} represents the combined image and sampler
 as \texttt{OpTypeSampledImage} and uses \texttt{OpSampleImage} operations
 to fetch and filter samples.
 \para
