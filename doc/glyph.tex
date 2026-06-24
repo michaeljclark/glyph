@@ -6075,9 +6075,12 @@ the following handler vectors are used by nested machine context TLB miss handle
 %\addtocontents{toc}{\protect\clearpage}
 \section{Security model}
 
-the domain and capability extensions define the principal access and
-isolation mechanism for the architecture, in addition to intrinsic user
+the domain and capability extensions define the principal isolation
+mechanism for the architecture, in addition to intrinsic user
 and system role isolation with address space prefixes.
+
+\subsection{extensions}
+
 the domain extension provides isolated contexts with role-based trap
 routing and context switching.
 \iffalse
@@ -6137,11 +6140,27 @@ messages, which include locally-scoped synchronous message instructions,
 and globally-scoped asynchronous message exceptions, such as timers and
 message-signaled interrupts.
 
+\newpage
 \subsection{permissions}
 
 the capability extension associates page table colors with additional
 permission masks, which are combined with page table permissions during
-memory access checks.
+memory access checks. the capability permission registers give control
+over read and write permissions for page table colors.
+
+\subsection{exceptions}
+
+the domain and capability extensions enable capability role and permission
+exceptions, which are synchronous capability faults raised
+when instruction execution violates a capability role check or a memory
+access violates a capability permission check.
+\para
+capability role and permission exceptions are distinct from illegal
+instruction and page fault exceptions, in that they reflect violations
+of capability-level policy as opposed to a system exception.
+capability faults are delivered through the domain extension
+trap routing mechanism, allowing each domain to configure an independent
+capability fault handler.
 
 \newpage
 %\addtocontents{toc}{\protect\clearpage}
