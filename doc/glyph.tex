@@ -3090,16 +3090,19 @@ monitor exception} for a matching memory store address.
 \newpage
 \section{Capability extension}
 
-the architecture provides an optional capabilities extension for role and
-permission checks using page table colors.
-the capability extension is a component of the privilege and virtual machine
-isolation system.
+the architecture provides an optional capability extension that provides
+a capability-based security model which includes capability role exceptions
+for capability violations routed through the domain extension, role-based
+access control, and page-based permissions using page table colors.
+the capability extension integrates with the domain and machine extensions
+to form the architectural isolation model.
 color permissions mask page table permissions based on page table color.
 \iffalse
 color roles restrict access to privileged registers and instructions based on
 page table color.
 \fi
-privileged registers and instructions have predefined roles associated with them.
+privileged registers and instructions have capability roles associated with them.
+capability role exceptions are routed using the domain extension.
 \para
 the architecture is designed to work without the capability extension.
 if the capability extension is not present, the domain, capability,
