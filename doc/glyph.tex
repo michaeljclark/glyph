@@ -2086,6 +2086,12 @@ atomic operations define synchronization and ordering.
 
 \subsection{address spaces}
 
+address space prefixes support architectural role checking based on address.
+address spaces extend a concept known as \emph{linear address space separation}%
+~\cite{intel2023sdm}, originally derived from the Linux kernel convention,
+whereby the upper half of the address space is reserved for system software,
+and the invariant on the address role is checked during execution.
+\para
 address spaces are divided into categories with different prefixes and characteristics:
 \\
 \begin{table}[h]
@@ -2107,37 +2113,32 @@ address spaces are divided into categories with different prefixes and character
 \label{tab:glyph-address-spaces}
 \end{table}
 
-\vspace{-1em}
-
-\subsubsection{user}
-
+\par\noindent
+\textbf{user: }
 user memory is a virtual address space intended for application
 software executing with the \emph{user} role.
 user memory is isolated from the \emph{system} address space except
 through controlled privilege transitions.
 user memory may map physical memory, device memory, or other
 implementation-defined memory classes.
-
-\subsubsection{system}
-
+\para
+\textbf{system: }
 system memory is a virtual address space intended for operating systems
 and other privileged software executing with the \emph{system} role.
 system memory is isolated from the \emph{user} address space except
 through controlled privilege transitions.
 system memory may map physical memory, device memory, or other
 implementation-defined memory classes.
-
-\subsubsection{physical}
-
-physical memory is a globally visible memory class with well-defined
-cache-coherency and memory-ordering semantics.
-physical memory provides a common view of random-access memory shared
+\para
+\textbf{physical: }
+physical memory is a memory class with well-defined visibility,
+cache-coherency, and memory-ordering semantics.
+physical memory provides a view of random-access memory shared
 by all processing units in the system.
 physical memory may be accessed directly by privileged software or
 mapped into the \emph{user} or \emph{system} virtual address spaces.
-
-\subsubsection{device}
-
+\para
+\textbf{device: }
 device memory is a memory class with non-uniform access semantics,
 intended for memory-mapped I/O and special purposes such as high-speed
 scratchpad memory.
