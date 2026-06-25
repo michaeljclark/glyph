@@ -6148,6 +6148,21 @@ permission masks, which are combined with page table permissions during
 memory access checks. the capability permission registers give control
 over read and write permissions for page table colors.
 
+\subsection{address spaces}
+the architecture derives user and system roles from unary address prefixes,
+enforcing address space isolation between user and system software during
+execution.
+implicit address space role checking is applied to every memory access and
+instruction fetch, independently of page table permissions, providing a
+defence-in-depth layer beneath the capability system.
+\para
+implicit address space role checking is used in the address translation
+in place of a \emph{user} bit in page table entries.
+user software is prevented from accessing the system address space.
+system software is prevented from accessing or executing the user
+address space via the \emph{user address space access disable} and
+\emph{user address space execute disable} system control bits.
+
 \subsection{exceptions}
 
 the domain and capability extensions enable capability role and permission
