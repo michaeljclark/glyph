@@ -2218,8 +2218,8 @@ implemented as relaxed operations.
 \newpage
 \section{Example pipeline}
 
-an illustrative micro-architecture is proposed based on the classic 5-stage
-RISC design~\cite{thornton1970cdc6600,patterson-hennessy} with the addition of an
+an illustrative micro-architecture is shown based on the classic 5-stage
+RISC pipeline~\cite{thornton1970cdc6600,patterson-hennessy} with the addition of an
 \emph{operand fetch} stage and a \emph{constant memory} port. this revised
 6-stage micro-architecture is composed of the following pipeline stages:
 
@@ -2247,13 +2247,14 @@ this example omits hazard detection and forwarding logic for the sake of simplic
   stage/.style={rectangle, draw=black, thick, align=center},
   sidebox/.style={rectangle, draw=black, thick, fill=gray!10},
   arrow/.style={-{Latex[length=3mm, width=2mm]}, thick},
-  node distance=12mm
+  node distance=6mm
 ]
 
 % Pipeline stages
-\tikzstyle{stage} = [draw, align=left, text width=40mm, minimum height=5mm, inner sep=2mm]
-\tikzstyle{sidebox} = [draw, fill=black!5, align=right, text width=40mm, minimum height=5mm, inner sep=2mm]
+\tikzstyle{stage} = [draw, align=center, text width=40mm, minimum height=5mm, inner sep=2mm]
+\tikzstyle{sidebox} = [draw, fill=black!5, align=center, text width=40mm, minimum height=5mm, inner sep=2mm]
 
+% Pipeline stages centred
 \node[stage] (IF) {\textsf{IF} -- instruction fetch};
 \node[stage, below=of IF] (ID) {\textsf{ID} -- instruction decode};
 \node[stage, below=of ID] (OF) {\textsf{OF} -- operand fetch};
@@ -2268,19 +2269,19 @@ this example omits hazard detection and forwarding logic for the sake of simplic
 \draw[arrow] (EX) -- (MA);
 \draw[arrow] (MA) -- (WB);
 
-% Side components
-\node[sidebox, left=2.8cm of IF] (instrmem) {instruction memory -- \textsf{IM}};
-\draw[->] (instrmem.east) -- (IF.west);
+% Top: instruction memory (top-left) and constant memory (top-right)
+\node[sidebox, above=of IF, xshift=-25mm] (instrmem) {\textsf{IM} -- instruction memory};
+\node[sidebox, above=of IF, xshift=25mm] (constmem) {\textsf{KM} -- constant memory};
 
-\node[sidebox, left=2.8cm of OF] (constmem) {constant memory -- \textsf{KM}};
-\draw[->] ([yshift=1mm]constmem.east) -- ([yshift=1mm]OF.west);
+% Bottom: data memory (bottom-left) and register file (bottom-right)
+\node[sidebox, below=of WB, xshift=-25mm] (datamem) {\textsf{DM} -- data memory};
+\node[sidebox, below=of WB, xshift=25mm] (regfile) {\textsf{RF} -- register file};
 
-\node[sidebox, left=2.8cm of MA] (datamem) {data memory -- \textsf{DM}};
-\draw[<->] (datamem.east) -- (MA.west);
-
-\node[sidebox, left=2.8cm of WB] (regfile) {register file -- \textsf{RF}};
-\draw[->] ([yshift=1mm]regfile.east) -- ++(1.5,0) -- ++(0,5.52) -- ([yshift=-1mm]OF.west);
-\draw[<-] ([yshift=-1mm]regfile.east) -- ([yshift=-1mm]WB.west);
+\draw[->] ([xshift=-3mm]instrmem.south) |- (IF.west);
+\draw[->] ([xshift=+3mm]constmem.south) |- ([yshift=+1mm]OF.east);
+\draw[<->] ([xshift=-3mm]datamem.north) |- (MA.west);
+\draw[->] ([xshift=+3mm]regfile.north) |- ([yshift=-1mm]OF.east);
+\draw[<-] (regfile.north) |- (WB.east);
 
 \end{tikzpicture}
 \caption{sample 6-stage micro-architecture with support for constant memory.}
