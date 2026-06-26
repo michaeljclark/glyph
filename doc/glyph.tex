@@ -2224,19 +2224,27 @@ an illustrative micro-architecture is shown based on the classic 5-stage
 RISC pipeline~\cite{thornton1970cdc6600,patterson-hennessy} with the addition of an
 \emph{operand fetch} stage and a \emph{constant memory} port. this revised
 6-stage micro-architecture is composed of the following pipeline stages:
-
-\begin{itemize}[itemsep=0pt]
-\item \textsf{IF} --- \emph{instruction fetch}: reads instructions from memory
-into a fetch buffer.
-\item \textsf{ID} --- \emph{instruction decode}: decodes instruction length, opcode,
-and operands.
-\item \textsf{OF} --- \emph{operand fetch}: reads operands from register file
-and constant memory.
-\item \textsf{EX} --- \emph{execute}: performs logical operations or
-arithmetic on the operands.
-\item \textsf{MA} --- \emph{memory access}: loads data from or stores data to memory.
-\item \textsf{WB} --- \emph{writeback}: writes results back to the register file.
-\end{itemize}
+\\
+\begin{table}[h]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{symbol} & \thead{stage} & \thead{description} \\
+\hline
+\texttt{IF} & instruction fetch  & reads instructions from memory into a fetch buffer. \\
+\texttt{ID} & instruction decode & decodes instruction length, opcode, and operands. \\
+\texttt{OF} & operand fetch      & reads operands from register file and constant memory. \\
+\texttt{EX} & execute            & performs logical operations or arithmetic on the operands. \\
+\texttt{MA} & memory access      & loads data from or stores data to memory. \\
+\texttt{WB} & writeback          & writes results back to the register file. \\
+\hline
+\end{tabular}
+\caption{glyph 6-stage example pipeline stages.}
+\label{tab:glyph-example-pipeline-stages}
+\end{table}
 
 \par\noindent
 a simplified micro-architecture using those pipeline stages might look like this:
@@ -2286,7 +2294,7 @@ this example omits hazard detection and forwarding logic for the sake of simplic
 \draw[<-] (regfile.north) |- (WB.east);
 
 \end{tikzpicture}
-\caption{sample 6-stage micro-architecture with support for constant memory.}
+\caption{glyph 6-stage micro-architecture with support for constant memory.}
 \label{fig:glyph-6-stage-uarch}
 \end{figure}
 
