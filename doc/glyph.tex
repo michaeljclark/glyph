@@ -663,8 +663,13 @@ RISC pipeline~\cite{thornton1970cdc6600,patterson-hennessy} with the addition of
 \end{table}
 
 \par\noindent
-a simplified micro-architecture using those pipeline stages might look like this:
-this example omits hazard detection and forwarding logic for the sake of simplicity.
+a simplified micro-architecture using those pipeline stages might look like
+the following. this example omits hazard detection and forwarding logic
+for the sake of simplicity.
+a more complete micro-architecture may have branch predictors, instruction
+and constant stream prefetchers, instruction and data caches, translation
+lookaside buffers, parallel instruction decoders, register renamers, reorder
+buffers, scheduler queues, and load and store buffers.
 \\
 \begin{figure}[H]
 \centering
