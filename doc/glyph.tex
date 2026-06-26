@@ -264,7 +264,8 @@ registers are temporary storage used to fill input and output
 operands for the \emph{ALU}\footnote{\emph{ALU}\,-- Arithmetic logic unit.}
 before and after execution of instructions. registers are
 organized as a word-addressable store where each register number refers
-to register data of a width specified by the \emph{GLEN} parameter.
+to data of width specified by the \emph{GLEN} parameter
+\S\ref{sec:architectural-parameters}.
 \\
 \begin{figure}[H]
 \centering
@@ -312,7 +313,7 @@ main memory is primary storage which in modern computers is most likely
 \emph{DRAM}\footnote{\emph{DRAM}\,-- Dynamic random-access memory.}.
 main memory is organized as a byte-addressable store where each address
 refers to a byte which is 8-bits of data, with the address width specified
-by the \emph{ALEN} parameter.
+by the \emph{ALEN} parameter \S\ref{sec:architectural-parameters}.
 \\
 \begin{figure}[H]
 \centering
@@ -821,6 +822,7 @@ instance of the architecture.
 configurations of these parameters are grouped into architectural profiles.
 
 \subsection{architectural parameters}
+\label{sec:architectural-parameters}
 
 the architecture provides a unified floating-point and integer general
 register file with 8 or 64 registers, and a unified floating-point
