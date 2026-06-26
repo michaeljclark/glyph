@@ -634,6 +634,87 @@ to 8-bit through to 64-bit constants.
 \end{figure}
 
 \newpage
+\section{Pipeline model}
+
+an illustrative micro-architecture is shown based on the classic 5-stage
+RISC pipeline~\cite{thornton1970cdc6600,patterson-hennessy} with the addition of an
+\emph{operand fetch} stage and a \emph{constant memory} port. this revised
+6-stage micro-architecture is composed of the following pipeline stages:
+\\
+\begin{table}[h]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{symbol} & \thead{stage} & \thead{description} \\
+\hline
+\texttt{IF} & instruction fetch  & reads instructions from memory into a fetch buffer. \\
+\texttt{ID} & instruction decode & decodes instruction length, opcode, and operands. \\
+\texttt{OF} & operand fetch      & reads operands from register file and constant memory. \\
+\texttt{EX} & execute            & performs logical operations or arithmetic on the operands. \\
+\texttt{MA} & memory access      & loads data from or stores data to memory. \\
+\texttt{WB} & writeback          & writes results back to the register file. \\
+\hline
+\end{tabular}
+\caption{glyph 6-stage example pipeline stages.}
+\label{tab:glyph-example-pipeline-stages}
+\end{table}
+
+\par\noindent
+a simplified micro-architecture using those pipeline stages might look like this:
+this example omits hazard detection and forwarding logic for the sake of simplicity.
+\\
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  every node/.style={font=\small},
+  stage/.style={rectangle, draw=black, thick, align=center},
+  sidebox/.style={rectangle, draw=black, thick, fill=gray!10},
+  arrow/.style={-{Latex[length=3mm, width=2mm]}, thick},
+  node distance=6mm
+]
+
+% Pipeline stages
+\tikzstyle{stage} = [draw, align=center, text width=40mm, minimum height=5mm, inner sep=2mm]
+\tikzstyle{sidebox} = [draw, fill=black!5, align=center, text width=40mm, minimum height=5mm, inner sep=2mm]
+
+% Pipeline stages centred
+\node[stage] (IF) {\textsf{IF} -- instruction fetch};
+\node[stage, below=of IF] (ID) {\textsf{ID} -- instruction decode};
+\node[stage, below=of ID] (OF) {\textsf{OF} -- operand fetch};
+\node[stage, below=of OF] (EX) {\textsf{EX} -- execute};
+\node[stage, below=of EX] (MA) {\textsf{MA} -- memory access};
+\node[stage, below=of MA] (WB) {\textsf{WB} -- writeback};
+
+% Arrows between pipeline stages
+\draw[arrow] (IF) -- (ID);
+\draw[arrow] (ID) -- (OF);
+\draw[arrow] (OF) -- (EX);
+\draw[arrow] (EX) -- (MA);
+\draw[arrow] (MA) -- (WB);
+
+% Top: instruction memory (top-left) and constant memory (top-right)
+\node[sidebox, above=of IF, xshift=-25mm] (instrmem) {\textsf{IM} -- instruction memory};
+\node[sidebox, above=of IF, xshift=25mm] (constmem) {\textsf{KM} -- constant memory};
+
+% Bottom: data memory (bottom-left) and register file (bottom-right)
+\node[sidebox, below=of WB, xshift=-25mm] (datamem) {\textsf{DM} -- data memory};
+\node[sidebox, below=of WB, xshift=25mm] (regfile) {\textsf{RF} -- register file};
+
+\draw[->] ([xshift=-3mm]instrmem.south) |- (IF.west);
+\draw[->] ([xshift=+3mm]constmem.south) |- ([yshift=+1mm]OF.east);
+\draw[<->] ([xshift=-3mm]datamem.north) |- (MA.west);
+\draw[->] ([xshift=+3mm]regfile.north) |- ([yshift=-1mm]OF.east);
+\draw[<-] (regfile.north) |- (WB.east);
+
+\end{tikzpicture}
+\caption{glyph 6-stage micro-architecture with support for constant memory.}
+\label{fig:glyph-6-stage-uarch}
+\end{figure}
+
+\newpage
 \section{Program streams}
 
 \arch{} separates the stored program into two streams, one with instructions
@@ -2216,87 +2297,6 @@ operations to act as implicit synchronization points.
 loads observe ordering established by prior synchronization points.
 on architectures providing sufficient ordering guarantees, loads may be
 implemented as relaxed operations.
-
-\newpage
-\section{Example pipeline}
-
-an illustrative micro-architecture is shown based on the classic 5-stage
-RISC pipeline~\cite{thornton1970cdc6600,patterson-hennessy} with the addition of an
-\emph{operand fetch} stage and a \emph{constant memory} port. this revised
-6-stage micro-architecture is composed of the following pipeline stages:
-\\
-\begin{table}[h]
-\centering
-\footnotesize
-\rowcolors{2}{tbcol}{tbcol}
-\begin{tabular}{|l|l|l|}
-\hline
-\rowcolor{thcol}
-\thead{symbol} & \thead{stage} & \thead{description} \\
-\hline
-\texttt{IF} & instruction fetch  & reads instructions from memory into a fetch buffer. \\
-\texttt{ID} & instruction decode & decodes instruction length, opcode, and operands. \\
-\texttt{OF} & operand fetch      & reads operands from register file and constant memory. \\
-\texttt{EX} & execute            & performs logical operations or arithmetic on the operands. \\
-\texttt{MA} & memory access      & loads data from or stores data to memory. \\
-\texttt{WB} & writeback          & writes results back to the register file. \\
-\hline
-\end{tabular}
-\caption{glyph 6-stage example pipeline stages.}
-\label{tab:glyph-example-pipeline-stages}
-\end{table}
-
-\par\noindent
-a simplified micro-architecture using those pipeline stages might look like this:
-this example omits hazard detection and forwarding logic for the sake of simplicity.
-\\
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}[
-  every node/.style={font=\small},
-  stage/.style={rectangle, draw=black, thick, align=center},
-  sidebox/.style={rectangle, draw=black, thick, fill=gray!10},
-  arrow/.style={-{Latex[length=3mm, width=2mm]}, thick},
-  node distance=6mm
-]
-
-% Pipeline stages
-\tikzstyle{stage} = [draw, align=center, text width=40mm, minimum height=5mm, inner sep=2mm]
-\tikzstyle{sidebox} = [draw, fill=black!5, align=center, text width=40mm, minimum height=5mm, inner sep=2mm]
-
-% Pipeline stages centred
-\node[stage] (IF) {\textsf{IF} -- instruction fetch};
-\node[stage, below=of IF] (ID) {\textsf{ID} -- instruction decode};
-\node[stage, below=of ID] (OF) {\textsf{OF} -- operand fetch};
-\node[stage, below=of OF] (EX) {\textsf{EX} -- execute};
-\node[stage, below=of EX] (MA) {\textsf{MA} -- memory access};
-\node[stage, below=of MA] (WB) {\textsf{WB} -- writeback};
-
-% Arrows between pipeline stages
-\draw[arrow] (IF) -- (ID);
-\draw[arrow] (ID) -- (OF);
-\draw[arrow] (OF) -- (EX);
-\draw[arrow] (EX) -- (MA);
-\draw[arrow] (MA) -- (WB);
-
-% Top: instruction memory (top-left) and constant memory (top-right)
-\node[sidebox, above=of IF, xshift=-25mm] (instrmem) {\textsf{IM} -- instruction memory};
-\node[sidebox, above=of IF, xshift=25mm] (constmem) {\textsf{KM} -- constant memory};
-
-% Bottom: data memory (bottom-left) and register file (bottom-right)
-\node[sidebox, below=of WB, xshift=-25mm] (datamem) {\textsf{DM} -- data memory};
-\node[sidebox, below=of WB, xshift=25mm] (regfile) {\textsf{RF} -- register file};
-
-\draw[->] ([xshift=-3mm]instrmem.south) |- (IF.west);
-\draw[->] ([xshift=+3mm]constmem.south) |- ([yshift=+1mm]OF.east);
-\draw[<->] ([xshift=-3mm]datamem.north) |- (MA.west);
-\draw[->] ([xshift=+3mm]regfile.north) |- ([yshift=-1mm]OF.east);
-\draw[<-] (regfile.north) |- (WB.east);
-
-\end{tikzpicture}
-\caption{glyph 6-stage micro-architecture with support for constant memory.}
-\label{fig:glyph-6-stage-uarch}
-\end{figure}
 
 \addtocontents{toc}{\protect\clearpage}
 \chapter{System registers}
