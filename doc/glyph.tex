@@ -2335,8 +2335,8 @@ the system register set is divided into the following sections.
 \hline
 \textbf{user-level registers}  & floating-point status and control,
 time stamp counter and frequency, thread and domain address aliases. \\
-\textbf{system registers}      & trap handling, addresses, interrupts,
-wall clock, timer, memory management and inter-domain messages. \\
+\textbf{privileged registers}   & trap handling, clock, thread addresses,
+interrupts, address translation, inter-domain messages and debugging. \\
 \hline
 \rowcolor{tscol}
 \multicolumn{2}{|l|}{\tsub{extension}} \\
@@ -2353,14 +2353,15 @@ wall clock, timer, memory management and inter-domain messages. \\
 
 \newpage
 \section{User-level registers}
-the architecture provides several user-level status and control registers
-for floating-point status and control, time stamp counter and frequency,
-machine address and domain.
+the architecture provides several user-level registers for floating-point
+status and control, time stamp counter and frequency, and access to machine
+address and domain address.
 \para
-user-level status and control registers can be read and written using the
-\texttt{sysread}, \texttt{syswrite}, \texttt{sysset}, and \texttt{sysclear}
-instructions. user-level status and control registers are available in
-contexts where their associated bit is enabled in \texttt{scontrol}.
+user-level registers can be read and written using the \texttt{sysread},
+\texttt{syswrite}, \texttt{sysset}, and \texttt{sysclear} instructions.
+user-level registers are available with user-level privileges when their
+associated bit is enabled in \texttt{scontrol}, otherwise they require
+the system role to access.
 
 \subsubsection{user-level registers}
 the following table lists the user-level registers:
@@ -2531,19 +2532,19 @@ this register is visible if \texttt{scontrol.D} is enabled.
 }
 
 \newpage
-\section{System registers}
-the architecture provides several privileged status and control
-registers for trap handling, system configuration, address translation,
-timers, interrupts, and debugging.
+\section{Privileged registers}
+the architecture provides several privileged system-level registers for
+trap handling, clock, thread addresses, interrupts, address translation,
+inter-domain messages and debugging.
 \para
-privileged system-level status and control registers can be read and written
+privileged system-level registers can be read and written
 using the \texttt{sysread}, \texttt{syswrite}, \texttt{sysset}, and
-\texttt{sysclear} instructions. privileged system registers are accessible
-from executable pages with system or physical address spaces.
+\texttt{sysclear} instructions. privileged system-level registers are
+accessible with the system role, which requires executable pages in
+the system or physical address spaces.
 
 \subsubsection{privileged registers}
-the following table lists the privileged trap, system, debug, and machine
-registers:
+the following table lists the privileged trap, system, and debug registers:
 
 \begin{table}[H]
 \centering
