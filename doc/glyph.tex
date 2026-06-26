@@ -2235,12 +2235,15 @@ virtual address spaces.
 device memory is not required to be coherent or globally ordered
 and is typically uncached.
 
-\subsection{memory types}
+\subsection{cache coherency}
 
-the architecture supports several memory types that define caching and
-write propagation behavior for memory accesses. they are specified via
-memory type registers or address translation attributes to determine how
-memory regions interact with the caching system.
+the architecture supports coherent caching of memory regions using
+memory types for cache policy.
+memory types define cache coherency attributes for caching and
+write propagation behavior.
+memory types are assigned via memory type registers or address translation
+page table attributes to determine how memory regions interact with the
+cache hierarchy.
 \para
 memory regions that have a memory type with caching enabled must support
 misaligned loads and stores, excluding instructions that are explicitly
