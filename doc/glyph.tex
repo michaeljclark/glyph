@@ -15,6 +15,7 @@ software-defined MMU\sep message-signaled interrupts\sep virtual machine}
 \usepackage[x-1a]{pdfx}
 \usepackage[utf8]{inputenc}
 \usepackage[table]{xcolor}
+\usepackage{CJKutf8}
 \usepackage{tikz}
 \usepackage{minitoc}
 \usepackage{fancyvrb}
@@ -97,7 +98,7 @@ software-defined MMU\sep message-signaled interrupts\sep virtual machine}
 % dedication
 \clearpage
 \thispagestyle{empty}
-\vspace*{0.22\textheight}
+\vspace*{0.19\textheight}
 \begin{center}
     \textbf{to my mentors, whose guidance and wisdom made this work possible.}
 \end{center}
@@ -105,7 +106,7 @@ software-defined MMU\sep message-signaled interrupts\sep virtual machine}
 % epigraph
 \clearpage
 \thispagestyle{empty}
-\vspace*{0.13\textheight}
+\vspace*{0.10\textheight}
 \begin{center}
 \noindent\rule{\textwidth}{0.5pt}\\
 \begin{flushleft}
@@ -131,6 +132,37 @@ between instruction encoding, execution, virtualization, memory management,
 capabilities, and isolation. rather than treating these concerns separately,
 the architecture integrates them into a coherent model that is both
 practical to implement and straightforward to understand.
+
+\vspace{5mm}
+
+% glyph translation ornament
+\begin{center}
+\begin{minipage}[t]{0.48\linewidth}
+  \raisebox{40mm}{%
+    \colorbox{black!5}{%
+      \parbox{\dimexpr\linewidth+3mm-2\fboxsep\relax}{%
+        \vspace{3mm}
+        \sffamily\raggedright
+        \setlength{\leftskip}{3mm}
+        \setlength{\rightskip}{3mm}
+        \begin{CJK}{UTF8}{maru}
+グリフ (gurifu) glyph \\
+字形グリフ glyph shape \\
+フォントのグリフ font glyphs \\
+字 (じ, ji) individual character \\
+字形 (じけい, jikei) character form \\
+字種 (じしゅ, jishu) character type \\
+字体 (じたい, jitai) character style \\
+字符 (じふ, jifu) character sign \\
+文字 (もじ, moji) general character \\
+漢字 (かんじ, kanji) han character
+        \end{CJK}
+        \vspace{3mm}
+      }%
+    }%
+  }
+\end{minipage}
+\end{center}
 
 % table of contents
 \cleardoublepage
