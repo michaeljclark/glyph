@@ -4027,7 +4027,7 @@ the faulting domain number, and an address space identifier.
 \subsubsection{machine translation lookaside buffer entry (\texttt{mtlbent})}
 \texttt{mtlbent} is a read-write register containing the TLB entry for the
 current TLB miss fault. this register is populated by the TLB miss fault
-handler with memory type, physical page number, color, plus several permission
+handler with page color, physical page number, memory type, plus permission
 and metadata bits in the same format as page table entries.
 \para
 the \emph{vm12d}, \emph{vm14c}, and \emph{vm16c} translation lookaside buffer
@@ -4044,9 +4044,9 @@ entry formats are as follows.
   1//{5}//\scriptsize\texttt{G},%
   1//{6}//\scriptsize\texttt{A},%
   1//{7}//\scriptsize\texttt{D},%
-  4/{8}//{11}/\footnotesize\emph{color},%
+  4/{8}//{11}/\footnotesize\emph{type},%
   40/{12}//{51}/\footnotesize\emph{physical page number},%
-  4/{52}//{55}/\footnotesize\emph{type},%
+  4/{52}//{55}/\footnotesize\emph{color},%
   8/{56}//{63}/\footnotesize\emph{reserved}%
 }
 \caption{64-bit \emph{vm12d} translation lookaside buffer entry.}
@@ -4064,10 +4064,10 @@ entry formats are as follows.
   1//{5}//\scriptsize\texttt{G},%
   1//{6}//\scriptsize\texttt{A},%
   1//{7}//\scriptsize\texttt{D},%
-  4/{8}//{11}/\footnotesize\emph{color},%
+  4/{8}//{11}/\footnotesize\emph{type},%
   2//{13}//\footnotesize\texttt{00},%
   38/{14}//{51}/\footnotesize\emph{physical page number},%
-  4/{52}//{55}/\footnotesize\emph{type},%
+  4/{52}//{55}/\footnotesize\emph{color},%
   8/{56}//{63}/\footnotesize\emph{reserved}%
 }
 \caption{64-bit \emph{vm14c} translation lookaside buffer entry.}
@@ -4085,15 +4085,34 @@ entry formats are as follows.
   1//{5}//\scriptsize\texttt{G},%
   1//{6}//\scriptsize\texttt{A},%
   1//{7}//\scriptsize\texttt{D},%
-  4/{8}//{11}/\footnotesize\emph{color},%
+  4/{8}//{11}/\footnotesize\emph{type},%
   4/{12}//{15}/\footnotesize\texttt{0000},%
   36/{16}//{51}/\footnotesize\emph{physical page number},%
-  4/{52}//{55}/\footnotesize\emph{type},%
+  4/{52}//{55}/\footnotesize\emph{color},%
   8/{56}//{63}/\footnotesize\emph{reserved}%
 }
 \caption{64-bit \emph{vm16c} translation lookaside buffer entry.}
 \label{fig:64-bit-vm16c-tlb-entry}
 \end{figure}
+
+\begin{table}[h]
+\centering
+\footnotesize
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{no.} & \thead{name} & \thead{description} \\
+\hline
+\texttt{0b0000} & \emph{WB}  & write-back \\
+\texttt{0b0001} & \emph{WC}  & write-combine \\
+\texttt{0b0010} & \emph{WT}  & write-through \\
+\texttt{0b0011} & \emph{UC}  & uncached \\
+\hline
+\end{tabular}
+\caption{64-bit translation lookaside buffer entry memory types}
+\label{tab:64-bit-tlb-entry-types}
+\end{table}
 
 \newpage
 
@@ -4117,8 +4136,8 @@ a conflict resolution override mask can be used when this is not
 the desired behavior.
 \\
 \registerspec{64}{32}{%
-  4/{0}//3/\footnotesize\emph{type},%
-  8/{4}//11/\footnotesize\emph{reserved},%
+  8/{0}//7/\footnotesize\emph{reserved},%
+  4/{8}//11/\footnotesize\emph{type},%
   40/{12}//51/\footnotesize\emph{physical address},%
   12/{52}//63/\footnotesize\emph{reserved}%
 }
@@ -4132,11 +4151,11 @@ the desired behavior.
 \rowcolor{thcol}
 \thead{no.} & \thead{name} & \thead{description} \\
 \hline
-\texttt{0b00} & \emph{WB}  & write-back \\
-\texttt{0b01} & \emph{WC}  & write-combine \\
-\texttt{0b10} & \emph{WT}  & write-through \\
-\texttt{0b11} & \emph{UC}  & uncached \\
-\texttt{0b100} & --  & \emph{override mask} \\
+\texttt{0b0000} & \emph{WB}  & write-back \\
+\texttt{0b0001} & \emph{WC}  & write-combine \\
+\texttt{0b0010} & \emph{WT}  & write-through \\
+\texttt{0b0011} & \emph{UC}  & uncached \\
+\texttt{0b0100} & --  & \emph{override mask} \\
 \texttt{0b1000} & --  & \emph{reserved mask} \\
 \hline
 \end{tabular}
@@ -5621,7 +5640,7 @@ register are as follows:
 
 page table entries are grouped into arrays within index pages selected by
 an index derived from a portion of the virtual address.
-each entry contains memory type, physical page number, color, plus several
+each entry contains page color, physical page number, memory type, plus
 permission and metadata bits. the physical page number points to the next
 page table level for \emph{pointer} entries or the translated physical
 address for \emph{leaf} entries.
@@ -5640,9 +5659,9 @@ are as follows.
   1//{5}//\scriptsize\texttt{G},%
   1//{6}//\scriptsize\texttt{A},%
   1//{7}//\scriptsize\texttt{D},%
-  4/{8}//{11}/\footnotesize\emph{color},%
+  4/{8}//{11}/\footnotesize\emph{type},%
   40/{12}//{51}/\footnotesize\emph{physical page number},%
-  4/{52}//{55}/\footnotesize\emph{type},%
+  4/{52}//{55}/\footnotesize\emph{color},%
   8/{56}//{63}/\footnotesize\emph{reserved}%
 }
 \caption{64-bit \emph{vm12d} page table entry format.}
@@ -5660,10 +5679,10 @@ are as follows.
   1//{5}//\scriptsize\texttt{G},%
   1//{6}//\scriptsize\texttt{A},%
   1//{7}//\scriptsize\texttt{D},%
-  4/{8}//{11}/\footnotesize\emph{color},%
+  4/{8}//{11}/\footnotesize\emph{type},%
   2//{13}//\footnotesize\texttt{00},%
   38/{14}//{51}/\footnotesize\emph{physical page number},%
-  4/{52}//{55}/\footnotesize\emph{type},%
+  4/{52}//{55}/\footnotesize\emph{color},%
   8/{56}//{63}/\footnotesize\emph{reserved}%
 }
 \caption{64-bit \emph{vm14c} page table entry format.}
@@ -5681,10 +5700,10 @@ are as follows.
   1//{5}//\scriptsize\texttt{G},%
   1//{6}//\scriptsize\texttt{A},%
   1//{7}//\scriptsize\texttt{D},%
-  4/{8}//{11}/\footnotesize\emph{color},%
+  4/{8}//{11}/\footnotesize\emph{type},%
   4/{12}//{15}/\footnotesize\texttt{0000},%
   36/{16}//{51}/\footnotesize\emph{physical page number},%
-  4/{52}//{55}/\footnotesize\emph{type},%
+  4/{52}//{55}/\footnotesize\emph{color},%
   8/{56}//{63}/\footnotesize\emph{reserved}%
 }
 \caption{64-bit \emph{vm16c} page table entry format.}
@@ -5728,10 +5747,10 @@ the page table entry permission and metadata bits are as follows:
 \rowcolor{thcol}
 \thead{no.} & \thead{name} & \thead{description} \\
 \hline
-\texttt{0b00} & \emph{WB}  & write-back \\
-\texttt{0b01} & \emph{WC}  & write-combine \\
-\texttt{0b10} & \emph{WT}  & write-through \\
-\texttt{0b11} & \emph{UC}  & uncached \\
+\texttt{0b0000} & \emph{WB}  & write-back \\
+\texttt{0b0001} & \emph{WC}  & write-combine \\
+\texttt{0b0010} & \emph{WT}  & write-through \\
+\texttt{0b0011} & \emph{UC}  & uncached \\
 \hline
 \end{tabular}
 \caption{64-bit page table entry memory types.}
