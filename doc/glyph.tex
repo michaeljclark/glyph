@@ -4924,14 +4924,28 @@ and \emph{message} roles respectively.
 synchronous and asynchronous interrupts and exceptions are delivered
 to the \emph{system}, \emph{domain}, \emph{capability}, \emph{machine},
 and \emph{message} roles depending on the initiating event:
+\\
+\begin{table}[h]
+\centering
+\small
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{role} & \thead{exception category} \\
+\hline
+\emph{system}     & system exceptions. \\
+\emph{domain}     & domain exceptions. \\
+\emph{capability} & capability exceptions. \\
+\emph{machine}    & machine exceptions. \\
+\emph{message}    & message exceptions. \\
+\hline
+\end{tabular}
+\caption{trap routing roles}
+\label{tab:trap-routing-roles}
+\end{table}
 
-\begin{itemize}[itemsep=0pt]
-\item \emph{system role} receives system-level access exceptions.
-\item \emph{domain role} receives domain-level access exceptions.
-\item \emph{capability role} receives capability-level access exceptions.
-\item \emph{machine role} receives machine-level access exceptions.
-\item \emph{message role} receives asynchronous message exceptions.
-\end{itemize}
+\vspace{-1em}
 
 \subsection{synchronous exceptions}
 
