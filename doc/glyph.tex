@@ -4872,17 +4872,29 @@ traps caused by external interrupts. when a trap is received the processor
 saves the \emph{program counter} and \emph{immediate base} registers into
 \{ \texttt{tepc}, \texttt{teib} \}, then branches to the addresses in
 \{ \texttt{thpc}, \texttt{thib} \}.
-
-\begin{itemize}[itemsep=0pt]
-\item \{ \texttt{tepc}, \texttt{teib} \} contains the address of the trapping instruction.
-\item \{ \texttt{thpc}, \texttt{thib} \} contains the address of the trap handler.
-\item \texttt{tstatus} indicates if an asynchronous interrupt is pending.
-\item \texttt{tcontrol} is used to enable or disable asynchronous interrupts.
-\item \texttt{tscratch} is a scratch register reserved for trap handlers.
-\item \texttt{tcause} contains the type code of the current trap.
-\item \texttt{tvalue} contains identity information for the current trap.
-\item \texttt{tack} is used to acknowledge asynchronous traps.
-\end{itemize}
+\\
+\begin{table}[h]
+\centering
+\small
+\rowcolors{2}{tbcol}{tbcol}
+\begin{tabular}{|l|l|}
+\hline
+\rowcolor{thcol}
+\thead{register}      & \thead{description} \\
+\hline
+\texttt{tepc}, \texttt{teib}     & address of the trapping instruction. \\
+\texttt{thpc}, \texttt{thib}     & address of the trap handler. \\
+\texttt{tstatus}                 & asynchronous interrupts pending. \\
+\texttt{tcontrol} & asynchronous interrupts enable. \\
+\texttt{tscratch} & scratch register for the trap handler. \\
+\texttt{tcause}   & cause of the current trap. \\
+\texttt{tvalue}   & identity of the current trap. \\
+\texttt{tack}     & acknowledgement of the current trap. \\
+\hline
+\end{tabular}
+\caption{trap handler registers}
+\label{tab:trap-handler-registers}
+\end{table}
 
 \subsubsection{synchronous traps}
 
