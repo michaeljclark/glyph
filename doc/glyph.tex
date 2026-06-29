@@ -4956,20 +4956,24 @@ domain numbers in the \texttt{sys}, \texttt{dom}, \texttt{cap}, and
 \para
 \textbf{system exceptions:}
 arising from access to system registers, illegal instruction
-exceptions, break instruction exceptions, debug monitor exceptions,
+exceptions, breakpoint exceptions, debug monitor exceptions,
 address alignment faults, memory access faults, page faults arising
 from page table entry configuration, and locally-scoped
 \emph{system role} messages, also known as system calls.
 \para
 \textbf{capability exceptions:}
 arising from access to capability registers, access checks due
-to the configuration of the capability permission registers, capability
-role registers, and the capability matrix, and locally-scoped
-\emph{capability role} messages, also known as capability calls.
+to the configuration of the capability permission registers,
+\iffalse
+capability role registers, and the capability matrix,
+\fi
+and locally-scoped \emph{capability role} messages, also known as
+capability calls.
 \para
 \textbf{domain exceptions:}
-arising from access to domain registers, domain matrix checks, and
-locally-scoped \emph{domain role} messages, also known as hyper calls.
+arising from access to domain registers, including the trap routing
+registers, and locally-scoped \emph{domain role} messages, also known
+as hyper calls.
 \para
 \textbf{machine exceptions:}
 faults arising from access to machine registers, translation lookaside
