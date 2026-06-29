@@ -6167,9 +6167,10 @@ translation is active and machine trap handler addresses are
 \emph{domain physical addresses}. when nested software address
 translation is active, the implementation runs the TLB miss handler for
 the handler address of the faulting domain in its machine default domain.
-this is to ensure the handler's TLB entry is present before it is recursively
-invoked. the TLB miss handler for a subordinate domain can be invoked
-in its default context using \texttt{maccall}.
+this is to ensure handler address TLB entries are present before
+recursively invoking the handler.
+the TLB miss handler for a subordinate domain can be invoked in its
+default context using \texttt{maccall}.
 \para
 the following handler vectors are used by nested machine context TLB miss handlers.
 \begin{itemize}[itemsep=0pt]
