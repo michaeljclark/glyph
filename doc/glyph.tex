@@ -4898,9 +4898,10 @@ saves the \emph{program counter} and \emph{immediate base} registers into
 
 \subsubsection{synchronous traps}
 
-synchronous traps arise from instruction execution due to internal events
-such as: execution permissions, illegal instructions, debug monitor faults,
-memory access faults, memory alignment faults, and page faults.
+synchronous traps arise from instruction execution events such as:
+instruction execution permissions, illegal instruction exceptions,
+breakpoint exceptions, debug monitor exceptions, address alignment
+faults, memory access faults, and page faults.
 when synchronous traps occur, \{ \texttt{tepc}, \texttt{teib} \} contain
 the address of the instruction that caused the trap.
 
