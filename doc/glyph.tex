@@ -2389,9 +2389,9 @@ interrupts, address translation, inter-domain messages and debugging. \\
 
 \newpage
 \section{User-level registers}
-the architecture provides several user-level registers for floating-point
-status and control, time stamp counter and frequency, and access to machine
-address and domain address.
+the architecture provides user-level registers for floating-point
+status and control, time stamp counter and frequency, and machine and
+domain address aliases.
 \para
 user-level registers can be read and written using the \texttt{sysread},
 \texttt{syswrite}, \texttt{sysset}, and \texttt{sysclear} instructions.
@@ -2569,7 +2569,7 @@ this register is visible if \texttt{scontrol.D} is enabled.
 
 \newpage
 \section{Privileged registers}
-the architecture provides several privileged system-level registers for
+the architecture provides privileged system-level registers for
 trap handling, clock, thread addresses, interrupts, address translation,
 inter-domain messages and debugging.
 \para
