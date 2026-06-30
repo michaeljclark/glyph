@@ -6448,16 +6448,19 @@ and system software via EFI configuration tables.
 \newpage
 \subsection{hypervisor interface}
 
-the virtual machine defines several roles. the \emph{domain},
-\emph{capability}, \emph{machine}, and \emph{message} roles are used by
-the hypervisor to control domain switching, trap routing, execution
-permissions and software-defined page-based virtual address translation.
+the hypervisor interface virtualizes the architectural mechanisms used to
+implement virtual machines.
+the \emph{domain}, \emph{capability}, \emph{machine}, and \emph{message}
+roles control domain switching, trap routing, cache coherency, memory
+permissions, and software-defined address translation. these mechanisms are
+exposed to systems software through a unified interface.
 \para
-the hypervisor is responsible for setting up the capability permission
-registers, domain trap routing and context switching registers, and setting
-the initial state of system registers before starting an isolated context.
-the initial context may be a root context in which case all processors
-start executing in domain zero with all trap routing registers self-mapped.
+the hypervisor is responsible for configuring context switching through the
+domain trap routing registers, configuring capability-based page-table color
+permissions through the capability permission registers, and configuring
+cache coherency and address translation through the machine memory registers.
+it also initializes, saves, and restores privileged registers during context
+switching, including starting, suspending, and resuming an isolated context.
 \\
 \begin{table}[h]
 \centering
