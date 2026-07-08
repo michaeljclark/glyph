@@ -5372,8 +5372,8 @@ both address types support multicast.
 multicast to multiple machine addresses uses masked comparison.
 domain addresses are intrinsically multicast and may additionally use
 masked comparison to select multiple domains. at most one domain is
-matched per processor. if multiple domains match on one processor,
-the lowest-numbered domain is selected.
+matched per processor. if multiple addresses match on one processor,
+the lowest-numbered address is selected.
 \para
 the processor network must provide reliable multicast.
 output queues may experience \emph{head-of-line blocking}, which
