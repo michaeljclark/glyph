@@ -5537,10 +5537,11 @@ processor network.
 \newpage
 \section{Memory management}
 
-the architecture provides for page-based virtual to physical address
-translation using a page table \emph{trie structure} composed of index
-pages containing arrays of page table entries. a page walker reads the
-structure from the root pointer to leaf entries to translate virtual
+the architecture provides for page-based virtual memory%
+~\cite{denning1970virtual}. the virtual memory system provides virtual to
+physical address translation using a \emph{page table trie} composed of
+index pages containing arrays of page table entries. a page walker reads
+the structure from the root pointer to leaf entries to translate virtual
 addresses into physical addresses. the architecture introduces the
 concept of a \emph{translation address} which is an address boxed with
 an \emph{address space prefix} (\texttt{AS}) designed to provide a
