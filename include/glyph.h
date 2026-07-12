@@ -95,7 +95,7 @@ enum
 };
 
 /*
- * jlrib op fun3
+ * link op fun3
  */
 
 enum

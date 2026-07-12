@@ -86,14 +86,14 @@ const (
  */
 
 const (
-    CPU_link_j        Fun3Jump = 0b000
-    CPU_link_rsrv     Fun3Jump = 0b001
-    CPU_link_jal_r6   Fun3Jump = 0b010
-    CPU_link_jal_r7   Fun3Jump = 0b011
-    CPU_link_jtl_r6   Fun3Jump = 0b100
-    CPU_link_jtl_r7   Fun3Jump = 0b101
-    CPU_link_jala_r6  Fun3Jump = 0b110
-    CPU_link_jala_r7  Fun3Jump = 0b111
+    CPU_link_j          Fun3Jump = 0b000
+    CPU_link_rsrv       Fun3Jump = 0b001
+    CPU_link_jal_r6     Fun3Jump = 0b010
+    CPU_link_jal_r7     Fun3Jump = 0b011
+    CPU_link_jtl_r6     Fun3Jump = 0b100
+    CPU_link_jtl_r7     Fun3Jump = 0b101
+    CPU_link_jala_r6    Fun3Jump = 0b110
+    CPU_link_jala_r7    Fun3Jump = 0b111
 )
 
 /*
