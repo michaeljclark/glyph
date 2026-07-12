@@ -72,7 +72,7 @@ compiled versions of the architecture specification are available from the
 following URLs:
 
 - current: [glyph.pdf](https://metaparadigm.com/~mclark/glyph.pdf)
-- latest: [glyph-20260712.pdf](https://metaparadigm.com/~mclark/glyph-20260712.pdf)
+- latest: [glyph-20260713.pdf](https://metaparadigm.com/~mclark/glyph-20260713.pdf)
 
 ## opcodes
 
@@ -118,29 +118,29 @@ this list outlines instructions, opcodes, and descriptions used in the
 
 ### compare fun3 codes
 
-| nr | fun3  | description                   |
-|:---|:------|:------------------------------|
-| 0  | lt    | less than (signed)            |
-| 1  | ge    | greather or equal (signed)    |
-| 2  | eq    | equal                         |
-| 3  | ne    | not equal                     |
-| 4  | ltu   | less than (unsigned)          |
-| 5  | geu   | greater or equal (unsigned)   |
-| 6  | cmov  | conditional move              |
-| 7  | ncmov | negated conditional move      |
+| nr | fun3   | description                   |
+|:---|:-------|:------------------------------|
+| 0  | lt     | less than (signed)            |
+| 1  | ge     | greather or equal (signed)    |
+| 2  | eq     | equal                         |
+| 3  | ne     | not equal                     |
+| 4  | ltu    | less than (unsigned)          |
+| 5  | geu    | greater or equal (unsigned)   |
+| 6  | cmov   | conditional move              |
+| 7  | ncmov  | negated conditional move      |
 
 ### logic fun3 codes
 
-| nr | fun3  | description                   |
-|:---|:------|:------------------------------|
-| 0  | mov   | move                          |
-| 1  | not   | logical not                   |
-| 2  | neg   | negate                        |
-| 3  | bswap | byte swap                     |
-| 4  | ctz   | count trailing zeros          |
-| 5  | clz   | count leading zeros           |
-| 6  | cpop  | count population              |
-| 7  | sext  | sign extend                   |
+| nr | fun3   | description                   |
+|:---|:-------|:------------------------------|
+| 0  | mov    | move                          |
+| 1  | not    | logical not                   |
+| 2  | neg    | negate                        |
+| 3  | bswap  | byte swap                     |
+| 4  | tzcnt  | count trailing zeros          |
+| 5  | lzcnt  | count leading zeros           |
+| 6  | popcnt | count ones                    |
+| 7  | sext   | sign extend                   |
 
 ## instructions formats
 

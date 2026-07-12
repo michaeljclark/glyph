@@ -75,9 +75,9 @@ const (
     CPU_logic_not       Fun3Logic = 0b001
     CPU_logic_neg       Fun3Logic = 0b010
     CPU_logic_bswap     Fun3Logic = 0b011
-    CPU_logic_ctz       Fun3Logic = 0b100
-    CPU_logic_clz       Fun3Logic = 0b101
-    CPU_logic_cpop      Fun3Logic = 0b110
+    CPU_logic_tzcnt     Fun3Logic = 0b100
+    CPU_logic_lzcnt     Fun3Logic = 0b101
+    CPU_logic_popcnt    Fun3Logic = 0b110
     CPU_logic_sext      Fun3Logic = 0b111
 )
 
@@ -391,13 +391,13 @@ func CPU_exec_op_logic_i64(cpu *CPUState, inst uint64) int {
     case CPU_logic_bswap:
         cpu.R[rc(inst)] = bits.ReverseBytes64(cpu.R[rb(inst)])
         break
-    case CPU_logic_ctz:
+    case CPU_logic_tzcnt:
         cpu.R[rc(inst)] = uint64(bits.TrailingZeros64(cpu.R[rb(inst)]))
         break
-    case CPU_logic_clz:
+    case CPU_logic_lzcnt:
         cpu.R[rc(inst)] = uint64(bits.LeadingZeros64(cpu.R[rb(inst)]))
         break
-    case CPU_logic_cpop:
+    case CPU_logic_popcnt:
         cpu.R[rc(inst)] = uint64(bits.OnesCount64(cpu.R[rb(inst)]))
         break
     case CPU_logic_sext:
@@ -588,9 +588,9 @@ var cpu_fun3_logic_str = [8]string{
     CPU_logic_not:         "not.i64",
     CPU_logic_neg:         "neg.i64",
     CPU_logic_bswap:       "bswap.i64",
-    CPU_logic_ctz:         "ctz.i64",
-    CPU_logic_clz:         "clz.i64",
-    CPU_logic_cpop:        "cpop.i64",
+    CPU_logic_tzcnt:       "tzcnt.i64",
+    CPU_logic_lzcnt:       "lzcnt.i64",
+    CPU_logic_popcnt:      "popcnt.i64",
     CPU_logic_sext:        "sext.i64",
 }
 
@@ -811,14 +811,14 @@ func CPU_encode_op_neg_i64(rc, rb int) uint16 {
 func CPU_encode_op_bswap_i64(rc, rb int) uint16 {
     return op2ri3_enc(CPU_op_logic_i64, rc, rb, int(CPU_logic_bswap))
 }
-func CPU_encode_op_ctz_i64(rc, rb int) uint16 {
-    return op2ri3_enc(CPU_op_logic_i64, rc, rb, int(CPU_logic_ctz))
+func CPU_encode_op_tzcnt_i64(rc, rb int) uint16 {
+    return op2ri3_enc(CPU_op_logic_i64, rc, rb, int(CPU_logic_tzcnt))
 }
-func CPU_encode_op_clz_i64(rc, rb int) uint16 {
-    return op2ri3_enc(CPU_op_logic_i64, rc, rb, int(CPU_logic_clz))
+func CPU_encode_op_lzcnt_i64(rc, rb int) uint16 {
+    return op2ri3_enc(CPU_op_logic_i64, rc, rb, int(CPU_logic_lzcnt))
 }
-func CPU_encode_op_cpop_i64(rc, rb int) uint16 {
-    return op2ri3_enc(CPU_op_logic_i64, rc, rb, int(CPU_logic_cpop))
+func CPU_encode_op_popcnt_i64(rc, rb int) uint16 {
+    return op2ri3_enc(CPU_op_logic_i64, rc, rb, int(CPU_logic_popcnt))
 }
 func CPU_encode_op_sext_i64(rc, rb int) uint16 {
     return op2ri3_enc(CPU_op_logic_i64, rc, rb, int(CPU_logic_sext))

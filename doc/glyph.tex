@@ -6899,14 +6899,14 @@ register. the type of logic operations in \emph{fun3} can be one of:
 \rowcolor{thcol}
 \thead{value} & \thead{mnemonic}& \thead{description} \\
 \hline
-0     & \emph{mov}   & \emph{move}                 \\
-1     & \emph{not}   & \emph{logical not}          \\
-2     & \emph{neg}   & \emph{negate}               \\
-3     & \emph{bswap} & \emph{byte swap}            \\
-4     & \emph{ctz}   & \emph{count trailing zeros} \\
-5     & \emph{clz}   & \emph{count leading zeros}  \\
-6     & \emph{cpop}  & \emph{count population}     \\
-7     & \emph{sext}  & \emph{sign extend}          \\
+0     & \emph{mov}    & \emph{move}                 \\
+1     & \emph{not}    & \emph{logical not}          \\
+2     & \emph{neg}    & \emph{negate}               \\
+3     & \emph{bswap}  & \emph{byte swap}            \\
+4     & \emph{tzcnt}  & \emph{count trailing zeros} \\
+5     & \emph{lzcnt}  & \emph{count leading zeros}  \\
+6     & \emph{popcnt} & \emph{count ones}           \\
+7     & \emph{sext}   & \emph{sign extend}          \\
 \hline
 \end{tabular}
 \caption{Logic instruction functions}
@@ -6915,14 +6915,14 @@ register. the type of logic operations in \emph{fun3} can be one of:
 
 \begin{Verbatim}
     match fun3
-    | mov   -> reg[rc] = reg[rb]
-    | not   -> reg[rc] = ~reg[rb]
-    | neg   -> reg[rc] = -reg[rb]
-    | bswap -> reg[rc] = bswap(reg[rb])
-    | ctz   -> reg[rc] = ctz(reg[rb])
-    | clz   -> reg[rc] = clz(reg[rb])
-    | cpop  -> reg[rc] = cpop(reg[rb])
-    | sext  -> reg[rc] = sext(reg[rb])
+    | mov    -> reg[rc] = reg[rb]
+    | not    -> reg[rc] = ~reg[rb]
+    | neg    -> reg[rc] = -reg[rb]
+    | bswap  -> reg[rc] = bswap(reg[rb])
+    | tzcnt  -> reg[rc] = tzcnt(reg[rb])
+    | lzcnt  -> reg[rc] = lzcnt(reg[rb])
+    | popcnt -> reg[rc] = popcnt(reg[rb])
+    | sext   -> reg[rc] = sext(reg[rb])
 \end{Verbatim}
 
 \needspace{8\baselineskip}
@@ -7297,12 +7297,12 @@ the following table lists \arch{} assembler pseudo-instruction aliases:
 \texttt{neg} & signed negate \\
 \texttt{bswap.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
 \texttt{bswap} & byte swap \\
-\texttt{ctz.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
-\texttt{ctz} & count trailing zeros \\
-\texttt{clz.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
-\texttt{clz} & count leading zeroes \\
-\texttt{cpop.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
-\texttt{cpop} & count population \\
+\texttt{tzcnt.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
+\texttt{tzcnt} & count trailing zeros \\
+\texttt{lzcnt.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
+\texttt{lzcnt} & count leading zeroes \\
+\texttt{popcnt.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
+\texttt{popcnt} & count ones \\
 \texttt{sext.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
 \texttt{sext} & sign extend \\
 \hline

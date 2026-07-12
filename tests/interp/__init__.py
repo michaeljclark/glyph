@@ -74,9 +74,9 @@ cpu_logic_mov       = 0b000
 cpu_logic_not       = 0b001
 cpu_logic_neg       = 0b010
 cpu_logic_bswap     = 0b011
-cpu_logic_ctz       = 0b100
-cpu_logic_clz       = 0b101
-cpu_logic_cpop      = 0b110
+cpu_logic_tzcnt     = 0b100
+cpu_logic_lzcnt     = 0b101
+cpu_logic_popcnt    = 0b110
 cpu_logic_sext      = 0b111
 
 #
@@ -162,7 +162,7 @@ def cpu_debug(*args):
 def bswap(w,v):
     return int.from_bytes(v.to_bytes(w>>3, byteorder='little'), byteorder='big')
 
-def clz(w,v):
+def lzcnt(w,v):
     count = 0
     for i in reversed(range(w)):
         if (v & (1 << i)) == 0:
@@ -171,7 +171,7 @@ def clz(w,v):
             break
     return count
 
-def ctz(w,v):
+def tzcnt(w,v):
     count = 0
     for i in range(w):
         if (v & (1 << i)) == 0:
@@ -180,7 +180,7 @@ def ctz(w,v):
             break
     return count
 
-def cpop(w,v):
+def popcnt(w,v):
     count = 0
     for i in range(w):
         if (v & (1 << i)) != 0:
@@ -405,12 +405,12 @@ def cpu_exec_op_logic_i64(cpu,inst):
         cpu.r[rc(inst)] = sux(-cpu.r[rb(inst)])
     elif fun == cpu_logic_bswap:
         cpu.r[rc(inst)] = sux(bswap(64, cpu.r[rb(inst)]))
-    elif fun == cpu_logic_ctz:
-        cpu.r[rc(inst)] = ctz(64, cpu.r[rb(inst)])
-    elif fun == cpu_logic_clz:
-        cpu.r[rc(inst)] = clz(64, cpu.r[rb(inst)])
-    elif fun == cpu_logic_cpop:
-        cpu.r[rc(inst)] = cpop(64, cpu.r[rb(inst)])
+    elif fun == cpu_logic_tzcnt:
+        cpu.r[rc(inst)] = tzcnt(64, cpu.r[rb(inst)])
+    elif fun == cpu_logic_lzcnt:
+        cpu.r[rc(inst)] = lzcnt(64, cpu.r[rb(inst)])
+    elif fun == cpu_logic_popcnt:
+        cpu.r[rc(inst)] = popcnt(64, cpu.r[rb(inst)])
     elif fun == cpu_logic_sext:
         # sign-extend is a move unless XLEN > 64
         cpu.r[rc(inst)] = cpu.r[rb(inst)]
@@ -555,9 +555,9 @@ cpu_fun3_logic_str = {
     cpu_logic_not:         "not.i64",
     cpu_logic_neg:         "neg.i64",
     cpu_logic_bswap:       "bswap.i64",
-    cpu_logic_ctz:         "ctz.i64",
-    cpu_logic_clz:         "clz.i64",
-    cpu_logic_cpop:        "cpop.i64",
+    cpu_logic_tzcnt:       "tzcnt.i64",
+    cpu_logic_lzcnt:       "lzcnt.i64",
+    cpu_logic_popcnt:      "popcnt.i64",
     cpu_logic_sext:        "sext.i64",
 }
 
@@ -735,12 +735,12 @@ def cpu_encode_op_neg_i64(rc, rb):
     return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_neg)
 def cpu_encode_op_bswap_i64(rc, rb):
     return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_bswap)
-def cpu_encode_op_ctz_i64(rc, rb):
-    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_ctz)
-def cpu_encode_op_clz_i64(rc, rb):
-    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_clz)
-def cpu_encode_op_cpop_i64(rc, rb):
-    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_cpop)
+def cpu_encode_op_tzcnt_i64(rc, rb):
+    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_tzcnt)
+def cpu_encode_op_lzcnt_i64(rc, rb):
+    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_lzcnt)
+def cpu_encode_op_popcnt_i64(rc, rb):
+    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_popcnt)
 def cpu_encode_op_sext_i64(rc, rb):
     return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_sext)
 def cpu_encode_op_pin_i64(rc, rb, ra):

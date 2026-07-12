@@ -10,10 +10,10 @@ def t():
         cpu_encode_op_mov_i64(1,0),
         cpu_encode_op_neg_i64(2,0),
         cpu_encode_op_not_i64(3,0),
-        cpu_encode_op_clz_i64(4,0),
-        cpu_encode_op_ctz_i64(5,3),
+        cpu_encode_op_lzcnt_i64(4,0),
+        cpu_encode_op_tzcnt_i64(5,3),
         cpu_encode_op_bswap_i64(6,4),
-        cpu_encode_op_cpop_i64(7,4),
+        cpu_encode_op_popcnt_i64(7,4),
         cpu_encode_op_break(0),
     ]
     cpu_test("logic_1", c, i)

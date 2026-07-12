@@ -88,9 +88,9 @@ enum
     cpu_logic_not       = 0b001,
     cpu_logic_neg       = 0b010,
     cpu_logic_bswap     = 0b011,
-    cpu_logic_ctz       = 0b100,
-    cpu_logic_clz       = 0b101,
-    cpu_logic_cpop      = 0b110,
+    cpu_logic_tzcnt     = 0b100,
+    cpu_logic_lzcnt     = 0b101,
+    cpu_logic_popcnt    = 0b110,
     cpu_logic_sext      = 0b111,
 };
 
@@ -233,9 +233,9 @@ __glyph_inline__ uint rc(u64 insn) { return (insn >> 13) & 7; }
  * bitmanip wrapper functions
  */
 
-static u64 bswao_u64(u64 n) { return (u64)__builtin_bswap64(n); }
-static u64 ctz_u64(u64 n) { return (u64)(n == 0 ? 64 : __builtin_ctzll(n)); }
-static u64 clz_u64(u64 n) { return (u64)(n == 0 ? 64 : __builtin_clzll(n)); }
+static u64 bswap_u64(u64 n) { return (u64)__builtin_bswap64(n); }
+static u64 tzcnt_u64(u64 n) { return (u64)(n == 0 ? 64 : __builtin_ctzll(n)); }
+static u64 lzcnt_u64(u64 n) { return (u64)(n == 0 ? 64 : __builtin_clzll(n)); }
 static u64 popcount_u64(u64 n) { return (u64)__builtin_popcountll(n); }
 
 /*
@@ -478,15 +478,15 @@ __glyph_func__ int cpu_exec_op_logic_i64(cpu_state *cpu, u64 inst)
         cpu->r[rc(inst)] = -cpu->r[rb(inst)];
         break;
     case cpu_logic_bswap:
-        cpu->r[rc(inst)] = bswao_u64(cpu->r[rb(inst)]);
+        cpu->r[rc(inst)] = bswap_u64(cpu->r[rb(inst)]);
         break;
-    case cpu_logic_ctz:
-        cpu->r[rc(inst)] = ctz_u64(cpu->r[rb(inst)]);
+    case cpu_logic_tzcnt:
+        cpu->r[rc(inst)] = tzcnt_u64(cpu->r[rb(inst)]);
         break;
-    case cpu_logic_clz:
-        cpu->r[rc(inst)] = clz_u64(cpu->r[rb(inst)]);
+    case cpu_logic_lzcnt:
+        cpu->r[rc(inst)] = lzcnt_u64(cpu->r[rb(inst)]);
         break;
-    case cpu_logic_cpop:
+    case cpu_logic_popcnt:
         cpu->r[rc(inst)] = popcount_u64(cpu->r[rb(inst)]);
         break;
     case cpu_logic_sext:
@@ -695,9 +695,9 @@ static const char* cpu_fun3_logic_str[8] =
     [cpu_logic_not]         = "not.i64",
     [cpu_logic_neg]         = "neg.i64",
     [cpu_logic_bswap]       = "bswap.i64",
-    [cpu_logic_ctz]         = "ctz.i64",
-    [cpu_logic_clz]         = "clz.i64",
-    [cpu_logic_cpop]        = "cpop.i64",
+    [cpu_logic_tzcnt]       = "tzcnt.i64",
+    [cpu_logic_lzcnt]       = "lzcnt.i64",
+    [cpu_logic_popcnt]      = "popcnt.i64",
     [cpu_logic_sext]        = "sext.i64",
 };
 
@@ -922,14 +922,14 @@ __glyph_func__ u16 cpu_encode_op_neg_i64(int rc, int rb) {
 __glyph_func__ u16 cpu_encode_op_bswap_i64(int rc, int rb) {
     return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_bswap);
 }
-__glyph_func__ u16 cpu_encode_op_ctz_i64(int rc, int rb) {
-    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_ctz);
+__glyph_func__ u16 cpu_encode_op_tzcnt_i64(int rc, int rb) {
+    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_tzcnt);
 }
-__glyph_func__ u16 cpu_encode_op_clz_i64(int rc, int rb) {
-    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_clz);
+__glyph_func__ u16 cpu_encode_op_lzcnt_i64(int rc, int rb) {
+    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_lzcnt);
 }
-__glyph_func__ u16 cpu_encode_op_cpop_i64(int rc, int rb) {
-    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_cpop);
+__glyph_func__ u16 cpu_encode_op_popcnt_i64(int rc, int rb) {
+    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_popcnt);
 }
 __glyph_func__ u16 cpu_encode_op_sext_i64(int rc, int rb) {
     return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_sext);
