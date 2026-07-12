@@ -6768,7 +6768,7 @@ the \emph{rc} register. zeros are copied into the right most bits.
 \subsection{addd}
 \insrcimmsix{rc}{uimm}{01100}{\textbf{addd.i64}\: \mathit{rc}, \mathit{ib32}(\mathit{uimm6}); \mathit{flag}}
 \\
-the \emph{addd} or \emph{add-half-immediate-block} instruction loads
+the \emph{addd} or \emph{add-dword-immediate-block} instruction loads
 a 32-bit constant addressed by \emph{$[ib + uimm6 \times 4]$}, which it
 sign-extends to 64-bits, then adds to the \emph{rc} register,
 and carry is saved to the \emph{flag} register.
