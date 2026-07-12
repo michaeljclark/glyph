@@ -84,7 +84,7 @@ cpu_logic_sext      = 0b111
 #
 
 cpu_link_j        = 0b000
-cpu_link_rsrv       = 0b001
+cpu_link_rsrv     = 0b001
 cpu_link_jal_r6   = 0b010
 cpu_link_jal_r7   = 0b011
 cpu_link_jtl_r6   = 0b100
