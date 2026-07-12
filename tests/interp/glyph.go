@@ -77,7 +77,7 @@ const (
     CPU_logic_bswap     Fun3Logic = 0b011
     CPU_logic_ctz       Fun3Logic = 0b100
     CPU_logic_clz       Fun3Logic = 0b101
-    CPU_logic_ctpop     Fun3Logic = 0b110
+    CPU_logic_cpop      Fun3Logic = 0b110
     CPU_logic_sext      Fun3Logic = 0b111
 )
 
@@ -397,7 +397,7 @@ func CPU_exec_op_logic_i64(cpu *CPUState, inst uint64) int {
     case CPU_logic_clz:
         cpu.R[rc(inst)] = uint64(bits.LeadingZeros64(cpu.R[rb(inst)]))
         break
-    case CPU_logic_ctpop:
+    case CPU_logic_cpop:
         cpu.R[rc(inst)] = uint64(bits.OnesCount64(cpu.R[rb(inst)]))
         break
     case CPU_logic_sext:
@@ -590,7 +590,7 @@ var cpu_fun3_logic_str = [8]string{
     CPU_logic_bswap:       "bswap.i64",
     CPU_logic_ctz:         "ctz.i64",
     CPU_logic_clz:         "clz.i64",
-    CPU_logic_ctpop:       "ctpop.i64",
+    CPU_logic_cpop:        "cpop.i64",
     CPU_logic_sext:        "sext.i64",
 }
 
@@ -817,8 +817,8 @@ func CPU_encode_op_ctz_i64(rc, rb int) uint16 {
 func CPU_encode_op_clz_i64(rc, rb int) uint16 {
     return op2ri3_enc(CPU_op_logic_i64, rc, rb, int(CPU_logic_clz))
 }
-func CPU_encode_op_ctpop_i64(rc, rb int) uint16 {
-    return op2ri3_enc(CPU_op_logic_i64, rc, rb, int(CPU_logic_ctpop))
+func CPU_encode_op_cpop_i64(rc, rb int) uint16 {
+    return op2ri3_enc(CPU_op_logic_i64, rc, rb, int(CPU_logic_cpop))
 }
 func CPU_encode_op_sext_i64(rc, rb int) uint16 {
     return op2ri3_enc(CPU_op_logic_i64, rc, rb, int(CPU_logic_sext))

@@ -6905,7 +6905,7 @@ register. the type of logic operations in \emph{fun3} can be one of:
 3     & \emph{bswap} & \emph{byte swap}            \\
 4     & \emph{ctz}   & \emph{count trailing zeros} \\
 5     & \emph{clz}   & \emph{count leading zeros}  \\
-6     & \emph{ctpop} & \emph{count population}     \\
+6     & \emph{cpop}  & \emph{count population}     \\
 7     & \emph{sext}  & \emph{sign extend}          \\
 \hline
 \end{tabular}
@@ -6921,7 +6921,7 @@ register. the type of logic operations in \emph{fun3} can be one of:
     | bswap -> reg[rc] = bswap(reg[rb])
     | ctz   -> reg[rc] = ctz(reg[rb])
     | clz   -> reg[rc] = clz(reg[rb])
-    | ctpop -> reg[rc] = ctpop(reg[rb])
+    | cpop  -> reg[rc] = cpop(reg[rb])
     | sext  -> reg[rc] = sext(reg[rb])
 \end{Verbatim}
 
@@ -7301,8 +7301,8 @@ the following table lists \arch{} assembler pseudo-instruction aliases:
 \texttt{ctz} & count trailing zeros \\
 \texttt{clz.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
 \texttt{clz} & count leading zeroes \\
-\texttt{ctpop.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
-\texttt{ctpop} & count population \\
+\texttt{cpop.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
+\texttt{cpop} & count population \\
 \texttt{sext.i64} \emph{rc, rb} & \texttt{logic.i64} \emph{rc, rb,}
 \texttt{sext} & sign extend \\
 \hline

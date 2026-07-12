@@ -139,7 +139,7 @@ this list outlines instructions, opcodes, and descriptions used in the
 | 3  | bswap | byte swap                     |
 | 4  | ctz   | count trailing zeros          |
 | 5  | clz   | count leading zeros           |
-| 6  | ctpop | count population              |
+| 6  | cpop  | count population              |
 | 7  | sext  | sign extend                   |
 
 ## instructions formats

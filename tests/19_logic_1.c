@@ -12,7 +12,7 @@ void t()
         cpu_encode_op_clz_i64(4,0),
         cpu_encode_op_ctz_i64(5,3),
         cpu_encode_op_bswap_i64(6,4),
-        cpu_encode_op_ctpop_i64(7,4),
+        cpu_encode_op_cpop_i64(7,4),
         cpu_encode_op_break(0),
     };
     cpu_test("logic_1", c, i);

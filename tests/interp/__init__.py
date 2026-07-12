@@ -76,7 +76,7 @@ cpu_logic_neg       = 0b010
 cpu_logic_bswap     = 0b011
 cpu_logic_ctz       = 0b100
 cpu_logic_clz       = 0b101
-cpu_logic_ctpop     = 0b110
+cpu_logic_cpop      = 0b110
 cpu_logic_sext      = 0b111
 
 #
@@ -180,7 +180,7 @@ def ctz(w,v):
             break
     return count
 
-def ctpop(w,v):
+def cpop(w,v):
     count = 0
     for i in range(w):
         if (v & (1 << i)) != 0:
@@ -409,8 +409,8 @@ def cpu_exec_op_logic_i64(cpu,inst):
         cpu.r[rc(inst)] = ctz(64, cpu.r[rb(inst)])
     elif fun == cpu_logic_clz:
         cpu.r[rc(inst)] = clz(64, cpu.r[rb(inst)])
-    elif fun == cpu_logic_ctpop:
-        cpu.r[rc(inst)] = ctpop(64, cpu.r[rb(inst)])
+    elif fun == cpu_logic_cpop:
+        cpu.r[rc(inst)] = cpop(64, cpu.r[rb(inst)])
     elif fun == cpu_logic_sext:
         # sign-extend is a move unless XLEN > 64
         cpu.r[rc(inst)] = cpu.r[rb(inst)]
@@ -557,7 +557,7 @@ cpu_fun3_logic_str = {
     cpu_logic_bswap:       "bswap.i64",
     cpu_logic_ctz:         "ctz.i64",
     cpu_logic_clz:         "clz.i64",
-    cpu_logic_ctpop:       "ctpop.i64",
+    cpu_logic_cpop:        "cpop.i64",
     cpu_logic_sext:        "sext.i64",
 }
 
@@ -739,8 +739,8 @@ def cpu_encode_op_ctz_i64(rc, rb):
     return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_ctz)
 def cpu_encode_op_clz_i64(rc, rb):
     return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_clz)
-def cpu_encode_op_ctpop_i64(rc, rb):
-    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_ctpop)
+def cpu_encode_op_cpop_i64(rc, rb):
+    return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_cpop)
 def cpu_encode_op_sext_i64(rc, rb):
     return op2ri3_enc(cpu_op_logic_i64, rc, rb, cpu_logic_sext)
 def cpu_encode_op_pin_i64(rc, rb, ra):
