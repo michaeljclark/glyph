@@ -53,7 +53,7 @@ _(pc, ib)_ displacements into an _i32x2_ vector. a 128-bit version of
 the instruction set relaxes this relative address requirement.
 
 glyph immediate blocks can be chained using relative displacements and
-switched via the constant branch instruction. unlike typical RISC
+switched via the constant branch instruction. unlike conventional RISC
 architectures, immediate blocks containing constants allow relocations
 to be word-sized, following C-style packing and alignment rules.
 
