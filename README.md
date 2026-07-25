@@ -1,6 +1,7 @@
 # glyph
 
-> a super regular RISC with split instruction and constant streams.
+> glyph is a super regular instruction set architecture with split
+> instruction and constant streams.
 
 ![instruction and constant streams](/doc/concept.png)
 
